@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Collections;
 
 namespace RepoWebShop.Controllers
 {
@@ -18,12 +20,14 @@ namespace RepoWebShop.Controllers
             _shoppingCart = shoppingCart;
         }
 
+        [Authorize]
         public IActionResult Checkout()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Checkout(Order order)
         {
             var items = _shoppingCart.GetShoppingCartItems();
@@ -40,6 +44,7 @@ namespace RepoWebShop.Controllers
                 _shoppingCart.ClearCart();
                 return RedirectToAction("CheckoutComplete");
             }
+
             return View(order);
 
         }
