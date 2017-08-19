@@ -1,13 +1,13 @@
 ﻿@model ShoppingCartViewModel
 
-<h2>Your shopping cart</h2>
-<h4>Here are the delicious pies in your shopping cart.</h4>
+<h2>Tu carrito de compras</h2>
+<h4>Este es tu carrito de delicias de La Repo.</h4>
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>Selected amount</th>
-            <th>Pie</th>
-            <th class="text-right">Price</th>
+            <th>Cantidad</th>
+            <th>Producto</th>
+            <th class="text-right">Precio</th>
             <th class="text-right">Subtotal</th>
         </tr>
     </thead>
@@ -38,3 +38,25 @@
 <div class="text-center">
     <a class="btn btn-primary" asp-controller="Order" asp-action="Checkout">Check out now!</a>
 </div>
+
+
+<!--Model.Preference["response"]["init_point"]-->
+<a href="@Model.Mercadolink" name="MP-Checkout" class="blue-rn-m" onreturn="execute_my_onreturn">Pagar</a>
+
+<script type="text/javascript">
+    function execute_my_onreturn(json) {
+        if (json.collection_status == 'approved') {
+            alert('Pago acreditado');
+        } else if (json.collection_status == 'pending') {
+            alert('El usuario no completó el pago');
+        } else if (json.collection_status == 'in_process') {
+            alert('El pago está siendo revisado');
+        } else if (json.collection_status == 'rejected') {
+            alert('El pago fué rechazado, el usuario puede intentar nuevamente el pago');
+        } else if (json.collection_status == null) {
+            alert('El usuario no completó el proceso de pago, no se ha generado ningún pago');
+        }
+    }
+</script>
+
+<script type="text/javascript" src="https://www.mercadopago.com/org-img/jsapi/mptools/buttons/render.js"></script>

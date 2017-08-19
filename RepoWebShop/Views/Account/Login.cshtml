@@ -1,9 +1,9 @@
 ﻿@model LoginViewModel
 
-<h2>Please log in before placing an order.</h2>
+<h2>Por favor, inicia sesión para poder ordenar.</h2>
 
 <form asp-controller="Account" asp-action="Login" method="post" class="form-horizontal" role="form">
-    <h4>Enter your details below</h4>
+    <h4>Ingresa tus detalles</h4>
     <hr />
     <input type="hidden" asp-for="ReturnUrl" />
     <div asp-validation-summary="All" class="text-danger"></div>

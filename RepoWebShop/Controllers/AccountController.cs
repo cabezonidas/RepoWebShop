@@ -55,7 +55,7 @@ namespace RepoWebShop.Controllers
                 }
             }
 
-            ModelState.AddModelError("", "Username/password not found");
+            ModelState.AddModelError("", "Usuario/contraseña no encontrada");
             return View(loginViewModel);
         }
 

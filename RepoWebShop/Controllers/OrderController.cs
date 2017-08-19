@@ -35,7 +35,7 @@ namespace RepoWebShop.Controllers
 
             if (_shoppingCart.ShoppingCartItems.Count == 0)
             {
-                ModelState.AddModelError("", "Your cart is empty, add some pies first");
+                ModelState.AddModelError("", "Tu carrito no puede estar vacío, agrega algunos productos.");
             }
 
             if (ModelState.IsValid)
@@ -52,7 +52,7 @@ namespace RepoWebShop.Controllers
         public IActionResult CheckoutComplete()
         {
             ViewBag.CheckoutCompleteMessage = HttpContext.User.Identity.Name +
-                                      ", thanks for your order. You'll soon enjoy our delicious pies!";
+                                      ", Gracias por tu reserva. Falta poco para disfrutar de nuestras delicias!";
             return View();
         }
     }

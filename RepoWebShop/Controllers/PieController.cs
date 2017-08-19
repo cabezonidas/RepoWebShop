@@ -29,7 +29,7 @@ namespace RepoWebShop.Controllers
             if (string.IsNullOrEmpty(category))
             {
                 pies = _pieRepository.Pies.OrderBy(p => p.PieId);
-                currentCategory = "All pies";
+                currentCategory = "Ver todos";
             }
             else
             {
