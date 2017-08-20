@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using RepoWebShop.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using RepoWebShop.Models;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -69,19 +70,18 @@ namespace RepoWebShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
-        public async Task<IActionResult> Register(LoginViewModel loginViewModel)
+        public async Task<IActionResult> Register(Registration registration)
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser() { UserName = loginViewModel.UserName };
-                var result = await _userManager.CreateAsync(user, loginViewModel.Password);
+                var result = await _userManager.CreateAsync(registration, registration.Password);
 
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
                 }
             }
-            return View(loginViewModel);
+            return View(registration);
         }
 
         [HttpPost]

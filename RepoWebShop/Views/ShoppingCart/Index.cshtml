@@ -1,11 +1,13 @@
 ﻿@model ShoppingCartViewModel
 
 <h2>Tu carrito de compras</h2>
-<h4>Este es tu carrito de delicias de La Repo.</h4>
-<table class="table table-bordered table-striped">
+<h3>Tu pedido va a estar listo en @Model.PreparationTime hs una vez acreditado el pago</h3>
+<h4>Todas las órdenes son procesadas en nuestros horarios de atención</h4>
+<table class="table table-striped table-condensed">
     <thead>
         <tr>
-            <th>Cantidad</th>
+            <th></th>
+            <th class="text-center">Cantidad</th>
             <th>Producto</th>
             <th class="text-right">Precio</th>
             <th class="text-right">Subtotal</th>
@@ -15,6 +17,12 @@
         @foreach (var line in Model.ShoppingCart.ShoppingCartItems)
         {
             <tr>
+                <td class="text-center" >
+                    <a asp-controller="ShoppingCart" asp-action="RemoveFromShoppingCart"
+                       asp-route-pieId="@line.Pie.PieId">
+                        <span class="glyphicon glyphicon-remove" style="color:darkred;"></span>
+                    </a>
+                </td>
                 <td class="text-center">@line.Amount</td>
                 <td class="text-left">@line.Pie.Name</td>
                 <td class="text-right">@line.Pie.Price.ToString("c")</td>
@@ -26,22 +34,33 @@
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="3" class="text-right">Total:</td>
-            <td class="text-right">
-                @Model.ShoppingCartTotal.ToString("c")
+            <td colspan="4" class="text-right" style="vertical-align:middle">
+                <strong>
+                    Total:
+                </strong>
             </td>
+            <td class="text-right" style="vertical-align:middle">
+                <strong>
+                    @Model.ShoppingCartTotal.ToString("c")
+                </strong>
+            </td>          
         </tr>
     </tfoot>
 </table>
 
-
-<div class="text-center">
-    <a class="btn btn-primary" asp-controller="Order" asp-action="Checkout">Check out now!</a>
+<div class="form-group">
+    <label asp-for="Comments" class="col-md-2 control-label"></label>
+    <div class="col-md-5">
+        <textarea placeholder="Quisiera agregar 'Feliz Cumple Mati!', gracias :)" asp-for="Comments" class="form-control" rows="5" id="comment" style="resize: vertical;"></textarea>
+        <span asp-validation-for="Comments" class="text-danger"></span>
+    </div>
+</div>
+<br/>
+<div class="text-center" style="vertical-align:baseline">
+    <a href="@Model.Mercadolink" name="MP-Checkout" class="btn btn-primary" onreturn="execute_my_onreturn">Pagar</a>
+    <a class="btn btn-primary" asp-controller="Order" asp-action="Checkout">Reservar</a>
 </div>
 
-
-<!--Model.Preference["response"]["init_point"]-->
-<a href="@Model.Mercadolink" name="MP-Checkout" class="blue-rn-m" onreturn="execute_my_onreturn">Pagar</a>
 
 <script type="text/javascript">
     function execute_my_onreturn(json) {

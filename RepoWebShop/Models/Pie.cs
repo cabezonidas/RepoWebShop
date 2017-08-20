@@ -18,6 +18,7 @@ namespace RepoWebShop.Models
         public bool IsPieOfTheWeek { get; set; }
         public bool InStock { get; set; }
         public int CategoryId { get; set; }
+        public int PreparationTime { get; set; }
         public virtual Category Category { get; set; }
     }
 }

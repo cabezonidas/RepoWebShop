@@ -8,9 +8,10 @@ using RepoWebShop.Models;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170819224057_Users")]
+    partial class Users
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.3")
@@ -65,11 +66,7 @@ namespace RepoWebShop.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
@@ -86,9 +83,7 @@ namespace RepoWebShop.Migrations
 
                     b.Property<string>("PasswordHash");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(25);
+                    b.Property<string>("PhoneNumber");
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
@@ -97,7 +92,6 @@ namespace RepoWebShop.Migrations
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
@@ -110,8 +104,6 @@ namespace RepoWebShop.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserClaim<string>", b =>
@@ -200,6 +192,32 @@ namespace RepoWebShop.Migrations
                     b.Property<int>("OrderId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("AddressLine1")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<string>("AddressLine2");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
                     b.Property<DateTime>("OrderPlaced");
 
                     b.Property<decimal>("OrderTotal");
@@ -208,7 +226,12 @@ namespace RepoWebShop.Migrations
                         .IsRequired()
                         .HasMaxLength(25);
 
-                    b.Property<DateTime>("PickUpDate");
+                    b.Property<string>("State")
+                        .HasMaxLength(10);
+
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasMaxLength(10);
 
                     b.HasKey("OrderId");
 
@@ -258,8 +281,6 @@ namespace RepoWebShop.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("PreparationTime");
-
                     b.Property<decimal>("Price");
 
                     b.Property<string>("ShortDescription");
@@ -287,47 +308,6 @@ namespace RepoWebShop.Migrations
                     b.HasIndex("PieId");
 
                     b.ToTable("ShoppingCartItems");
-                });
-
-            modelBuilder.Entity("RepoWebShop.Models.Registration", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUser");
-
-                    b.Property<string>("AddressLine1")
-                        .IsRequired()
-                        .HasMaxLength(100);
-
-                    b.Property<string>("AddressLine2");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("Password")
-                        .IsRequired();
-
-                    b.Property<string>("State")
-                        .HasMaxLength(10);
-
-                    b.Property<string>("ZipCode")
-                        .IsRequired()
-                        .HasMaxLength(10);
-
-                    b.ToTable("Registration");
-
-                    b.HasDiscriminator().HasValue("Registration");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>

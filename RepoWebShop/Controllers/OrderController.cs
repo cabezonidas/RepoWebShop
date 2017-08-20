@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace RepoWebShop.Controllers
 {
@@ -13,11 +15,13 @@ namespace RepoWebShop.Controllers
     {
         private readonly IOrderRepository _orderRepository;
         private readonly ShoppingCart _shoppingCart;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public OrderController(IOrderRepository orderRepository, ShoppingCart shoppingCart)
+        public OrderController(IOrderRepository orderRepository, ShoppingCart shoppingCart, UserManager<IdentityUser> userManager)
         {
             _orderRepository = orderRepository;
             _shoppingCart = shoppingCart;
+            _userManager = userManager;
         }
 
         [Authorize]
@@ -51,8 +55,10 @@ namespace RepoWebShop.Controllers
 
         public IActionResult CheckoutComplete()
         {
-            ViewBag.CheckoutCompleteMessage = HttpContext.User.Identity.Name +
-                                      ", Gracias por tu reserva. Falta poco para disfrutar de nuestras delicias!";
+            var firstName = (_userManager.Users.FirstOrDefault(x => x.UserName == HttpContext.User.Identity.Name) as Registration).FirstName;
+            ViewBag.CheckoutCompleteMessage = firstName +
+                                      ", gracias por tu reserva. Falta poco para disfrutar de nuestras delicias!";
+
             return View();
         }
     }

@@ -7,6 +7,8 @@ using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
 using mercadopago;
 using System.Collections;
+using RepoWebShop.Extensions;
+using Microsoft.AspNetCore.Hosting;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,14 +18,15 @@ namespace RepoWebShop.Controllers
     {
         private readonly IPieRepository _pieRepository;
         private readonly ShoppingCart _shoppingCart;
+        private readonly IHostingEnvironment _env;
         private readonly MP mp;
 
 
-        public ShoppingCartController(IPieRepository pieRepository, ShoppingCart shoppingCart)
+        public ShoppingCartController(IPieRepository pieRepository, ShoppingCart shoppingCart, IHostingEnvironment env)
         {
             _pieRepository = pieRepository;
             _shoppingCart = shoppingCart;
-
+            _env = env;
             mp = new MP("8551380243694935", "xCQbHtu06Y3vBZvYY2wTg1zJ4qf0dRBd");
         }
 
@@ -32,24 +35,14 @@ namespace RepoWebShop.Controllers
             var items = _shoppingCart.GetShoppingCartItems();
             _shoppingCart.ShoppingCartItems = items;
             var total = _shoppingCart.GetShoppingCartTotal();
+            var highestPrepTime = items.Count == 0 ? 0 : items.OrderByDescending(x => x.Pie.PreparationTime).First().Pie.PreparationTime;
 
-            String preferenceData = "{\"items\":" +
-                                        "[{" +
-                                            "\"title\":\"La Reposteria\"," +
-                                            "\"quantity\":1," +
-                                            "\"currency_id\":\"ARS\"," +
-                                            "\"unit_price\":" + total +
-                                        "}]" +
-                                    "}";
-
-            //mp.sandboxMode(true);
-            Hashtable preference = mp.createPreference(preferenceData);
-            
             var shoppingCartViewModel = new ShoppingCartViewModel
             {
                 ShoppingCart = _shoppingCart,
                 ShoppingCartTotal = total,
-                Mercadolink = (preference["response"] as Hashtable)["sandbox_init_point"].ToString()
+                Mercadolink = mp.getPaymentLink(total, _env.IsProduction()),
+                PreparationTime = highestPrepTime
             };
 
             return View(shoppingCartViewModel);

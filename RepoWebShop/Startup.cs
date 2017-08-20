@@ -35,9 +35,7 @@ namespace RepoWebShop
 
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();
-
-            //services.AddTransient<ICategoryRepository, MockCategoryRepository>();
-            //services.AddTransient<IPieRepository, MockPieRepository>();
+            
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IPieRepository, PieRepository>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

@@ -8,9 +8,10 @@ using RepoWebShop.Models;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170820044521_Users3")]
+    partial class Users3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.3")
@@ -200,6 +201,32 @@ namespace RepoWebShop.Migrations
                     b.Property<int>("OrderId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("AddressLine1")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<string>("AddressLine2");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
                     b.Property<DateTime>("OrderPlaced");
 
                     b.Property<decimal>("OrderTotal");
@@ -208,7 +235,12 @@ namespace RepoWebShop.Migrations
                         .IsRequired()
                         .HasMaxLength(25);
 
-                    b.Property<DateTime>("PickUpDate");
+                    b.Property<string>("State")
+                        .HasMaxLength(10);
+
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasMaxLength(10);
 
                     b.HasKey("OrderId");
 
@@ -257,8 +289,6 @@ namespace RepoWebShop.Migrations
                     b.Property<string>("LongDescription");
 
                     b.Property<string>("Name");
-
-                    b.Property<int>("PreparationTime");
 
                     b.Property<decimal>("Price");
 
