@@ -33,7 +33,7 @@ namespace RepoWebShop.Controllers
             }
             else
             {
-                pies = _pieRepository.Pies.Where(p => p.Category.CategoryName == category)
+                pies = _pieRepository.Pies.Where(p => p.PieDetail.Category.CategoryName == category)
                    .OrderBy(p => p.PieId);
                 currentCategory = _categoryRepository.Categories.FirstOrDefault(c => c.CategoryName == category).CategoryName;
             }

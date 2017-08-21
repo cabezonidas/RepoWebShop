@@ -35,7 +35,7 @@ namespace RepoWebShop.Controllers
             var items = _shoppingCart.GetShoppingCartItems();
             _shoppingCart.ShoppingCartItems = items;
             var total = _shoppingCart.GetShoppingCartTotal();
-            var highestPrepTime = items.Count == 0 ? 0 : items.OrderByDescending(x => x.Pie.PreparationTime).First().Pie.PreparationTime;
+            var highestPrepTime = items.Count == 0 ? 0 : items.OrderByDescending(x => x.Pie.PieDetail.PreparationTime).First().Pie.PieDetail.PreparationTime;
 
             var shoppingCartViewModel = new ShoppingCartViewModel
             {

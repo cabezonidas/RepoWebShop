@@ -8,9 +8,10 @@ using RepoWebShop.Models;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170821012014_Ihc2")]
+    partial class Ihc2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.3")
@@ -240,28 +241,6 @@ namespace RepoWebShop.Migrations
                     b.Property<int>("PieId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("CategoryId");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int?>("PieDetailId");
-
-                    b.Property<decimal>("Price");
-
-                    b.HasKey("PieId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("PieDetailId");
-
-                    b.ToTable("Pies");
-                });
-
-            modelBuilder.Entity("RepoWebShop.Models.PieDetail", b =>
-                {
-                    b.Property<int>("PieDetailId")
-                        .ValueGeneratedOnAdd();
-
                     b.Property<string>("AllergyInformation");
 
                     b.Property<int>("CategoryId");
@@ -280,13 +259,15 @@ namespace RepoWebShop.Migrations
 
                     b.Property<int>("PreparationTime");
 
+                    b.Property<decimal>("Price");
+
                     b.Property<string>("ShortDescription");
 
-                    b.HasKey("PieDetailId");
+                    b.HasKey("PieId");
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("PieDetails");
+                    b.ToTable("Pies");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.ShoppingCartItem", b =>
@@ -400,19 +381,8 @@ namespace RepoWebShop.Migrations
 
             modelBuilder.Entity("RepoWebShop.Models.Pie", b =>
                 {
-                    b.HasOne("RepoWebShop.Models.Category")
-                        .WithMany("Pies")
-                        .HasForeignKey("CategoryId");
-
-                    b.HasOne("RepoWebShop.Models.PieDetail", "PieDetail")
-                        .WithMany()
-                        .HasForeignKey("PieDetailId");
-                });
-
-            modelBuilder.Entity("RepoWebShop.Models.PieDetail", b =>
-                {
                     b.HasOne("RepoWebShop.Models.Category", "Category")
-                        .WithMany()
+                        .WithMany("Pies")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

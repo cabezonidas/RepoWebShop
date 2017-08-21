@@ -18,7 +18,7 @@ namespace RepoWebShop.Models
         {
             get
             {
-                return _appDbContext.Pies.Include(c => c.Category);
+                return _appDbContext.Pies.Include(p => p.PieDetail).Include(c => c.PieDetail.Category);
             }
         }
 
@@ -26,13 +26,13 @@ namespace RepoWebShop.Models
         {
             get
             {
-                return _appDbContext.Pies.Include(c => c.Category).Where(p => p.IsPieOfTheWeek);
+                return _appDbContext.Pies.Include(p => p.PieDetail).Include(c => c.PieDetail.Category).Where(p => p.PieDetail.IsPieOfTheWeek);
             }
         }
 
         public Pie GetPieById(int pieId)
         {
-            return _appDbContext.Pies.FirstOrDefault(p => p.PieId == pieId);
+            return _appDbContext.Pies.Include(p => p.PieDetail).FirstOrDefault(p => p.PieId == pieId);
         }
     }
 }

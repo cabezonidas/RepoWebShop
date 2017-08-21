@@ -1,15 +1,15 @@
 ﻿@model Pie
 
 <div class="thumbnail">
-    <img alt="@Model.Name" src="@Model.ImageUrl">
+    <img alt="@Model.Name" src="@Model.PieDetail.ImageUrl">
     <div class="caption-full">
         <h3 class="pull-right">@Model.Price</h3>
         <h3>
             <a href="#">@Model.Name</a>
         </h3>
-        <h4>@Model.ShortDescription</h4>
-        <p>@Model.LongDescription</p>
-        <p>Tiempo de preparación: @Model.PreparationTime hs</p>
+        <h4>@Model.PieDetail.ShortDescription</h4>
+        <p>@Model.PieDetail.LongDescription</p>
+        <p>Tiempo de preparación: @Model.PieDetail.PreparationTime hs</p>
         <p class="button">
             <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="AddToShoppingCart"
                asp-route-pieId="@Model.PieId">Comprar</a>

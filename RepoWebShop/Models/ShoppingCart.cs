@@ -88,6 +88,7 @@ namespace RepoWebShop.Models
                    (ShoppingCartItems =
                        _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == ShoppingCartId)
                            .Include(s => s.Pie)
+                           .Include(s => s.Pie.PieDetail)
                            .ToList());
         }
 

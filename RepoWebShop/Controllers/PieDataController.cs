@@ -43,8 +43,8 @@ namespace RepoWebShop.Controllers
                 PieId = dbPie.PieId,
                 Name = dbPie.Name,
                 Price = dbPie.Price,
-                ShortDescription = dbPie.ShortDescription,
-                ImageThumbnailUrl = dbPie.ImageThumbnailUrl
+                ShortDescription = dbPie.PieDetail.ShortDescription,
+                ImageThumbnailUrl = dbPie.PieDetail.ImageThumbnailUrl
             };
         }
     }
