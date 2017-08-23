@@ -1,0 +1,11 @@
+﻿@model Pie
+
+<div class='addToCart' style='text-align:center;'>
+    <h2><strong>$ @Model.Price</strong></h2>
+    <p class='button'>
+        <a class='btn btn-primary' asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@Model.PieId'>
+            Comprar <span class='glyphicon glyphicon-shopping-cart'></span> 
+        </a>
+    </p>
+    <h4>@Model.Name</h4>
+</div>

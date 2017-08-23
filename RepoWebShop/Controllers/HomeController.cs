@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace RepoWebShop.Controllers
 {
@@ -21,11 +20,22 @@ namespace RepoWebShop.Controllers
 
         public ViewResult Index()
         {
+            var result = new List<PieDetailViewModel>();
+
+            foreach(var pieOfTheWeek in _pieRepository.PiesOfTheWeek)
+            {
+                var p = new PieDetailViewModel()
+                {
+                    PieDetail = pieOfTheWeek,
+                    Pies = _pieRepository.Pies.Where(x => x.PieDetail.PieDetailId == pieOfTheWeek.PieDetailId)
+                };
+                result.Add(p);
+            };
             var homeViewModel = new HomeViewModel
             {
-                PiesOfTheWeek = _pieRepository.PiesOfTheWeek
+                PiesOfTheWeek = result
             };
-
+            
             return View(homeViewModel);
         }
     }

@@ -22,8 +22,8 @@ namespace RepoWebShop.Models
                 };
             }
         }
-
-        public IEnumerable<Pie> PiesOfTheWeek { get; }
+        
+        IEnumerable<PieDetail> IPieRepository.PiesOfTheWeek => throw new NotImplementedException();
 
         public Pie GetPieById(int pieId)
         {

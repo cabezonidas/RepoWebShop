@@ -1,0 +1,21 @@
+﻿@model PieDetailViewModel
+
+<div id="PieDetail-@Model.PieDetail.PieDetailId" class="carousel slide" style="height:150px; margin:10px;">
+    <div class="carousel-inner">
+        @{
+            var pies = Model.Pies.ToArray();
+            for (int i = 0; i < pies.Count(); i++)
+            {
+                <div class='@(i == 0 ? "active item" : "item")'>
+                    @Html.Partial("PiePriceCarouselItem", pies[i])
+                </div>
+            }
+        }
+    </div>
+    <a class='carousel-control left' href='#PieDetail-@Model.PieDetail.PieDetailId' data-slide='prev' style='background-image:none;'>
+        <span class='glyphicon glyphicon-chevron-left' aria-hidden='true' style='color:darkseagreen'></span>
+    </a>
+    <a class='carousel-control right' href='#PieDetail-@Model.PieDetail.PieDetailId' data-slide='next' style='background-image:none;'>
+        <span class='glyphicon glyphicon-chevron-right' aria-hidden='true' style='color:darkseagreen'></span>
+    </a>
+</div>

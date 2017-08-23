@@ -18,15 +18,17 @@ namespace RepoWebShop.Models
         {
             get
             {
-                return _appDbContext.Pies.Include(p => p.PieDetail).Include(c => c.PieDetail.Category);
+                return _appDbContext.Pies
+                    .Include(p => p.PieDetail)
+                    .Include(c => c.PieDetail.Category);
             }
         }
 
-        public IEnumerable<Pie> PiesOfTheWeek
+        public IEnumerable<PieDetail> PiesOfTheWeek //To be removed. Must be replaced from IPieDetailRepository
         {
             get
             {
-                return _appDbContext.Pies.Include(p => p.PieDetail).Include(c => c.PieDetail.Category).Where(p => p.PieDetail.IsPieOfTheWeek);
+                return _appDbContext.PieDetails.Where(p => p.IsPieOfTheWeek);
             }
         }
 

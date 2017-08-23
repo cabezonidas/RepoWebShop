@@ -1,0 +1,10 @@
+﻿@model PieDetailsListViewModel
+
+<div class="row">
+
+    @foreach (var pieDetail in Model.PieDetails)
+    {
+        @Html.Partial("PieOverviewSummary", pieDetail)
+    }
+
+</div>

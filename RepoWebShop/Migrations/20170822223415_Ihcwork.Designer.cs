@@ -8,9 +8,10 @@ using RepoWebShop.Models;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170822223415_Ihcwork")]
+    partial class Ihcwork
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.3")
@@ -405,7 +406,7 @@ namespace RepoWebShop.Migrations
                         .HasForeignKey("CategoryId");
 
                     b.HasOne("RepoWebShop.Models.PieDetail", "PieDetail")
-                        .WithMany("Pies")
+                        .WithMany()
                         .HasForeignKey("PieDetailId");
                 });
 

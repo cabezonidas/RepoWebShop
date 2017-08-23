@@ -8,7 +8,7 @@ namespace RepoWebShop.Models
     public interface IPieRepository
     {
         IEnumerable<Pie> Pies { get; }
-        IEnumerable<Pie> PiesOfTheWeek { get; }
+        IEnumerable<PieDetail> PiesOfTheWeek { get; }
         Pie GetPieById(int pieId);
     }
 }

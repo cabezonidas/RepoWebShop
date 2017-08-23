@@ -1,0 +1,13 @@
+﻿@model PieDetailViewModel
+
+<div class="thumbnail">
+    <img alt="@Model.PieDetail.Name" src="@Model.PieDetail.ImageUrl">
+    <div class="caption-full">
+        <a href="#">@Model.PieDetail.Name</a>
+
+        <h4>@Model.PieDetail.ShortDescription</h4>
+        <p>@Model.PieDetail.LongDescription</p>
+        <p>Tiempo de preparación: @Model.PieDetail.PreparationTime hs</p>
+        @Html.Partial("PiePriceCarousel", Model)
+    </div>
+</div>

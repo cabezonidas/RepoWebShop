@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace RepoWebShop.ViewModels
 {
-    public class HomeViewModel
+    public class PieDetailViewModel
     {
-        public IEnumerable<PieDetailViewModel> PiesOfTheWeek { get; set; }
+        public PieDetail PieDetail { get; set; } 
+        public IEnumerable<Pie> Pies { get; set; }
     }
 }
