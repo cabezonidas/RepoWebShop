@@ -64,7 +64,17 @@
 
 <script type="text/javascript">
     function execute_my_onreturn(json) {
-        if (json.collection_status == 'approved') {
+        
+        $.ajax({
+            type: 'GET',
+            url: 'api/PaymentData/Process/' + json.collection_status + '/' + 1,
+            dataType: 'json',
+            success: function (data) { alert(data); },
+            error: function () { alert('err'); }
+        });
+        return false;
+
+        /*if (json.collection_status == 'approved') {
             alert('Pago acreditado');
         } else if (json.collection_status == 'pending') {
             alert('El usuario no completó el pago');
@@ -74,7 +84,7 @@
             alert('El pago fué rechazado, el usuario puede intentar nuevamente el pago');
         } else if (json.collection_status == null) {
             alert('El usuario no completó el proceso de pago, no se ha generado ningún pago');
-        }
+        }*/
     }
 </script>
 
