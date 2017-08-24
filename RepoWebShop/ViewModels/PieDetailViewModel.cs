@@ -8,7 +8,8 @@ namespace RepoWebShop.ViewModels
 {
     public class PieDetailViewModel
     {
-        public PieDetail PieDetail { get; set; } 
+
+        public PieDetail PieDetail { get; set; }
         public IEnumerable<Pie> Pies { get; set; }
     }
 }

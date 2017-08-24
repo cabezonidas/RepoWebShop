@@ -1,10 +1,64 @@
 ﻿@model PieDetailsListViewModel
 
-<div class="row">
+<h3 id="category-title">
+</h3>
 
-    @foreach (var pieDetail in Model.PieDetails)
-    {
-        @Html.Partial("PieOverviewSummary", pieDetail)
-    }
+<div id="container"></div>
 
-</div>
+@section scripts{
+    <script>
+        function getParameterByName(name){
+            var regexS = "[\\?&]" + name + "=([^&#]*)",
+            regex = new RegExp(regexS),
+            results = regex.exec(window.location.search);
+            if( results == null ){
+                return "";
+            } else {
+                return decodeURIComponent(results[1].replace(/\+/g, " "));
+            }
+        }
+
+        var itemsloaded = 0;
+        var takeitems = 3;
+
+        var category = getParameterByName("category");
+
+        if(category)
+            $('#category-title').append(category);
+        else
+            $('#category-title').append("Todos los productos");
+
+        $(document).ready(function () {
+            LoadMorePies();
+        });
+
+        $(window).scroll(function () {
+            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+                LoadMorePies();
+            }
+        });
+
+        function LoadMorePies() {
+            $.ajax({
+                type: 'GET',
+                url: '/api/PieDetailData/LoadMorePieDetails/' + category + '/' + itemsloaded + '/' + takeitems,
+                dataType: 'json',
+                success: onLoadSuccess,
+                error: function (ex) { console.log(ex); }
+            });
+            return false;
+        }
+        function onLoadSuccess(jsonData) {
+            if (jsonData == null) {
+                console.log('no data returned');
+                return;
+            }
+            $.each(jsonData, function (index, row) {
+                $.get("/api/PieDetailData/GetOverview/" + row.pieDetail.pieDetailId, function(data) {
+                  $("#container").append(data);
+                });
+            });
+            itemsloaded += takeitems;
+        }
+    </script>
+}

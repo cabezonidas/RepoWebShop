@@ -1,6 +1,10 @@
 ﻿@model PieDetailViewModel
 
-<div id="PieDetail-@Model.PieDetail.PieDetailId" class="carousel slide" style="height:150px; margin:10px;">
+@{
+    string id = Model.PieDetail.PieDetailId.ToString() + "-" + Guid.NewGuid().ToString();
+}
+
+<div id="@id" class="carousel slide" style="height:150px; margin:10px;">
     <div class="carousel-inner">
         @{
             var pies = Model.Pies.ToArray();
@@ -12,10 +16,13 @@
             }
         }
     </div>
-    <a class='carousel-control left' href='#PieDetail-@Model.PieDetail.PieDetailId' data-slide='prev' style='background-image:none;'>
-        <span class='glyphicon glyphicon-chevron-left' aria-hidden='true' style='color:darkseagreen'></span>
-    </a>
-    <a class='carousel-control right' href='#PieDetail-@Model.PieDetail.PieDetailId' data-slide='next' style='background-image:none;'>
-        <span class='glyphicon glyphicon-chevron-right' aria-hidden='true' style='color:darkseagreen'></span>
-    </a>
+    @if(pies.Length > 1)
+    { 
+        <a class='carousel-control left' href='#@id' data-slide='prev' style='background-image:none;'>
+            <span class='glyphicon glyphicon-chevron-left' aria-hidden='true' style='color:darkseagreen'></span>
+        </a>
+        <a class='carousel-control right' href='#@id' data-slide='next' style='background-image:none;'>
+            <span class='glyphicon glyphicon-chevron-right' aria-hidden='true' style='color:darkseagreen'></span>
+        </a>
+    }
 </div>
