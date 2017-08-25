@@ -41,8 +41,8 @@ namespace RepoWebShop
             services.AddTransient<IPieDetailRepository, PieDetailRepository>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ShoppingCart>(sp => ShoppingCart.GetCart(sp));
-            services.AddMvc();
             services.AddTransient<IOrderRepository, OrderRepository>();
+            services.AddMvc();
 
             services.AddMemoryCache();
             services.AddSession();

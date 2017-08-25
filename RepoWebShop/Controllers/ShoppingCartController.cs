@@ -27,6 +27,7 @@ namespace RepoWebShop.Controllers
             _pieRepository = pieRepository;
             _shoppingCart = shoppingCart;
             _env = env;
+            
             mp = new MP("8551380243694935", "xCQbHtu06Y3vBZvYY2wTg1zJ4qf0dRBd");
         }
 
@@ -41,7 +42,7 @@ namespace RepoWebShop.Controllers
             {
                 ShoppingCart = _shoppingCart,
                 ShoppingCartTotal = total,
-                Mercadolink = mp.getPaymentLink(total, _env.IsProduction()),
+                Mercadolink = mp.GetPaymentLink(total, _env.IsProduction()),
                 PreparationTime = highestPrepTime
             };
 

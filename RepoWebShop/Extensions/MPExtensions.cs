@@ -6,7 +6,7 @@ namespace RepoWebShop.Extensions
 {
     public static class MPExtensions
     {
-        public static string getPaymentLink(this MP mp, decimal total, bool isPrd)
+        public static string GetPaymentLink(this MP mp, decimal total, bool isPrd)
         {
             try
             {
@@ -14,14 +14,17 @@ namespace RepoWebShop.Extensions
                             "[{" +
                                 "\"title\":\"La Reposteria\"," +
                                 "\"quantity\":1," +
+                                //"\"id\":" + orderId +
                                 "\"currency_id\":\"ARS\"," +
                                 "\"unit_price\":" + total +
                             "}]" +
                         "}";
 
                 //mp.sandboxMode(true);
+
                 Hashtable preference = mp.createPreference(preferenceData);
                 string init_point = (isPrd ? "" : "sandbox_") + "init_point";
+                
                 return (preference["response"] as Hashtable)[init_point].ToString();
             }
             catch

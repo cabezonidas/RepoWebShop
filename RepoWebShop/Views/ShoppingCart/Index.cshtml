@@ -48,44 +48,37 @@
     </tfoot>
 </table>
 
-<div class="form-group">
-    <label asp-for="Comments" class="col-md-2 control-label"></label>
-    <div class="col-md-5">
-        <textarea placeholder="Quisiera agregar 'Feliz Cumple Mati!', gracias :)" asp-for="Comments" class="form-control" rows="5" id="comment" style="resize: vertical;"></textarea>
-        <span asp-validation-for="Comments" class="text-danger"></span>
-    </div>
-</div>
-<br/>
 <div class="text-center" style="vertical-align:baseline">
-    <a href="@Model.Mercadolink" name="MP-Checkout" class="btn btn-primary" onreturn="execute_my_onreturn">Pagar</a>
+    @*<a href="@Model.Mercadolink" name="MP-Checkout" class="btn btn-primary" onreturn="execute_my_onreturn">Pagar</a>*@
     <a class="btn btn-primary" asp-controller="Order" asp-action="Checkout">Reservar</a>
 </div>
 
+<div class="container">
+    <h2>Registration</h2>
+    <form action="" name="registration">
+
+        <label for="firstname">First Name</label>
+        <input type="text" name="firstname" id="firstname" placeholder="John">
+
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" placeholder="john@doe.com">
+
+        <button type="submit">Register</button>
+    </form>
+</div>
 
 <script type="text/javascript">
-    function execute_my_onreturn(json) {
-        
+    function payment(json) {
         $.ajax({
             type: 'GET',
-            url: 'api/PaymentData/Process/' + json.collection_status + '/' + 1,
+            url: 'api/PaymentData/Process/' + json.collection_status + '/',
             dataType: 'json',
             success: function (data) { alert(data); },
             error: function () { alert('err'); }
         });
         return false;
-
-        /*if (json.collection_status == 'approved') {
-            alert('Pago acreditado');
-        } else if (json.collection_status == 'pending') {
-            alert('El usuario no completó el pago');
-        } else if (json.collection_status == 'in_process') {
-            alert('El pago está siendo revisado');
-        } else if (json.collection_status == 'rejected') {
-            alert('El pago fué rechazado, el usuario puede intentar nuevamente el pago');
-        } else if (json.collection_status == null) {
-            alert('El usuario no completó el proceso de pago, no se ha generado ningún pago');
-        }*/
     }
 </script>
-
 <script type="text/javascript" src="https://www.mercadopago.com/org-img/jsapi/mptools/buttons/render.js"></script>
+
+

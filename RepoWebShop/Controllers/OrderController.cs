@@ -44,6 +44,8 @@ namespace RepoWebShop.Controllers
 
             if (ModelState.IsValid)
             {
+                order.OrderTotal = _shoppingCart.ShoppingCartItems.Select(x => x.Amount * x.Pie.Price).Sum();
+                order.Registration = GetCurrentUser();
                 _orderRepository.CreateOrder(order);
                 _shoppingCart.ClearCart();
                 return RedirectToAction("CheckoutComplete");
@@ -52,14 +54,19 @@ namespace RepoWebShop.Controllers
             return View(order);
 
         }
-
+        
+        [Authorize]
         public IActionResult CheckoutComplete()
         {
-            var firstName = (_userManager.Users.FirstOrDefault(x => x.UserName == HttpContext.User.Identity.Name) as Registration).FirstName;
-            ViewBag.CheckoutCompleteMessage = firstName +
-                                      ", gracias por tu reserva. Falta poco para disfrutar de nuestras delicias!";
+            var firstName = GetCurrentUser().FirstName;
+            ViewBag.CheckoutCompleteMessage = firstName + ", gracias por tu reserva. Falta poco para que disfrutes de nuestras delicias!";
 
             return View();
+        }
+
+        private Registration GetCurrentUser()
+        {
+            return (_userManager.Users.FirstOrDefault(x => x.UserName == HttpContext.User.Identity.Name) as Registration);
         }
     }
 }

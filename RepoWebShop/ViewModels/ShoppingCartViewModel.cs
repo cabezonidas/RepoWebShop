@@ -14,9 +14,5 @@ namespace RepoWebShop.ViewModels
         public decimal ShoppingCartTotal { get; set; }
         public string Mercadolink { get; set; }
         public int PreparationTime { get; set; }
-        
-        [Display(Name = "Comentarios")]
-        [StringLength(250)]
-        public string Comments { get; set; }
     }
 }

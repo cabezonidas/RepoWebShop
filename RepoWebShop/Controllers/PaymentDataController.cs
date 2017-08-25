@@ -25,6 +25,20 @@ namespace RepoWebShop.Controllers
         [Route("Process/{status}/{orderId}")]
         public IActionResult Index(string status, int orderId)
         {
+            //Write payments in table
+
+            /*if (json.collection_status == 'approved') {
+                alert('Pago acreditado');
+            } else if (json.collection_status == 'pending') {
+                alert('El usuario no completó el pago');
+            } else if (json.collection_status == 'in_process') {
+                alert('El pago está siendo revisado');
+            } else if (json.collection_status == 'rejected') {
+                alert('El pago fué rechazado, el usuario puede intentar nuevamente el pago');
+            } else if (json.collection_status == null) {
+                alert('El usuario no completó el proceso de pago, no se ha generado ningún pago');
+            }*/
+
             return Ok();
         }
     }
