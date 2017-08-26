@@ -22,6 +22,15 @@ namespace RepoWebShop.Controllers
         }
 
         [HttpGet]
+        [Route("Management")]
+        public IActionResult Management()
+        {
+            var orders = _orderRepository.GetAll();
+
+            return Ok(orders);
+        }
+
+        [HttpGet]
         [Route("SaveDraft/{bookingId}")]
         public IActionResult SaveDraft(string bookingId)
         {

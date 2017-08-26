@@ -1,0 +1,83 @@
+﻿<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
+<h2>Pedidos</h2>
+<div id='orders-div' style='display:none;' class='dataTables_wrapper'>
+    <table id="orders-table" class="display nowrap dataTable dtr-inline collapsed" cellspacing="0" role="grid" style="width: 100%;">
+        <thead>
+            <tr>
+                <th>Reserva</th>
+                <th>Pago</th> @*status*@
+                <th>Creado</th>
+                <th>Acreditacion</th> @*date*@
+                <th>Plazo (hs)</th>
+                <th>Entrega</th> @*date*@
+                <th>Retirado</th>
+                <th>Monto</th>
+            </tr>
+        </thead>
+        <tbody id='orders-table-tbody'></tbody>
+    </table>
+</div>
+<div id='orders-error' style='display:none;'>
+    <h2>
+        Esta pagina no esta disponible.
+    </h2>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        getOrders();
+    });
+
+    function getOrders() {
+        var url = "/api/PaymentData/Management";
+        $.ajax({
+            url: url,
+            method: "GET",
+            success: onSuccess,
+            error: function (error) {
+                console.log(error);
+                $('#locations-error').show();
+            }
+        });
+    }
+
+    function onSuccess(data) {
+        $.each(data, function (index, item) {
+            $('#orders-table-tbody').append(getRow(item));
+        });
+        $('#orders-table').DataTable();
+        $('#orders-div').parent().css('overflow', 'auto');
+        $('#orders-div').css('width', '100%');
+        $('#orders-div').show();
+    }
+
+    function getRow(item) {
+        var row = $('<tr>');
+        row.append('<td>' + item.bookingId + '</td>');
+        row.append('<td>' + item.status + '</td>');
+        row.append('<td>' + formatDate(item.orderPlaced) + '</td>');
+        row.append('<td>' + formatDate(item.payout) + '</td>');
+        row.append('<td>' + item.preparationTime + '</td>');
+        row.append('<td>' + formatDate(item.pickUp) + '</td>');
+        row.append('<td>' + (item.pickedUp ? 'Si' : 'No') + '</td>');
+        row.append('<td>' + item.orderTotal + '</td>');
+        return row;
+    }
+
+    function formatDate(date) {
+        var momentDate = moment(date);
+        var result = '';
+        if (momentDate.isValid())
+        {
+            console.log(momentDate)
+            result = '<div style="display: none;">' + momentDate.format('x') + '</div>';
+            result += '<div>';
+            result += momentDate.format('dddd') + ' ' + (momentDate.day() + 1);
+            result += '<br/>' + momentDate.format('hh:mm a');
+            result += '<br/>' + momentDate.format('MMMM');
+            result += '</div>';
+            return result;
+        }
+        return '';
+    }
+</script>

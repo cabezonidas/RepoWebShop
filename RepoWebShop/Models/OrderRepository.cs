@@ -33,14 +33,22 @@ namespace RepoWebShop.Models
             return _appDbContext.Orders.FirstOrDefault(x => x.BookingId == bookingId);
         }
 
+        public IEnumerable<Order> GetAll()
+        {
+            return _appDbContext.Orders.ToList();
+        }
+
         public void CreateOrder(Order order)
         {
             order.OrderPlaced = DateTime.Now;
+            order.PickedUp = false;
+
+            var shoppingCartItems = _shoppingCart.ShoppingCartItems;
+
+            order.PreparationTime = _shoppingCart.GetShoppingCartPreparationTime();
 
             _appDbContext.Orders.Add(order);
             _appDbContext.SaveChanges();
-
-            var shoppingCartItems = _shoppingCart.ShoppingCartItems;
 
             foreach (var shoppingCartItem in shoppingCartItems)
             {
@@ -51,6 +59,7 @@ namespace RepoWebShop.Models
                     OrderId = order.OrderId,
                     Price = shoppingCartItem.Pie.Price
                 };
+
                 _appDbContext.OrderDetails.Add(orderDetail);
             }
             _appDbContext.SaveChanges();

@@ -6,14 +6,14 @@ namespace RepoWebShop.Extensions
 {
     public static class MPExtensions
     {
-        public static string GetPaymentLink(this MP mp, decimal total, string bookingId, bool isPrd)
+        public static string GetPaymentLink(this MP mp, decimal total, string bookingId, bool isPrd, string host)
         {
             try
             {
                 String preferenceData =
                         "{\"items\":" +
                             "[{" +
-                                $"\"title\":\"La Reposteria ({bookingId})\"," +
+                                $"\"title\":\"La Reposteria - {bookingId}\"," +
                                 "\"quantity\":1," +
                                 $"\"id\":\"{bookingId}\"," +
                                 "\"currency_id\":\"ARS\"," +
@@ -21,9 +21,9 @@ namespace RepoWebShop.Extensions
                             "}]," +
                         "\"back_urls\":" +
                             "{" +
-                                $"\"success\":\"www.lareposteria.com.ar/Order/Status/{bookingId}\"," +
-                                $"\"pending\":\"www.lareposteria.com.ar/Order/Status/{bookingId}\"," +
-                                $"\"failure\":\"www.lareposteria.com.ar/Order/Status/{bookingId}\"" +
+                                $"\"success\":\"{host}/Order/Status/{bookingId}\"," +
+                                $"\"pending\":\"{host}/Order/Status/{bookingId}\"," +
+                                $"\"failure\":\"{host}/Order/Status/{bookingId}\"" +
                             "}" +
                         "}";
 

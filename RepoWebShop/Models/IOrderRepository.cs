@@ -11,5 +11,6 @@ namespace RepoWebShop.Models
         void UpdateOrderStatus(int orderId, string status);
         Order GetDraftOrderByBookingId(string bookingId);
         Order GetOrderByBookingId(string bookingId);
+        IEnumerable<Order> GetAll();
     }
 }

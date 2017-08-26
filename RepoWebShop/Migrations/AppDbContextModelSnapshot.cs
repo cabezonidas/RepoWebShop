@@ -209,9 +209,17 @@ namespace RepoWebShop.Migrations
 
                     b.Property<decimal>("OrderTotal");
 
+                    b.Property<DateTime?>("Payout");
+
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(25);
+
+                    b.Property<DateTime?>("PickUp");
+
+                    b.Property<bool>("PickedUp");
+
+                    b.Property<int>("PreparationTime");
 
                     b.Property<string>("RegistrationId");
 

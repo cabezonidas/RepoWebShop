@@ -69,6 +69,12 @@ namespace RepoWebShop.Controllers
             return View(orderstatus);
         }
 
+        //[Authorize]
+        public IActionResult Management()
+        {
+            return View();
+        }
+
         [Authorize]
         public IActionResult Checkout()
         {

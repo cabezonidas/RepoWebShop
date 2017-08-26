@@ -29,6 +29,12 @@ namespace RepoWebShop.Models
             return shoppingCartComment?.Comments;
         }
 
+        public int GetShoppingCartPreparationTime()
+        {
+            var items = GetShoppingCartItems();
+            return items.Count == 0 ? 0 : items.OrderByDescending(x => x.Pie.PieDetail.PreparationTime).First().Pie.PieDetail.PreparationTime;
+        }
+
         public void AddComments(string comments)
         {
             _appDbContext.ShoppingCartComments.Add(

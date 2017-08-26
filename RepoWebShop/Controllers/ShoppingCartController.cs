@@ -6,7 +6,6 @@ using mercadopago;
 using RepoWebShop.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
-
 namespace RepoWebShop.Controllers
 {
     public class ShoppingCartController : Controller
@@ -25,7 +24,7 @@ namespace RepoWebShop.Controllers
             _pieRepository = pieRepository;
             _shoppingCart = shoppingCart;
             _env = env;
-            _bookingId = Path.GetRandomFileName().Replace(".", "").ToUpper();
+            _bookingId = Path.GetRandomFileName().Replace(".", "").Substring(0, 6).ToUpper();
             _mp = new MP("8551380243694935", "xCQbHtu06Y3vBZvYY2wTg1zJ4qf0dRBd");
         }
 
@@ -34,13 +33,14 @@ namespace RepoWebShop.Controllers
             var items = _shoppingCart.GetShoppingCartItems();
             _shoppingCart.ShoppingCartItems = items;
             var total = _shoppingCart.GetShoppingCartTotal();
-            var highestPrepTime = items.Count == 0 ? 0 : items.OrderByDescending(x => x.Pie.PieDetail.PreparationTime).First().Pie.PieDetail.PreparationTime;
+            var highestPrepTime = _shoppingCart.GetShoppingCartPreparationTime();
+
 
             var shoppingCartViewModel = new ShoppingCartViewModel
             {
                 ShoppingCart = _shoppingCart,
                 ShoppingCartTotal = total,
-                Mercadolink = _mp.GetPaymentLink(total, _bookingId, _env.IsProduction()),
+                Mercadolink = _mp.GetPaymentLink(total, _bookingId, _env.IsProduction(), Request.Host.ToString()),
                 PreparationTime = highestPrepTime,
                 BookingId = _bookingId
             };

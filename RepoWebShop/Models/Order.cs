@@ -31,7 +31,16 @@ namespace RepoWebShop.Models
         [ScaffoldColumn(false)]
         public DateTime OrderPlaced { get; set; }
 
+        public bool PickedUp { get; set; }
+
+        public DateTime? Payout { get; set; }
+
+        public int PreparationTime { get; set; }
+
+        public DateTime? PickUp { get; set; }
+
         public virtual Registration Registration { get; set; }
+        
         public string BookingId { get; set; }
         public string Status { get; set; }
     }
