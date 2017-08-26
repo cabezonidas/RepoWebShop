@@ -32,5 +32,7 @@ namespace RepoWebShop.Models
         public DateTime OrderPlaced { get; set; }
 
         public virtual Registration Registration { get; set; }
+        public string BookingId { get; set; }
+        public string Status { get; set; }
     }
 }

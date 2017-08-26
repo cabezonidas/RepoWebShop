@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Models;
 using Microsoft.AspNetCore.Authorization;
-using System.Collections;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using System.IO;
+using RepoWebShop.ViewModels;
 
 namespace RepoWebShop.Controllers
 {
@@ -22,6 +20,53 @@ namespace RepoWebShop.Controllers
             _orderRepository = orderRepository;
             _shoppingCart = shoppingCart;
             _userManager = userManager;
+        }
+
+        public IActionResult Status(string id)
+        {
+            Order order = _orderRepository.GetOrderByBookingId(id);
+
+            string statusCode = order?.Status;
+
+            string status = string.Empty;
+            string description = string.Empty;
+
+            switch (statusCode)
+            {
+                case "approved":
+                    status = "Aprobado";
+                    description = "Gracias! Tu compra ya fue aceptada y ya estamos trabajando para que disfrutes de nuestras mejores delicias.";
+                    break;
+                case "pending":
+                    status = "Pendiente";
+                    description = "Tu compra todavía no fue aceptada. Está pendiente.";
+                    break;
+                case "in_process":
+                    status = "En proceso";
+                    description = "La acreditacion aún está en proceso.";
+                    break;
+                case "rejected":
+                    status = "Rechazado";
+                    description = "Lamentablemente la transacción fue rechazada. Podrías intentar con otros medios de pago.";
+                    break;
+                case "draft":
+                    status = "Sin confirmación";
+                    description = "Lamentablemente no hemos recibido detalles de pago de esta reserva.";
+                    break;
+                default:
+                    status = "No encontrado";
+                    description = "El código que buscas no se encuentra en nuestra base de datos.";
+                    break;
+            }
+
+            OrderStatusViewModel orderstatus = new OrderStatusViewModel()
+            {
+                BookingId = id ?? string.Empty,
+                Status = status,
+                Description = description
+            };
+
+            return View(orderstatus);
         }
 
         [Authorize]
@@ -46,13 +91,15 @@ namespace RepoWebShop.Controllers
             {
                 order.OrderTotal = _shoppingCart.ShoppingCartItems.Select(x => x.Amount * x.Pie.Price).Sum();
                 order.Registration = GetCurrentUser();
+                order.Comments = _shoppingCart.GetShoppingCartComments();
+                order.BookingId = Path.GetRandomFileName().Replace(".", "").ToUpper();
+                order.Status = "reservation";
                 _orderRepository.CreateOrder(order);
                 _shoppingCart.ClearCart();
+                //Mandar mail al cliente con el codigo y los detalles
                 return RedirectToAction("CheckoutComplete");
             }
-
             return View(order);
-
         }
         
         [Authorize]

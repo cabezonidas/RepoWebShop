@@ -8,5 +8,8 @@ namespace RepoWebShop.Models
     public interface IOrderRepository
     {
         void CreateOrder(Order order);
+        void UpdateOrderStatus(int orderId, string status);
+        Order GetDraftOrderByBookingId(string bookingId);
+        Order GetOrderByBookingId(string bookingId);
     }
 }

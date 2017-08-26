@@ -19,6 +19,29 @@ namespace RepoWebShop.Models
 
         public List<ShoppingCartItem> ShoppingCartItems { get; set; }
 
+        public string GetShoppingCartComments()
+        {
+            var shoppingCartComment = _appDbContext.ShoppingCartComments
+                .Where(c => c.ShoppingCartId == ShoppingCartId)
+                .OrderByDescending(c => c.Created)
+                .FirstOrDefault();
+
+            return shoppingCartComment?.Comments;
+        }
+
+        public void AddComments(string comments)
+        {
+            _appDbContext.ShoppingCartComments.Add(
+                new ShoppingCartComment()
+                {
+                    ShoppingCartId = ShoppingCartId,
+                    Comments = comments,
+                    Created = DateTime.Now
+                }
+            );
+            _appDbContext.SaveChanges();
+        }
+
         public static ShoppingCart GetCart(IServiceProvider services)
         {
             ISession session = services.GetRequiredService<IHttpContextAccessor>()?

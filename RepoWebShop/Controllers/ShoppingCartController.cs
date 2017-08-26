@@ -1,34 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
 using mercadopago;
-using System.Collections;
 using RepoWebShop.Extensions;
 using Microsoft.AspNetCore.Hosting;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using System.IO;
 
 namespace RepoWebShop.Controllers
 {
     public class ShoppingCartController : Controller
     {
+        private readonly IOrderRepository _orderRepository;
         private readonly IPieRepository _pieRepository;
         private readonly ShoppingCart _shoppingCart;
         private readonly IHostingEnvironment _env;
-        private readonly MP mp;
+        private readonly MP _mp;
+        private readonly string _bookingId;
 
 
-        public ShoppingCartController(IPieRepository pieRepository, ShoppingCart shoppingCart, IHostingEnvironment env)
+        public ShoppingCartController(IOrderRepository orderRepository, IPieRepository pieRepository, ShoppingCart shoppingCart, IHostingEnvironment env)
         {
+            _orderRepository = orderRepository;
             _pieRepository = pieRepository;
             _shoppingCart = shoppingCart;
             _env = env;
-            
-            mp = new MP("8551380243694935", "xCQbHtu06Y3vBZvYY2wTg1zJ4qf0dRBd");
+            _bookingId = Path.GetRandomFileName().Replace(".", "").ToUpper();
+            _mp = new MP("8551380243694935", "xCQbHtu06Y3vBZvYY2wTg1zJ4qf0dRBd");
         }
 
         public ViewResult Index()
@@ -42,10 +40,11 @@ namespace RepoWebShop.Controllers
             {
                 ShoppingCart = _shoppingCart,
                 ShoppingCartTotal = total,
-                Mercadolink = mp.GetPaymentLink(total, _env.IsProduction()),
-                PreparationTime = highestPrepTime
+                Mercadolink = _mp.GetPaymentLink(total, _bookingId, _env.IsProduction()),
+                PreparationTime = highestPrepTime,
+                BookingId = _bookingId
             };
-
+            
             return View(shoppingCartViewModel);
         }
 

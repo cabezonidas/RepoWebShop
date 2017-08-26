@@ -33,7 +33,7 @@
         });
 
         $(window).scroll(function () {
-            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+            if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
                 LoadMorePies();
             }
         });
@@ -48,6 +48,7 @@
             });
             return false;
         }
+
         function onLoadSuccess(jsonData) {
             if (jsonData == null) {
                 console.log('no data returned');

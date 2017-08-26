@@ -12,34 +12,75 @@ namespace RepoWebShop.Controllers
     [Route("api/[controller]")]
     public class PaymentDataController : Controller
     {
-        private readonly IPieDetailRepository _pieDetailRepository;
-        private readonly IPieRepository _pieRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly ShoppingCart _shoppingCart;
 
-        public PaymentDataController(IPieDetailRepository pieDetailRepository, IPieRepository pieRepository)
+        public PaymentDataController(IOrderRepository orderRepository, ShoppingCart shoppingCart)
         {
-            _pieDetailRepository = pieDetailRepository;
-            _pieRepository = pieRepository;
+            _orderRepository = orderRepository;
+            _shoppingCart = shoppingCart;
         }
 
         [HttpGet]
-        [Route("Process/{status}/{orderId}")]
-        public IActionResult Index(string status, int orderId)
+        [Route("SaveDraft/{bookingId}")]
+        public IActionResult SaveDraft(string bookingId)
         {
-            //Write payments in table
+            Order order = _orderRepository.GetDraftOrderByBookingId(bookingId);
+            if (order != null)
+            {
+                return Ok();
+            }
 
-            /*if (json.collection_status == 'approved') {
-                alert('Pago acreditado');
-            } else if (json.collection_status == 'pending') {
-                alert('El usuario no completó el pago');
-            } else if (json.collection_status == 'in_process') {
-                alert('El pago está siendo revisado');
-            } else if (json.collection_status == 'rejected') {
-                alert('El pago fué rechazado, el usuario puede intentar nuevamente el pago');
-            } else if (json.collection_status == null) {
-                alert('El usuario no completó el proceso de pago, no se ha generado ningún pago');
-            }*/
-
+            var items = _shoppingCart.GetShoppingCartItems();
+            _shoppingCart.ShoppingCartItems = items;
+            order = new Order();
+            order.OrderTotal = _shoppingCart.ShoppingCartItems.Select(x => x.Amount * x.Pie.Price).Sum();
+            order.Comments = _shoppingCart.GetShoppingCartComments();
+            order.PhoneNumber = "0";
+            order.Status = "draft";
+            order.BookingId = bookingId;
+            _orderRepository.CreateOrder(order);
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("Process/{status}/{bookingId}")]
+        public IActionResult Process(string status, string bookingId)
+        {
+            var data = new { result = "" };
+            switch (status)
+            {
+                case "approved":
+                case "pending":
+                case "in_process":
+                    HandlePayment(status, bookingId);
+                    return Ok(new { status = status });
+                case "rejected":
+                default:
+                    break;
+            }
+            return BadRequest(new { status = status });
+        }
+
+        private void HandlePayment(string status, string bookingId)
+        {
+            Order order = _orderRepository.GetDraftOrderByBookingId(bookingId);
+            if(order != null)
+            {
+                order.Status = status;
+                _orderRepository.UpdateOrderStatus(order.OrderId, status);
+            }
+            else
+            {
+                order = new Order();
+                order.OrderTotal = _shoppingCart.ShoppingCartItems.Select(x => x.Amount * x.Pie.Price).Sum();
+                order.Comments = _shoppingCart.GetShoppingCartComments();
+                order.PhoneNumber = "0";
+                order.Status = status;
+                _orderRepository.CreateOrder(order);
+            }
+
+            _shoppingCart.ClearCart();
         }
     }
 }

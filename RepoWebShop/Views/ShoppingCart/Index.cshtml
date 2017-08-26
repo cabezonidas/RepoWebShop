@@ -1,8 +1,10 @@
 ﻿@model ShoppingCartViewModel
 
+
 <h2>Tu carrito de compras</h2>
 <h3>Tu pedido va a estar listo en @Model.PreparationTime hs una vez acreditado el pago</h3>
 <h4>Todas las órdenes son procesadas en nuestros horarios de atención</h4>
+
 <table class="table table-striped table-condensed">
     <thead>
         <tr>
@@ -48,36 +50,56 @@
     </tfoot>
 </table>
 
+<div class="form-group">
+    <label class="col-md-2 control-label">Comentarios</label>
+    <div class="col-md-5">
+        <textarea id="comments" placeholder="Quisiera agregar 'Feliz Cumple Mati!', gracias :)" class="form-control" rows="5" style="resize: vertical;"></textarea>
+    </div>
+</div>
+
 <div class="text-center" style="vertical-align:baseline">
-    @*<a href="@Model.Mercadolink" name="MP-Checkout" class="btn btn-primary" onreturn="execute_my_onreturn">Pagar</a>*@
+    <a id="mercadolink" href="@Model.Mercadolink" name="MP-Checkout" class="btn btn-primary" onreturn="payment">Pagar</a>
     <a class="btn btn-primary" asp-controller="Order" asp-action="Checkout">Reservar</a>
 </div>
 
-<div class="container">
-    <h2>Registration</h2>
-    <form action="" name="registration">
-
-        <label for="firstname">First Name</label>
-        <input type="text" name="firstname" id="firstname" placeholder="John">
-
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email" placeholder="john@doe.com">
-
-        <button type="submit">Register</button>
-    </form>
-</div>
-
 <script type="text/javascript">
+    $.ajax({
+        type: 'GET',
+        url: 'api/ShoppingCartData/GetComments/',
+        dataType: 'json',
+        success: function (data) {
+            $('#comments').append(data.comments);
+        },
+        error: function () { console.log('err'); }
+    });
+
     function payment(json) {
+        console.log(json);
         $.ajax({
             type: 'GET',
-            url: 'api/PaymentData/Process/' + json.collection_status + '/',
+            url: 'api/PaymentData/Process/' + json.collection_status + '/' + '@Model.BookingId',
             dataType: 'json',
-            success: function (data) { alert(data); },
-            error: function () { alert('err'); }
+            success: function (data) {
+                window.location.assign('Order/Status/' + '@Model.BookingId');
+            }
         });
         return false;
     }
+
+    $("a").on('click', function () {
+        $.ajax({
+            type: 'GET',
+            url: 'api/ShoppingCartData/AddComments/' + $('#comments').val()
+        });
+    });
+
+    $("#mercadolink").on('click', function () {
+        $.ajax({
+            type: 'GET',
+            url: 'api/PaymentData/SaveDraft/' + '@Model.BookingId'
+        });
+    });
+
 </script>
 <script type="text/javascript" src="https://www.mercadopago.com/org-img/jsapi/mptools/buttons/render.js"></script>
 

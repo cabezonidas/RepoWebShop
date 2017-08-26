@@ -17,12 +17,28 @@ namespace RepoWebShop.Models
             _shoppingCart = shoppingCart;
         }
 
+        public void UpdateOrderStatus(int orderId, string status)
+        {
+            _appDbContext.Orders.First(x => x.OrderId == orderId).Status = status;
+            _appDbContext.SaveChanges();
+        }
+
+        public Order GetDraftOrderByBookingId(string bookingId)
+        {
+            return _appDbContext.Orders.FirstOrDefault(x => x.BookingId == bookingId && x.Status == "draft");
+        }
+
+        public Order GetOrderByBookingId(string bookingId)
+        {
+            return _appDbContext.Orders.FirstOrDefault(x => x.BookingId == bookingId);
+        }
 
         public void CreateOrder(Order order)
         {
             order.OrderPlaced = DateTime.Now;
 
             _appDbContext.Orders.Add(order);
+            _appDbContext.SaveChanges();
 
             var shoppingCartItems = _shoppingCart.ShoppingCartItems;
 
@@ -35,10 +51,8 @@ namespace RepoWebShop.Models
                     OrderId = order.OrderId,
                     Price = shoppingCartItem.Pie.Price
                 };
-
                 _appDbContext.OrderDetails.Add(orderDetail);
             }
-
             _appDbContext.SaveChanges();
         }
     }
