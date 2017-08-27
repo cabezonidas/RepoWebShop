@@ -1,0 +1,68 @@
+﻿@model OrderDetailsViewModel
+
+<h2>@Model.Order.BookingId</h2>
+
+<div class="container">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Cantidad</th>
+                <th>Producto</th>
+                <th>Precio</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td> @item.Amount </td>
+                    <td> @item.Pie.Name </td>
+                    <td> @item.Pie.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<br/>
+<table class="table table-user-information" style="max-width: 600px">
+    <tbody>
+        <tr>
+            <td><strong>Estado</strong></td>
+            <td colspan="2">@Model.Order.Status</td>
+        </tr>
+        <tr>
+            <td><strong>Comentarios</strong></td>
+            <td colspan="2">@Model.Order.Comments</td>
+        </tr>
+        <tr>
+            <td><strong>Fecha Creacion</strong></td>
+            <td colspan="2">@Model.Order.OrderPlaced.ToShortDateString() @Model.Order.OrderPlaced.ToShortTimeString() </td>
+        </tr>
+        <tr>
+            <td><strong>Plazo</strong></td>
+            <td colspan="2">@Model.Order.PreparationTime</td>
+        </tr>
+        <tr>
+            <td><strong>Entrega Pautada</strong></td>
+            <td>
+                <div class="input-group date" data-provide="datepicker">
+                    <input type="text" class="form-control">
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-th"></span>
+                    </div>
+                </div>
+            </td>
+            <td><input type="submit" class="btn btn-primary" value="Guardar" /></td>
+        </tr>
+        <tr>
+            <td><strong>Entregado</strong></td>
+            <td>@(@Model.Order.PickedUp ? "Si" : "No")</td>
+            <td><input type="submit" class="btn btn-primary" value="Cambiar" /></td>
+        </tr>
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $('.datepicker').datepicker();
+</script>
+

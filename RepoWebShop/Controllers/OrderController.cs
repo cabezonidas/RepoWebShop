@@ -13,10 +13,12 @@ namespace RepoWebShop.Controllers
     {
         private readonly IOrderRepository _orderRepository;
         private readonly ShoppingCart _shoppingCart;
+        private readonly IPieDetailRepository _pieDetailRepository;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public OrderController(IOrderRepository orderRepository, ShoppingCart shoppingCart, UserManager<IdentityUser> userManager)
+        public OrderController(IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, ShoppingCart shoppingCart, UserManager<IdentityUser> userManager)
         {
+            _pieDetailRepository = pieDetailRepository;
             _orderRepository = orderRepository;
             _shoppingCart = shoppingCart;
             _userManager = userManager;
@@ -69,10 +71,30 @@ namespace RepoWebShop.Controllers
             return View(orderstatus);
         }
 
-        //[Authorize]
+        //[Authorize] administrator
         public IActionResult Management()
         {
             return View();
+        }
+
+        //[Authorize]
+        public IActionResult Detail(int id)
+        {
+            Order order = _orderRepository.GetOrder(id);
+            if (order != null)
+            {
+                var items = _orderRepository.GetOrderDetails(order.OrderId);
+
+                OrderDetailsViewModel orderDetails = new OrderDetailsViewModel()
+                {
+                    Order = order,
+                    Items = items
+                };
+
+                return View(orderDetails);
+            }
+            else
+                return NotFound();
         }
 
         [Authorize]
@@ -98,10 +120,11 @@ namespace RepoWebShop.Controllers
                 order.OrderTotal = _shoppingCart.ShoppingCartItems.Select(x => x.Amount * x.Pie.Price).Sum();
                 order.Registration = GetCurrentUser();
                 order.Comments = _shoppingCart.GetShoppingCartComments();
-                order.BookingId = Path.GetRandomFileName().Replace(".", "").ToUpper();
+                order.BookingId = Path.GetRandomFileName().Substring(0,6).ToUpper();
                 order.Status = "reservation";
                 _orderRepository.CreateOrder(order);
                 _shoppingCart.ClearCart();
+
                 //Mandar mail al cliente con el codigo y los detalles
                 return RedirectToAction("CheckoutComplete");
             }

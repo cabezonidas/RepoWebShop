@@ -12,5 +12,7 @@ namespace RepoWebShop.Models
         Order GetDraftOrderByBookingId(string bookingId);
         Order GetOrderByBookingId(string bookingId);
         IEnumerable<Order> GetAll();
+        Order GetOrder(int id);
+        IEnumerable<OrderDetail> GetOrderDetails(int id);
     }
 }

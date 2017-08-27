@@ -1,5 +1,4 @@
-﻿<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
-<h2>Pedidos</h2>
+﻿<h2>Pedidos</h2>
 <div id='orders-div' style='display:none;' class='dataTables_wrapper'>
     <table id="orders-table" class="display nowrap dataTable dtr-inline collapsed" cellspacing="0" role="grid" style="width: 100%;">
         <thead>
@@ -53,7 +52,7 @@
 
     function getRow(item) {
         var row = $('<tr>');
-        row.append('<td>' + item.bookingId + '</td>');
+        row.append('<td><a href="Detail/' + item.orderId + '">' + item.bookingId + '</a></td>');
         row.append('<td>' + item.status + '</td>');
         row.append('<td>' + formatDate(item.orderPlaced) + '</td>');
         row.append('<td>' + formatDate(item.payout) + '</td>');

@@ -24,7 +24,7 @@ namespace RepoWebShop.Controllers
             _pieRepository = pieRepository;
             _shoppingCart = shoppingCart;
             _env = env;
-            _bookingId = Path.GetRandomFileName().Replace(".", "").Substring(0, 6).ToUpper();
+            _bookingId = Path.GetRandomFileName().Substring(0, 6).ToUpper();
             _mp = new MP("8551380243694935", "xCQbHtu06Y3vBZvYY2wTg1zJ4qf0dRBd");
         }
 

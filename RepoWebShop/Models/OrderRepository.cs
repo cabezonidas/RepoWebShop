@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace RepoWebShop.Models
 {
@@ -31,6 +32,18 @@ namespace RepoWebShop.Models
         public Order GetOrderByBookingId(string bookingId)
         {
             return _appDbContext.Orders.FirstOrDefault(x => x.BookingId == bookingId);
+        }
+
+        public Order GetOrder(int id)
+        {
+            return _appDbContext.Orders.FirstOrDefault(x => x.OrderId == id);
+        }
+
+
+
+        public IEnumerable<OrderDetail> GetOrderDetails(int id)
+        {
+            return _appDbContext.OrderDetails.Include(x => x.Pie).Where(x => x.OrderId == id);
         }
 
         public IEnumerable<Order> GetAll()
