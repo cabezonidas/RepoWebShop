@@ -33,6 +33,10 @@
                     @await Component.InvokeAsync("CategoryMenu")
                     <li><a asp-controller="Contact" asp-action="Index">Contacto</a></li>
                     @await  Component.InvokeAsync("ShoppingCartSummary")
+                    @if (this.User.IsInRole("Administrator"))
+                    {
+                        <li><a asp-controller="Order" asp-action="Management">Pedidos</a></li>
+                    }
                 </ul>
                 @await Html.PartialAsync("LoginPartial")
             </div>

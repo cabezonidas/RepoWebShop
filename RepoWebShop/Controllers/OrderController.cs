@@ -71,13 +71,13 @@ namespace RepoWebShop.Controllers
             return View(orderstatus);
         }
 
-        //[Authorize] administrator
+        [Authorize(Roles = "Administrator")]
         public IActionResult Management()
         {
             return View();
         }
 
-        //[Authorize]
+        [Authorize(Roles = "Administrator")]
         public IActionResult Detail(int id)
         {
             Order order = _orderRepository.GetOrder(id);
@@ -134,7 +134,7 @@ namespace RepoWebShop.Controllers
         [Authorize]
         public IActionResult CheckoutComplete()
         {
-            var firstName = GetCurrentUser().FirstName;
+            var firstName = GetCurrentUser()?.FirstName ?? "Estimado/a";
             ViewBag.CheckoutCompleteMessage = firstName + ", gracias por tu reserva. Falta poco para que disfrutes de nuestras delicias!";
 
             return View();

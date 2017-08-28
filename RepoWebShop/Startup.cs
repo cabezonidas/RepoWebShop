@@ -11,6 +11,7 @@ using RepoWebShop.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace RepoWebShop
 {
@@ -49,7 +50,7 @@ namespace RepoWebShop
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             if(env.IsDevelopment())
             {
@@ -79,6 +80,61 @@ namespace RepoWebShop
             });
 
             DbInitializer.Seed(app);
+            CreateRoles(serviceProvider);
+        }
+
+        private void CreateRoles(IServiceProvider serviceProvider)
+        {
+            /*_userManager.
+
+            var result = await _userManager.CreateAsync(registration, registration.Password);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            */
+
+
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            Task<IdentityResult> roleResult;
+            string username = "cabezonidas";
+
+            //Check that there is an Administrator role and create if not
+            Task<bool> hasAdminRole = roleManager.RoleExistsAsync("Administrator");
+            hasAdminRole.Wait();
+
+            if (!hasAdminRole.Result)
+            {
+                roleResult = roleManager.CreateAsync(new IdentityRole("Administrator"));
+                roleResult.Wait();
+            }
+
+            //Check if the admin user exists and create it if not
+            //Add to the Administrator role
+
+            Task<IdentityUser> testUser = userManager.FindByNameAsync(username);
+            testUser.Wait();
+
+            if (testUser.Result == null)
+            {
+                IdentityUser administrator = new IdentityUser()
+                {
+                    UserName = username,
+                    Email = "sebastian.scd@gmail.com",
+                    PhoneNumber = "02102790126",
+                };
+                
+                Task<IdentityResult> newUser = userManager.CreateAsync(administrator, "Lgaga132!");
+                newUser.Wait();
+
+                if (newUser.Result.Succeeded)
+                {
+                    Task<IdentityResult> newUserRole = userManager.AddToRoleAsync(administrator, "Administrator");
+                    newUserRole.Wait();
+                }
+            }
         }
     }
 }
