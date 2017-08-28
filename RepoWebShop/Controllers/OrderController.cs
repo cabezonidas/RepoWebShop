@@ -119,7 +119,7 @@ namespace RepoWebShop.Controllers
             {
                 order.OrderTotal = _shoppingCart.ShoppingCartItems.Select(x => x.Amount * x.Pie.Price).Sum();
                 order.Registration = GetCurrentUser();
-                order.Comments = _shoppingCart.GetShoppingCartComments();
+                order.CustomerComments = _shoppingCart.GetShoppingCartComments();
                 order.BookingId = Path.GetRandomFileName().Substring(0,6).ToUpper();
                 order.Status = "reservation";
                 _orderRepository.CreateOrder(order);

@@ -44,7 +44,7 @@ namespace RepoWebShop.Controllers
             _shoppingCart.ShoppingCartItems = items;
             order = new Order();
             order.OrderTotal = _shoppingCart.ShoppingCartItems.Select(x => x.Amount * x.Pie.Price).Sum();
-            order.Comments = _shoppingCart.GetShoppingCartComments();
+            order.CustomerComments = _shoppingCart.GetShoppingCartComments();
             order.PhoneNumber = "0";
             order.Status = "draft";
             order.BookingId = bookingId;
@@ -83,7 +83,7 @@ namespace RepoWebShop.Controllers
             {
                 order = new Order();
                 order.OrderTotal = _shoppingCart.ShoppingCartItems.Select(x => x.Amount * x.Pie.Price).Sum();
-                order.Comments = _shoppingCart.GetShoppingCartComments();
+                order.CustomerComments = _shoppingCart.GetShoppingCartComments();
                 order.PhoneNumber = "0";
                 order.Status = status;
                 _orderRepository.CreateOrder(order);

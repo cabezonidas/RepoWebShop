@@ -1,5 +1,9 @@
 ﻿@model OrderDetailsViewModel
 
+@{
+    var pickUp = Model.Order.PickUp?.ToString("dd'/'MM'/'yyyy") ?? string.Empty;
+}
+
 <h2>@Model.Order.BookingId</h2>
 
 <div class="container">
@@ -32,7 +36,7 @@
         </tr>
         <tr>
             <td><strong>Comentarios</strong></td>
-            <td colspan="2">@Model.Order.Comments</td>
+            <td colspan="2">@Model.Order.CustomerComments</td>
         </tr>
         <tr>
             <td><strong>Fecha Creacion</strong></td>
@@ -46,23 +50,65 @@
             <td><strong>Entrega Pautada</strong></td>
             <td>
                 <div class="input-group date" data-provide="datepicker">
-                    <input type="text" class="form-control">
+                    <input id="pickUpDateSubmit" type="text" class="form-control" value="@pickUp">
                     <div class="input-group-addon">
                         <span class="glyphicon glyphicon-th"></span>
                     </div>
                 </div>
             </td>
-            <td><input type="submit" class="btn btn-primary" value="Guardar" /></td>
+            <td><input id="pickUpSubmit" type="submit" class="btn btn-primary" value="Guardar" /></td>
         </tr>
         <tr>
             <td><strong>Entregado</strong></td>
             <td>@(@Model.Order.PickedUp ? "Si" : "No")</td>
             <td><input type="submit" class="btn btn-primary" value="Cambiar" /></td>
         </tr>
+        <tr>
+            <td><strong>Comentarios Agregados</strong></td>
+            <td>
+                <textarea id="comments" style="resize: vertical; width:100%">@Model.Order.ManagementComments</textarea>
+            </td>
+            <td><input id="commentsSubmit" type="submit" class="btn btn-primary" value="Guardar" /></td>
+        </tr>
     </tbody>
 </table>
 
 <script type="text/javascript">
+    $.fn.datepicker.defaults.format = "dd/mm/yyyy";
     $('.datepicker').datepicker();
+
+    $("#commentsSubmit").on('click', function () {
+        $.ajax({
+            type: 'GET',
+            url: '/api/OrderData/AddComments/' + '@Model.Order.OrderId' + '/' + $("#comments").val(),
+            success: function () { alert('success'); },
+            error: function () { alert('error'); }
+        });
+    });
+    $("#pickUpSubmit").on('click', function () {
+        var parts = $("#pickUpDateSubmit").val().split("/");
+        var date = new Date(parts[2], parts[1] - 1, parts[0]);
+
+        $.ajax({
+            type: 'GET',
+            url: '/api/OrderData/UpdatePickUpDate/' + '@Model.Order.OrderId' + '/' + date.toUTCString(),
+            success: function () { alert('success'); },
+            error: function () { alert('error'); }
+        });
+    });
+    /*
+    api/OrderData/AddComments/{orderId}/{comments}")]
+        public IActionResult AddComments(int orderId, string comments)
+        {
+            _orderRepository.UpdateManagementComments(orderId, comments);
+            return View();
+        }
+
+        [Route("UpdatePickUpDate/{orderId}/{pickUp}")]
+
+    */
+
+
+
 </script>
 

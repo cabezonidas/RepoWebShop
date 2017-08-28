@@ -14,5 +14,7 @@ namespace RepoWebShop.Models
         IEnumerable<Order> GetAll();
         Order GetOrder(int id);
         IEnumerable<OrderDetail> GetOrderDetails(int id);
+        void UpdateManagementComments(int orderId, string comments);
+        void UpdatePickUpDate(int orderId, DateTime pickUp);
     }
 }

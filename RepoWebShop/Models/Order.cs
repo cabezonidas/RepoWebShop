@@ -20,8 +20,7 @@ namespace RepoWebShop.Models
         public string PhoneNumber { get; set; }
 
         [Display(Name = "Comentarios")]
-        [StringLength(250)]
-        public string Comments { get; set; }
+        public string CustomerComments { get; set; }
 
         [BindNever]
         [ScaffoldColumn(false)]
@@ -40,7 +39,9 @@ namespace RepoWebShop.Models
         public DateTime? PickUp { get; set; }
 
         public virtual Registration Registration { get; set; }
-        
+
+        public string ManagementComments { get; set; }
+
         public string BookingId { get; set; }
         public string Status { get; set; }
     }

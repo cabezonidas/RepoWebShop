@@ -17,6 +17,18 @@ namespace RepoWebShop.Models
             _appDbContext = appDbContext;
             _shoppingCart = shoppingCart;
         }
+        
+        public void UpdateManagementComments(int orderId, string comments)
+        {
+            _appDbContext.Orders.First(x => x.OrderId == orderId).ManagementComments = comments;
+            _appDbContext.SaveChanges();
+        }
+
+        public void UpdatePickUpDate(int orderId, DateTime pickUp)
+        {
+            _appDbContext.Orders.First(x => x.OrderId == orderId).PickUp = pickUp;
+            _appDbContext.SaveChanges();
+        }
 
         public void UpdateOrderStatus(int orderId, string status)
         {
