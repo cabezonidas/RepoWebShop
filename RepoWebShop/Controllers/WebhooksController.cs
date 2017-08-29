@@ -14,7 +14,7 @@ namespace RepoWebShop.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            return View();
+            return Ok();
         }
 
         /*private void SeedWebhooks(APIContext apiContext)

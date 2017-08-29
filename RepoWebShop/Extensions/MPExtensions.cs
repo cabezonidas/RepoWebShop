@@ -27,7 +27,7 @@ namespace RepoWebShop.Extensions
                             "}" +
                         "}";
 
-                //mp.sandboxMode(true);
+                mp.sandboxMode(!isPrd);
 
                 Hashtable preference = mp.createPreference(preferenceData);
                 string init_point = (isPrd ? "" : "sandbox_") + "init_point";
