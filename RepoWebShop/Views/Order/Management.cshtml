@@ -53,7 +53,7 @@
     function getRow(item) {
         var row = $('<tr>');
         row.append('<td><a href="Detail/' + item.orderId + '">' + item.bookingId + '</a></td>');
-        row.append('<td>' + item.status + '</td>');
+        row.append('<td>' + statusCode2DisplayValue(item.status) + '</td>');
         row.append('<td>' + formatDate(item.orderPlaced) + '</td>');
         row.append('<td>' + formatDate(item.payout) + '</td>');
         row.append('<td>' + item.preparationTime + '</td>');
@@ -61,22 +61,5 @@
         row.append('<td>' + (item.pickedUp ? 'Si' : 'No') + '</td>');
         row.append('<td>' + item.orderTotal + '</td>');
         return row;
-    }
-
-    function formatDate(date) {
-        var momentDate = moment(date);
-        var result = '';
-        if (momentDate.isValid())
-        {
-            console.log(momentDate)
-            result = '<div style="display: none;">' + momentDate.format('x') + '</div>';
-            result += '<div>';
-            result += momentDate.format('dddd') + ' ' + (momentDate.day() + 1);
-            result += '<br/>' + momentDate.format('hh:mm a');
-            result += '<br/>' + momentDate.format('MMMM');
-            result += '</div>';
-            return result;
-        }
-        return '';
     }
 </script>

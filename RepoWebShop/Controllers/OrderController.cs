@@ -55,6 +55,10 @@ namespace RepoWebShop.Controllers
                     status = "Sin confirmación";
                     description = "Lamentablemente no hemos recibido detalles de pago de esta reserva.";
                     break;
+                case "reservation":
+                    status = "Reseva condirmada";
+                    description = "La reserva se encuentra confirmada.";
+                    break;
                 default:
                     status = "No encontrado";
                     description = "El código que buscas no se encuentra en nuestra base de datos.";

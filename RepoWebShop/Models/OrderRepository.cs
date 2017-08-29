@@ -36,19 +36,27 @@ namespace RepoWebShop.Models
             _appDbContext.SaveChanges();
         }
 
+        public bool InvertPickedUpStatus(int orderId)
+        {
+            Order order = _appDbContext.Orders.First(x => x.OrderId == orderId);
+            order.PickedUp = !order.PickedUp;
+            _appDbContext.SaveChanges();
+            return order.PickedUp;
+        }
+
         public Order GetDraftOrderByBookingId(string bookingId)
         {
-            return _appDbContext.Orders.FirstOrDefault(x => x.BookingId == bookingId && x.Status == "draft");
+            return _appDbContext.Orders.Include(x => x.Registration).FirstOrDefault(x => x.BookingId == bookingId && x.Status == "draft");
         }
 
         public Order GetOrderByBookingId(string bookingId)
         {
-            return _appDbContext.Orders.FirstOrDefault(x => x.BookingId == bookingId);
+            return _appDbContext.Orders.Include(x => x.Registration).FirstOrDefault(x => x.BookingId == bookingId);
         }
 
         public Order GetOrder(int id)
         {
-            return _appDbContext.Orders.FirstOrDefault(x => x.OrderId == id);
+            return _appDbContext.Orders.Include(x => x.Registration).FirstOrDefault(x => x.OrderId == id);
         }
 
 

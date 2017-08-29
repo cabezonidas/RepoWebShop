@@ -43,6 +43,13 @@ namespace RepoWebShop.Models
         public string ManagementComments { get; set; }
 
         public string BookingId { get; set; }
+
         public string Status { get; set; }
+
+        public string MercadoPagoMail { get; set; }
+
+        public string MercadoPagoName { get; set; }
+
+        public string MercadoPhoneNumber { get; set; }
     }
 }

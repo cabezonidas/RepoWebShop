@@ -34,5 +34,11 @@ namespace RepoWebShop.Controllers
             _orderRepository.UpdatePickUpDate(orderId, pickUp);
             return Ok();
         }
+
+        [Route("InvertPickedUpStatus/{orderId}")]
+        public IActionResult InvertPickedUpStatus(int orderId)
+        {
+            return Ok(_orderRepository.InvertPickedUpStatus(orderId));
+        }
     }
 }

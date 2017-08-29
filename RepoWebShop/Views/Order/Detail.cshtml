@@ -4,7 +4,7 @@
     var pickUp = Model.Order.PickUp?.ToString("dd'/'MM'/'yyyy") ?? string.Empty;
 }
 
-<h2>@Model.Order.BookingId</h2>
+<h3>Detalles: @Model.Order.BookingId</h3>
 
 <div class="container">
     <table class="table table-hover">
@@ -32,7 +32,17 @@
     <tbody>
         <tr>
             <td><strong>Estado</strong></td>
-            <td colspan="2">@Model.Order.Status</td>
+            <td colspan="2" id="orderStatus"></td>
+        </tr>
+        <tr>
+            <td><strong>Total</strong></td>
+            <td colspan="2">@Model.Order.OrderTotal</td>
+        </tr>
+        <tr>
+            <td><strong>Cliente</strong></td>
+            <td colspan="2" id="contactDetails">
+
+            </td>
         </tr>
         <tr>
             <td><strong>Comentarios</strong></td>
@@ -55,36 +65,93 @@
                         <span class="glyphicon glyphicon-th"></span>
                     </div>
                 </div>
+                <span style="display:none;" id="dateSaveMessage"></span>
             </td>
-            <td><input id="pickUpSubmit" type="submit" class="btn btn-primary" value="Guardar" /></td>
+            <td>
+                <input id="pickUpSubmit" type="submit" class="btn btn-primary" value="Guardar" />
+            </td>
         </tr>
         <tr>
             <td><strong>Entregado</strong></td>
-            <td>@(@Model.Order.PickedUp ? "Si" : "No")</td>
-            <td><input type="submit" class="btn btn-primary" value="Cambiar" /></td>
+            <td>
+                <div id="pickedUpStatus">@(@Model.Order.PickedUp ? "Si" : "No")</div>
+                <span style="display:none;" id="pickedUpChanged"></span>
+            </td>
+            <td>
+                <input type="submit" class="btn btn-primary" value="Cambiar" id="pickedUp" />
+            </td>
         </tr>
         <tr>
             <td><strong>Comentarios Agregados</strong></td>
             <td>
                 <textarea id="comments" style="resize: vertical; width:100%">@Model.Order.ManagementComments</textarea>
+                <span style="display:none;" id="commentsChanged"></span>
             </td>
-            <td><input id="commentsSubmit" type="submit" class="btn btn-primary" value="Guardar" /></td>
+            <td>
+                <input id="commentsSubmit" type="submit" class="btn btn-primary" value="Guardar" />
+            </td>
         </tr>
     </tbody>
 </table>
 
+<div class="alert alert-success" id="successMessage" style="display:none;">
+    Cambio guardado satisfactoriamente!
+</div>
+<div class="alert alert-danger" id="errorMessage" style="display:none;">
+    Ocurrio un error al guardar. Intente mas tarde.
+</div>
+
 <script type="text/javascript">
+
     $.fn.datepicker.defaults.format = "dd/mm/yyyy";
     $('.datepicker').datepicker();
+
+    $('#orderStatus').append(statusCode2DisplayValue('@Model.Order.Status'));
+
+    $('#contactDetails').append(getContactDetails());
+
+    function getContactDetails() {
+        if ('@Model.Order.Registration'.toString()) {
+            return '@Model.Order.Registration?.LastName, @Model.Order.Registration?.FirstName <br/>' +
+                '<a href="mailto:@Model.Order.Registration?.Email">@Model.Order.Registration?.Email</a> <br/>' +
+                '<a href="tel:@Model.Order.Registration?.PhoneNumber">@Model.Order.Registration?.PhoneNumber</a>';
+        }
+        else
+        {
+            return '@Model.Order.MercadoPagoName <br/>' +
+                '<a href="mailto:@Model.Order.MercadoPagoMail">@Model.Order.MercadoPagoMail</a> <br/>' +
+                '<a href="tel:@Model.Order.MercadoPhoneNumber">@Model.Order.MercadoPhoneNumber</a>';
+        }
+    }
 
     $("#commentsSubmit").on('click', function () {
         $.ajax({
             type: 'GET',
             url: '/api/OrderData/AddComments/' + '@Model.Order.OrderId' + '/' + $("#comments").val(),
-            success: function () { alert('success'); },
-            error: function () { alert('error'); }
+            success: function () {
+                handleSuccess('#commentsChanged');
+            },
+            error: function () {
+                handleError('#commentsChanged');
+            }
         });
     });
+
+    $("#pickedUp").on('click', function () {
+        $.ajax({
+            type: 'GET',
+            url: '/api/OrderData/InvertPickedUpStatus/' + '@Model.Order.OrderId',
+            success: function (data) {
+                $('#pickedUpStatus').empty().append(data ? 'Si' : 'No');
+                handleSuccess('#pickedUpChanged');
+            },
+            error: function () {
+                handleError('#pickedUpChanged');
+            }
+        });
+    });
+
+
     $("#pickUpSubmit").on('click', function () {
         var parts = $("#pickUpDateSubmit").val().split("/");
         var date = new Date(parts[2], parts[1] - 1, parts[0]);
@@ -92,23 +159,21 @@
         $.ajax({
             type: 'GET',
             url: '/api/OrderData/UpdatePickUpDate/' + '@Model.Order.OrderId' + '/' + date.toUTCString(),
-            success: function () { alert('success'); },
-            error: function () { alert('error'); }
+            success: function () {
+                handleSuccess('#dateSaveMessage');
+            },
+            error: function () {
+                handleError('#dateSaveMessage');
+            }
         });
     });
-    /*
-    api/OrderData/AddComments/{orderId}/{comments}")]
-        public IActionResult AddComments(int orderId, string comments)
-        {
-            _orderRepository.UpdateManagementComments(orderId, comments);
-            return View();
-        }
 
-        [Route("UpdatePickUpDate/{orderId}/{pickUp}")]
-
-    */
-
-
+    function handleSuccess(controller) {
+        $(controller).empty().append('Guardado!').css("display", "flex").fadeOut(1000);
+    }
+    function handleError() {
+        $(controller).empty().append('Ocurrio un error!').css("display", "flex");
+    }
 
 </script>
 

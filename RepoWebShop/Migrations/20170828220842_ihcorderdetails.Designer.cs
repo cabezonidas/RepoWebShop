@@ -8,9 +8,10 @@ using RepoWebShop.Models;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170828220842_ihcorderdetails")]
+    partial class ihcorderdetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.3")
@@ -273,8 +274,6 @@ namespace RepoWebShop.Migrations
                     b.Property<int?>("PieDetailId");
 
                     b.Property<decimal>("Price");
-
-                    b.Property<string>("SizeDescription");
 
                     b.HasKey("PieId");
 

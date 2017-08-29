@@ -8,9 +8,10 @@ using RepoWebShop.Models;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170828210309_ihcbla")]
+    partial class ihcbla
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.3")
@@ -206,12 +207,6 @@ namespace RepoWebShop.Migrations
 
                     b.Property<string>("ManagementComments");
 
-                    b.Property<string>("MercadoPagoMail");
-
-                    b.Property<string>("MercadoPagoName");
-
-                    b.Property<string>("MercadoPhoneNumber");
-
                     b.Property<DateTime>("OrderPlaced");
 
                     b.Property<decimal>("OrderTotal");
@@ -273,8 +268,6 @@ namespace RepoWebShop.Migrations
                     b.Property<int?>("PieDetailId");
 
                     b.Property<decimal>("Price");
-
-                    b.Property<string>("SizeDescription");
 
                     b.HasKey("PieId");
 

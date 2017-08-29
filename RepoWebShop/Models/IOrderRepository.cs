@@ -16,5 +16,6 @@ namespace RepoWebShop.Models
         IEnumerable<OrderDetail> GetOrderDetails(int id);
         void UpdateManagementComments(int orderId, string comments);
         void UpdatePickUpDate(int orderId, DateTime pickUp);
+        bool InvertPickedUpStatus(int orderId);
     }
 }

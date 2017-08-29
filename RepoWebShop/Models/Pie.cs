@@ -10,6 +10,7 @@ namespace RepoWebShop.Models
     	public int PieId { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
+        public string SizeDescription { get; set; }
         public virtual PieDetail PieDetail { get; set; }
     }
 }
