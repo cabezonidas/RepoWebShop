@@ -12,6 +12,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\lib\Mercadopago\**" />
+    <Content Remove="wwwroot\lib\Mercadopago\**" />
+    <EmbeddedResource Remove="wwwroot\lib\Mercadopago\**" />
+    <None Remove="wwwroot\lib\Mercadopago\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="wwwroot\**\*">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
@@ -53,13 +60,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\lib\Mercadopago\" />
+    <Reference Include="mercadopago">
+      <HintPath>wwwroot\lib\Mercadopago\mercadopago.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="mercadopago">
-      <HintPath>wwwroot\lib\Mercadopago\mercadopago.dll</HintPath>
-    </Reference>
+    <None Update="Libraries\mercadopago.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>
