@@ -1,12 +1,13 @@
 ﻿@model PieDetailsListViewModel
 
-<h3 id="category-title">
+<h3 id="category-title" style="text-align: center;">
 </h3>
 
-<div id="container"></div>
 
-@section scripts{
-    <script>
+<div class="container" id="container"></div>
+
+@*@section scripts{*@
+    <script type="text/javascript">
         function getParameterByName(name){
             var regexS = "[\\?&]" + name + "=([^&#]*)",
             regex = new RegExp(regexS),
@@ -18,9 +19,6 @@
             }
         }
 
-        var itemsloaded = 0;
-        var takeitems = 3;
-
         var category = getParameterByName("category");
 
         if(category)
@@ -29,19 +27,19 @@
             $('#category-title').append("Todos los productos");
 
         $(document).ready(function () {
-            LoadMorePies();
+            LoadPies();
         });
 
-        $(window).scroll(function () {
-            if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
-                LoadMorePies();
-            }
-        });
+        //$(window).scroll(function () {
+        //    if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+        //        LoadMorePies();
+        //    }
+        //});
 
-        function LoadMorePies() {
+        function LoadPies() {
             $.ajax({
                 type: 'GET',
-                url: '/api/PieDetailData/LoadMorePieDetails/' + category + '/' + itemsloaded + '/' + takeitems,
+                url: '/api/PieDetailData/LoadMorePieDetails/' + category,
                 dataType: 'json',
                 success: onLoadSuccess,
                 error: function (ex) { console.log(ex); }
@@ -59,7 +57,6 @@
                   $("#container").append(data);
                 });
             });
-            itemsloaded += takeitems;
         }
     </script>
-}
+@*}*@

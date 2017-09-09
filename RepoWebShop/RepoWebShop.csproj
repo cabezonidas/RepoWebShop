@@ -19,6 +19,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\Content\agency.css" />
+    <Content Include="wwwroot\Images\index.jpg" />
+    <Content Include="wwwroot\Images\Team\Claudio.jpg" />
+    <Content Include="wwwroot\Images\Team\Fio.jpeg" />
+    <Content Include="wwwroot\Images\Team\Marcela.jpg" />
+    <Content Include="wwwroot\js\AllPiesList.js" />
+    <Content Include="wwwroot\js\Formatting.js" />
+    <Content Include="wwwroot\js\OrderDetails.js" />
+    <Content Include="wwwroot\js\ShoppingCart.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="wwwroot\**\*">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>

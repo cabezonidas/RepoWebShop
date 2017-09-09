@@ -22,26 +22,26 @@ namespace RepoWebShop.Controllers
         }
 
         [HttpGet]
-        [Route("LoadMorePieDetails/{skip}/{take}")]
-        public IEnumerable<PieDetailViewModel> LoadAnyPieDetails(string category, int skip, int take)
+        [Route("LoadMorePieDetails")]
+        public IEnumerable<PieDetailViewModel> LoadAnyPieDetails(string category)
         {
-            return LoadMorePieDetails(string.Empty, skip, take);
+            return LoadMorePieDetails(string.Empty);
         }
 
         [HttpGet]
-        [Route("LoadMorePieDetails/{category}/{skip}/{take}")]
-        public IEnumerable<PieDetailViewModel> LoadMorePieDetails(string category, int skip, int take)
+        [Route("LoadMorePieDetails/{category}")]
+        public IEnumerable<PieDetailViewModel> LoadMorePieDetails(string category)
         {
             IEnumerable<PieDetail> dbPieDetails = null;
 
 
             if (string.IsNullOrEmpty(category))
             {
-                dbPieDetails = _pieDetailRepository.PieDetails.OrderBy(p => p.PieDetailId).Skip(skip).Take(take);
+                dbPieDetails = _pieDetailRepository.PieDetails.OrderBy(p => p.PieDetailId);
             }
             else
             {
-                dbPieDetails = _pieDetailRepository.PieDetails.OrderBy(p => p.PieDetailId).Where(p => p.Category.CategoryName == category).Skip(skip).Take(take);
+                dbPieDetails = _pieDetailRepository.PieDetails.OrderBy(p => p.PieDetailId).Where(p => p.Category.CategoryName == category);
             }
 
             List<PieDetailViewModel> pieDetails = new List<PieDetailViewModel>();

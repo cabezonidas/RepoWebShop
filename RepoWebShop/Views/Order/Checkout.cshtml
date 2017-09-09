@@ -1,19 +1,19 @@
 ﻿@model Order
-
-<form asp-action="Checkout" method="post" class="form-horizontal" role="form">
-    <h4>Estás a un paso de tus delicias.</h4>
-    <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="form-group">
-        <label asp-for="PhoneNumber" class="col-md-2 control-label"></label>
-        <div class="col-md-5">
-            <input asp-for="PhoneNumber" class="form-control" />
-            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+<div class="container">
+    <form asp-action="Checkout" method="post" class="form-horizontal" role="form">
+        <h4>Estás a un paso de tus delicias.</h4>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="PhoneNumber" class="col-md-2 control-label"></label>
+            <div class="col-md-5">
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-5">
-            <input type="submit" class="btn btn-primary" value="Reservar" />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-5">
+                <input type="submit" class="btn btn-primary" value="Reservar" />
+            </div>
         </div>
-    </div>
-</form>
-
+    </form>
+</div>
