@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
+using RepoWebShop.Models;
+using Newtonsoft.Json;
 
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -21,7 +23,16 @@ namespace RepoWebShop.Controllers
                 Request.Body.Position = 0;
             }
 
-            var input = new StreamReader(Request.Body).ReadToEnd();
+            //var input = new StreamReader(Request.Body).ReadToEnd();
+
+
+
+            JsonSerializer s = new JsonSerializer();
+            var test = s.Deserialize<Webhook>(new JsonTextReader(new StreamReader(Request.Body)));
+
+            
+
+
             /*
              * 
              * "{\"id\":123,\"live_mode\":false,\"type\":\"test\",\"date_created\":\"2017-09-09T21:12:32.706-04:00\",\"user_id\":\"58959397\",\"api_version\":\"v1\",\"action\":\"test.created\",\"data\":{\"id\":\"56456123212\"}}"
