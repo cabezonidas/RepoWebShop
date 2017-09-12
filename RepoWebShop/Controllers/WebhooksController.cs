@@ -1,72 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using RepoWebShop.Models;
 using Newtonsoft.Json;
-
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using System;
 
 namespace RepoWebShop.Controllers
 {
     public class WebhooksController : Controller
     {
+        private readonly IMercadoPago _mp;
+        private readonly IPaymentNotificationRepository _paymentWebhookRepository;
+        public WebhooksController(IMercadoPago mp, IPaymentNotificationRepository paymentNotificationRepository)
+        {
+            _mp = mp;
+            _paymentWebhookRepository = paymentNotificationRepository;
+        }
+
         // GET: /<controller>/
         public IActionResult Index()
         {
-            if (Request.Body.CanSeek)
-            {
-                // Reset the position to zero to read from the beginning.
-                Request.Body.Position = 0;
-            }
+            var body = new StreamReader(Request.Body);
+            var s = new JsonSerializer();
+            PaymentNotification Notification = s.Deserialize<PaymentNotification>(
+                new JsonTextReader(body)
+            );
 
-            //var input = new StreamReader(Request.Body).ReadToEnd();
+            Notification.MercadoPagoId = Notification.Id;
+            Notification.Id = 0;
+
+            if (!String.IsNullOrEmpty(Notification.PaymentId))
+                _paymentWebhookRepository.CreatePayment(Notification);
 
 
-
-            JsonSerializer s = new JsonSerializer();
-            var test = s.Deserialize<Webhook>(new JsonTextReader(new StreamReader(Request.Body)));
+            //Cambiar Development Variable to 
+            var payment = _mp.GetPayment("2506822618");
 
             
 
 
-            /*
-             * 
-             * "{\"id\":123,\"live_mode\":false,\"type\":\"test\",\"date_created\":\"2017-09-09T21:12:32.706-04:00\",\"user_id\":\"58959397\",\"api_version\":\"v1\",\"action\":\"test.created\",\"data\":{\"id\":\"56456123212\"}}"
-             * 
-             * 
-             * con esto, tengo que ir a preguntar la data del payment
-             * */
+
+
+
+
+
+
             return Ok();
         }
-
-        /*private void SeedWebhooks(APIContext apiContext)
-        {
-            var callBackUrl = Url.Action("Receive", "WebhookEvents", null, Request.Url.Scheme);
-            //Request.Host.ToString()??
-
-            if(Request.Url.Host == "localhost")
-            {
-                callBackUrl = "https://443tregf.ngrok.io/WebhookEvents/Receive";
-            }
-            var everythingWebhook = new Webhook()
-            {
-                url = callBackUrl,
-                event_types = new List<WebhookEventType>
-                {
-                    new WebhookEventType
-                    {
-                        name = "PAYMENT.SALE.REFUNDED"
-                    },
-                    new WebhookEventType
-                    {
-                        name = "PAYMENT.SALE.REVERSED"
-                    }
-                };
-             }
-        }*/
     }
 }

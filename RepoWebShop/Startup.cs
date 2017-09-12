@@ -27,8 +27,6 @@ namespace RepoWebShop
                 .Build();
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options =>
@@ -40,9 +38,16 @@ namespace RepoWebShop
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IPieRepository, PieRepository>();
             services.AddTransient<IPieDetailRepository, PieDetailRepository>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<ShoppingCart>(sp => ShoppingCart.GetCart(sp));
+            services.AddTransient<IPaymentNotificationRepository, PaymentNotificationRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IMercadoPago, MercadoPago>();
+
+            services.AddSingleton<IConfiguration>(_configurationRoot);  /************/
+
+            services.AddScoped<ShoppingCart>(sp => ShoppingCart.GetCart(sp));
+
             services.AddMvc();
 
             services.AddMemoryCache();
