@@ -3,6 +3,9 @@ using System.IO;
 using RepoWebShop.Models;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RepoWebShop.Controllers
 {
@@ -21,6 +24,7 @@ namespace RepoWebShop.Controllers
         {
             var body = new StreamReader(Request.Body);
             var s = new JsonSerializer();
+
             PaymentNotification Notification = s.Deserialize<PaymentNotification>(
                 new JsonTextReader(body)
             );
@@ -35,7 +39,21 @@ namespace RepoWebShop.Controllers
             //Cambiar Development Variable to 
             var payment = _mp.GetPayment("2506822618");
 
-            
+            //payment.ContainsKey("response");
+            var paymentInfoResponse = ((payment["response"] as Hashtable)["collection"] as Hashtable);
+
+
+
+            //PaymentInfo paymentInfo = new PaymentInfo()
+            //{
+            //    MercadoPagoPaymentId = paymentInfoResponse["id"],
+            //    Payment_Type = paymentInfoResponse["payment_type"]?.ToString(),
+            //    Total_Paid_Amount = (Decimal)paymentInfoResponse["payment_type"],
+            //    Order_Id = paymentInfoResponse["order_id"]?.ToString(),
+            //    Reason = paymentInfoResponse["reason"]?.ToString(),
+            //    Date_Created = (DateTime)paymentInfoResponse["date_created"],
+            //    Status = paymentInfoResponse["status"]?.ToString()
+            //};
 
 
 

@@ -13,7 +13,7 @@ namespace RepoWebShop.Models
         public MercadoPagoPayer MercadoPagoPayer { get; set;}
         public Decimal Total_Paid_Amount { get; set; }
 
-        public int Order_Id { get; set; } //Important
+        public string Order_Id { get; set; } //Important
         public int Transaction_Order_Id { get; set; } //important
         public string Reason { get; set; } //check if it's the title
 
