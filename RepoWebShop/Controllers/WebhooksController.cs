@@ -2,6 +2,7 @@
 using System.IO;
 using RepoWebShop.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,38 +26,54 @@ namespace RepoWebShop.Controllers
             var body = new StreamReader(Request.Body);
             var s = new JsonSerializer();
 
-            PaymentNotification Notification = s.Deserialize<PaymentNotification>(
+            Object Notification = s.Deserialize<Object>(
                 new JsonTextReader(body)
             );
 
-            Notification.MercadoPagoId = Notification.Id;
-            Notification.Id = 0;
+            var topic = ((JValue)((JContainer)((JToken)Notification).Root)["topic"])?.Value.ToString();
 
-            if (!String.IsNullOrEmpty(Notification.PaymentId))
-                _paymentWebhookRepository.CreatePayment(Notification);
+            if(topic == "payment")
+            {
+                var resource = ((JValue)((JContainer)((JToken)Notification).Root)["resource"])?.Value.ToString();
+                var notificationApi = "https://api.mercadolibre.com/collections/notifications/";
+                if(resource.StartsWith(notificationApi))
+                {
+                    var notificationId = resource.Split('/').Last();
+                    var payment = _mp.GetPayment(notificationId);
+                    if (payment["status"]?.ToString() == "200")
+                    {
+                        //_paymentWebhookRepository.CreatePayment(Notification);
+                        var paymentInfoResponse = ((payment["response"] as Hashtable)["collection"] as Hashtable);
+                        PaymentInfo paymentInfo = new PaymentInfo(paymentInfoResponse);
+                    }
+                }
+            }
+            
 
+            //"{\"topic\":\"payment\",\"resource\":\"https://api.mercadolibre.com/collections/notifications/2986651030\"}"
+            //["net_received_account"]
 
-            //Cambiar Development Variable to 
-            var payment = _mp.GetPayment("2506822618");
-
-            //payment.ContainsKey("response");
-            var paymentInfoResponse = ((payment["response"] as Hashtable)["collection"] as Hashtable);
-
-
-
-            //PaymentInfo paymentInfo = new PaymentInfo()
+            //if(Notification != null)
             //{
-            //    MercadoPagoPaymentId = paymentInfoResponse["id"],
-            //    Payment_Type = paymentInfoResponse["payment_type"]?.ToString(),
-            //    Total_Paid_Amount = (Decimal)paymentInfoResponse["payment_type"],
-            //    Order_Id = paymentInfoResponse["order_id"]?.ToString(),
-            //    Reason = paymentInfoResponse["reason"]?.ToString(),
-            //    Date_Created = (DateTime)paymentInfoResponse["date_created"],
-            //    Status = paymentInfoResponse["status"]?.ToString()
-            //};
+            //    Notification.MercadoPagoId = Notification.Id;
+            //    Notification.Id = 0;
+
+            //    if (!String.IsNullOrEmpty(Notification.PaymentId))
+            //    {
+            //        var payment = _mp.GetPayment(Notification.PaymentId);
+            //        if (payment["status"]?.ToString() == "200")
+            //        {
+            //            _paymentWebhookRepository.CreatePayment(Notification);
+            //            var paymentInfoResponse = ((payment["response"] as Hashtable)["collection"] as Hashtable);
+            //            PaymentInfo paymentInfo = new PaymentInfo(paymentInfoResponse);
+            //        }
+            //    }
+            //}
 
 
 
+            //var payment = _mp.GetPayment("2506822618");
+            //payment.ContainsKey("response");
 
 
 

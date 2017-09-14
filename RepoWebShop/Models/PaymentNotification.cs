@@ -26,12 +26,12 @@ namespace RepoWebShop.Models
         {
             get
             {
-                return Data["id"];
+                return Data?["id"];
                 //return Data.ContainsKey("id") ? Data["id"] : string.Empty;
             }
             private set
             {
-                PaymentId = Data["id"];
+                PaymentId = Data?["id"];
                 //PaymentId = Data.ContainsKey("id") ? Data["id"] : string.Empty;
             }
         }

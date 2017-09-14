@@ -557,19 +557,24 @@ namespace RepoWebShop.Models
                                 "\"quantity\":1," +
                                 $"\"id\":\"{bookingId}\"," +
                                 "\"currency_id\":\"ARS\"," +
+                                "\"description\":\"lalalalala\"," +
                                 "\"unit_price\":" + total +
+                                //picture_url: Item image URL
                             "}]," +
                         "\"back_urls\":" +
                             "{" +
                                 $"\"success\":\"{host}/Order/Status/{bookingId}\"," +
                                 $"\"pending\":\"{host}/Order/Status/{bookingId}\"," +
                                 $"\"failure\":\"{host}/Order/Status/{bookingId}\"" +
-                            "}" +
-                        "}";
+                            //"}" +
+                            "}," +
+                        //"\"notification_url\":\"https://171c7460.ngrok.io/Webhooks\"," +
+                        $"\"additional_info\":\"lelelelele\"" +
+                "}";
 
                 Hashtable preference = CreatePreference(preferenceData);
                 string init_point = (!sandbox ? "" : "sandbox_") + "init_point";
-
+                
                 return (preference["response"] as Hashtable)[init_point].ToString();
             }
             catch
