@@ -18,6 +18,9 @@ namespace RepoWebShop.Models
             Date_Created = DateTime.Parse(paymentInfoResponse["date_created"]?.ToString());
             Status = paymentInfoResponse["status"]?.ToString();
 
+            Merchant_Order_Id = paymentInfoResponse["merchant_order_id"]?.ToString();
+            Net_Received_Amount = Decimal.Parse(paymentInfoResponse["net_received_account"]?.ToString());
+             
             var payerInfoResponse = paymentInfoResponse["payer"] as Hashtable;
             First_Name = payerInfoResponse["first_name"]?.ToString();
             Last_Name = payerInfoResponse["last_name"]?.ToString();
@@ -49,12 +52,14 @@ namespace RepoWebShop.Models
         public string Order_Id { get; set; } //Important
         public int Transaction_Order_Id { get; set; } //important
         public string Reason { get; set; } //check if it's the title
+        public string Order_Code { get; set; } //check if it's the title
 
         public DateTime Date_Created { get; set; }
         public DateTime Date_Approved { get; set; }
         public Decimal Concept_Amount { get; set; }
         public Decimal Transaction_Amount { get; set; }
         public Decimal Net_Received_Amount { get; set; }
+        public string Merchant_Order_Id { get; set; }
         public Decimal Installment_Amount { get; set; }
 
         public string Status_Detail { get; set; }

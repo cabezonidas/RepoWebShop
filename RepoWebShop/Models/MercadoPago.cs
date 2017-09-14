@@ -546,7 +546,7 @@ namespace RepoWebShop.Models
 
         /******************************************** Extensions *********************************************/
         
-        public string GetPaymentLink(decimal total, string bookingId, string host, string title)
+        public string GetRepoPaymentLink(decimal total, string bookingId, string host, string title)
         {
             try
             {
@@ -557,19 +557,15 @@ namespace RepoWebShop.Models
                                 "\"quantity\":1," +
                                 $"\"id\":\"{bookingId}\"," +
                                 "\"currency_id\":\"ARS\"," +
-                                "\"description\":\"lalalalala\"," +
                                 "\"unit_price\":" + total +
-                                //picture_url: Item image URL
                             "}]," +
                         "\"back_urls\":" +
                             "{" +
                                 $"\"success\":\"{host}/Order/Status/{bookingId}\"," +
                                 $"\"pending\":\"{host}/Order/Status/{bookingId}\"," +
                                 $"\"failure\":\"{host}/Order/Status/{bookingId}\"" +
-                            //"}" +
                             "}," +
-                        //"\"notification_url\":\"https://171c7460.ngrok.io/Webhooks\"," +
-                        $"\"additional_info\":\"lelelelele\"" +
+                        $"\"additional_info\":\"{bookingId}\"" +
                 "}";
 
                 Hashtable preference = CreatePreference(preferenceData);
@@ -581,6 +577,25 @@ namespace RepoWebShop.Models
             {
                 return "#";
             }
+        }
+
+        public Hashtable GetMerchantOrder(string merchantOrederId)
+        {
+            String accessToken;
+            try
+            {
+                accessToken = this.GetAccessToken();
+            }
+            catch (Exception e)
+            {
+                return (Hashtable)JSON.JsonDecode(e.Message);
+            }
+
+            String uriPrefix = this.sandbox ? "/sandbox" : "";
+
+            Hashtable merchantOrderInfo = RestClient.Get(uriPrefix + "/merchant_orders/" + merchantOrederId + "?access_token=" + accessToken);
+
+            return merchantOrderInfo;
         }
 
         /*****************************************************************************************************/
@@ -598,6 +613,7 @@ namespace RepoWebShop.Models
             }
             return String.Join("&", query);
         }
+
 
         private static class Util
         {

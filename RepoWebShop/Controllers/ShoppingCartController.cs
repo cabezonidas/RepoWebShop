@@ -36,7 +36,7 @@ namespace RepoWebShop.Controllers
             {
                 ShoppingCart = _shoppingCart,
                 ShoppingCartTotal = total,
-                Mercadolink = _mp.GetPaymentLink(total, _bookingId, Request.Host.ToString(), "La Reposteria"),
+                Mercadolink = _mp.GetRepoPaymentLink(total, _bookingId, Request.Host.ToString(), "La Reposteria"),
                 PreparationTime = highestPrepTime,
                 BookingId = _bookingId
             };

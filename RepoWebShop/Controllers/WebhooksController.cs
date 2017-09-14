@@ -42,43 +42,22 @@ namespace RepoWebShop.Controllers
                     var payment = _mp.GetPayment(notificationId);
                     if (payment["status"]?.ToString() == "200")
                     {
-                        //_paymentWebhookRepository.CreatePayment(Notification);
                         var paymentInfoResponse = ((payment["response"] as Hashtable)["collection"] as Hashtable);
                         PaymentInfo paymentInfo = new PaymentInfo(paymentInfoResponse);
+
+                        var merchantOrderInfo = _mp.GetMerchantOrder(paymentInfo.Merchant_Order_Id);
+                        if (merchantOrderInfo["status"]?.ToString() == "200")
+                        {
+                            paymentInfo.Order_Code = (merchantOrderInfo["response"] as Hashtable)["additional_info"]?.ToString();
+                            //Guardar notificacion en base de datos, y cambiar el estado en las ordenes :)
+                            //Manegar error por si viene un codigo que no esta en la base de datos.
+                            //Revisar que el codigo de pedido sea siempre diferente
+                        }
+                        else
+                            return NotFound();
                     }
                 }
             }
-            
-
-            //"{\"topic\":\"payment\",\"resource\":\"https://api.mercadolibre.com/collections/notifications/2986651030\"}"
-            //["net_received_account"]
-
-            //if(Notification != null)
-            //{
-            //    Notification.MercadoPagoId = Notification.Id;
-            //    Notification.Id = 0;
-
-            //    if (!String.IsNullOrEmpty(Notification.PaymentId))
-            //    {
-            //        var payment = _mp.GetPayment(Notification.PaymentId);
-            //        if (payment["status"]?.ToString() == "200")
-            //        {
-            //            _paymentWebhookRepository.CreatePayment(Notification);
-            //            var paymentInfoResponse = ((payment["response"] as Hashtable)["collection"] as Hashtable);
-            //            PaymentInfo paymentInfo = new PaymentInfo(paymentInfoResponse);
-            //        }
-            //    }
-            //}
-
-
-
-            //var payment = _mp.GetPayment("2506822618");
-            //payment.ContainsKey("response");
-
-
-
-
-
             return Ok();
         }
     }
