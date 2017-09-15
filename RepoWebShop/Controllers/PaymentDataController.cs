@@ -53,8 +53,8 @@ namespace RepoWebShop.Controllers
         }
 
         [HttpGet]
-        [Route("Process/{status}/{bookingId}")]
-        public IActionResult Process(string status, string bookingId)
+        [Route("Process/{status}")]
+        public IActionResult Process(string status)
         {
             var data = new { result = "" };
             switch (status)
@@ -62,34 +62,13 @@ namespace RepoWebShop.Controllers
                 case "approved":
                 case "pending":
                 case "in_process":
-                    HandlePayment(status, bookingId);
+                    _shoppingCart.ClearCart();
                     return Ok(new { status = status });
                 case "rejected":
                 default:
                     break;
             }
             return BadRequest(new { status = status });
-        }
-
-        private void HandlePayment(string status, string bookingId)
-        {
-            Order order = _orderRepository.GetDraftOrderByBookingId(bookingId);
-            if(order != null)
-            {
-                order.Status = status;
-                _orderRepository.UpdateOrderStatus(order.OrderId, status);
-            }
-            else
-            {
-                order = new Order();
-                order.OrderTotal = _shoppingCart.ShoppingCartItems.Select(x => x.Amount * x.Pie.Price).Sum();
-                order.CustomerComments = _shoppingCart.GetShoppingCartComments();
-                order.PhoneNumber = "0";
-                order.Status = status;
-                _orderRepository.CreateOrder(order);
-            }
-
-            _shoppingCart.ClearCart();
         }
     }
 }

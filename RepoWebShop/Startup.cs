@@ -38,7 +38,7 @@ namespace RepoWebShop
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IPieRepository, PieRepository>();
             services.AddTransient<IPieDetailRepository, PieDetailRepository>();
-            services.AddTransient<IPaymentNotificationRepository, PaymentNotificationRepository>();
+            services.AddTransient<IPaymentNoticeRepository, PaymentNoticeRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

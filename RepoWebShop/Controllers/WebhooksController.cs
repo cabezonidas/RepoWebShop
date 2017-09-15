@@ -13,11 +13,13 @@ namespace RepoWebShop.Controllers
     public class WebhooksController : Controller
     {
         private readonly IMercadoPago _mp;
-        private readonly IPaymentNotificationRepository _paymentWebhookRepository;
-        public WebhooksController(IMercadoPago mp, IPaymentNotificationRepository paymentNotificationRepository)
+        private readonly IPaymentNoticeRepository _paymentWebhookRepository;
+        private readonly IOrderRepository _orderRespository;
+        public WebhooksController(IMercadoPago mp, IPaymentNoticeRepository paymentNotificationRepository, IOrderRepository orderRespository)
         {
             _mp = mp;
             _paymentWebhookRepository = paymentNotificationRepository;
+            _orderRespository = orderRespository;
         }
 
         // GET: /<controller>/
@@ -43,18 +45,14 @@ namespace RepoWebShop.Controllers
                     if (payment["status"]?.ToString() == "200")
                     {
                         var paymentInfoResponse = ((payment["response"] as Hashtable)["collection"] as Hashtable);
-                        PaymentInfo paymentInfo = new PaymentInfo(paymentInfoResponse);
+                        PaymentNotice paymentInfo = new PaymentNotice(paymentInfoResponse);
 
                         var merchantOrderInfo = _mp.GetMerchantOrder(paymentInfo.Merchant_Order_Id);
                         if (merchantOrderInfo["status"]?.ToString() == "200")
-                        {
                             paymentInfo.Order_Code = (merchantOrderInfo["response"] as Hashtable)["additional_info"]?.ToString();
-                            //Guardar notificacion en base de datos, y cambiar el estado en las ordenes :)
-                            //Manegar error por si viene un codigo que no esta en la base de datos.
-                            //Revisar que el codigo de pedido sea siempre diferente
-                        }
-                        else
-                            return NotFound();
+
+                        _paymentWebhookRepository.CreatePayment(paymentInfo);
+                        _orderRespository.UpdateOrder(paymentInfo);
                     }
                 }
             }

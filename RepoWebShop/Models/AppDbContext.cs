@@ -21,7 +21,8 @@ namespace RepoWebShop.Models
         public DbSet<ShoppingCartComment> ShoppingCartComments { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
-        public DbSet<PaymentNotification> PaymentNotifications { get; set; }
+        //public DbSet<PaymentNotification> PaymentNotifications { get; set; }
+        public DbSet<PaymentNotice> PaymentNotices { get; set; }
         public DbSet<Registration> Registrations { get; set; }
     }
 }

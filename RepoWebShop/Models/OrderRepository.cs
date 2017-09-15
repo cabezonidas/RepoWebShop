@@ -16,7 +16,22 @@ namespace RepoWebShop.Models
             _appDbContext = appDbContext;
             _shoppingCart = shoppingCart;
         }
-        
+
+
+        public void UpdateOrder(PaymentNotice paymentNotice)
+        {
+            Order order = this.GetOrderByBookingId(paymentNotice.Order_Code);
+            if (order != null)
+            {
+                order.MercadoPhoneNumber = paymentNotice.Number;
+                order.MercadoPagoMail = paymentNotice.Email;
+                order.MercadoPagoName = paymentNotice.Last_Name + ", " + paymentNotice.First_Name;
+                order.MercadoPagoUsername = paymentNotice.Nickname;
+                order.Status = paymentNotice.Status;
+                _appDbContext.SaveChanges();
+            }
+        }
+
         public void UpdateManagementComments(int orderId, string comments)
         {
             _appDbContext.Orders.First(x => x.OrderId == orderId).ManagementComments = comments;
@@ -67,7 +82,7 @@ namespace RepoWebShop.Models
 
         public IEnumerable<Order> GetAll()
         {
-            return _appDbContext.Orders.ToList();
+            return _appDbContext.Orders.Where(o => o.Status != "draft").ToList();
         }
 
         public void CreateOrder(Order order)

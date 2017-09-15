@@ -20,10 +20,9 @@ function formatDate(date) {
     var momentDate = moment(date);
     var result = '';
     if (momentDate.isValid()) {
-        console.log(momentDate)
         result = '<div style="display: none;">' + momentDate.format('x') + '</div>';
         result += '<div>';
-        result += momentDate.format('dddd') + ' ' + (momentDate.day() + 1);
+        result += momentDate.format('dddd') + ' ' + (momentDate.format('DD'));
         result += '<br/>' + momentDate.format('hh:mm a');
         result += '<br/>' + momentDate.format('MMMM');
         result += '<br/>' + momentDate.year();

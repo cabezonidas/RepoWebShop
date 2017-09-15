@@ -559,12 +559,12 @@ namespace RepoWebShop.Models
                                 "\"currency_id\":\"ARS\"," +
                                 "\"unit_price\":" + total +
                             "}]," +
-                        "\"back_urls\":" +
-                            "{" +
-                                $"\"success\":\"{host}/Order/Status/{bookingId}\"," +
-                                $"\"pending\":\"{host}/Order/Status/{bookingId}\"," +
-                                $"\"failure\":\"{host}/Order/Status/{bookingId}\"" +
-                            "}," +
+                        //"\"back_urls\":" +
+                        //    "{" +
+                        //        $"\"success\":\"{host}/Order/Status/{bookingId}\"," +
+                        //        $"\"pending\":\"{host}/Order/Status/{bookingId}\"," +
+                        //        $"\"failure\":\"{host}/Order/Status/{bookingId}\"" +
+                        //    "}," +
                         $"\"additional_info\":\"{bookingId}\"" +
                 "}";
 

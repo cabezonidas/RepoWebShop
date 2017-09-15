@@ -126,8 +126,12 @@ namespace RepoWebShop.Models
             var cartItems = _appDbContext
                 .ShoppingCartItems
                 .Where(cart => cart.ShoppingCartId == ShoppingCartId);
-
             _appDbContext.ShoppingCartItems.RemoveRange(cartItems);
+
+            var cartComments = _appDbContext
+                .ShoppingCartComments
+                .Where(cart => cart.ShoppingCartId == ShoppingCartId);
+            _appDbContext.ShoppingCartComments.RemoveRange(cartComments);
 
             _appDbContext.SaveChanges();
         }

@@ -8,9 +8,10 @@ using RepoWebShop.Models;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170915003756_paymentnotice")]
+    partial class paymentnotice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.3")
@@ -209,8 +210,6 @@ namespace RepoWebShop.Migrations
                     b.Property<string>("MercadoPagoMail");
 
                     b.Property<string>("MercadoPagoName");
-
-                    b.Property<string>("MercadoPagoUsername");
 
                     b.Property<string>("MercadoPhoneNumber");
 

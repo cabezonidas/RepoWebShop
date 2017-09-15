@@ -17,7 +17,7 @@
             </thead>
             <tbody>
                 @foreach (var item in Model.Items)
-            {
+                {
                     <tr>
                         <td> @item.Amount </td>
                         <td> @item.Pie.Name </td>
@@ -115,6 +115,7 @@ function getContactDetails() {
     }
     else {
         return '@Model.Order.MercadoPagoName <br/>' +
+            '@Model.Order.MercadoPagoUsername <br/>' +
             '<a href="mailto:@Model.Order.MercadoPagoMail">@Model.Order.MercadoPagoMail</a> <br/>' +
             '<a href="tel:@Model.Order.MercadoPhoneNumber">@Model.Order.MercadoPhoneNumber</a>';
     }

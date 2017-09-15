@@ -51,5 +51,6 @@ namespace RepoWebShop.Models
         public string MercadoPagoName { get; set; }
 
         public string MercadoPhoneNumber { get; set; }
+        public string MercadoPagoUsername { get; internal set; }
     }
 }

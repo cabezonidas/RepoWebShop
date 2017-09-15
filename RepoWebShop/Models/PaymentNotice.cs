@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace RepoWebShop.Models
 {
-    public class PaymentInfo
+    public class PaymentNotice
     {
-        public PaymentInfo(Hashtable paymentInfoResponse)
+        public PaymentNotice(Hashtable paymentInfoResponse)
         {
-            MercadoPagoPaymentId = paymentInfoResponse["id"]?.ToString();
+            Payment_Id = paymentInfoResponse["id"]?.ToString();
             Payment_Type = paymentInfoResponse["payment_type"]?.ToString();
             Total_Paid_Amount = Decimal.Parse(paymentInfoResponse["total_paid_amount"]?.ToString());
             Order_Id = paymentInfoResponse["order_id"]?.ToString();
@@ -19,7 +19,7 @@ namespace RepoWebShop.Models
             Status = paymentInfoResponse["status"]?.ToString();
 
             Merchant_Order_Id = paymentInfoResponse["merchant_order_id"]?.ToString();
-            Net_Received_Amount = Decimal.Parse(paymentInfoResponse["net_received_account"]?.ToString());
+            Net_Received_Amount = Decimal.Parse(paymentInfoResponse["net_received_amount"]?.ToString());
              
             var payerInfoResponse = paymentInfoResponse["payer"] as Hashtable;
             First_Name = payerInfoResponse["first_name"]?.ToString();
@@ -29,9 +29,9 @@ namespace RepoWebShop.Models
             Nickname = payerInfoResponse["nickname"]?.ToString();
 
             var payerPhoneInfoResponse = payerInfoResponse["phone"] as Hashtable;
-            var Area_Code = payerInfoResponse["area_code"];
-            var Extension = payerInfoResponse["extension"];
-            var Number = payerInfoResponse["number"];
+            Area_Code = payerPhoneInfoResponse["area_code"]?.ToString();
+            Extension = payerPhoneInfoResponse["extension"]?.ToString();
+            Number = payerPhoneInfoResponse["number"]?.ToString();
         }
             
         public string First_Name { get; set; }
@@ -45,29 +45,29 @@ namespace RepoWebShop.Models
         public string Number { get; set; }
 
         public int Id { get; set; }
-        public string MercadoPagoPaymentId { get; set; }
+        public string Payment_Id { get; set; }
         public string Payment_Type { get; set; }
         public Decimal Total_Paid_Amount { get; set; }
 
-        public string Order_Id { get; set; } //Important
-        public int Transaction_Order_Id { get; set; } //important
-        public string Reason { get; set; } //check if it's the title
-        public string Order_Code { get; set; } //check if it's the title
+        public string Order_Id { get; set; }
+        public int Transaction_Order_Id { get; set; }
+        public string Reason { get; set; }
+        public string Order_Code { get; set; }
 
-        public DateTime Date_Created { get; set; }
-        public DateTime Date_Approved { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Approved { get; set; }
         public Decimal Concept_Amount { get; set; }
         public Decimal Transaction_Amount { get; set; }
         public Decimal Net_Received_Amount { get; set; }
         public string Merchant_Order_Id { get; set; }
-        public Decimal Installment_Amount { get; set; }
+        public Decimal? Installment_Amount { get; set; }
 
         public string Status_Detail { get; set; }
         public string Site_Id { get; set; }
         public string Status { get; set; }
         public string Currency_Id { get; set; }
         public int Installments { get; set; }
-        public DateTime Money_Release_Date { get; set; }
+        public DateTime? Money_Release_Date { get; set; }
         public string Operation_Type { get; set; }
     }
 }

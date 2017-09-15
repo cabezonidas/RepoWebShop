@@ -17,5 +17,6 @@ namespace RepoWebShop.Models
         void UpdateManagementComments(int orderId, string comments);
         void UpdatePickUpDate(int orderId, DateTime pickUp);
         bool InvertPickedUpStatus(int orderId);
+        void UpdateOrder(PaymentNotice paymentNotice);
     }
 }

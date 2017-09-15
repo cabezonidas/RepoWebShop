@@ -15,6 +15,23 @@ body {
     font-family: 'Source Sans Pro', sans-serif;
 }
 
+footer {
+    position: relative;
+    max-height: 250px;
+    bottom: 0;
+    width: 100%;
+    margin: 50px 0;
+}
+
+#MP-Checkout-dialog {
+    border: none !important;
+    max-height: 650px !important;
+    top: 70px !important;
+}
+
+#MP-Checkout-IFrame {
+    max-height: 650px !important;
+}
 
 .slide-image {
     width: 100%;
@@ -58,12 +75,9 @@ body {
         color: #333;
     }
 
-footer {
-    margin: 50px 0;
-}
-
 .navbar {
     background-image: none;
+    z-index: 140;
 }
 
 .navbar-inverse {
