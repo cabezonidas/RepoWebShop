@@ -15,11 +15,13 @@ namespace RepoWebShop.Controllers
         private readonly IMercadoPago _mp;
         private readonly IPaymentNoticeRepository _paymentWebhookRepository;
         private readonly IOrderRepository _orderRespository;
-        public WebhooksController(IMercadoPago mp, IPaymentNoticeRepository paymentNotificationRepository, IOrderRepository orderRespository)
+        private readonly IEmailRepository _emailRespository;
+        public WebhooksController(IEmailRepository emailRespository, IMercadoPago mp, IPaymentNoticeRepository paymentNotificationRepository, IOrderRepository orderRespository)
         {
             _mp = mp;
             _paymentWebhookRepository = paymentNotificationRepository;
             _orderRespository = orderRespository;
+            _emailRespository = emailRespository;
         }
 
         // GET: /<controller>/
@@ -52,7 +54,11 @@ namespace RepoWebShop.Controllers
                             paymentInfo.Order_Code = (merchantOrderInfo["response"] as Hashtable)["additional_info"]?.ToString();
 
                         _paymentWebhookRepository.CreatePayment(paymentInfo);
-                        _orderRespository.UpdateOrder(paymentInfo);
+                        Order order = _orderRespository.UpdateOrder(paymentInfo);
+
+                        _emailRespository.Send(order);
+                        //order?.CustomerComments
+                        //_orderRespository.GetOrderDetails(6021).CustomerComments
                     }
                 }
             }

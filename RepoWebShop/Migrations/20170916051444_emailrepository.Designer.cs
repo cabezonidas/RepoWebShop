@@ -8,9 +8,10 @@ using RepoWebShop.Models;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170916051444_emailrepository")]
+    partial class emailrepository
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.3")
@@ -193,28 +194,6 @@ namespace RepoWebShop.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("RepoWebShop.Models.Email", b =>
-                {
-                    b.Property<int>("EmailId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Bcc");
-
-                    b.Property<string>("Body");
-
-                    b.Property<string>("Cc");
-
-                    b.Property<string>("Status");
-
-                    b.Property<string>("Subject");
-
-                    b.Property<string>("To");
-
-                    b.HasKey("EmailId");
-
-                    b.ToTable("Emails");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.Order", b =>

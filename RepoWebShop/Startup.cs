@@ -40,6 +40,7 @@ namespace RepoWebShop
             services.AddTransient<IPieDetailRepository, PieDetailRepository>();
             services.AddTransient<IPaymentNoticeRepository, PaymentNoticeRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
+            services.AddTransient<IEmailRepository, EmailRepository>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IMercadoPago, MercadoPago>();

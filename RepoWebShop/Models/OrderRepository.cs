@@ -18,7 +18,7 @@ namespace RepoWebShop.Models
         }
 
 
-        public void UpdateOrder(PaymentNotice paymentNotice)
+        public Order UpdateOrder(PaymentNotice paymentNotice)
         {
             Order order = this.GetOrderByBookingId(paymentNotice.Order_Code);
             if (order != null)
@@ -30,6 +30,7 @@ namespace RepoWebShop.Models
                 order.Status = paymentNotice.Status;
                 _appDbContext.SaveChanges();
             }
+            return order;
         }
 
         public void UpdateManagementComments(int orderId, string comments)
