@@ -31,6 +31,12 @@ namespace RepoWebShop.Models
             }
         }
 
+        public Task<int> Add(PieDetail pieDetail)
+        {
+            _appDbContext.PieDetails.Add(pieDetail);
+            return _appDbContext.SaveChangesAsync();
+        }
+
         public PieDetail GetPieDetailById(int pieDetailId)
         {
             return _appDbContext.PieDetails.FirstOrDefault(p => p.PieDetailId == pieDetailId);

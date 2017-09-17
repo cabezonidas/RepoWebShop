@@ -1,8 +1,11 @@
-﻿using MailKit.Net.Smtp;
+﻿using MailKit.Net.Imap;
+using MailKit.Net.Smtp;
+using MailKit.Security;
 using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace RepoWebShop.Models
@@ -22,7 +25,6 @@ namespace RepoWebShop.Models
         {
             if (order != null)
             {
-                //MercadoPago
                 var orderdetails = _orderRepository.GetOrderDetails(order.OrderId);
                 var comments = order.CustomerComments;
 
@@ -34,7 +36,7 @@ namespace RepoWebShop.Models
                 };
 
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("Seba Cabe", "sebastian.scd@gmail.com"));
+                message.From.Add(new MailboxAddress("Seba Cabe", "info@lareposteria.com.ar"));
                 message.To.Add(new MailboxAddress("Mrs. Chanandler Bong", "sebastian.cabeza@outlook.com"));
                 message.Subject = email.Subject;
 
@@ -45,16 +47,9 @@ namespace RepoWebShop.Models
 
                 using (var client = new SmtpClient())
                 {
-                    client.Connect("smtp.gmail.com", 587);
-
-
-                    // Note: since we don't have an OAuth2 token, disable
-                    // the XOAUTH2 authentication mechanism.
-                    client.AuthenticationMechanisms.Remove("XOAUTH2");
-
-                    // Note: only needed if the SMTP server requires authentication
-                    client.Authenticate("sebastian.scd@gmail.com", "palmera561");
-
+                    client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTlsWhenAvailable);
+                    client.AuthenticationMechanisms.Remove("XOAUTH2"); // Must be removed for Gmail SMTP
+                    client.Authenticate("info@lareposteria.com.ar", "alamaula10");
                     client.Send(message);
                     client.Disconnect(true);
                 }

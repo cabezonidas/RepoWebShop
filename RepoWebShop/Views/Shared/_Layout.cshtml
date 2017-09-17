@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-site-verification" content="zbu8hPYGxpGUfN13GzQ3gg0_2IUODpEAqGKoVzFlND0" />
     <title>La Reposteria Shop</title>
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro">
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
@@ -42,7 +43,7 @@
                     @await  Component.InvokeAsync("ShoppingCartSummary")
                     @if (this.User.IsInRole("Administrator"))
                     {
-                        <li><a asp-controller="Order" asp-action="Management">Pedidos</a></li>
+                        <li><a asp-controller="Admin" asp-action="Index">Admin</a></li>
                     }
                 </ul>
                 @await Html.PartialAsync("LoginPartial")

@@ -9,5 +9,6 @@ namespace RepoWebShop.Models
     {
         IEnumerable<PieDetail> PieDetails { get; }
         PieDetail GetPieDetailById(int pieDetailId);
+        Task<int> Add(PieDetail pieDetail);
     }
 }

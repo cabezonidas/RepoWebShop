@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +10,8 @@ namespace RepoWebShop.Models
     public class PieDetail
     {
         public int PieDetailId { get; set; }
+
+        [Required]
         public string Name { get; set; }
         public string ShortDescription { get; set; }
         public string LongDescription { get; set; }
