@@ -95,13 +95,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    $("a").on('click', function () {
-        alert();
-        //$.ajax({
-        //    type: 'GET',
-        //    url: 'api/ShoppingCartData/AddComments/' + $('#comments').val()
-        //});
-    });
+    var dataTable;
     $(document).ready(function () {
         getPies();
     });
@@ -118,16 +112,17 @@
         });
     }
 
-
-
-    function deletePie() {
-        console.log(data);
-        alert('test');
-        var url = "/api/AdminData/DeletePie/" + '@Model.PieDetailId';
+    function deletePie(id) {
+        var url = "/api/AdminData/DeletePie/" + id;
+        console.log(url);
         $.ajax({
             url: url,
             method: "DELETE",
-            success: onSuccess,
+            success: function () {
+                dataTable.clear();
+                dataTable.destroy();
+                getPies();
+            },
             error: function (error) {
                 console.log(error);
             }
@@ -135,16 +130,19 @@
     }
 
     function onSuccess(data) {
-        console.log(data);
         $.each(data, function (index, item) {
             $('#allPies-tbody').append(getRow(item));
         });
-        $('#allPies').DataTable({
-            "order": [[0, "asc"]]
+        dataTable = $('#allPies').DataTable({
+            "order": [[0, "asc"]],
+            "paging": false
         });
         $('#allPies-div').parent().css('overflow', 'auto');
         $('#allPies-div').css('width', '100%');
         $('#allPies-div').show();
+        $(".deletePie").on('click', function (data) {
+            deletePie(data.currentTarget.id);
+        });
     }
 
     function getRow(item) {
@@ -152,7 +150,7 @@
         row.append('<td><a href="/Admin/EditPieDetail/' + '@Model.PieDetailId' + "/" + item.pieId + '">' + item.name + '</a></td>');
         row.append('<td>' + item.price + '</td>');
         row.append('<td>' + item.sizeDescription + '</td>');
-        row.append('<td>' + '<a class="deletePie" id="' + item.pieId + '" href=#>Eliminar</a>' + '</td>');
+        row.append('<td>' + '<a class="deletePie" id="' + item.pieId + '" href="#">Eliminar</a>' + '</td>');
         return row;
     }
 </script>

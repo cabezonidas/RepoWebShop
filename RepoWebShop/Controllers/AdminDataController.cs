@@ -41,9 +41,17 @@ namespace RepoWebShop.Controllers
 
         [HttpDelete]
         [Route("DeletePie/{pieId}")]
-        public IActionResult DeletePie(int id)
+        public IActionResult DeletePie(int pieId)
         {
-            return Ok();
+            try
+            {
+                _pieRepository.Delete(pieId);
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

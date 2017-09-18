@@ -40,6 +40,13 @@ namespace RepoWebShop.Models
 
         }
 
+        public void Delete(int pieId)
+        {
+            Pie pie = _appDbContext.Pies.FirstOrDefault(x => x.PieId == pieId);
+            _appDbContext.Pies.Remove(pie);
+            _appDbContext.SaveChanges();
+        }
+
         public Pie GetPieById(int pieId)
         {
             return _appDbContext.Pies.Include(p => p.PieDetail).FirstOrDefault(p => p.PieId == pieId);

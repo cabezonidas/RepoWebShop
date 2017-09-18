@@ -30,6 +30,11 @@ namespace RepoWebShop.Models
             throw new NotImplementedException();
         }
 
+        public void Delete(int pieId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Pie GetPieById(int pieId)
         {
             throw new System.NotImplementedException();

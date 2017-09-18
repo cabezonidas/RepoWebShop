@@ -11,5 +11,6 @@ namespace RepoWebShop.Models
         IEnumerable<PieDetail> PiesOfTheWeek { get; }
         Pie GetPieById(int pieId);
         Pie Add(Pie pie);
+        void Delete(int pieId);
     }
 }
