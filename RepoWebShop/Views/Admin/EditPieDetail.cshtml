@@ -83,6 +83,7 @@
                         <th>Nombre</th>
                         <th>Precio</th>
                         <th>Descripcion de Tamaño</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody id='allPies-tbody'></tbody>
@@ -94,6 +95,13 @@
     </div>
 </div>
 <script type="text/javascript">
+    $("a").on('click', function () {
+        alert();
+        //$.ajax({
+        //    type: 'GET',
+        //    url: 'api/ShoppingCartData/AddComments/' + $('#comments').val()
+        //});
+    });
     $(document).ready(function () {
         getPies();
     });
@@ -103,6 +111,22 @@
         $.ajax({
             url: url,
             method: "GET",
+            success: onSuccess,
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+
+
+    function deletePie() {
+        console.log(data);
+        alert('test');
+        var url = "/api/AdminData/DeletePie/" + '@Model.PieDetailId';
+        $.ajax({
+            url: url,
+            method: "DELETE",
             success: onSuccess,
             error: function (error) {
                 console.log(error);
@@ -128,6 +152,7 @@
         row.append('<td><a href="/Admin/EditPieDetail/' + '@Model.PieDetailId' + "/" + item.pieId + '">' + item.name + '</a></td>');
         row.append('<td>' + item.price + '</td>');
         row.append('<td>' + item.sizeDescription + '</td>');
+        row.append('<td>' + '<a class="deletePie" id="' + item.pieId + '" href=#>Eliminar</a>' + '</td>');
         return row;
     }
 </script>

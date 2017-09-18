@@ -38,5 +38,12 @@ namespace RepoWebShop.Controllers
         {
             return Ok(_pieRepository.Pies.Where(x => x.PieDetail.PieDetailId == id));
         }
+
+        [HttpDelete]
+        [Route("DeletePie/{pieId}")]
+        public IActionResult DeletePie(int id)
+        {
+            return Ok();
+        }
     }
 }
