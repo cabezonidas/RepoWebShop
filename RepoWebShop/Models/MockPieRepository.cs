@@ -25,6 +25,11 @@ namespace RepoWebShop.Models
         
         IEnumerable<PieDetail> IPieRepository.PiesOfTheWeek => throw new NotImplementedException();
 
+        public Pie Add(Pie pie)
+        {
+            throw new NotImplementedException();
+        }
+
         public Pie GetPieById(int pieId)
         {
             throw new System.NotImplementedException();

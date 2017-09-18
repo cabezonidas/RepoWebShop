@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using AutoMapper;
 
 namespace RepoWebShop
 {
@@ -45,11 +46,13 @@ namespace RepoWebShop
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IMercadoPago, MercadoPago>();
 
-            services.AddSingleton<IConfiguration>(_configurationRoot);  /************/
+            services.AddSingleton<Microsoft.Extensions.Configuration.IConfiguration>(_configurationRoot);  /************/
 
             services.AddScoped<ShoppingCart>(sp => ShoppingCart.GetCart(sp));
 
             services.AddMvc();
+
+            services.AddAutoMapper();
 
             services.AddMemoryCache();
             services.AddSession();

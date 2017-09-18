@@ -1,0 +1,53 @@
+﻿<div class="container">
+    <h2>Todos los productos</h2>
+    <div id="allProducts-div">
+        <table id="allProducts" class="display nowrap dataTable dtr-inline collapsed" cellspacing="0" role="grid" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripcion</th>
+                    <th>Categoria</th>
+                </tr>
+            </thead>
+            <tbody id='allProducts-tbody'></tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        getProducts();
+    });
+
+    function getProducts() {
+        var url = "/api/AdminData/GetProducts";
+        $.ajax({
+            url: url,
+            method: "GET",
+            success: onSuccess,
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function onSuccess(data) {
+        $.each(data, function (index, item) {
+            $('#allProducts-tbody').append(getRow(item));
+        });
+        $('#allProducts').DataTable({
+            "order": [[0, "asc"]]
+        });
+        $('#allProducts-div').parent().css('overflow', 'auto');
+        $('#allProducts-div').css('width', '100%');
+        $('#allProducts-div').show();
+    }
+
+    function getRow(item) {
+        var row = $('<tr>');
+        row.append('<td><a href="/Admin/EditPieDetail/' + item.pieDetailId + '">' + item.name + '</a></td>');
+        row.append('<td>' + item.shortDescription + '</td>');
+        row.append('<td>' + item.category.categoryName + '</td>');
+        return row;
+    }
+</script>

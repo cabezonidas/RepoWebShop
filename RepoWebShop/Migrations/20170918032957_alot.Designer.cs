@@ -8,9 +8,10 @@ using RepoWebShop.Models;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170918032957_alot")]
+    partial class alot
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.3")
@@ -363,7 +364,7 @@ namespace RepoWebShop.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<int>("PieDetailId");
+                    b.Property<int?>("PieDetailId");
 
                     b.Property<decimal>("Price");
 
@@ -556,8 +557,7 @@ namespace RepoWebShop.Migrations
 
                     b.HasOne("RepoWebShop.Models.PieDetail", "PieDetail")
                         .WithMany()
-                        .HasForeignKey("PieDetailId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PieDetailId");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.PieDetail", b =>

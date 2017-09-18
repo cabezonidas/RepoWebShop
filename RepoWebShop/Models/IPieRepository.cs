@@ -10,5 +10,6 @@ namespace RepoWebShop.Models
         IEnumerable<Pie> Pies { get; }
         IEnumerable<PieDetail> PiesOfTheWeek { get; }
         Pie GetPieById(int pieId);
+        Pie Add(Pie pie);
     }
 }

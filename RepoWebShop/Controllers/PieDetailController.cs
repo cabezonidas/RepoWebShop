@@ -6,6 +6,8 @@ using RepoWebShop.ViewModels;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RepoWebShop.Controllers
 {
@@ -15,13 +17,15 @@ namespace RepoWebShop.Controllers
         private readonly IPieRepository _pieRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly AppDbContext _appDbContext;
+        private readonly IMapper _mapper;
 
-        public PieDetailController(AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
+        public PieDetailController(IMapper mapper, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
         {
             _pieDetailRepository = pieDetailRepository;
             _categoryRepository = categoryRepository;
             _pieRepository = pieRepository;
             _appDbContext = appDbContext;
+            _mapper = mapper;
         }
 
         public ViewResult List(string category)
@@ -35,12 +39,12 @@ namespace RepoWebShop.Controllers
 
             if (string.IsNullOrEmpty(category))
             {
-                pieDetails = _pieDetailRepository.PieDetails.Where(x => piesWithPrice.Contains(x.PieDetailId)).OrderBy(p => p.Name);
+                pieDetails = _pieDetailRepository.PieDetailsWithChildren.OrderBy(p => p.Name);
                 currentCategory = "Ver todos";
             }
             else
             {
-                pieDetails = _pieDetailRepository.PieDetails.Where(x => piesWithPrice.Contains(x.PieDetailId)).Where(p => p.Category.CategoryName == category)
+                pieDetails = _pieDetailRepository.PieDetailsWithChildren.Where(p => p.Category.CategoryName == category)
                    .OrderBy(p => p.Name);
                 currentCategory = _categoryRepository.Categories.FirstOrDefault(c => c.CategoryName == category).CategoryName;
             }
@@ -77,21 +81,21 @@ namespace RepoWebShop.Controllers
         }
 
 
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PieDetailCreateViewModel pieDetail)
         {
             if (ModelState.IsValid)
             {
-                //mapear el viewmodel, con el model
-                await _pieDetailRepository.Add(new PieDetail());
-
-                return RedirectToRoute("Admin", "Index");
+                await _pieDetailRepository.Add(_mapper.Map<PieDetailCreateViewModel, PieDetail>(pieDetail));
+                return RedirectToAction("AllProducts", "Admin");
             }
 
             return View(pieDetail);
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         public ViewResult Create()
         {

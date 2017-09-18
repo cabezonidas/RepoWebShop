@@ -37,11 +37,11 @@ namespace RepoWebShop.Controllers
 
             if (string.IsNullOrEmpty(category))
             {
-                dbPieDetails = _pieDetailRepository.PieDetails.OrderBy(p => p.PieDetailId);
+                dbPieDetails = _pieDetailRepository.PieDetailsWithChildren.OrderBy(p => p.PieDetailId);
             }
             else
             {
-                dbPieDetails = _pieDetailRepository.PieDetails.OrderBy(p => p.PieDetailId).Where(p => p.Category.CategoryName == category);
+                dbPieDetails = _pieDetailRepository.PieDetailsWithChildren.OrderBy(p => p.PieDetailId).Where(p => p.Category.CategoryName == category);
             }
 
             List<PieDetailViewModel> pieDetails = new List<PieDetailViewModel>();

@@ -1,0 +1,52 @@
+﻿@model  Pie
+
+<div class="container">
+    @*<h2>Agregar version para @Model.PieDetail.Name</h2>*@
+    <form asp-controller="Admin" asp-action="AddPieToPieDetail" method="post" class="form-horizontal" role="form">
+        <hr />
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="form-group" hidden="hidden">
+            <label asp-for="PieId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PieId" class="form-control" />
+                <span asp-validation-for="PieId" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group" hidden="hidden">
+            <label asp-for="PieDetailId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PieDetailId" class="form-control" />
+                <span asp-validation-for="PieDetailId" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Name" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Price" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="SizeDescription" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="SizeDescription" class="form-control" />
+                <span asp-validation-for="SizeDescription" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-primary" value="Guardar" />
+            </div>
+        </div>
+    </form>
+</div>

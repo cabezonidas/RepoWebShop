@@ -32,6 +32,14 @@ namespace RepoWebShop.Models
             }
         }
 
+        public Pie Add(Pie pie)
+        {
+            var result = _appDbContext.Pies.Add(pie);
+            _appDbContext.SaveChanges();
+            return pie;
+
+        }
+
         public Pie GetPieById(int pieId)
         {
             return _appDbContext.Pies.Include(p => p.PieDetail).FirstOrDefault(p => p.PieId == pieId);

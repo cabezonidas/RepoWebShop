@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using RepoWebShop.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,6 +10,9 @@ namespace RepoWebShop.ViewModels
 {
     public class PieDetailCreateViewModel
     {
+        public int PieDetailId { get; set; }
+
+        [Required]
         [Display(Name="Nombre")]
         public string Name { get; set; }
 
@@ -29,7 +33,7 @@ namespace RepoWebShop.ViewModels
         public string ImageThumbnailUrl { get; set; }
 
         [Required]
-        [Display(Name = "Imagen calidad media")]
+        [Display(Name = "Categoria")]
         public int CategoryId { get; set; }
 
         [Required]

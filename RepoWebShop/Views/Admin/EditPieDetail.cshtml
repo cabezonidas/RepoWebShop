@@ -1,0 +1,133 @@
+﻿@model PieDetailCreateViewModel 
+
+<div class="container">
+    <h2>Edicion de producto</h2>
+    <form asp-controller="Admin" asp-action="EditPieDetail" method="post" class="form-horizontal" role="form">
+        <hr />
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="form-group" hidden="hidden">
+            <label asp-for="PieDetailId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PieDetailId" class="form-control" />
+                <span asp-validation-for="PieDetailId" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Name" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ShortDescription" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="ShortDescription" class="form-control" />
+                <span asp-validation-for="ShortDescription" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PreparationTime" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PreparationTime" class="form-control" />
+                <span asp-validation-for="PreparationTime" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="LongDescription" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="LongDescription" class="form-control" />
+                <span asp-validation-for="LongDescription" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ImageUrl" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="ImageUrl" class="form-control" />
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ImageThumbnailUrl" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="ImageThumbnailUrl" class="form-control" />
+                <span asp-validation-for="ImageThumbnailUrl" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="CategoryId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="CategoryId" class="form-control" asp-items="@Model.Categories"></select>
+                @*<select asp-for="CategoryId" class="form-control" asp-items="@Model.Categories"/>*@
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-primary" value="Guardar" />
+            </div>
+        </div>
+    </form>
+    <div>
+        <div id="allPies-div">
+            <table id="allPies" class="display nowrap dataTable dtr-inline collapsed" cellspacing="0" role="grid" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Descripcion de Tamaño</th>
+                    </tr>
+                </thead>
+                <tbody id='allPies-tbody'></tbody>
+            </table>
+        </div>
+        <div align="center">
+            <a class="btn btn-primary" href="/Admin/EditPieDetail/AddPie/@Model.PieDetailId">Agregar item</a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        getPies();
+    });
+
+    function getPies() {
+        var url = "/api/AdminData/GetPies/" + '@Model.PieDetailId';
+        $.ajax({
+            url: url,
+            method: "GET",
+            success: onSuccess,
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function onSuccess(data) {
+        console.log(data);
+        $.each(data, function (index, item) {
+            $('#allPies-tbody').append(getRow(item));
+        });
+        $('#allPies').DataTable({
+            "order": [[0, "asc"]]
+        });
+        $('#allPies-div').parent().css('overflow', 'auto');
+        $('#allPies-div').css('width', '100%');
+        $('#allPies-div').show();
+    }
+
+    function getRow(item) {
+        var row = $('<tr>');
+        row.append('<td><a href="/Admin/EditPieDetail/' + '@Model.PieDetailId' + "/" + item.pieId + '">' + item.name + '</a></td>');
+        row.append('<td>' + item.price + '</td>');
+        row.append('<td>' + item.sizeDescription + '</td>');
+        return row;
+    }
+</script>
