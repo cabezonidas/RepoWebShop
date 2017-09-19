@@ -27,6 +27,7 @@ namespace RepoWebShop.Models
                 order.MercadoPagoMail = paymentNotice.Email;
                 order.MercadoPagoName = paymentNotice.Last_Name + ", " + paymentNotice.First_Name;
                 order.MercadoPagoUsername = paymentNotice.Nickname;
+                order.MercadoPagoTransaction = paymentNotice.Payment_Id;
                 order.Status = paymentNotice.Status;
                 _appDbContext.SaveChanges();
             }

@@ -56,7 +56,7 @@ namespace RepoWebShop.Controllers
                         _paymentWebhookRepository.CreatePayment(paymentInfo);
                         Order order = _orderRespository.UpdateOrder(paymentInfo);
 
-                        _emailRespository.Send(order);
+                        _emailRespository.Send(order, paymentInfo);
                         //order?.CustomerComments
                         //_orderRespository.GetOrderDetails(6021).CustomerComments
                     }

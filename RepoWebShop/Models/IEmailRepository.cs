@@ -7,6 +7,6 @@ namespace RepoWebShop.Models
 {
     public interface IEmailRepository
     {
-        void Send(Order order);
+        void Send(Order order, PaymentNotice payment);
     }
 }

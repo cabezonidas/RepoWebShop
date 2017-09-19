@@ -21,7 +21,7 @@ namespace RepoWebShop.Models
             _orderRepository = orderRepository;
         }
 
-        public void Send(Order order)
+        public void Send(Order order, PaymentNotice payment)
         {
             if (order != null)
             {
@@ -32,7 +32,7 @@ namespace RepoWebShop.Models
                 {
                     To = "info@lareposteria.com.ar",
                     Subject = "subject test",
-                    Body = "body test"
+                    Body = buildHTML(orderdetails, order, comments, payment)
                 };
 
                 var message = new MimeMessage();
@@ -54,6 +54,68 @@ namespace RepoWebShop.Models
                     client.Disconnect(true);
                 }
             }
+        }
+
+        private string buildHTML(IEnumerable<OrderDetail> orderDetails, Order order, string comment, PaymentNotice payment)
+        {
+            string details = "";
+
+            foreach(OrderDetail od in orderDetails)
+            {
+                details +=
+                    "<tr>" +
+                        $"<td style='padding:2px; text-align:center;'>{od.Amount}</td>" +
+                        $"<td style='padding:2px; text-align:left;'>{od.Pie.PieDetail} {od.Pie.Name}</td>" +
+                        $"<td style='padding:2px; text-align:right;'>{od.Price}</td>" +
+                        $"<td style='padding:2px; text-align:right;'>{od.Price * od.Amount}</td>" +
+                    "</tr>";
+            }
+
+            var result = 
+            @"<body>
+                <div style='text-align:center; items-align:center; font-family: ""Arial"", Georgia, Serif;'>
+                  <section style=' border-radius: 25px; border: 2px solid #73AD21; padding: 20px; max-width:600px; min-width:400px;'>
+                      <h2><strong>¡Gracias por tu compra reciente!</strong></h2>
+                      <p>
+                        Ya estamos trabajando para que puedas disfrutar de tu compra. Mientras tanto te mandamos los detalles.
+                      </p>
+                      <p style='font-size:10px;'>Codigo de Reserva </p>" +
+                      $"<h1>{order.BookingId}</h1>" +
+                      $"<p>Comprobante MercadoPago <strong>{order.MercadoPagoTransaction}</strong></p>" +
+                      $"<p>Tiempo de Elaboracion <strong>{order.PreparationTime}hs</strong></p>" +
+                      $"<p><strong>Detalle de Compra ${order.OrderTotal}</strong></p>" +
+
+                      @"<table style='margin: auto;'>
+                        <tr>
+                          <th style='border-bottom: 1px solid #ddd;'>Cantidad</th>
+                          <th style='border-bottom: 1px solid #ddd;'>Producto</th>
+                          <th style='border-bottom: 1px solid #ddd;'>Precio U.</th>
+                          <th style='border-bottom: 1px solid #ddd;'>Subtotal</th>
+                        </tr>" +
+                      details + 
+                      @"</table>
+
+                      <p><strong>Comentarios</strong></p>" +
+                      $"<p>{comment}</p>" +
+                  @"</section> 
+                  <div style='text-align:left;'>
+                    <p><strong>Importante</strong></p>
+                    <p>Antes de pasar a buscar tu pedido, fijate nuestros horarios de atencion</p>
+                    <p>
+                      Martes a Viernes: 08:00 a 12.30 y 16:00 a 20:00
+                      <br/>
+                      Sabados: 08:00 a 20:00
+                      <br/>
+                      Domingos: 08:00 a 13:00
+                    </p>
+                    <p>
+                      Si queres retirar tu pedido en otro momento, ponete en contacto con nosotros y vamos a tratar de hacer lo posible por adaptarnos. Si estas muy apresurado, a veces podemos hacer las entregas antes del tiempo calculado, pero no siempre podremos.
+                    </p>
+                  </div>
+                </div>
+            </body>";
+
+            return result;
         }
     }
 }

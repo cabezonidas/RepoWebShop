@@ -32,7 +32,7 @@ namespace RepoWebShop.Models
         {
             this.client_id = config.GetSection("MercadoPagoClientId").Value;
             this.client_secret = config.GetSection("MercadoPagoClientSecret").Value;
-            sandbox = !env.IsProduction();
+            //sandbox = !env.IsProduction();
         }
 
         public bool SandboxMode()
