@@ -12,5 +12,6 @@ namespace RepoWebShop.Models
         PieDetail GetPieDetailById(int pieDetailId);
         Task<int> Add(PieDetail pieDetail);
         Task<int> Update(PieDetail pieDetail);
+        void Delete(int pieDetailId);
     }
 }

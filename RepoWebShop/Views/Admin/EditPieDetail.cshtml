@@ -72,6 +72,7 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" class="btn btn-primary" value="Guardar" />
+                <a class="btn btn-primary" id="delete-pieDetail" style="display:none;" >Eliminar</a>
             </div>
         </div>
     </form>
@@ -98,7 +99,41 @@
     var dataTable;
     $(document).ready(function () {
         getPies();
+        allowDeletion(@Model.PieDetailId);
+        $("#delete-pieDetail").on('click', function (data) {
+            deletePieDetail(@Model.PieDetailId);
+        });
     });
+
+
+    function allowDeletion(id) {
+        var url = "/api/AdminData/PieDetailHasChildren/" + id;
+        $.ajax({
+            url: url,
+            method: "GET",
+            success: function (data) {
+                if (data == false)
+                    $('#delete-pieDetail').show();
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function deletePieDetail(id) {
+        var url = "/api/AdminData/DeletePieDetail/" + id;
+        $.ajax({
+            url: url,
+            method: "DELETE",
+            success: function () {
+                window.location.assign("/Admin/AllProducts");
+            },
+            error: function (error) {
+                alert('Algo salio mal.');
+            }
+        });
+    }
 
     function getPies() {
         var url = "/api/AdminData/GetPies/" + '@Model.PieDetailId';
@@ -114,7 +149,6 @@
 
     function deletePie(id) {
         var url = "/api/AdminData/DeletePie/" + id;
-        console.log(url);
         $.ajax({
             url: url,
             method: "DELETE",
