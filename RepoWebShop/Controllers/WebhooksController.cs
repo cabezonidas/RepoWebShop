@@ -53,6 +53,13 @@ namespace RepoWebShop.Controllers
                         if (merchantOrderInfo["status"]?.ToString() == "200")
                             paymentInfo.Order_Code = (merchantOrderInfo["response"] as Hashtable)["additional_info"]?.ToString();
 
+
+                        if (paymentInfo.Order_Code == null)
+                        {
+                            //Ver casos de error
+                            return Ok();
+                        }
+                            
                         _paymentWebhookRepository.CreatePayment(paymentInfo);
                         Order order = _orderRespository.UpdateOrder(paymentInfo);
 

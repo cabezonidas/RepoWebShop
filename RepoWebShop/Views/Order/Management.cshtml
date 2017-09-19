@@ -12,6 +12,7 @@
                     <th>Entrega</th> @*date*@
                     <th>Retirado</th>
                     <th>Monto</th>
+                    <th>Comprobante MP</th>
                 </tr>
             </thead>
             <tbody id='orders-table-tbody'></tbody>
@@ -76,6 +77,7 @@
                     null,
                     null,
                     null,
+                    null,
                     null
                 ]
             });
@@ -94,6 +96,10 @@
             row.append('<td>' + formatDate(item.pickUp) + '</td>');
             row.append('<td>' + (item.pickedUp ? 'Si' : 'No') + '</td>');
             row.append('<td>' + item.orderTotal + '</td>');
+            var comprobante = '';
+            if (item.mercadoPagoTransaction)
+                comprobante = item.mercadoPagoTransaction;
+            row.append('<td>' + comprobante + '</td>');
             return row;
         }
     </script>

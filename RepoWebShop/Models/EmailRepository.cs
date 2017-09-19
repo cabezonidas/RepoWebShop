@@ -30,20 +30,20 @@ namespace RepoWebShop.Models
 
                 Email email = new Email()
                 {
-                    To = "info@lareposteria.com.ar",
-                    Subject = "subject test",
-                    Body = buildHTML(orderdetails, order, comments, payment)
+                    To = payment == null ? order.Registration.Email : order.MercadoPagoMail,
+                    Bcc = "info@lareposteria.com.ar",
+                    Subject = "La Reposteria - Confirmacion de " + (payment == null ? "Reserva" : "Compra"),
+                    Body = buildHTML(orderdetails, order, comments)
                 };
 
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("Seba Cabe", "info@lareposteria.com.ar"));
-                message.To.Add(new MailboxAddress("Mrs. Chanandler Bong", "sebastian.cabeza@outlook.com"));
+                message.From.Add(new MailboxAddress("De las Artes", "info@lareposteria.com.ar"));
+                message.To.Add(new MailboxAddress(email.To));
+                message.Bcc.Add(new MailboxAddress(email.Bcc));
                 message.Subject = email.Subject;
 
-                message.Body = new TextPart("plain")
-                {
-                    Text = email.Body
-                };
+                message.Body = (new BodyBuilder() { HtmlBody = email.Body }).ToMessageBody();
+
 
                 using (var client = new SmtpClient())
                 {
@@ -56,7 +56,7 @@ namespace RepoWebShop.Models
             }
         }
 
-        private string buildHTML(IEnumerable<OrderDetail> orderDetails, Order order, string comment, PaymentNotice payment)
+        private string buildHTML(IEnumerable<OrderDetail> orderDetails, Order order, string comment)
         {
             string details = "";
 
@@ -71,17 +71,17 @@ namespace RepoWebShop.Models
                     "</tr>";
             }
 
-            var result = 
+            var result =
             @"<body>
                 <div style='text-align:center; items-align:center; font-family: ""Arial"", Georgia, Serif;'>
-                  <section style=' border-radius: 25px; border: 2px solid #73AD21; padding: 20px; max-width:600px; min-width:400px;'>
-                      <h2><strong>¡Gracias por tu compra reciente!</strong></h2>
-                      <p>
+                  <section style=' border-radius: 25px; border: 2px solid #73AD21; padding: 20px; max-width:600px; min-width:400px;'>" +
+                      $"<h2><strong>¡Gracias por tu reciente {(String.IsNullOrEmpty(order.MercadoPagoTransaction) ? "Reserva" : "Compra")}!</strong></h2>" +
+                      @"<p>
                         Ya estamos trabajando para que puedas disfrutar de tu compra. Mientras tanto te mandamos los detalles.
                       </p>
                       <p style='font-size:10px;'>Codigo de Reserva </p>" +
                       $"<h1>{order.BookingId}</h1>" +
-                      $"<p>Comprobante MercadoPago <strong>{order.MercadoPagoTransaction}</strong></p>" +
+                      (String.IsNullOrEmpty(order.MercadoPagoTransaction) ? "" : $"<p>Comprobante MercadoPago <strong>{order.MercadoPagoTransaction}</strong></p>") +
                       $"<p>Tiempo de Elaboracion <strong>{order.PreparationTime}hs</strong></p>" +
                       $"<p><strong>Detalle de Compra ${order.OrderTotal}</strong></p>" +
 
@@ -92,11 +92,9 @@ namespace RepoWebShop.Models
                           <th style='border-bottom: 1px solid #ddd;'>Precio U.</th>
                           <th style='border-bottom: 1px solid #ddd;'>Subtotal</th>
                         </tr>" +
-                      details + 
-                      @"</table>
-
-                      <p><strong>Comentarios</strong></p>" +
-                      $"<p>{comment}</p>" +
+                      details +
+                      "</table>" +
+                      (!String.IsNullOrWhiteSpace(comment) ? $"<p><strong>Comentarios</strong></p><p>{comment}</p>" : string.Empty) +
                   @"</section> 
                   <div style='text-align:left;'>
                     <p><strong>Importante</strong></p>

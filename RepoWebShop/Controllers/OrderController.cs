@@ -15,13 +15,15 @@ namespace RepoWebShop.Controllers
         private readonly ShoppingCart _shoppingCart;
         private readonly IPieDetailRepository _pieDetailRepository;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IEmailRepository _emailRespository;
 
-        public OrderController(IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, ShoppingCart shoppingCart, UserManager<IdentityUser> userManager)
+        public OrderController(IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, ShoppingCart shoppingCart, UserManager<IdentityUser> userManager)
         {
             _pieDetailRepository = pieDetailRepository;
             _orderRepository = orderRepository;
             _shoppingCart = shoppingCart;
             _userManager = userManager;
+            _emailRespository = emailRespository;
         }
 
         public IActionResult Status(string id)
@@ -126,10 +128,15 @@ namespace RepoWebShop.Controllers
                 order.CustomerComments = _shoppingCart.GetShoppingCartComments();
                 order.BookingId = Path.GetRandomFileName().Substring(0,6).ToUpper();
                 order.Status = "reservation";
+
                 _orderRepository.CreateOrder(order);
                 _shoppingCart.ClearCart();
 
+
+                _emailRespository.Send(order, null);
+
                 //Mandar mail al cliente con el codigo y los detalles
+                // redirigir al mismo check out que mercado pago con el codigo de reserva. Agregar un texto piola
                 return RedirectToAction("CheckoutComplete");
             }
             return View(order);
