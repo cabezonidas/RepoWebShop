@@ -65,7 +65,7 @@ namespace RepoWebShop.Models
                 details +=
                     "<tr>" +
                         $"<td style='padding:2px; text-align:center;'>{od.Amount}</td>" +
-                        $"<td style='padding:2px; text-align:left;'>{od.Pie.PieDetail} {od.Pie.Name}</td>" +
+                        $"<td style='padding:2px; text-align:left;'>{od.Pie.PieDetail.Name} {od.Pie.Name}</td>" +
                         $"<td style='padding:2px; text-align:right;'>{od.Price}</td>" +
                         $"<td style='padding:2px; text-align:right;'>{od.Price * od.Amount}</td>" +
                     "</tr>";

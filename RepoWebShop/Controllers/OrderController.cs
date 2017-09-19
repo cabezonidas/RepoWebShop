@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System.IO;
 using RepoWebShop.ViewModels;
+using AutoMapper;
 
 namespace RepoWebShop.Controllers
 {
@@ -16,14 +17,16 @@ namespace RepoWebShop.Controllers
         private readonly IPieDetailRepository _pieDetailRepository;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IEmailRepository _emailRespository;
+        private readonly IMapper _mp;
 
-        public OrderController(IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, ShoppingCart shoppingCart, UserManager<IdentityUser> userManager)
+        public OrderController(IMapper mp, IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, ShoppingCart shoppingCart, UserManager<IdentityUser> userManager)
         {
             _pieDetailRepository = pieDetailRepository;
             _orderRepository = orderRepository;
             _shoppingCart = shoppingCart;
             _userManager = userManager;
             _emailRespository = emailRespository;
+            _mp = mp;
         }
 
         public IActionResult Status(string id)
@@ -137,7 +140,9 @@ namespace RepoWebShop.Controllers
 
                 //Mandar mail al cliente con el codigo y los detalles
                 // redirigir al mismo check out que mercado pago con el codigo de reserva. Agregar un texto piola
-                return RedirectToAction("CheckoutComplete");
+                //return View("Status", _mp.Map<Order, OrderStatusViewModel>(order));
+                return Redirect($"/Order/Status/{order.BookingId}");
+                //return RedirectToAction("CheckoutComplete");
             }
             return View(order);
         }

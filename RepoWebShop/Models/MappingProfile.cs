@@ -14,6 +14,7 @@ namespace RepoWebShop.Models
             CreateMap<PieDetailCreateViewModel, PieDetail>();
             CreateMap<PieDetail, PieDetailCreateViewModel>();
             CreateMap<PieDetail, PieDetail>().ForMember(x => x.PieDetailId, opt => opt.Ignore());
+            CreateMap<Order, OrderStatusViewModel>();
         }
     }
 }
