@@ -10,6 +10,7 @@ namespace RepoWebShop.Models
     {
         public PaymentNotice(Hashtable paymentInfoResponse)
         {
+            Order_Code = paymentInfoResponse["external_reference"]?.ToString();
             Payment_Id = paymentInfoResponse["id"]?.ToString();
             Payment_Type = paymentInfoResponse["payment_type"]?.ToString();
             Total_Paid_Amount = Decimal.Parse(paymentInfoResponse["total_paid_amount"]?.ToString());

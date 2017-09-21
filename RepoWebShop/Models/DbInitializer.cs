@@ -27,18 +27,19 @@ namespace RepoWebShop.Models
             {
                 context.AddRange
                 (
-                    new Pie { Name = "Frutal Chica", Price = 240M, PieDetail = Piedetails["Frutal"] },
-                    new Pie { Name = "Frutal Grande", Price = 310M, PieDetail = Piedetails["Frutal"] },
-                    new Pie { Name = "Frutal Super Grande", Price = 420M, PieDetail = Piedetails["Frutal"] },
-                    new Pie { Name = "Crumble", Price = 220M, PieDetail = Piedetails["Crumble"] },
-                    new Pie { Name = "Africa Chica", Price = 200M, PieDetail = Piedetails["Africa"] },
-                    new Pie { Name = "Africa Grande", Price = 250M, PieDetail = Piedetails["Africa"] },
-                    new Pie { Name = "Africa Super Grande", Price = 360M, PieDetail = Piedetails["Africa"] },
-                    new Pie { Name = "Linzer", Price = 200M, PieDetail = Piedetails["Linzer"] },
-                    new Pie { Name = "Italiana", Price = 250M, PieDetail = Piedetails["Italiana"] },
-                    new Pie { Name = "Pasta Frola", Price = 220M, PieDetail = Piedetails["Pasta frola"] },
-                    new Pie { Name = "Masas", Price = 120M, PieDetail = Piedetails["Masas"] },
-                    new Pie { Name = "Desayuno", Price = 580M, PieDetail = Piedetails["Desayuno"] }
+                    new Pie { Name = "Chica", Price = 240M, PieDetail = Piedetails["Frutal"], SizeDescription = "8 porciones" },
+                    new Pie { Name = "Grande", Price = 310M, PieDetail = Piedetails["Frutal"], SizeDescription = "12 porciones" },
+                    new Pie { Name = "Super Grande", Price = 420M, PieDetail = Piedetails["Frutal"], SizeDescription = "16 porciones" },
+                    new Pie { Name = "Crumble", Price = 220M, PieDetail = Piedetails["Crumble"], SizeDescription = "8 porciones" },
+                    new Pie { Name = "Chica", Price = 200M, PieDetail = Piedetails["Africa"], SizeDescription = "8 porciones" },
+                    new Pie { Name = "Grande", Price = 250M, PieDetail = Piedetails["Africa"], SizeDescription = "12 porciones" },
+                    new Pie { Name = "Super Grande", Price = 360M, PieDetail = Piedetails["Africa"], SizeDescription = "16 porciones" },
+                    new Pie { Name = "Estandar", Price = 200M, PieDetail = Piedetails["Linzer"], SizeDescription = "8 porciones" },
+                    new Pie { Name = "Estandar", Price = 250M, PieDetail = Piedetails["Italiana"], SizeDescription = "8 porciones" },
+                    new Pie { Name = "Chica", Price = 220M, PieDetail = Piedetails["Pasta frola"], SizeDescription = "8 porciones" },
+                    new Pie { Name = "250gr", Price = 120M, PieDetail = Piedetails["Masas"], SizeDescription = "4 personas" },
+                    new Pie { Name = "Estandar", Price = 580M, PieDetail = Piedetails["Desayuno"], SizeDescription = "Individual" },
+                    new Pie { Name = "Doble", Price = 580M, PieDetail = Piedetails["Desayuno"], SizeDescription = "2 personas" }
                 );
             }
 
