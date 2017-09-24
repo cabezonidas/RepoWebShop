@@ -18,5 +18,6 @@ namespace RepoWebShop.Models
         void UpdatePickUpDate(int orderId, DateTime pickUp);
         bool InvertPickedUpStatus(int orderId);
         Order UpdateOrder(PaymentNotice paymentNotice);
+        Order CreateOrderByPayment(PaymentNotice paymentNotice);
     }
 }

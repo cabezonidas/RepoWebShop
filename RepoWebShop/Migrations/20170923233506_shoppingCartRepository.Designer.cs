@@ -8,9 +8,10 @@ using RepoWebShop.Models;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170923233506_shoppingCartRepository")]
+    partial class shoppingCartRepository
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.3")
@@ -318,6 +319,8 @@ namespace RepoWebShop.Migrations
 
                     b.Property<string>("MercadoPagoUsername");
 
+                    b.Property<string>("MercadoPhoneNumber");
+
                     b.Property<string>("Merchant_Order_Id");
 
                     b.Property<DateTime?>("Money_Release_Date");
@@ -333,8 +336,6 @@ namespace RepoWebShop.Migrations
                     b.Property<string>("Payment_Id");
 
                     b.Property<string>("Payment_Type");
-
-                    b.Property<string>("PhoneNumber");
 
                     b.Property<string>("Reason");
 

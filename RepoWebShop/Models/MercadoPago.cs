@@ -546,14 +546,14 @@ namespace RepoWebShop.Models
 
         /******************************************** Extensions *********************************************/
         
-        public string GetRepoPaymentLink(decimal total, string bookingId, string host, string title)
+        public string GetRepoPaymentLink(decimal total, string bookingId, string friendlyBookingId, string host, string title)
         {
             try
             {
                 String preferenceData =
                         "{\"items\":" +
                             "[{" +
-                                $"\"title\":\"{title} - {bookingId}\"," +
+                                $"\"title\":\"{title} - {friendlyBookingId}\"," +
                                 "\"quantity\":1," +
                                 $"\"id\":\"{bookingId}\"," +
                                 "\"currency_id\":\"ARS\"," +
@@ -561,9 +561,9 @@ namespace RepoWebShop.Models
                             "}]," +
                         "\"back_urls\":" +
                             "{" +
-                                $"\"success\":\"{host}/Order/Status/{bookingId}\"," +
-                                $"\"pending\":\"{host}/Order/Status/{bookingId}\"," +
-                                $"\"failure\":\"{host}/Order/Status/{bookingId}\"" +
+                                $"\"success\":\"{host}/Order/Status/{friendlyBookingId}\"," +
+                                $"\"pending\":\"{host}/Order/Status/{friendlyBookingId}\"," +
+                                $"\"failure\":\"{host}/Order/Status/{friendlyBookingId}\"" +
                             "}," +
                         "\"auto_return\":\"approved\"," +
                         $"\"external_reference\":\"{bookingId}\"," +

@@ -19,8 +19,7 @@
             _appDbContext.PaymentNotices.Add(paymentNotification);
             _appDbContext.SaveChanges();
 
-            //_shoppingCart.ClearCart();
-            Order order = _orderRespository.UpdateOrder(paymentNotification);
+            Order order = _orderRespository.CreateOrderByPayment(paymentNotification);
             _emailRespository.Send(order, paymentNotification);
         }
     }

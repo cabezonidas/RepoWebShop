@@ -87,8 +87,9 @@
         }
 
         function getRow(item) {
+            console.log(item)
             var row = $('<tr>');
-            row.append('<td><a href="Detail/' + item.orderId + '">' + item.bookingId + '</a></td>');
+            row.append('<td><a href="Detail/' + item.orderId + '">' + item.friendlyBookingId + '</a></td>');
             row.append('<td>' + statusCode2DisplayValue(item.status) + '</td>');
             row.append('<td>' + formatDate(item.orderPlaced) + '</td>');
             row.append('<td>' + formatDate(item.payout) + '</td>');

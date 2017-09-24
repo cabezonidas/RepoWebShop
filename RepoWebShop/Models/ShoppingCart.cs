@@ -4,29 +4,50 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 
 namespace RepoWebShop.Models
 {
     public class ShoppingCart
     {
+        private readonly ISession _session;
         private readonly AppDbContext _appDbContext;
-        private ShoppingCart(AppDbContext appDbContext)
+        private readonly IShoppingCartRepository _shoppingCartRepository;
+        private ShoppingCart(AppDbContext appDbContext, ISession session, string cartId, IShoppingCartRepository shoppingCartRepository)
         {
             _appDbContext = appDbContext;
+            _session = session;
+            shoppingCartId = cartId;
+            _shoppingCartRepository = shoppingCartRepository;
         }
 
-        public string ShoppingCartId { get; set; }
+        private string shoppingCartId;
+
+        public string ShoppingCartId
+        {
+            get
+            {
+                Order order = _appDbContext.Orders.FirstOrDefault<Order>(x => x.BookingId == shoppingCartId);
+                if (order != null)
+                {
+                    var newBookingId = GetRandomBookingId();
+                    _session.SetString("CartId", newBookingId);
+                    ShoppingCartId = newBookingId;
+                }
+
+                return shoppingCartId;
+            }
+            set
+            {
+                shoppingCartId = value;
+            }
+        }
 
         public List<ShoppingCartItem> ShoppingCartItems { get; set; }
 
         public string GetShoppingCartComments()
         {
-            var shoppingCartComment = _appDbContext.ShoppingCartComments
-                .Where(c => c.ShoppingCartId == ShoppingCartId)
-                .OrderByDescending(c => c.Created)
-                .FirstOrDefault();
-
-            return shoppingCartComment?.Comments;
+            return _shoppingCartRepository.GetComments(shoppingCartId);
         }
 
         public int GetShoppingCartPreparationTime()
@@ -50,15 +71,20 @@ namespace RepoWebShop.Models
 
         public static ShoppingCart GetCart(IServiceProvider services)
         {
-            ISession session = services.GetRequiredService<IHttpContextAccessor>()?
-                .HttpContext.Session;
+            ISession session = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
 
             var context = services.GetService<AppDbContext>();
-            string cartId = session.GetString("CartId") ?? Guid.NewGuid().ToString();
+            var shoppingCartRepository = services.GetService<IShoppingCartRepository>();
 
+            string cartId = session.GetString("CartId") ?? GetRandomBookingId();
             session.SetString("CartId", cartId);
 
-            return new ShoppingCart(context) { ShoppingCartId = cartId };
+            return new ShoppingCart(context, session, cartId, shoppingCartRepository);
+        }
+
+        private static string GetRandomBookingId()
+        {
+            return Guid.NewGuid().ToString("D").ToUpper();
         }
 
         public void AddToCart(Pie pie, int amount)

@@ -129,7 +129,7 @@ namespace RepoWebShop.Controllers
                 order.OrderTotal = _shoppingCart.ShoppingCartItems.Select(x => x.Amount * x.Pie.Price).Sum();
                 order.Registration = GetCurrentUser();
                 order.CustomerComments = _shoppingCart.GetShoppingCartComments();
-                order.BookingId = Path.GetRandomFileName().Substring(0,6).ToUpper();
+                order.BookingId = _shoppingCart.ShoppingCartId;
                 order.Status = "reservation";
 
                 _orderRepository.CreateOrder(order);
@@ -138,11 +138,7 @@ namespace RepoWebShop.Controllers
 
                 _emailRespository.Send(order, null);
 
-                //Mandar mail al cliente con el codigo y los detalles
-                // redirigir al mismo check out que mercado pago con el codigo de reserva. Agregar un texto piola
-                //return View("Status", _mp.Map<Order, OrderStatusViewModel>(order));
-                return Redirect($"/Order/Status/{order.BookingId}");
-                //return RedirectToAction("CheckoutComplete");
+                return Redirect($"/Order/Status/{order.FriendlyBookingId}");
             }
             return View(order);
         }

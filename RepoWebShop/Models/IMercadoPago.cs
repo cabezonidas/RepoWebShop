@@ -37,7 +37,7 @@ namespace RepoWebShop.Models
         Hashtable Put(String uri, Hashtable data, Dictionary<String, String> parameters);
         Hashtable Delete(String uri);
         Hashtable Delete(String uri, Dictionary<String, String> parameters);
-        string GetRepoPaymentLink(decimal total, string bookingId, string host, string title);
+        string GetRepoPaymentLink(decimal total, string bookingId, string friendlyBookingId, string host, string title);
         Hashtable GetMerchantOrder(String merchantOrderId);
     }
 }

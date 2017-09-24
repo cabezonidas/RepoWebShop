@@ -10,40 +10,39 @@ namespace RepoWebShop.Models
     {
         public PaymentNotice(Hashtable paymentInfoResponse)
         {
-            Order_Code = paymentInfoResponse["external_reference"]?.ToString();
-            Payment_Id = paymentInfoResponse["id"]?.ToString();
+            BookingId = paymentInfoResponse["external_reference"]?.ToString(); //Mapped
+            MercadoPagoTransaction = paymentInfoResponse["id"]?.ToString(); //Mapped
             Payment_Type = paymentInfoResponse["payment_type"]?.ToString();
-            Total_Paid_Amount = Decimal.Parse(paymentInfoResponse["total_paid_amount"]?.ToString());
+            OrderTotal = Decimal.Parse(paymentInfoResponse["total_paid_amount"]?.ToString()); //Mapped
             Order_Id = paymentInfoResponse["order_id"]?.ToString();
             Reason = paymentInfoResponse["reason"]?.ToString();
             Date_Created = DateTime.Parse(paymentInfoResponse["date_created"]?.ToString());
-            Status = paymentInfoResponse["status"]?.ToString();
+            Status = paymentInfoResponse["status"]?.ToString(); //Mapped
 
             Merchant_Order_Id = paymentInfoResponse["merchant_order_id"]?.ToString();
             Net_Received_Amount = Decimal.Parse(paymentInfoResponse["net_received_amount"]?.ToString());
              
             var payerInfoResponse = paymentInfoResponse["payer"] as Hashtable;
-            First_Name = payerInfoResponse["first_name"]?.ToString();
-            Last_Name = payerInfoResponse["last_name"]?.ToString();
+            MercadoPagoName = payerInfoResponse["first_name"]?.ToString() + " " + payerInfoResponse["last_name"]?.ToString(); //Mapped
             User_Id = payerInfoResponse["id"]?.ToString();
-            Email = payerInfoResponse["email"]?.ToString();
-            Nickname = payerInfoResponse["nickname"]?.ToString();
+            MercadoPagoMail = payerInfoResponse["email"]?.ToString(); //Mapped
+            MercadoPagoUsername = payerInfoResponse["nickname"]?.ToString(); //Mapped
 
             var payerPhoneInfoResponse = payerInfoResponse["phone"] as Hashtable;
             Area_Code = payerPhoneInfoResponse["area_code"]?.ToString();
             Extension = payerPhoneInfoResponse["extension"]?.ToString();
-            Number = payerPhoneInfoResponse["number"]?.ToString();
+            PhoneNumber = payerPhoneInfoResponse["number"]?.ToString(); //Mapped
+            PhoneNumber = String.IsNullOrEmpty(PhoneNumber) ? "-" : PhoneNumber;
         }
             
-        public string First_Name { get; set; }
+        public string MercadoPagoName { get; set; }
         public string User_Id { get; set; }
-        public string Last_Name { get; set; }
-        public string Email { get; set; }
-        public string Nickname { get; set; }
+        public string MercadoPagoMail { get; set; }
+        public string MercadoPagoUsername { get; set; }
 
         public string Area_Code { get; set; }
         public string Extension { get; set; }
-        public string Number { get; set; }
+        public string PhoneNumber { get; set; }
 
         public int Id { get; set; }
         public string Payment_Id { get; set; }
@@ -53,7 +52,7 @@ namespace RepoWebShop.Models
         public string Order_Id { get; set; }
         public int Transaction_Order_Id { get; set; }
         public string Reason { get; set; }
-        public string Order_Code { get; set; }
+        public string BookingId { get; set; }
 
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Approved { get; set; }
@@ -70,5 +69,7 @@ namespace RepoWebShop.Models
         public int Installments { get; set; }
         public DateTime? Money_Release_Date { get; set; }
         public string Operation_Type { get; set; }
+        public decimal OrderTotal { get; private set; }
+        public string MercadoPagoTransaction { get; private set; }
     }
 }

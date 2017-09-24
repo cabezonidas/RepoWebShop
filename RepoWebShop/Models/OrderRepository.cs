@@ -9,24 +9,24 @@ namespace RepoWebShop.Models
     {
         private readonly AppDbContext _appDbContext;
         private readonly ShoppingCart _shoppingCart;
+        private readonly IShoppingCartRepository _shoppingCartRepository;
 
-
-        public OrderRepository(AppDbContext appDbContext, ShoppingCart shoppingCart)
+        public OrderRepository(AppDbContext appDbContext, ShoppingCart shoppingCart, IShoppingCartRepository shoppingCartRepository)
         {
             _appDbContext = appDbContext;
             _shoppingCart = shoppingCart;
+            _shoppingCartRepository = shoppingCartRepository;
         }
 
 
         public Order UpdateOrder(PaymentNotice paymentNotice)
         {
-            Order order = this.GetOrderByBookingId(paymentNotice.Order_Code);
+            Order order = this.GetOrderByBookingId(paymentNotice.BookingId);
             if (order != null)
             {
-                order.MercadoPhoneNumber = paymentNotice.Number;
-                order.MercadoPagoMail = paymentNotice.Email;
-                order.MercadoPagoName = paymentNotice.Last_Name + ", " + paymentNotice.First_Name;
-                order.MercadoPagoUsername = paymentNotice.Nickname;
+                order.MercadoPagoMail = paymentNotice.MercadoPagoMail;
+                order.MercadoPagoName = paymentNotice.MercadoPagoName;
+                order.MercadoPagoUsername = paymentNotice.MercadoPagoUsername;
                 order.MercadoPagoTransaction = paymentNotice.Payment_Id;
                 order.Status = paymentNotice.Status;
                 _appDbContext.SaveChanges();
@@ -60,14 +60,14 @@ namespace RepoWebShop.Models
             return order.PickedUp;
         }
 
-        public Order GetDraftOrderByBookingId(string bookingId)
+        public Order GetDraftOrderByBookingId(string friendlyBookingId)
         {
-            return _appDbContext.Orders.Include(x => x.Registration).FirstOrDefault(x => x.BookingId == bookingId && x.Status == "draft");
+            return _appDbContext.Orders.Include(x => x.Registration).OrderByDescending(x => x.OrderId).FirstOrDefault(x => x.BookingId.EndsWith(friendlyBookingId) && x.Status == "draft");
         }
 
-        public Order GetOrderByBookingId(string bookingId)
+        public Order GetOrderByBookingId(string friendlyBookingId)
         {
-            return _appDbContext.Orders.Include(x => x.Registration).FirstOrDefault(x => x.BookingId == bookingId);
+            return _appDbContext.Orders.Include(x => x.Registration).OrderByDescending(x => x.OrderId).FirstOrDefault(x => x.BookingId.EndsWith(friendlyBookingId));
         }
 
         public Order GetOrder(int id)
@@ -113,5 +113,12 @@ namespace RepoWebShop.Models
             }
             _appDbContext.SaveChanges();
         }
+
+
+        public Order CreateOrderByPayment(PaymentNotice paymentNotice)
+        {
+            return _shoppingCartRepository.CreateOrderByPayment(paymentNotice);
+        }
+
     }
 }

@@ -50,9 +50,24 @@ namespace RepoWebShop.Models
 
         public string MercadoPagoName { get; set; }
 
-        public string MercadoPhoneNumber { get; set; }
         public string MercadoPagoUsername { get; internal set; }
 
         public string MercadoPagoTransaction { get; set; }
+
+        [BindNever]
+        public string FriendlyBookingId
+        {
+            get
+            {
+                try
+                {
+                    return BookingId?.Substring(BookingId.Length - 6, 6) ?? string.Empty;
+                }
+                catch
+                {
+                    return String.Empty;
+                }
+            }
+        }
     }
 }

@@ -4,7 +4,7 @@
     var pickUp = Model.Order.PickUp?.ToString("dd'/'MM'/'yyyy") ?? string.Empty;
 }
 <div class="container">
-    <h3>Detalles: @Model.Order.BookingId</h3>
+    <h3>Detalles: @Model.Order.FriendlyBookingId</h3>
 
     <div class="container">
         <table class="table table-hover">
@@ -117,7 +117,7 @@ function getContactDetails() {
         return '@Model.Order.MercadoPagoName <br/>' +
             '@Model.Order.MercadoPagoUsername <br/>' +
             '<a href="mailto:@Model.Order.MercadoPagoMail">@Model.Order.MercadoPagoMail</a> <br/>' +
-            '<a href="tel:@Model.Order.MercadoPhoneNumber">@Model.Order.MercadoPhoneNumber</a>';
+            '<a href="tel:@Model.Order.PhoneNumber">@Model.Order.PhoneNumber</a>';
     }
 }
 

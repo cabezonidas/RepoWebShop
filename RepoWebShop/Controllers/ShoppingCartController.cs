@@ -4,6 +4,8 @@ using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using System;
+
 namespace RepoWebShop.Controllers
 {
     public class ShoppingCartController : Controller
@@ -13,6 +15,7 @@ namespace RepoWebShop.Controllers
         private readonly ShoppingCart _shoppingCart;
         private readonly IMercadoPago _mp;
         private readonly string _bookingId;
+        private readonly string _friendlyBookingId;
 
 
         public ShoppingCartController(IOrderRepository orderRepository, IPieRepository pieRepository, ShoppingCart shoppingCart, IMercadoPago mp)
@@ -20,7 +23,9 @@ namespace RepoWebShop.Controllers
             _orderRepository = orderRepository;
             _pieRepository = pieRepository;
             _shoppingCart = shoppingCart;
-            _bookingId = Path.GetRandomFileName().Substring(0, 6).ToUpper();
+            _bookingId = shoppingCart.ShoppingCartId;
+            _friendlyBookingId = _bookingId.Length >= 6 ? _bookingId?.Substring(_bookingId.Length - 6, 6) ?? string.Empty : String.Empty;
+
             _mp = mp;
         }
 
@@ -36,9 +41,9 @@ namespace RepoWebShop.Controllers
             {
                 ShoppingCart = _shoppingCart,
                 ShoppingCartTotal = total,
-                Mercadolink = _mp.GetRepoPaymentLink(total, _bookingId, Request.Host.ToString(), "La Reposteria"),
+                Mercadolink = _mp.GetRepoPaymentLink(total, _bookingId, _friendlyBookingId, Request.Host.ToString(), "La Reposteria"),
                 PreparationTime = highestPrepTime,
-                BookingId = _bookingId
+                FriendlyBookingId = _friendlyBookingId
             };
             
             return View(shoppingCartViewModel);

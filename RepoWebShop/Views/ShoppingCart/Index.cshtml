@@ -79,7 +79,9 @@ else
                             <tr>
                                 <td>
                                     <a style="margin:30px;" id="mercadolink" href="@Model.Mercadolink" name="MP-Checkout"
-                                       class="btn btn-primary" onreturn="payment">Pagar Ahora</a>
+                                       class="btn btn-primary"> @*onreturn="payment"*@
+                                        Pagar Ahora
+                                    </a>
                                 </td>
                             </tr>
                             <tr>
@@ -127,18 +129,18 @@ else
         },
         error: function () { console.log('err'); }
     });
-    function payment(json) {
+    @*function payment(json) {
         console.log(json);
         $.ajax({
             type: 'GET',
             url: 'api/PaymentData/Process/' + json.collection_status,
             dataType: 'json',
             success: function (data) {
-                window.location.assign('Order/Status/' + '@Model.BookingId');
+                window.location.assign('Order/Status/' + '@Model.FriendlyBookingId');
             }
         });
         return false;
-    }
+    }*@
     $("a").on('click', function () {
         $.ajax({
             type: 'GET',
@@ -146,12 +148,12 @@ else
         });
     });
 
-    $("#mercadolink").on('click', function () {
+    @*$("#mercadolink").on('click', function () {
         $.ajax({
             type: 'GET',
             url: 'api/PaymentData/SaveDraft/' + '@Model.BookingId'
         });
-    });
+    });*@
 </script>
 <script type="text/javascript" src="https://www.mercadopago.com/org-img/jsapi/mptools/buttons/render.js"></script>
 

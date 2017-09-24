@@ -14,7 +14,7 @@ namespace RepoWebShop.ViewModels
         public decimal ShoppingCartTotal { get; set; }
         public string Mercadolink { get; set; }
         public int PreparationTime { get; set; }
-        public string BookingId { get; set; }
+        public string FriendlyBookingId { get; set; }
         public string Comments { get; set; }
     }
 }
