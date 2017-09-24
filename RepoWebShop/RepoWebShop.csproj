@@ -14,6 +14,15 @@
     <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
   </PropertyGroup>
 
+
+
+  <ItemGroup>
+    <Content Include="wwwroot\Content\De las Artes Service Account-55afafff4554.p12" />
+    <Content Include="wwwroot\Content\RepoCalendarClientSecret.json" />
+    <Content Include="wwwroot\Content\RepoServiceAccount-55afafff4554.p12" />
+    <Content Include="wwwroot\Content\RepoServiceAccount.p12" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Update="wwwroot\**\*">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -22,6 +31,8 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="1.2.0" />
+    <PackageReference Include="Google.Apis" Version="1.29.1" />
+    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.29.1.985" />
     <PackageReference Include="MailKit" Version="1.18.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="1.0.0" />
