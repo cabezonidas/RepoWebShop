@@ -8,6 +8,7 @@ using System.Net;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using RepoWebShop.Interfaces;
 
 namespace RepoWebShop.Models
 {

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace RepoWebShop.Models
 {
     public class ProcessingHours : WorkingHours
     {
-        public string ProcessingHoursId { get; set; }
+        public int ProcessingHoursId { get; set; }
     }
 }

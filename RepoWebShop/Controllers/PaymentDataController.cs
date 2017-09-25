@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 
 namespace RepoWebShop.Controllers

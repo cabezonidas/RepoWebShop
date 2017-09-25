@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
-using Microsoft.AspNetCore.Hosting;
-using System.IO;
 using System;
+using RepoWebShop.Interfaces;
 
 namespace RepoWebShop.Controllers
 {

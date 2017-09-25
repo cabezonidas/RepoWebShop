@@ -14,15 +14,6 @@
     <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
   </PropertyGroup>
 
-
-
-  <ItemGroup>
-    <Content Include="wwwroot\Content\De las Artes Service Account-55afafff4554.p12" />
-    <Content Include="wwwroot\Content\RepoCalendarClientSecret.json" />
-    <Content Include="wwwroot\Content\RepoServiceAccount-55afafff4554.p12" />
-    <Content Include="wwwroot\Content\RepoServiceAccount.p12" />
-  </ItemGroup>
-
   <ItemGroup>
     <None Update="wwwroot\**\*">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

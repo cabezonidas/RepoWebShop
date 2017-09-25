@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using RepoWebShop.Interfaces;
 
 namespace RepoWebShop.Controllers
 {

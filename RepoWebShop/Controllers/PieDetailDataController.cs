@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace RepoWebShop.Controllers
 {

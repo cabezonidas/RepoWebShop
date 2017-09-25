@@ -4,9 +4,9 @@ using RepoWebShop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using System.IO;
 using RepoWebShop.ViewModels;
 using AutoMapper;
+using RepoWebShop.Interfaces;
 
 namespace RepoWebShop.Controllers
 {
