@@ -14,6 +14,9 @@ namespace RepoWebShop.Models
 
         }
 
+        public DbSet<ProcessingHours> ProcessingHours { get; set; }
+        public DbSet<OpenHours> OpenHours { get; set; }
+
         public DbSet<Category> Categories { get; set; }
         public DbSet<Pie> Pies { get; set; }
         public DbSet<PieDetail> PieDetails { get; set; }
