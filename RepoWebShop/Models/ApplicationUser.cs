@@ -1,15 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace RepoWebShop.Models
 {
-    public class Registration : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         [Required]
         [Display(Name = "Nombre de usuario")]
@@ -34,26 +29,14 @@ namespace RepoWebShop.Models
         [Display(Name = "Dirección 1")]
         public string AddressLine1 { get; set; }
 
-        [Display(Name = "Dirección 2")]
-        public string AddressLine2 { get; set; }
-
         [Required(ErrorMessage = "Por favor ingrese su código postal")]
         [Display(Name = "Codigo Postal")]
         [StringLength(10, MinimumLength = 4)]
         public string ZipCode { get; set; }
 
-        [Required(ErrorMessage = "Por favor complete la ciudad")]
-        [Display(Name = "Ciudad")]
-        [StringLength(50)]
-        public string City { get; set; }
         [Display(Name = "Provincia")]
         [StringLength(10)]
         public string State { get; set; }
-
-        [Required(ErrorMessage = "Por favor complete el país")]
-        [StringLength(50)]
-        [Display(Name = "País")]
-        public string Country { get; set; }
 
         [Required(ErrorMessage = "Por favor complete el número de teléfono")]
         [StringLength(25)]

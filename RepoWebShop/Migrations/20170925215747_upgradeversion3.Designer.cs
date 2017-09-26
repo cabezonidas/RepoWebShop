@@ -12,9 +12,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170925215747_upgradeversion3")]
+    partial class upgradeversion3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -499,6 +500,16 @@ namespace RepoWebShop.Migrations
                     b.Property<string>("AddressLine1")
                         .IsRequired()
                         .HasMaxLength(100);
+
+                    b.Property<string>("AddressLine2");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<string>("FirstName")
                         .IsRequired()

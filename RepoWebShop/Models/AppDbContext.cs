@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RepoWebShop.Models
 {
@@ -11,7 +8,7 @@ namespace RepoWebShop.Models
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-
+            //Database.EnsureCreated();
         }
 
         public DbSet<ProcessingHours> ProcessingHours { get; set; }
@@ -26,6 +23,6 @@ namespace RepoWebShop.Models
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Email> Emails { get; set; }
         public DbSet<PaymentNotice> PaymentNotices { get; set; }
-        public DbSet<Registration> Registrations { get; set; }
+        public DbSet<ApplicationUser> Registrations { get; set; }
     }
 }

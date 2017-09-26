@@ -38,7 +38,7 @@ namespace RepoWebShop.Models
 
         public DateTime? PickUp { get; set; }
 
-        public virtual Registration Registration { get; set; }
+        public virtual ApplicationUser Registration { get; set; }
 
         public string ManagementComments { get; set; }
 

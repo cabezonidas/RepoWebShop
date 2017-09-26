@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using RepoWebShop.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using RepoWebShop.Models;
+using AutoMapper;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,14 +17,15 @@ namespace RepoWebShop.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IMapper _mapper;
 
-        public AccountController(UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _mapper = mapper;
         }
 
         [AllowAnonymous]
@@ -42,17 +44,30 @@ namespace RepoWebShop.Controllers
             if (!ModelState.IsValid)
                 return View(loginViewModel);
 
+            //var user = _mapper.Map<IdentityUser, ApplicationUser>(await _userManager.FindByNameAsync(loginViewModel.UserName));
             var user = await _userManager.FindByNameAsync(loginViewModel.UserName);
 
             if (user != null)
             {
-                var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false);
-                if (result.Succeeded)
+                try
                 {
-                    if (string.IsNullOrEmpty(loginViewModel.ReturnUrl))
-                        return RedirectToAction("Index", "Home");
+                    //var result = await _signInManager.PasswordSignInAsync(loginViewModel.UserName, user.Password, true, lockoutOnFailure: false);
+                    user.Email = user.NormalizedEmail;
+                    user.UserName = loginViewModel.UserName;
+                    var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false);
 
-                    return Redirect(loginViewModel.ReturnUrl);
+                    if (result.Succeeded)
+                    {
+                        if (string.IsNullOrEmpty(loginViewModel.ReturnUrl))
+                            return RedirectToAction("Index", "Home");
+
+                        return Redirect(loginViewModel.ReturnUrl);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                    return View(loginViewModel);
                 }
             }
 
@@ -70,7 +85,7 @@ namespace RepoWebShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
-        public async Task<IActionResult> Register(Registration registration)
+        public async Task<IActionResult> Register(ApplicationUser registration)
         {
             if (ModelState.IsValid)
             {

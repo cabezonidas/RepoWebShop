@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using RepoWebShop.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RepoWebShop.Models
 {
@@ -16,6 +13,7 @@ namespace RepoWebShop.Models
             CreateMap<PieDetail, PieDetail>().ForMember(x => x.PieDetailId, opt => opt.Ignore());
             CreateMap<Order, OrderStatusViewModel>();
             CreateMap<PaymentNotice, Order>();
+            CreateMap<IdentityUser, ApplicationUser>();
         }
     }
 }

@@ -33,9 +33,29 @@ namespace RepoWebShop
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(_configurationRoot.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<AppDbContext>();
-            
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequiredUniqueChars = 4;
+
+                // Lockout settings
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                options.Lockout.MaxFailedAccessAttempts = 10;
+                options.Lockout.AllowedForNewUsers = true;
+
+                // User settings
+                options.User.RequireUniqueEmail = true;
+            });
+
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IPieRepository, PieRepository>();
             services.AddTransient<IPieDetailRepository, PieDetailRepository>();
@@ -47,9 +67,9 @@ namespace RepoWebShop
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IMercadoPago, MercadoPago>();
 
-            services.AddSingleton<Microsoft.Extensions.Configuration.IConfiguration>(_configurationRoot);  /************/
+            services.AddSingleton<IConfiguration>(_configurationRoot);  /************/
 
-            services.AddScoped<ShoppingCart>(sp => ShoppingCart.GetCart(sp));
+            services.AddScoped(sp => ShoppingCart.GetCart(sp));
 
             services.AddMvc();
 
@@ -75,9 +95,11 @@ namespace RepoWebShop
 
             app.UseStaticFiles();
             app.UseSession();
-            app.UseIdentity();
-            //app.UseMvcWithDefaultRoute();
 
+            app.UseAuthentication();
+            //app.UseIdentity(); deprecated
+            
+            //app.UseMvcWithDefaultRoute();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -89,63 +111,6 @@ namespace RepoWebShop
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-
-            DbInitializer.Seed(app);
-            CreateRoles(serviceProvider);
-        }
-
-        private void CreateRoles(IServiceProvider serviceProvider)
-        {
-            /*_userManager.
-
-            var result = await _userManager.CreateAsync(registration, registration.Password);
-
-            if (result.Succeeded)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            */
-
-
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
-            Task<IdentityResult> roleResult;
-            string username = "cabezonidas";
-
-            //Check that there is an Administrator role and create if not
-            Task<bool> hasAdminRole = roleManager.RoleExistsAsync("Administrator");
-            hasAdminRole.Wait();
-
-            if (!hasAdminRole.Result)
-            {
-                roleResult = roleManager.CreateAsync(new IdentityRole("Administrator"));
-                roleResult.Wait();
-            }
-
-            //Check if the admin user exists and create it if not
-            //Add to the Administrator role
-
-            Task<IdentityUser> testUser = userManager.FindByNameAsync(username);
-            testUser.Wait();
-
-            if (testUser.Result == null)
-            {
-                IdentityUser administrator = new IdentityUser()
-                {
-                    UserName = username,
-                    Email = "sebastian.scd@gmail.com",
-                    PhoneNumber = "02102790126",
-                };
-                
-                Task<IdentityResult> newUser = userManager.CreateAsync(administrator, "Lgaga132!");
-                newUser.Wait();
-
-                if (newUser.Result.Succeeded)
-                {
-                    Task<IdentityResult> newUserRole = userManager.AddToRoleAsync(administrator, "Administrator");
-                    newUserRole.Wait();
-                }
-            }
         }
     }
 }

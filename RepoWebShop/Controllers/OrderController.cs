@@ -15,11 +15,11 @@ namespace RepoWebShop.Controllers
         private readonly IOrderRepository _orderRepository;
         private readonly ShoppingCart _shoppingCart;
         private readonly IPieDetailRepository _pieDetailRepository;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailRepository _emailRespository;
         private readonly IMapper _mp;
 
-        public OrderController(IMapper mp, IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, ShoppingCart shoppingCart, UserManager<IdentityUser> userManager)
+        public OrderController(IMapper mp, IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, ShoppingCart shoppingCart, UserManager<ApplicationUser> userManager)
         {
             _pieDetailRepository = pieDetailRepository;
             _orderRepository = orderRepository;
@@ -152,9 +152,9 @@ namespace RepoWebShop.Controllers
             return View();
         }
 
-        private Registration GetCurrentUser()
+        private ApplicationUser GetCurrentUser()
         {
-            return (_userManager.Users.FirstOrDefault(x => x.UserName == HttpContext.User.Identity.Name) as Registration);
+            return (_userManager.Users.FirstOrDefault(x => x.UserName == HttpContext.User.Identity.Name) as ApplicationUser);
         }
     }
 }
