@@ -107,9 +107,12 @@ namespace RepoWebShop
                     template: "Pie/{action}/{category?}",
                     defaults: new { Controller = "Pie", action = "List" });
 
+                //routes.MapRoute(
+                //    name: "default",
+                //    template: "{controller=Home}/{action=Index}/{id?}");
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Calendar}/{action=Index}/{id?}");
             });
         }
     }

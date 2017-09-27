@@ -7,9 +7,13 @@
     "DataTables": "^1.10.15",
     "moment": "^2.18.1",
     "bootstrap-datepicker": "^1.7.1",
+    "bootstrap-timepicker": "^0.5.2",
     "popper.js": "^1.12.5",
     "jquery-easing": "*",
     "font-awesome": "^4.7.0",
     "simple-line-icons": "^2.4.1"
-  }  
+  },
+  "resolutions": {
+    "jquery": "3.2.1"
+  }
 }
