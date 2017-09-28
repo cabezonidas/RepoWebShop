@@ -6,6 +6,8 @@ namespace RepoWebShop.Interfaces
     public interface IWorkingHours
     {
         [Required]
+        int Id { get; set; }
+        [Required]
         TimeSpan StartingAt { get; set; }
         [Required]
         TimeSpan Duration { get; set; }

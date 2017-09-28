@@ -6,7 +6,7 @@ namespace RepoWebShop.Models
 {
     public class ProcessingHours : IWorkingHours
     {
-        public int ProcessingHoursId { get; set; }
+        public int Id { get; set; }
         public TimeSpan StartingAt { get; set; }
         public TimeSpan Duration { get; set; }
         public int DayId { get; set; }

@@ -9,7 +9,7 @@ namespace RepoWebShop.ViewModels
 {
     public class CalendarViewModel
     {
-        public IEnumerable<ProcessingHours> ProcessingHoures { get; internal set; }
+        public IEnumerable<ProcessingHours> ProcessingHours { get; internal set; }
         public IEnumerable<OpenHours> OpenHours { get; internal set; }
 
 

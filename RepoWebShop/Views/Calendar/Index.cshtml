@@ -1,6 +1,5 @@
 ﻿@model CalendarViewModel
 
-
 <div class="container">
     @{ 
         for (int i = 0; i <= 6; i++)
@@ -24,109 +23,16 @@
                 <tbody>
                     <tr>
                         <td>
-                            <table class="timeframestable" style="margin: 10px; width: 500px; vertical-align:top;">
-                                <thead>
-                                    <tr>
-                                        <td>Id</td>
-                                        <td>Abre</td>
-                                        <td>Cierra</td>
-                                        <td></td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (OpenHours timeframe in Model.OpenHours.Where(x => x.DayId == i))
-                                    {
-                                        <tr>
-                                            <td>@timeframe.OpenHoursId</td>
-                                            <td>@timeframe.StartingAt.ToString("hh\\:mm")</td>
-                                            <td>@timeframe.StartingAt.Add(timeframe.Duration).ToString("hh\\:mm")</td>
-                                            <td><a href="#">Eliminar</a></td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="input-group bootstrap-timepicker timepicker" style="margin:10px; width: 150px;">
-                                                <input id="startingat-openhours-@i" type="text" class="form-control input-small startingat-openhours">
-                                                <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="input-group bootstrap-timepicker timepicker" style="margin:10px; width: 150px;">
-                                                <input id="finishingat-openhours-@i" type="text" class="form-control input-small finishingat-openhours">
-                                                <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a href="#" style="margin:10px;">Agregar</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td id="errorOpenHours-@i"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <working-hours day-id="@i" working-hours="@Model.OpenHours" hours-type="openhours" delete-class="delete openhours-actionlink"></working-hours>
+                            <time-frame day-id=@i class-name="openhours" action-type="addtimeframe openhours-actionlink"></time-frame>
                         </td>
                         <td style="vertical-align:top;">
-                            <table class="timeframestable" style="margin: 10px; width: 500px; vertical-align:top;">
-                                <thead>
-                                    <tr>
-                                        <td>Id</td>
-                                        <td>Abre</td>
-                                        <td>Cierra</td>
-                                        <td></td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (ProcessingHours timeframe in Model.ProcessingHoures.Where(x => x.DayId == i))
-                                    {
-                                        <tr>
-                                            <td>@timeframe.ProcessingHoursId</td>
-                                            <td>@timeframe.StartingAt.ToString("hh\\:mm")</td>
-                                            <td>@timeframe.StartingAt.Add(timeframe.Duration).ToString("hh\\:mm")</td>
-                                            <td><a href="#">Eliminar</a></td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="input-group bootstrap-timepicker timepicker" style="margin:10px; width: 150px;">
-                                                <input id="startingat-openhours-@i" type="text" class="form-control input-small startingat-processinghours">
-                                                <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="input-group bootstrap-timepicker timepicker" style="margin:10px; width: 150px;">
-                                                <input id="finishingat-openhours-@i" type="text" class="form-control input-small finishingat-processinghours">
-                                                <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a href="#" style="margin:10px;">Agregar</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td id="errorOpenHours-@i"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <working-hours day-id="@i" working-hours="@Model.ProcessingHours" hours-type="processinghours" delete-class="delete processinghours-actionlink"></working-hours>
+                            <time-frame day-id=@i class-name="processinghours" action-type="addtimeframe processinghours-actionlink"></time-frame>
                         </td>
                     </tr>
                 </tbody>
             </table>
-
         }
     }
 </div>
@@ -149,8 +55,70 @@
         });
     });
 
-    $('.startingat-openhours').timepicker();
-    $('.finishingat-openhours').timepicker();
-    $('.startingat-processinghours').timepicker();
-    $('.finishingat-processinghours').timepicker();
+    $('.openhours').timepicker({
+        showMeridian: false
+    });
+    $('.processinghours').timepicker({
+        showMeridian: false
+    });
+    $('a.delete.openhours-actionlink').on('click', function (data) {
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/CalendarData/OpenHoursDeleteTimeFrame/' + data.target.id,
+            success: function (data) {
+                alert('ok!');
+            },
+            error: function () {
+                alert('error');
+                //$('openhours-' + data.id).val('No se guardaron los cambios.');
+            }
+        });
+    });
+    $('a.delete.processinghours-actionlink').on('click', function (data) {
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/CalendarData/ProcessingHoursDeleteTimeFrame/' + data.target.id,
+            success: function (data) {
+                alert('ok!');
+            },
+            error: function () {
+                //$('processinghours-' + data.id).val('No se guardaron los cambios.');
+                alert('error');
+            }
+        });
+    });
+
+    $('a.addtimeframe.openhours-actionlink').on('click', function (data) {
+        var startingAt = $('input#' + data.target.id + '.form-control.input-small.startingat.openhours')[0].value;
+        var finishingAt = $('input#' + data.target.id + '.form-control.input-small.finishingat.openhours')[0].value;
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/CalendarData/OpenHoursAddTimeFrame/' + data.target.id + '/' + startingAt + '/' + finishingAt,
+            success: function (data) {
+                alert('ok!');
+            },
+            error: function () {
+                //$('processinghours-' + data.id).val('No se guardaron los cambios.');
+                alert('error');
+            }
+        });
+    });
+
+    $('a.addtimeframe.processinghours-actionlink').on('click', function (data) {
+        var startingAt = $('input#' + data.target.id + '.form-control.input-small.startingat.processinghours')[0].value;
+        var finishingAt = $('input#' + data.target.id + '.form-control.input-small.finishingat.processinghours')[0].value;
+        $.ajax({
+            type: 'POST',
+            url: '/api/CalendarData/ProcessingHoursAddTimeFrame/' + data.target.id + '/' + startingAt + '/' + finishingAt,
+            success: function (data) {
+                alert('ok!');
+            },
+            error: function () {
+                //$('processinghours-' + data.id).val('No se guardaron los cambios.');
+                alert('error');
+            }
+        });
+    });
+
 </script>

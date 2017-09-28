@@ -22,7 +22,7 @@ namespace RepoWebShop.Controllers
         {
             var calendar = new CalendarViewModel()
             {
-                ProcessingHoures = _appDbContext.ProcessingHours.OrderBy(x => x.StartingAt).ToList(),
+                ProcessingHours = _appDbContext.ProcessingHours.OrderBy(x => x.StartingAt).ToList(),
                 OpenHours = _appDbContext.OpenHours.OrderBy(x => x.StartingAt).ToList()
             };
 
