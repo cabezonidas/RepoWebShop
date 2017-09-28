@@ -12,8 +12,8 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20170925220348_upgradeversion4")]
-    partial class upgradeversion4
+    [Migration("20170928073633_casamigration")]
+    partial class casamigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -228,7 +228,7 @@ namespace RepoWebShop.Migrations
 
             modelBuilder.Entity("RepoWebShop.Models.OpenHours", b =>
                 {
-                    b.Property<int>("OpenHoursId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("DayId");
@@ -237,7 +237,7 @@ namespace RepoWebShop.Migrations
 
                     b.Property<TimeSpan>("StartingAt");
 
-                    b.HasKey("OpenHoursId");
+                    b.HasKey("Id");
 
                     b.ToTable("OpenHours");
                 });
@@ -445,7 +445,7 @@ namespace RepoWebShop.Migrations
 
             modelBuilder.Entity("RepoWebShop.Models.ProcessingHours", b =>
                 {
-                    b.Property<int>("ProcessingHoursId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("DayId");
@@ -454,7 +454,7 @@ namespace RepoWebShop.Migrations
 
                     b.Property<TimeSpan>("StartingAt");
 
-                    b.HasKey("ProcessingHoursId");
+                    b.HasKey("Id");
 
                     b.ToTable("ProcessingHours");
                 });
@@ -500,16 +500,6 @@ namespace RepoWebShop.Migrations
                     b.Property<string>("AddressLine1")
                         .IsRequired()
                         .HasMaxLength(100);
-
-                    b.Property<string>("AddressLine2");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasMaxLength(50);
 
                     b.Property<string>("FirstName")
                         .IsRequired()
