@@ -16,8 +16,9 @@ namespace RepoWebShop.TagHelpers
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "table";
+            //output.Attributes.SetAttribute("class", "timeframestable table table-striped table-condensed");
             output.Attributes.SetAttribute("class", "timeframestable");
-            output.Attributes.SetAttribute("style", "margin: 10px; width: 500px; vertical-align:top;");
+            output.Attributes.SetAttribute("style", "vertical-align:top; width:100%;");
             output.Content.AppendHtml(
                 @"<thead>
                     <tr>

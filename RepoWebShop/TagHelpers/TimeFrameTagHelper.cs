@@ -15,23 +15,25 @@ namespace RepoWebShop.TagHelpers
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "table";
+            output.Attributes.SetAttribute("style", "width: 100%;");
+            //output.Attributes.SetAttribute("class", "table table-striped table-condensed");
             output.Content.AppendHtml(
                 @"<tbody>
                     <tr>
                         <td>
-                            <div class='input-group bootstrap-timepicker timepicker' style='margin:10px; width: 150px;'>" +
+                            <div class='input-group bootstrap-timepicker timepicker' style='margin:5px; width: 100px;'>" +
                                 $"<input id='{DayId}' type='text' class='form-control input-small startingat {ClassName}'>" +
                                 @"<span class='input-group-addon'><i class='glyphicon glyphicon-time'></i></span>
                             </div>
                         </td>
                         <td>
-                            <div class='input-group bootstrap-timepicker timepicker' style='margin:10px; width: 150px;'>" +
+                            <div class='input-group bootstrap-timepicker timepicker' style='margin:5px; width: 100px;'>" +
                                 $"<input id='{DayId}' type='text' class='form-control input-small finishingat {ClassName}'>" +
                                 @"<span class='input-group-addon'><i class='glyphicon glyphicon-time'></i></span>
                             </div>
                         </td>
                         <td>" +
-                            $"<a id='{DayId}' class='{ActionType}' href='#' style='margin:10px;'>Agregar</a>" +
+                            $"<a id='{DayId}' class='{ActionType}' href='#'>Agregar</a>" +
                         @"</td>
                     </tr>
                     <tr>

@@ -1,38 +1,42 @@
 ﻿@model CalendarViewModel
 
 <div class="container">
-    @{ 
+    @{
         for (int i = 0; i <= 6; i++)
         {
-            <table>
-                <thead>
-                    <tr>
-                        <td>
-                            <h2>@Model.DayToString(i)</h2>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: center;">
-                            <strong>Atencion al Publico</strong>
-                        </td>
-                        <td style="text-align: center;">
-                            <strong>Produccion</strong>
-                        </td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <working-hours day-id="@i" working-hours="@Model.OpenHours" hours-type="openhours" delete-class="delete openhours-actionlink"></working-hours>
-                            <time-frame day-id=@i class-name="openhours" action-type="addtimeframe openhours-actionlink"></time-frame>
-                        </td>
-                        <td style="vertical-align:top;">
-                            <working-hours day-id="@i" working-hours="@Model.ProcessingHours" hours-type="processinghours" delete-class="delete processinghours-actionlink"></working-hours>
-                            <time-frame day-id=@i class-name="processinghours" action-type="addtimeframe processinghours-actionlink"></time-frame>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="col-sm-6 col-lg-4 col-md-6">
+                <table style="width:100%;" >
+                    <tbody>
+                        <tr>
+                            <td>
+                                <h2>@Model.DayToString(i)</h2>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">
+                                <strong>Atencion al Publico</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <working-hours day-id="@i" working-hours="@Model.OpenHours" hours-type="openhours" delete-class="delete openhours-actionlink"></working-hours>
+                                <time-frame day-id=@i class-name="openhours" action-type="addtimeframe openhours-actionlink"></time-frame>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">
+                                <strong>Produccion</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align:top;">
+                                <working-hours day-id="@i" working-hours="@Model.ProcessingHours" hours-type="processinghours" delete-class="delete processinghours-actionlink"></working-hours>
+                                <time-frame day-id=@i class-name="processinghours" action-type="addtimeframe processinghours-actionlink"></time-frame>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         }
     }
 </div>
@@ -62,12 +66,12 @@
         showMeridian: false
     });
     $('a.delete.openhours-actionlink').on('click', function (data) {
+        data.preventDefault();
+
         $.ajax({
             type: 'DELETE',
             url: '/api/CalendarData/OpenHoursDeleteTimeFrame/' + data.target.id,
-            success: function (data) {
-                alert('ok!');
-            },
+            success: function (data) { location.reload(); },
             error: function () {
                 alert('error');
                 //$('openhours-' + data.id).val('No se guardaron los cambios.');
@@ -75,12 +79,12 @@
         });
     });
     $('a.delete.processinghours-actionlink').on('click', function (data) {
+        data.preventDefault();
+
         $.ajax({
             type: 'DELETE',
             url: '/api/CalendarData/ProcessingHoursDeleteTimeFrame/' + data.target.id,
-            success: function (data) {
-                alert('ok!');
-            },
+            success: function (data) { location.reload(); },
             error: function () {
                 //$('processinghours-' + data.id).val('No se guardaron los cambios.');
                 alert('error');
@@ -89,15 +93,15 @@
     });
 
     $('a.addtimeframe.openhours-actionlink').on('click', function (data) {
+        data.preventDefault();
+
         var startingAt = $('input#' + data.target.id + '.form-control.input-small.startingat.openhours')[0].value;
         var finishingAt = $('input#' + data.target.id + '.form-control.input-small.finishingat.openhours')[0].value;
 
         $.ajax({
             type: 'POST',
             url: '/api/CalendarData/OpenHoursAddTimeFrame/' + data.target.id + '/' + startingAt + '/' + finishingAt,
-            success: function (data) {
-                alert('ok!');
-            },
+            success: function (data) { location.reload(); },
             error: function () {
                 //$('processinghours-' + data.id).val('No se guardaron los cambios.');
                 alert('error');
@@ -106,14 +110,14 @@
     });
 
     $('a.addtimeframe.processinghours-actionlink').on('click', function (data) {
+        data.preventDefault();
+
         var startingAt = $('input#' + data.target.id + '.form-control.input-small.startingat.processinghours')[0].value;
         var finishingAt = $('input#' + data.target.id + '.form-control.input-small.finishingat.processinghours')[0].value;
         $.ajax({
             type: 'POST',
             url: '/api/CalendarData/ProcessingHoursAddTimeFrame/' + data.target.id + '/' + startingAt + '/' + finishingAt,
-            success: function (data) {
-                alert('ok!');
-            },
+            success: function (data) { location.reload(); },
             error: function () {
                 //$('processinghours-' + data.id).val('No se guardaron los cambios.');
                 alert('error');
