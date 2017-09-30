@@ -62,7 +62,7 @@ namespace RepoWebShop.Repositories
                 }
                 finally
                 {
-                    _appDbContext.Add(email);
+                    _appDbContext.Emails.Add(email);
                     _appDbContext.SaveChanges();
                 }
 
