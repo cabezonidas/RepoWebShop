@@ -80,7 +80,7 @@ namespace RepoWebShop.Models
 
         public IEnumerable<OrderDetail> GetOrderDetails(int id)
         {
-            return _appDbContext.OrderDetails.Include(x => x.Pie).ThenInclude(x => x.PieDetail).Where(x => x.OrderId == id);
+            return _appDbContext.OrderDetails.Include(x => x.Order.Email).Include(x => x.Pie).ThenInclude(x => x.PieDetail).Where(x => x.OrderId == id);
         }
 
         public IEnumerable<Order> GetAll()

@@ -28,5 +28,19 @@ namespace RepoWebShop.Controllers
 
             return View(calendar);
         }
+
+
+
+        [HttpGet]
+        public ViewResult OpenHours()
+        {
+            var calendar = new CalendarViewModel()
+            {
+                ProcessingHours = _appDbContext.ProcessingHours.OrderBy(x => x.StartingAt).ToList(),
+                OpenHours = _appDbContext.OpenHours.OrderBy(x => x.StartingAt).ToList()
+            };
+
+            return View(calendar);
+        }
     }
 }

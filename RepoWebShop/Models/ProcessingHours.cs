@@ -4,11 +4,7 @@ using RepoWebShop.Interfaces;
 
 namespace RepoWebShop.Models
 {
-    public class ProcessingHours : IWorkingHours
+    public class ProcessingHours : WorkingHours
     {
-        public int Id { get; set; }
-        public TimeSpan StartingAt { get; set; }
-        public TimeSpan Duration { get; set; }
-        public int DayId { get; set; }
     }
 }

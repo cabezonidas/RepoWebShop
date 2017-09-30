@@ -7,11 +7,7 @@ using System.Threading.Tasks;
 
 namespace RepoWebShop.Models
 {
-    public class OpenHours : IWorkingHours
+    public class OpenHours : WorkingHours
     {
-        public int Id { get; set; }
-        public TimeSpan StartingAt { get; set; }
-        public TimeSpan Duration { get; set; }
-        public int DayId { get; set; }
     }
 }

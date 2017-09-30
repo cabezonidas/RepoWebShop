@@ -27,6 +27,13 @@ namespace RepoWebShop.Controllers
         }
 
         [HttpGet]
+        [Route("GetPieById/{pieDetailId}")]
+        public PieDetail GetPieById(int pieDetailId)
+        {
+            return _pieDetailRepository.GetPieDetailById(pieDetailId);
+        }
+
+        [HttpGet]
         [Route("LoadMorePieDetails/{category}")]
         public IEnumerable<PieDetailViewModel> LoadMorePieDetails(string category)
         {

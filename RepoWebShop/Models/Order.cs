@@ -54,6 +54,8 @@ namespace RepoWebShop.Models
 
         public string MercadoPagoTransaction { get; set; }
 
+        public virtual Email Email { get; set; }
+        
         [BindNever]
         public string FriendlyBookingId
         {

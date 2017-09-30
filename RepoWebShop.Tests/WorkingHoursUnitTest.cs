@@ -1,10 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using RepoWebShop.Helpers;
 
 namespace RepoWebShop.Tests
 {

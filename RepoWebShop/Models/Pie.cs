@@ -10,10 +10,13 @@ namespace RepoWebShop.Models
     {
     	public int PieId { get; set; }
         [Required]
+        [Display(Name = "Tamaño")]
         public string Name { get; set; }
         [Required]
+        [Display(Name = "Precio")]
         public decimal Price { get; set; }
         [Required]
+        [Display(Name = "Descripción del tamaño")]
         public string SizeDescription { get; set; }
 
         public int PieDetailId { get; set; }

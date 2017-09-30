@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using RepoWebShop.ViewModels;
 using AutoMapper;
 using RepoWebShop.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace RepoWebShop.Controllers
 {
@@ -42,15 +43,15 @@ namespace RepoWebShop.Controllers
             {
                 case "approved":
                     status = "Aprobado";
-                    description = "Gracias! Tu compra ya fue aceptada y ya estamos trabajando para que disfrutes de nuestras mejores delicias.";
+                    description = "Gracias! Tu compra ya fue aceptada y ya estamos trabajando para que disfrutes de nuestras mejores delicias. Pronto recibiras un mail con los detalles.";
                     break;
                 case "pending":
                     status = "Pendiente";
-                    description = "Tu compra todavía no fue aceptada. Está pendiente.";
+                    description = "Tu compra todavía no fue aceptada. Está pendiente. Cuando se acredite el pago, te enviaremos un mail con todos los detalles.";
                     break;
                 case "in_process":
                     status = "En proceso";
-                    description = "La acreditacion aún está en proceso.";
+                    description = "La acreditacion aún está en proceso. Cuando se acredite el pago te mandaremos un mail con los detalles. Gracias!";
                     break;
                 case "rejected":
                     status = "Rechazado";
@@ -62,7 +63,7 @@ namespace RepoWebShop.Controllers
                     break;
                 case "reservation":
                     status = "Reseva condirmada";
-                    description = "La reserva se encuentra confirmada.";
+                    description = "La reserva se encuentra confirmada. Pronto recibiras un mail con los detalles.";
                     break;
                 default:
                     status = "No encontrado";
@@ -94,7 +95,7 @@ namespace RepoWebShop.Controllers
             {
                 var items = _orderRepository.GetOrderDetails(order.OrderId);
 
-                OrderDetailsViewModel orderDetails = new OrderDetailsViewModel()
+                OrderDetailsViewModel orderDetails = new OrderDetailsViewModel(_userManager)
                 {
                     Order = order,
                     Items = items
@@ -154,7 +155,7 @@ namespace RepoWebShop.Controllers
 
         private ApplicationUser GetCurrentUser()
         {
-            return (_userManager.Users.FirstOrDefault(x => x.UserName == HttpContext.User.Identity.Name) as ApplicationUser);
+            return _userManager.Users.FirstOrDefault(x => x.NormalizedUserName.ToLower() == HttpContext.User.Identity.Name.ToLower());
         }
     }
 }

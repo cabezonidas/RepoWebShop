@@ -20,7 +20,7 @@
                 {
                     <tr>
                         <td> @item.Amount </td>
-                        <td> @item.Pie.Name </td>
+                        <td> @item.Pie.PieDetail.Name @item.Pie.Name </td>
                         <td> @item.Pie.Price</td>
                     </tr>
                 }
@@ -89,6 +89,15 @@
                     <input id="commentsSubmit" type="submit" class="btn btn-primary" value="Guardar" />
                 </td>
             </tr>
+            <tr>
+                <td><strong>Correo enviado</strong></td>
+                <td colspan="2">
+                    <div>
+                        <p><strong>@Model.Order.Email.To</strong></p>
+                        <p>@Html.Raw(Model.Order.Email.Body)</p>
+                    </div>
+                </td>
+            </tr>
         </tbody>
     </table>
 
@@ -108,18 +117,14 @@ $('#orderStatus').append(statusCode2DisplayValue('@Model.Order.Status'));
 $('#contactDetails').append(getContactDetails());
 
 function getContactDetails() {
-    if ('@Model.Order.Registration'.toString()) {
-        return '@Model.Order.Registration?.LastName, @Model.Order.Registration?.FirstName <br/>' +
-            '<a href="mailto:@Model.Order.Registration?.Email">@Model.Order.Registration?.Email</a> <br/>' +
-            '<a href="tel:@Model.Order.Registration?.PhoneNumber">@Model.Order.Registration?.PhoneNumber</a>';
-    }
-    else {
-        return '@Model.Order.MercadoPagoName <br/>' +
-            '@Model.Order.MercadoPagoUsername <br/>' +
-            '<a href="mailto:@Model.Order.MercadoPagoMail">@Model.Order.MercadoPagoMail</a> <br/>' +
-            '<a href="tel:@Model.Order.PhoneNumber">@Model.Order.PhoneNumber</a>';
-    }
+    return '<p>@Model.Order.Registration?.LastName, @Model.Order.Registration?.FirstName <p/>' +
+    '<p><a href="mailto:@Model.Order.Registration?.NormalizedEmail">@Model.Order.Registration?.NormalizedEmail.ToLower()</a> </p>' +
+    '<p>@Model.Order.MercadoPagoName </p>' +
+    '<p>@Model.Order.MercadoPagoUsername </p>' +
+    '<p><a href="mailto:@Model.Order.MercadoPagoMail">@Model.Order.MercadoPagoMail</a></p>' +
+    '<p><a href="tel:@Model.Order.PhoneNumber">@Model.Order.PhoneNumber</a></p>';
 }
+
 
 $("#commentsSubmit").on('click', function () {
     $.ajax({

@@ -24,5 +24,7 @@ namespace RepoWebShop.Models
         public DbSet<Email> Emails { get; set; }
         public DbSet<PaymentNotice> PaymentNotices { get; set; }
         public DbSet<ApplicationUser> Registrations { get; set; }
+        public DbSet<Vacation> Vacations { get; set; }
+        public DbSet<PublicHoliday> Holidays { get; set; }
     }
 }

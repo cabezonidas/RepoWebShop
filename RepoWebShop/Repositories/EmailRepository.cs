@@ -38,7 +38,7 @@ namespace RepoWebShop.Repositories
 
                 Email email = new Email()
                 {
-                    To = payment == null ? order.Registration.Email : mercadopagomail,
+                    To = payment == null ? order.Registration.NormalizedEmail.ToLower() : mercadopagomail,
                     Bcc = sender,
                     Subject = "La Reposteria - Confirmacion de " + (payment == null ? "Reserva" : "Compra"),
                     Body = buildHTML(orderdetails, order, comments)
@@ -65,7 +65,8 @@ namespace RepoWebShop.Repositories
                 }
                 finally
                 {
-                    _appDbContext.Emails.Add(email);
+                    var emailsaved = _appDbContext.Emails.Add(email);
+                    order.Email = emailsaved.Entity;
                     _appDbContext.SaveChanges();
                 }
 
@@ -114,7 +115,7 @@ namespace RepoWebShop.Repositories
                   @"</section> 
                   <div style='text-align:left;'>
                     <p><strong>Importante</strong></p>
-                    <p>Antes de pasar a buscar tu pedido, fijate nuestros </p><a href='www.lareposteria.com.ar/Calendar/OpenHours'>horarios de atencion</a>
+                    <p>Antes de pasar a buscar tu pedido, fijate nuestros <a href='http://www.lareposteria.com.ar/Calendar/OpenHours'>horarios de atencion</a></p>
                     <p>
                       Si queres retirar tu pedido en otro momento, ponete en contacto con nosotros y vamos a tratar de hacer lo posible por adaptarnos. Si estas muy apresurado, a veces podemos hacer las entregas antes del tiempo calculado, pero no siempre podremos.
                     </p>
