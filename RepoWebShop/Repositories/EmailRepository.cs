@@ -26,6 +26,9 @@ namespace RepoWebShop.Repositories
 
         public void Send(Order order, PaymentNotice payment = null)
         {
+            var sender = _config.GetSection("EmailSender").Value;
+            var pass = _config.GetSection("EmailSenderPass").Value;
+
             if (order != null)
             {
                 var orderdetails = _orderRepository.GetOrderDetails(order.OrderId);
@@ -36,13 +39,13 @@ namespace RepoWebShop.Repositories
                 Email email = new Email()
                 {
                     To = payment == null ? order.Registration.Email : mercadopagomail,
-                    Bcc = "info@lareposteria.com.ar",
+                    Bcc = sender,
                     Subject = "La Reposteria - Confirmacion de " + (payment == null ? "Reserva" : "Compra"),
                     Body = buildHTML(orderdetails, order, comments)
                 };
 
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("De las Artes", "info@lareposteria.com.ar"));
+                message.From.Add(new MailboxAddress("De las Artes", sender));
                 message.To.Add(new MailboxAddress(email.To));
                 message.Bcc.Add(new MailboxAddress(email.Bcc));
                 message.Subject = email.Subject;
@@ -55,7 +58,7 @@ namespace RepoWebShop.Repositories
                     {
                         client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTlsWhenAvailable);
                         client.AuthenticationMechanisms.Remove("XOAUTH2"); // Must be removed for Gmail SMTP
-                        client.Authenticate("info@lareposteria.com.ar", "alamaula10");
+                        client.Authenticate(sender, pass);
                         client.Send(message);
                         client.Disconnect(true);
                     }

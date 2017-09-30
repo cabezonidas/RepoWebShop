@@ -31,7 +31,7 @@ namespace RepoWebShop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(_configurationRoot.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped);
+                options.UseSqlServer(_configurationRoot.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
@@ -87,6 +87,7 @@ namespace RepoWebShop
             {
                 app.UseExceptionHandler("/AppException");
             }
+
             app.UseStaticFiles();
             app.UseSession();
             app.UseAuthentication();

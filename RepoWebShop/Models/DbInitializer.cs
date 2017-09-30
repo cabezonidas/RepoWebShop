@@ -55,7 +55,7 @@ namespace RepoWebShop.Models
                         new Pie { Name = "Chica", Price = 240M, PieDetail = Piedetails["Frutal"], SizeDescription = "8 porciones" },
                         new Pie { Name = "Grande", Price = 310M, PieDetail = Piedetails["Frutal"], SizeDescription = "12 porciones" },
                         new Pie { Name = "Super Grande", Price = 420M, PieDetail = Piedetails["Frutal"], SizeDescription = "16 porciones" },
-                        new Pie { Name = "Crumble", Price = 220M, PieDetail = Piedetails["Crumble"], SizeDescription = "8 porciones" },
+                        new Pie { Name = "Estandar", Price = 220M, PieDetail = Piedetails["Crumble"], SizeDescription = "8 porciones" },
                         new Pie { Name = "Chica", Price = 200M, PieDetail = Piedetails["Africa"], SizeDescription = "8 porciones" },
                         new Pie { Name = "Grande", Price = 250M, PieDetail = Piedetails["Africa"], SizeDescription = "12 porciones" },
                         new Pie { Name = "Super Grande", Price = 360M, PieDetail = Piedetails["Africa"], SizeDescription = "16 porciones" },
