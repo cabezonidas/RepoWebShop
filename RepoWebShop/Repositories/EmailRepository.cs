@@ -1,10 +1,12 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.AspNetCore.Hosting;
 using MimeKit;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 
 namespace RepoWebShop.Repositories
 {
@@ -12,23 +14,28 @@ namespace RepoWebShop.Repositories
     {
         private readonly AppDbContext _appDbContext;
         private readonly IOrderRepository _orderRepository;
-
-        public EmailRepository(AppDbContext appDbContext, IOrderRepository orderRepository)
+        private readonly IHostingEnvironment _env;
+        private readonly IConfiguration _config;
+        public EmailRepository(AppDbContext appDbContext, IOrderRepository orderRepository, IHostingEnvironment env, IConfiguration config)
         {
             _appDbContext = appDbContext;
             _orderRepository = orderRepository;
+            _env = env;
+            _config = config;
         }
 
-        public void Send(Order order, PaymentNotice payment)
+        public void Send(Order order, PaymentNotice payment = null)
         {
             if (order != null)
             {
                 var orderdetails = _orderRepository.GetOrderDetails(order.OrderId);
                 var comments = order.CustomerComments;
 
+                var mercadopagomail = !_env.IsProduction() ? _config.GetSection("MercadoPagoTestEmail").Value : order.MercadoPagoMail;
+
                 Email email = new Email()
                 {
-                    To = payment == null ? order.Registration.Email : order.MercadoPagoMail,
+                    To = payment == null ? order.Registration.Email : mercadopagomail,
                     Bcc = "info@lareposteria.com.ar",
                     Subject = "La Reposteria - Confirmacion de " + (payment == null ? "Reserva" : "Compra"),
                     Body = buildHTML(orderdetails, order, comments)
@@ -42,15 +49,23 @@ namespace RepoWebShop.Repositories
 
                 message.Body = (new BodyBuilder() { HtmlBody = email.Body }).ToMessageBody();
 
-
-                using (var client = new SmtpClient())
+                try
                 {
-                    client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTlsWhenAvailable);
-                    client.AuthenticationMechanisms.Remove("XOAUTH2"); // Must be removed for Gmail SMTP
-                    client.Authenticate("info@lareposteria.com.ar", "alamaula10");
-                    client.Send(message);
-                    client.Disconnect(true);
+                    using (var client = new SmtpClient())
+                    {
+                        client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTlsWhenAvailable);
+                        client.AuthenticationMechanisms.Remove("XOAUTH2"); // Must be removed for Gmail SMTP
+                        client.Authenticate("info@lareposteria.com.ar", "alamaula10");
+                        client.Send(message);
+                        client.Disconnect(true);
+                    }
                 }
+                finally
+                {
+                    _appDbContext.Add(email);
+                    _appDbContext.SaveChanges();
+                }
+
             }
         }
 
@@ -96,14 +111,7 @@ namespace RepoWebShop.Repositories
                   @"</section> 
                   <div style='text-align:left;'>
                     <p><strong>Importante</strong></p>
-                    <p>Antes de pasar a buscar tu pedido, fijate nuestros horarios de atencion</p>
-                    <p>
-                      Martes a Viernes: 08:00 a 12.30 y 16:00 a 20:00
-                      <br/>
-                      Sabados: 08:00 a 20:00
-                      <br/>
-                      Domingos: 08:00 a 13:00
-                    </p>
+                    <p>Antes de pasar a buscar tu pedido, fijate nuestros </p><a href='www.lareposteria.com.ar/Calendar/OpenHours'>horarios de atencion</a>
                     <p>
                       Si queres retirar tu pedido en otro momento, ponete en contacto con nosotros y vamos a tratar de hacer lo posible por adaptarnos. Si estas muy apresurado, a veces podemos hacer las entregas antes del tiempo calculado, pero no siempre podremos.
                     </p>

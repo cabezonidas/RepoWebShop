@@ -31,7 +31,7 @@ namespace RepoWebShop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(_configurationRoot.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(_configurationRoot.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped);
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
@@ -63,18 +63,13 @@ namespace RepoWebShop
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IEmailRepository, EmailRepository>();
             services.AddTransient<IShoppingCartRepository, ShoppingCartRepository>();
-
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IMercadoPago, MercadoPago>();
-
-            services.AddSingleton<IConfiguration>(_configurationRoot);  /************/
-
+            services.AddSingleton<IConfiguration>(_configurationRoot);
             services.AddScoped(sp => ShoppingCart.GetCart(sp));
 
             services.AddMvc();
-
             services.AddAutoMapper();
-
             services.AddMemoryCache();
             services.AddSession();
             
@@ -92,14 +87,9 @@ namespace RepoWebShop
             {
                 app.UseExceptionHandler("/AppException");
             }
-
             app.UseStaticFiles();
             app.UseSession();
-
             app.UseAuthentication();
-            //app.UseIdentity(); deprecated
-            
-            //app.UseMvcWithDefaultRoute();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -107,12 +97,9 @@ namespace RepoWebShop
                     template: "Pie/{action}/{category?}",
                     defaults: new { Controller = "Pie", action = "List" });
 
-                //routes.MapRoute(
-                //    name: "default",
-                //    template: "{controller=Home}/{action=Index}/{id?}");
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Calendar}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
