@@ -14,6 +14,8 @@ namespace RepoWebShop.Models
             CreateMap<Order, OrderStatusViewModel>();
             CreateMap<PaymentNotice, Order>();
             CreateMap<IdentityUser, ApplicationUser>();
+            CreateMap<WorkingHours, ProcessingHours>();
+            CreateMap<WorkingHours, OpenHours>();
         }
     }
 }

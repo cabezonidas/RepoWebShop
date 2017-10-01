@@ -36,11 +36,8 @@ namespace RepoWebShop.TagHelpers
                             $"<a id='{DayId}' class='{ActionType}' href='#'>Agregar</a>" +
                         @"</td>
                     </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>" +
-                        $"<td id='{ClassName}-{DayId}'></td>" +
+                    <tr>" + 
+                        $"<td colspan='3' id='{ClassName}-{DayId}'></td>" +
                     @"</tr>
                 </tbody>"
             );

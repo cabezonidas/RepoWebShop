@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
@@ -14,19 +15,23 @@ namespace RepoWebShop.Controllers
     public class CalendarDataController : Controller
     {
         private readonly AppDbContext _appDbContext;
-        public CalendarDataController(AppDbContext appDbContext)
+        private readonly IMapper _mapper;
+
+        public CalendarDataController(AppDbContext appDbContext, IMapper mapper)
         {
             _appDbContext = appDbContext;
+            _mapper = mapper;
         }
 
         [HttpPost]
         [Route("OpenHoursAddTimeFrame/{dayId}/{startingAt}/{finishAt}")]
         public IActionResult OpenHoursAddTimeFrame(int dayId, string startingAt, string finishAt)
         {
-            var openHours = new OpenHours();
-            if(TryGetOpenHours(startingAt, finishAt, dayId, out openHours))
+            var openHours = new WorkingHours();
+            if(TryGetWorkingHours(startingAt, finishAt, dayId, out openHours))
             {
-                _appDbContext.OpenHours.Add(openHours);
+                var result = _mapper.Map<WorkingHours, OpenHours>(openHours);
+                _appDbContext.OpenHours.Add(result);
                 _appDbContext.SaveChanges();
                 return Ok();
             }
@@ -47,10 +52,11 @@ namespace RepoWebShop.Controllers
         [Route("ProcessingHoursAddTimeFrame/{dayId}/{startingAt}/{finishAt}")]
         public IActionResult ProcessingHoursAddTimeFrame(int dayId, string startingAt, string finishAt)
         {
-            var processingHours = new ProcessingHours();
-            if (TryGetProcessingHours(startingAt, finishAt, dayId, out processingHours))
+            var processingHours = new WorkingHours();
+            if (TryGetWorkingHours(startingAt, finishAt, dayId, out processingHours))
             {
-                _appDbContext.ProcessingHours.Add(processingHours);
+                var result = _mapper.Map<WorkingHours, ProcessingHours>(processingHours);
+                _appDbContext.ProcessingHours.Add(result);
                 _appDbContext.SaveChanges();
                 return Ok();
             }
@@ -67,31 +73,9 @@ namespace RepoWebShop.Controllers
             return Ok();
         }
 
-        private bool TryGetOpenHours(string startingAt, string finishingAt, int dayId, out OpenHours workingHours)
+        private bool TryGetWorkingHours(string startingAt, string finishingAt, int dayId, out WorkingHours workingHours)
         {
-            workingHours = new OpenHours();
-            try
-            {
-                var StartingAt = TimeSpan.Parse(startingAt);
-                var FinishingAt = TimeSpan.Parse(finishingAt);
-                if (FinishingAt > StartingAt)
-                {
-                    workingHours.DayId = dayId;
-                    workingHours.StartingAt = StartingAt;
-                    workingHours.Duration = new TimeSpan(FinishingAt.Ticks - StartingAt.Ticks);
-                    return true;
-                }
-                return false;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private bool TryGetProcessingHours(string startingAt, string finishingAt, int dayId, out ProcessingHours workingHours)
-        {
-            workingHours = new ProcessingHours();
+            workingHours = new WorkingHours();
             try
             {
                 var StartingAt = TimeSpan.Parse(startingAt);

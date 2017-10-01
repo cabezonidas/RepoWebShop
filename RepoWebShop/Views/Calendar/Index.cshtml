@@ -73,8 +73,7 @@
             url: '/api/CalendarData/OpenHoursDeleteTimeFrame/' + data.target.id,
             success: function (data) { location.reload(); },
             error: function () {
-                alert('error');
-                //$('openhours-' + data.id).val('No se guardaron los cambios.');
+                $('#openhours-' + data.target.id).empty().append('No se guardaron los cambios.');
             }
         });
     });
@@ -86,8 +85,7 @@
             url: '/api/CalendarData/ProcessingHoursDeleteTimeFrame/' + data.target.id,
             success: function (data) { location.reload(); },
             error: function () {
-                //$('processinghours-' + data.id).val('No se guardaron los cambios.');
-                alert('error');
+                $('#processinghours-' + data.target.id).empty().append('No se guardaron los cambios.');
             }
         });
     });
@@ -103,8 +101,7 @@
             url: '/api/CalendarData/OpenHoursAddTimeFrame/' + data.target.id + '/' + startingAt + '/' + finishingAt,
             success: function (data) { location.reload(); },
             error: function () {
-                //$('processinghours-' + data.id).val('No se guardaron los cambios.');
-                alert('error');
+                $('#openhours-' + data.target.id).empty().append('No se guardaron los cambios.');
             }
         });
     });
@@ -119,8 +116,7 @@
             url: '/api/CalendarData/ProcessingHoursAddTimeFrame/' + data.target.id + '/' + startingAt + '/' + finishingAt,
             success: function (data) { location.reload(); },
             error: function () {
-                //$('processinghours-' + data.id).val('No se guardaron los cambios.');
-                alert('error');
+                $('#processinghours-' + data.target.id).empty().append('No se guardaron los cambios.');
             }
         });
     });
