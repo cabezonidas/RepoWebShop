@@ -16,19 +16,13 @@ namespace RepoWebShop.Repositories
 
         public DateTime GetPickupEstimate(int hours)
         {
-            //The week starts on Sundays and it's 0
-            var dayId = (int)DateTime.Now.DayOfWeek;
-
-            var enoughtime = false;
-            for(int i = dayId; !enoughtime; i++)
-            {
-                //15:00
-                var timeFrames = _appDbContext.ProcessingHours.Where(x => x.DayId == i % 7);
-
-            }
-
-            return DateTime.Now;
-            
+            return WorkingHours.GetPickUpDate(
+                DateTime.Now,
+                hours,
+                _appDbContext.ProcessingHours.ToList(),
+                _appDbContext.OpenHours.ToList(),
+                _appDbContext.Holidays.ToList(),
+                _appDbContext.Vacations.ToList());            
         }
     }
 }

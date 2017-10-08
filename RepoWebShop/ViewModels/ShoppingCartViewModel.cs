@@ -16,5 +16,6 @@ namespace RepoWebShop.ViewModels
         public int PreparationTime { get; set; }
         public string FriendlyBookingId { get; set; }
         public string Comments { get; set; }
+        public DateTime PickupDate { get; set; }
     }
 }

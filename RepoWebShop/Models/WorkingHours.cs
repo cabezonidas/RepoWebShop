@@ -13,12 +13,13 @@ namespace RepoWebShop.Models
         public TimeSpan Duration { get; set; }
         public int DayId { get; set; }
 
-        public static DateTime GetPickUpDate(DateTime orderAccredited, int estimationHs, IEnumerable<IWorkingHours> processingHours, IEnumerable<IWorkingHours> openHours)
+        public static DateTime GetPickUpDate(DateTime orderAccredited, int estimationHs, IEnumerable<IWorkingHours> processingHours, IEnumerable<IWorkingHours> openHours, IEnumerable<PublicHoliday> holidays, IEnumerable<Vacation> vacations)
         {
-            return GetOrderReady(GetOrderReady(orderAccredited, estimationHs, processingHours), 0, openHours);
+            var orderFinished = GetOrderReady(orderAccredited, estimationHs, processingHours, holidays, vacations, true);
+            return GetOrderReady(orderFinished, 0, openHours, holidays, vacations, false);
         }
 
-        public static DateTime GetOrderReady(DateTime orderAccreditted, int estimationHs, IEnumerable<IWorkingHours> workingHours)
+        public static DateTime GetOrderReady(DateTime orderAccreditted, int estimationHs, IEnumerable<IWorkingHours> workingHours, IEnumerable<PublicHoliday> holidays, IEnumerable<Vacation> vacations, bool isProcessing)
         {
             int minutesEstimation = estimationHs * 60;
             int dayOfWeekSubmitted = (int)orderAccreditted.DayOfWeek;
@@ -27,9 +28,9 @@ namespace RepoWebShop.Models
             var availableMinutes = 0;
             var preparationDays = 0;
 
-            for (int i = dayOfWeekSubmitted; !orderReady; i++)
+            for (int i = dayOfWeekSubmitted, days = 0; !orderReady; i++, days++)
             {
-                var workingslots = GetWorkingSlots(workingHours, i % 7);
+                var workingslots = GetWorkingSlots(workingHours, i % 7, isProcessing, orderAccreditted, vacations, holidays, days);
                 offset = orderAccreditted.Hour * 60 + orderAccreditted.Minute;
                 if (i == dayOfWeekSubmitted)
                     workingslots.RemoveWhere(x => x < offset);
@@ -51,14 +52,27 @@ namespace RepoWebShop.Models
             return time.Hours * 60 + time.Minutes;
         }
 
-        private static SortedSet<int> GetWorkingSlots(IEnumerable<IWorkingHours> workingHours, int dayId)
+        private static SortedSet<int> GetWorkingSlots(IEnumerable<IWorkingHours> workingHours, int dayId, bool isProcessing, DateTime orderAccreditted, IEnumerable<Vacation> vacations, IEnumerable<PublicHoliday> holidays, int days)
         {
-            // Check public holidays and special dates
-            var processingSlots = workingHours.Where(x => x.DayId == dayId);
-
             SortedSet<int> result = new SortedSet<int>();
 
-            foreach (var processingSlot in processingSlots)
+            var workingDay = orderAccreditted.Date.AddDays(days);
+            int? isVacationDay = vacations?.Where(x => workingDay >= x.StartDate.Date && workingDay <= x.EndDate.Date).Count();
+
+            if (isVacationDay.HasValue && isVacationDay.Value > 0)
+                return result;
+
+            var workingSlots = workingHours.Where(x => x.DayId == dayId);
+
+            var matchingHolidays = holidays?.Where(x => x.Date.Date == workingDay);
+
+            if (matchingHolidays != null && matchingHolidays.Count() > 0)
+                if(isProcessing)
+                    workingSlots = matchingHolidays.Select(x => x.ProcessingHours);
+                else
+                    workingSlots = matchingHolidays.Select(x => x.OpenHours);
+
+            foreach (var processingSlot in workingSlots)
             {
                 var startingAt = getminutes(processingSlot.StartingAt);
                 var duration = getminutes(processingSlot.Duration);

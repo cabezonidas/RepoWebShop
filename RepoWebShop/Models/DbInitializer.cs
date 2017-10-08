@@ -15,6 +15,26 @@ namespace RepoWebShop.Models
             //AppDbContext context = serviceProvider.GetService<AppDbContext>();
             using (var context = new AppDbContext(serviceProvider.GetRequiredService<DbContextOptions<AppDbContext>>()))
             {
+                if (!context.Holidays.Any())
+                {
+                    context.Holidays.Add(new PublicHoliday()
+                    {
+                        Date = new DateTime(2017, 10, 12),
+                        OpenHours = new OpenHours() { StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(6, 0, 0) },
+                        ProcessingHours = new ProcessingHours() { StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(6, 0, 0) }
+                    });
+                }
+
+                if (!context.Vacations.Any())
+                {
+                    context.Vacations.Add(new Vacation()
+                    {
+                         StartDate = new DateTime(2018, 1, 10),
+                         EndDate = new DateTime(2018, 1, 10)
+                    });
+                }
+
+
                 if (!context.OpenHours.Any())
                 {
                     context.OpenHours.Add(new OpenHours() { DayId = 2, StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(4, 0, 0) });
