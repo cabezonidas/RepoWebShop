@@ -12,8 +12,8 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20170930212207_emailinorder")]
-    partial class emailinorder
+    [Migration("20171008215727_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -251,7 +251,7 @@ namespace RepoWebShop.Migrations
 
                     b.Property<string>("CustomerComments");
 
-                    b.Property<int>("EmailId");
+                    b.Property<int?>("EmailId");
 
                     b.Property<string>("ManagementComments");
 
@@ -463,6 +463,26 @@ namespace RepoWebShop.Migrations
                     b.ToTable("ProcessingHours");
                 });
 
+            modelBuilder.Entity("RepoWebShop.Models.PublicHoliday", b =>
+                {
+                    b.Property<int>("PublicHolidayId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<int?>("OpenHoursId");
+
+                    b.Property<int?>("ProcessingHoursId");
+
+                    b.HasKey("PublicHolidayId");
+
+                    b.HasIndex("OpenHoursId");
+
+                    b.HasIndex("ProcessingHoursId");
+
+                    b.ToTable("Holidays");
+                });
+
             modelBuilder.Entity("RepoWebShop.Models.ShoppingCartComment", b =>
                 {
                     b.Property<int>("ShoppingCartCommentId")
@@ -495,6 +515,20 @@ namespace RepoWebShop.Migrations
                     b.HasIndex("PieId");
 
                     b.ToTable("ShoppingCartItems");
+                });
+
+            modelBuilder.Entity("RepoWebShop.Models.Vacation", b =>
+                {
+                    b.Property<int>("VacationId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("EndDate");
+
+                    b.Property<DateTime>("StartDate");
+
+                    b.HasKey("VacationId");
+
+                    b.ToTable("Vacations");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.ApplicationUser", b =>
@@ -577,8 +611,7 @@ namespace RepoWebShop.Migrations
                 {
                     b.HasOne("RepoWebShop.Models.Email", "Email")
                         .WithMany()
-                        .HasForeignKey("EmailId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EmailId");
 
                     b.HasOne("RepoWebShop.Models.ApplicationUser", "Registration")
                         .WithMany()
@@ -616,6 +649,17 @@ namespace RepoWebShop.Migrations
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("RepoWebShop.Models.PublicHoliday", b =>
+                {
+                    b.HasOne("RepoWebShop.Models.OpenHours", "OpenHours")
+                        .WithMany()
+                        .HasForeignKey("OpenHoursId");
+
+                    b.HasOne("RepoWebShop.Models.ProcessingHours", "ProcessingHours")
+                        .WithMany()
+                        .HasForeignKey("ProcessingHoursId");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.ShoppingCartItem", b =>

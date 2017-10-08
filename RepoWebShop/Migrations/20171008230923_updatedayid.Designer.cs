@@ -12,8 +12,8 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20170930234357_refactor")]
-    partial class refactor
+    [Migration("20171008230923_updatedayid")]
+    partial class updatedayid
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

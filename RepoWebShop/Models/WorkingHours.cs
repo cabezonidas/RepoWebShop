@@ -1,6 +1,7 @@
 ﻿using RepoWebShop.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace RepoWebShop.Models
         public int Id { get; set; }
         public TimeSpan StartingAt { get; set; }
         public TimeSpan Duration { get; set; }
+        [Range(0, 8)]
         public int DayId { get; set; }
 
         public static DateTime GetPickUpDate(DateTime orderAccredited, int estimationHs, IEnumerable<IWorkingHours> processingHours, IEnumerable<IWorkingHours> openHours, IEnumerable<PublicHoliday> holidays, IEnumerable<Vacation> vacations)

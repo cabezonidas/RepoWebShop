@@ -20,8 +20,8 @@ namespace RepoWebShop.Models
                     context.Holidays.Add(new PublicHoliday()
                     {
                         Date = new DateTime(2017, 10, 12),
-                        OpenHours = new OpenHours() { StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(6, 0, 0) },
-                        ProcessingHours = new ProcessingHours() { StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(6, 0, 0) }
+                        OpenHours = new OpenHours() { DayId = 8, StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(6, 0, 0) },
+                        ProcessingHours = new ProcessingHours() { DayId = 8, StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(6, 0, 0) }
                     });
                 }
 
