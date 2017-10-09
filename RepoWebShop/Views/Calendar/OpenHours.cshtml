@@ -1,5 +1,68 @@
 ﻿@model OpenHoursViewModel
-
+@{var daysId = Model.OpenHours.OrderBy(x => x.DayId).Select(x => x.DayId).Distinct(); }
 <div class="container">
+    <h2>Horarios de Atencion</h2>
+    <div class="table-responsive">
+        <table id="horarios" class="table table-bordered">
+            <tr>
+                <th></th>
+                <th>Desde</th>
+                <th>Hasta</th>
+            </tr>
+            @foreach (var dayId in daysId)
+            {
+                {
+                    var openHours = Model.OpenHours.Where(x => x.DayId == dayId).ToArray();
+                    @for (int i = 0; i < openHours.Count(); i++)
+                    {
+                        <tr>
+                            @if (i == 0)
+                            {
+                                <td rowspan="@openHours.Count()"><strong>@Model.DayToString(dayId)</strong></td>
+                            }
+                            <td>@openHours[i].StartingAt.ToString("hh\\:mm")</td>
+                            <td>@openHours[i].StartingAt.Add(openHours[i].Duration).ToString("hh\\:mm")</td>
+                        </tr>
+                    }
+                }
+            }
+        </table>
 
+    </div>
+
+    @if (Model.PublicHolidays.Any())
+    {
+        <h2>Fechas especiales</h2>
+    }
+
+    @foreach (var holiday in Model.PublicHolidays.OrderBy(x => x.Date))
+    {
+
+        <div class="table-responsive">
+            @{
+                if (holiday.OpenHours == null)
+                {
+                    <h4>@holiday.Date.ToString("dd'/'MM'/'yyyy") - Cerrado</h4>
+                }
+                else
+                {
+                    <h4>
+                        @holiday.Date.ToString("dd'/'MM'/'yyyy") - Abierto desde @holiday.OpenHours.StartingAt.ToString("hh\\:mm") hasta: @holiday.OpenHours.StartingAt.Add(holiday.OpenHours.Duration).ToString("hh\\:mm")
+                    </h4>
+                }
+            }
+        </div>
+    }
 </div>
+
+
+<script type="text/javascript">
+    //$(document).ready(function () {
+    //    $('#horarios').DataTable({
+    //        "searching": false,
+    //        "sorting": false,
+    //        "paging": false,
+    //        "bInfo": false
+    //    });
+    //});
+</script>
