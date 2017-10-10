@@ -1,5 +1,82 @@
 ﻿@model SpecialDatesViewModel
 
 <div class="container">
-    <a asp-controller="Calendar" asp-action="AddVacations" class="btn btn-primary">Agregar vacaciones</a>
+    <div class="col-sm-6 col-lg-6 col-md-6">
+        <h2>Vacaciones planificadas</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td><strong>Desde</strong></td>
+                    <td><strong>Hasta</strong></td>
+                    <td></td>
+                </tr>
+            </thead>
+            @foreach (var vacation in Model.Vacations.OrderBy(x => x.StartDate))
+            {
+                <tr>
+                    <td>@vacation.StartDate.ToString("dd'/'MM'/'yyyy")</td>
+                    <td>@vacation.EndDate.ToString("dd'/'MM'/'yyyy")</td>
+                    <td>
+                        <a href="/Calendar/DeleteVacation/@vacation.VacationId" id="@vacation.VacationId" class="deleteVacation">Eliminar</a>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="3">
+                    <a asp-controller="Calendar" asp-action="AddVacations" class="btn btn-primary">Agregar vacaciones</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-sm-6 col-lg-6 col-md-6">
+        <h2>Fechas especiales</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td><strong>Fecha</strong></td>
+                    <td colspan="2"><strong>Elaboracion</strong></td>
+                    <td colspan="2"><strong>Abierto</strong></td>
+                    <td></td>
+                </tr>
+            </thead>
+            @foreach (var holiday in Model.Holidays.OrderBy(x => x.Date))
+            {
+                <tr>
+                    <td>@holiday.Date.ToString("dd'/'MM'/'yyyy")</td>
+                    @{
+                        if (holiday.ProcessingHours == null)
+                        {
+                            <td colspan="2">Sin Produccion</td>
+                        }
+                        else
+                        {
+                            <td>@holiday.ProcessingHours.StartingAt.ToString("hh\\:mm")</td>
+                            <td>@holiday.ProcessingHours.StartingAt.Add(holiday.ProcessingHours.StartingAt).ToString("hh\\:mm")</td>
+                        }
+                    }
+                    @{
+                        if (holiday.OpenHours == null)
+                        {
+                            <td colspan="2">Local cerrado</td>
+                        }
+                        else
+                        {
+                            <td>@holiday.OpenHours.StartingAt.ToString("hh\\:mm")</td>
+                            <td>@holiday.OpenHours.StartingAt.Add(holiday.OpenHours.Duration).ToString("hh\\:mm")</td>
+                        }
+                    }
+                    <td>
+                        <a href="/Calendar/DeleteHoliday/@holiday.PublicHolidayId" id="@holiday.PublicHolidayId" class="deleteHoliday">Eliminar</a>
+                    </td>
+
+
+                </tr>
+            }
+            <tr>
+                <td colspan="6">
+                    <a asp-controller="Calendar" asp-action="AddPublicHoliday" class="btn btn-primary">Agregar fecha</a>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>

@@ -34,6 +34,29 @@ namespace RepoWebShop.Controllers
             return View(calendar);
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteVacation(int id)
+        {
+            var vacation = _appDbContext.Vacations.FirstOrDefault(w => w.VacationId == id);
+            _appDbContext.Vacations.Remove(vacation);
+            await _appDbContext.SaveChangesAsync();
+            return RedirectToAction("SpecialDates", "Calendar");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteHoliday(int id)
+        {
+            var holiday = _appDbContext.Holidays.Include(x => x.ProcessingHours).Include(x => x.OpenHours).FirstOrDefault(w => w.PublicHolidayId == id);
+            if(holiday.ProcessingHours != null)
+                _appDbContext.ProcessingHours.Remove(holiday.ProcessingHours);
+            if (holiday.OpenHours != null)
+                _appDbContext.OpenHours.Remove(holiday.OpenHours);
+            _appDbContext.Holidays.Remove(holiday);
+            await _appDbContext.SaveChangesAsync();
+            return RedirectToAction("SpecialDates", "Calendar");
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public ViewResult OpenHours()
@@ -71,13 +94,27 @@ namespace RepoWebShop.Controllers
         [HttpGet]
         public ViewResult AddPublicHoliday()
         {
-            return View(new PublicHoliday() {  });
+            return View(new AddSpecialDateViewModel() { Date = DateTime.Now });
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPublicHoliday(PublicHoliday holiday)
+        public async Task<IActionResult> AddPublicHoliday(AddSpecialDateViewModel specialDateViewModel)
         {
-            throw new NotImplementedException();
+            var IsDataConsistent = true;
+
+            //Todo: validation de timeframes
+
+            if (ModelState.IsValid && IsDataConsistent)
+            {
+                var result = new PublicHoliday();
+                _mapper.Map<AddSpecialDateViewModel, PublicHoliday>(specialDateViewModel, result);
+                _appDbContext.Holidays.Add(result);
+                await _appDbContext.SaveChangesAsync();
+                return RedirectToAction("SpecialDates", "Calendar");
+            }
+            if (!IsDataConsistent)
+                ModelState.AddModelError("InvalidValues", "Datos mal cargados");
+            return View(specialDateViewModel);
         }
 
         [HttpGet]

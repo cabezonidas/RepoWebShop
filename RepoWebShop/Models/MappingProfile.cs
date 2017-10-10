@@ -16,6 +16,23 @@ namespace RepoWebShop.Models
             CreateMap<IdentityUser, ApplicationUser>();
             CreateMap<WorkingHours, OpenHours>();
             CreateMap<WorkingHours, ProcessingHours>();
+            CreateMap<AddSpecialDateViewModel, PublicHoliday>()
+                .ForMember(x => x.OpenHours,
+                    opt => opt.MapFrom(src => src.OpenHoursStartingAt.HasValue && src.OpenHoursFinishingAt.HasValue  ? 
+                    new OpenHours()
+                    {
+                        StartingAt = src.OpenHoursStartingAt.Value,
+                        Duration = src.OpenHoursFinishingAt.Value.Subtract(src.OpenHoursStartingAt.Value),
+                        DayId = 8
+                    } : null))
+                .ForMember(x => x.ProcessingHours,
+                    opt => opt.MapFrom(src => src.ProcessingHoursStartingAt.HasValue && src.ProcessingHoursFinishingAt.HasValue ?
+                    new ProcessingHours()
+                    {
+                        StartingAt = src.ProcessingHoursStartingAt.Value,
+                        Duration = src.ProcessingHoursFinishingAt.Value.Subtract(src.ProcessingHoursStartingAt.Value),
+                        DayId = 8
+                    } : null));
         }
     }
 }

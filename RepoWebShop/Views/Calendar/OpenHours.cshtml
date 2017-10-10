@@ -45,7 +45,7 @@
                     else
                     {
                         <h4>
-                            @holiday.Date.ToString("dd'/'MM'/'yyyy") - Abierto desde @holiday.OpenHours.StartingAt.ToString("hh\\:mm") hasta: @holiday.OpenHours.StartingAt.Add(holiday.OpenHours.Duration).ToString("hh\\:mm")
+                            @holiday.Date.ToString("dd'/'MM'/'yyyy") - Abierto desde @holiday.OpenHours.StartingAt.ToString("hh\\:mm") hasta @holiday.OpenHours.StartingAt.Add(holiday.OpenHours.Duration).ToString("hh\\:mm")
                         </h4>
                     }
                 }
@@ -73,15 +73,3 @@
         }
     </div>
 </div>
-
-
-<script type="text/javascript">
-    //$(document).ready(function () {
-    //    $('#horarios').DataTable({
-    //        "searching": false,
-    //        "sorting": false,
-    //        "paging": false,
-    //        "bInfo": false
-    //    });
-    //});
-</script>

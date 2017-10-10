@@ -10,7 +10,11 @@ namespace RepoWebShop.Models
     {
         public int VacationId { get; set; }
         [Display(Name = "Comienzo")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Fin")]
         public DateTime EndDate { get; set; }
     }
