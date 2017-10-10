@@ -43,6 +43,7 @@
                     @await Component.InvokeAsync("CategoryMenu")
                     <li><a href="#">Fotos</a></li>
                     <li><a asp-controller="Contact" asp-action="Index">Contacto</a></li>
+                    <li><a asp-controller="Calendar" asp-action="OpenHours">Horarios</a></li>
                     @await  Component.InvokeAsync("ShoppingCartSummary")
                     @if (this.User.IsInRole("Administrator"))
                     {

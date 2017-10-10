@@ -6,6 +6,7 @@ using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Controllers
 {
@@ -44,6 +45,52 @@ namespace RepoWebShop.Controllers
                 Vacations = _appDbContext.Vacations.Where(x => x.EndDate >= DateTime.Now.Date)
             };
             return View(result);
+        }
+
+        [HttpGet]
+        public ViewResult AddVacations()
+        {
+            return View(new Vacation() { StartDate = DateTime.Now.Date, EndDate = DateTime.Now.Date });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddVacations(Vacation vacation)
+        {
+            bool AreDatesOk = vacation.EndDate.Subtract(vacation.StartDate).Ticks > 0;
+            if (ModelState.IsValid && AreDatesOk)
+            {
+                _appDbContext.Vacations.Add(vacation);
+                await _appDbContext.SaveChangesAsync();
+                return RedirectToAction("SpecialDates", "Calendar");
+            }
+            if (!AreDatesOk)
+                ModelState.AddModelError("InvalidDates", "Las fechas deben ser validas y la fecha de comienzo debe ser mayor a la de fin.");
+            return View(vacation);
+        }
+
+        [HttpGet]
+        public ViewResult AddPublicHoliday()
+        {
+            return View(new PublicHoliday() {  });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddPublicHoliday(PublicHoliday holiday)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpGet]
+        public IActionResult SpecialDates(int id)
+        {
+            var holidays = _appDbContext.Holidays.Include(x => x.OpenHours).Include(x => x.ProcessingHours).ToList();
+            var vacations = _appDbContext.Vacations.ToList();
+            SpecialDatesViewModel model = new SpecialDatesViewModel()
+            {
+                Holidays = holidays,
+                Vacations = vacations
+            };
+            return View(model);
         }
     }
 }

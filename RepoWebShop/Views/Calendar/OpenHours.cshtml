@@ -1,16 +1,16 @@
 ﻿@model OpenHoursViewModel
 @{var daysId = Model.OpenHours.OrderBy(x => x.DayId).Select(x => x.DayId).Distinct(); }
 <div class="container">
-    <h2>Horarios de Atencion</h2>
-    <div class="table-responsive">
-        <table id="horarios" class="table table-bordered">
-            <tr>
-                <th></th>
-                <th>Desde</th>
-                <th>Hasta</th>
-            </tr>
-            @foreach (var dayId in daysId)
-            {
+    <div class="col-sm-4 col-lg-4 col-md-4">
+        <h2>Horarios de Atencion</h2>
+        <div >
+            <table id="horarios" style="width:100%" class="table" >
+                <tr>
+                    <th></th>
+                    <th>Desde</th>
+                    <th>Hasta</th>
+                </tr>
+                @foreach (var dayId in daysId)
                 {
                     var openHours = Model.OpenHours.Where(x => x.DayId == dayId).ToArray();
                     @for (int i = 0; i < openHours.Count(); i++)
@@ -18,41 +18,60 @@
                         <tr>
                             @if (i == 0)
                             {
-                                <td rowspan="@openHours.Count()"><strong>@Model.DayToString(dayId)</strong></td>
+                                <td rowspan="@openHours.Count().ToString()"><strong>@Model.DayToString(dayId)</strong></td>
                             }
                             <td>@openHours[i].StartingAt.ToString("hh\\:mm")</td>
                             <td>@openHours[i].StartingAt.Add(openHours[i].Duration).ToString("hh\\:mm")</td>
                         </tr>
                     }
                 }
-            }
-        </table>
-
+            </table>
+        </div>
     </div>
+    <div class="col-sm-4 col-lg-4 col-md-4">
+        @if (Model.PublicHolidays.Any())
+        {
+            <h2>Fechas especiales</h2>
+        }
 
-    @if (Model.PublicHolidays.Any())
-    {
-        <h2>Fechas especiales</h2>
-    }
-
-    @foreach (var holiday in Model.PublicHolidays.OrderBy(x => x.Date))
-    {
-
-        <div class="table-responsive">
-            @{
-                if (holiday.OpenHours == null)
+        @foreach (var holiday in Model.PublicHolidays.OrderBy(x => x.Date))
+        {
+            <div>
+                @{
+                    if (holiday.OpenHours == null)
+                    {
+                        <h4>@holiday.Date.ToString("dd'/'MM'/'yyyy") - Cerrado</h4>
+                    }
+                    else
+                    {
+                        <h4>
+                            @holiday.Date.ToString("dd'/'MM'/'yyyy") - Abierto desde @holiday.OpenHours.StartingAt.ToString("hh\\:mm") hasta: @holiday.OpenHours.StartingAt.Add(holiday.OpenHours.Duration).ToString("hh\\:mm")
+                        </h4>
+                    }
+                }
+            </div>
+        }
+    </div>
+    
+    <div class="col-sm-4 col-lg-4 col-md-4">
+        @if (Model.Vacations.Any())
+        {
+            <h2>Vacaciones</h2>
+            <h4>Nosotros tambien necesitamos descansar!</h4>
+            foreach (var vac in Model.Vacations)
+            {
+                <p>Cerramos el @vac.StartDate.ToString("dd'/'MM'/'yyyy") hasta el @vac.EndDate.ToString("dd'/'MM'/'yyyy")</p>
+                if (DateTime.Now.Ticks >= vac.StartDate.Ticks && DateTime.Now.Ticks <= vac.EndDate.Ticks)
                 {
-                    <h4>@holiday.Date.ToString("dd'/'MM'/'yyyy") - Cerrado</h4>
+                    <p>No te preocupes, faltan @(vac.EndDate.Subtract(DateTime.Now).Days) dias y se pasan volando!</p>
                 }
                 else
                 {
-                    <h4>
-                        @holiday.Date.ToString("dd'/'MM'/'yyyy") - Abierto desde @holiday.OpenHours.StartingAt.ToString("hh\\:mm") hasta: @holiday.OpenHours.StartingAt.Add(holiday.OpenHours.Duration).ToString("hh\\:mm")
-                    </h4>
+                    <p>No te preocupes, @(vac.EndDate.Subtract(vac.StartDate).Days) dias se pasan volando!</p>
                 }
             }
-        </div>
-    }
+        }
+    </div>
 </div>
 
 
