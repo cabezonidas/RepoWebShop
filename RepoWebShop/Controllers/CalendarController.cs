@@ -100,20 +100,14 @@ namespace RepoWebShop.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPublicHoliday(AddSpecialDateViewModel specialDateViewModel)
         {
-            var IsDataConsistent = true;
-
-            //Todo: validation de timeframes
-
-            if (ModelState.IsValid && IsDataConsistent)
+            if (ModelState.IsValid && specialDateViewModel.IsValid)
             {
-                var result = new PublicHoliday();
-                _mapper.Map<AddSpecialDateViewModel, PublicHoliday>(specialDateViewModel, result);
-                _appDbContext.Holidays.Add(result);
+                _appDbContext.Holidays.Add(_mapper.Map<AddSpecialDateViewModel, PublicHoliday>(specialDateViewModel));
                 await _appDbContext.SaveChangesAsync();
                 return RedirectToAction("SpecialDates", "Calendar");
             }
-            if (!IsDataConsistent)
-                ModelState.AddModelError("InvalidValues", "Datos mal cargados");
+            if (!specialDateViewModel.IsValid)
+                ModelState.AddModelError("InvalidValues", "Fecha debe ser mayor a hoy. El par de horas de produccion o de atencion debe estar vacio, o populados ambos valores con horario desde menor a horario hasta.");
             return View(specialDateViewModel);
         }
 
