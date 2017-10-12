@@ -1,0 +1,7 @@
+﻿.table-user-information {
+    max-width: 600px;
+}
+textarea {
+    resize: vertical;
+    width: 100%
+}

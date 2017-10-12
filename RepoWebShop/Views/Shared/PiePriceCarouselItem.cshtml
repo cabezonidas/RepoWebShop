@@ -1,6 +1,8 @@
 ﻿@model Pie
 
-<div class='addToCart' style='text-align:center;'>
+<link href="~/Content/Shared/PiePriceCarouselItem.css" rel="stylesheet" />
+
+<div class='addToCart'>
     <h2><strong>$ @Model.Price</strong></h2>
     <p class='button'>
         <a class='btn btn-primary' asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@Model.PieId'>

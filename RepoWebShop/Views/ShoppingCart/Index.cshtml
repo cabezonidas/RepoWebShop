@@ -1,4 +1,7 @@
 ﻿@model ShoppingCartViewModel
+
+<link href="~/Content/ShoppingCart/Index.css" rel="stylesheet" />
+
 <div class="container">
     <h2>Tu carrito de compras</h2>
 </div>
@@ -32,7 +35,7 @@ else
                         <td class="text-center">
                             <a asp-controller="ShoppingCart" asp-action="RemoveFromShoppingCart"
                                asp-route-pieId="@line.Pie.PieId">
-                                <span class="glyphicon glyphicon-remove" style="color:darkred;"></span>
+                                <span class="glyphicon glyphicon-remove remove-item"></span>
                             </a>
                         </td>
                         <td class="text-center">@line.Amount</td>
@@ -46,12 +49,12 @@ else
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4" class="text-right" style="vertical-align:middle">
+                    <td colspan="4" class="text-right">
                         <strong>
                             Total:
                         </strong>
                     </td>
-                    <td class="text-right" style="vertical-align:middle">
+                    <td class="text-right">
                         <strong>
                             @Model.ShoppingCartTotal.ToString("c")
                         </strong>
@@ -62,7 +65,7 @@ else
         <div class="form-group" >
             <label class="col-md-12 control-label">Comentarios</label>
             <div class="col-md-12">
-                <textarea id="comments" placeholder="Quisiera agregar 'Feliz Cumple Mati!', gracias :)" class="form-control" rows="4" style="resize: vertical;"></textarea>
+                <textarea id="comments" placeholder="Quisiera agregar 'Feliz Cumple Mati!', gracias :)" class="form-control" rows="4"></textarea>
             </div>
         </div>
     </div>
@@ -71,16 +74,16 @@ else
             <div class="row" >
                 <div class="col-lg-6 col-md-6">
                     <div class="payment-item">
-                        <table style="text-align:center" align="center">
+                        <table align="center">
                             <tr>
                                 <td>
-                                    <img class="img-responsive" style="margin: 0px auto;" alt="Mercado Pago'" src="~/Pictures/mercadopago.png">
+                                    <img class="img-responsive" alt="Mercado Pago'" src="~/Pictures/mercadopago.png">
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <a style="margin:30px;" id="mercadolink" href="@Model.Mercadolink" name="MP-Checkout"
-                                       class="btn btn-primary"> @*onreturn="payment"*@
+                                    <a id="mercadolink" href="@Model.Mercadolink" name="MP-Checkout"
+                                       class="btn btn-primary submit-btn">
                                         Pagar Ahora
                                     </a>
                                 </td>
@@ -96,15 +99,15 @@ else
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <div class="payment-item">
-                        <table style="text-align:center" align="center">
+                        <table align="center">
                             <tr>
                                 <td>
-                                    <img class="img-responsive" style="margin: 0px auto;" alt="Mercado Pago'" src="~/Pictures/logo.png">
+                                    <img class="img-responsive" alt="Mercado Pago'" src="~/Pictures/logo.png">
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <a style="margin:30px;" class="btn btn-primary" asp-controller="Order" asp-action="Checkout">Reservar</a>
+                                    <a class="btn btn-primary submit-btn" asp-controller="Order" asp-action="Checkout">Reservar</a>
                                 </td>
                             </tr>
                             <tr>
@@ -127,34 +130,14 @@ else
         dataType: 'json',
         success: function (data) {
             $('#comments').append(data.comments);
-        },
-        error: function () { console.log('err'); }
+        }
     });
-    @*function payment(json) {
-        console.log(json);
-        $.ajax({
-            type: 'GET',
-            url: 'api/PaymentData/Process/' + json.collection_status,
-            dataType: 'json',
-            success: function (data) {
-                window.location.assign('Order/Status/' + '@Model.FriendlyBookingId');
-            }
-        });
-        return false;
-    }*@
     $("a").on('click', function () {
         $.ajax({
             type: 'GET',
             url: 'api/ShoppingCartData/AddComments/' + $('#comments').val()
         });
     });
-
-    @*$("#mercadolink").on('click', function () {
-        $.ajax({
-            type: 'GET',
-            url: 'api/PaymentData/SaveDraft/' + '@Model.BookingId'
-        });
-    });*@
 </script>
 <script type="text/javascript" src="https://www.mercadopago.com/org-img/jsapi/mptools/buttons/render.js"></script>
 

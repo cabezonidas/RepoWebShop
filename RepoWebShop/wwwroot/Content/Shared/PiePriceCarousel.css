@@ -1,0 +1,12 @@
+﻿.carousel.slide {
+    height: 150px;
+    margin: 10px;
+}
+.carousel-control.left,
+.carousel-control.right {
+    background-image: none;
+}
+span.glyphicon.glyphicon-chevron-left,
+span.glyphicon.glyphicon-chevron-right {
+    color: darkseagreen;
+}

@@ -70,9 +70,9 @@ namespace RepoWebShop.Models
 
             if (matchingHolidays != null && matchingHolidays.Count() > 0)
                 if(isProcessing)
-                    workingSlots = matchingHolidays.Select(x => x.ProcessingHours);
+                    workingSlots = matchingHolidays.Where(x => x.ProcessingHours != null).Select(x => x.ProcessingHours);
                 else
-                    workingSlots = matchingHolidays.Select(x => x.OpenHours);
+                    workingSlots = matchingHolidays.Where(x => x.OpenHours != null).Select(x => x.OpenHours);
 
             foreach (var processingSlot in workingSlots)
             {

@@ -1,8 +1,11 @@
 ﻿@model OrderDetailsViewModel
 
+<link href="~/Content/Order/Detail.css" rel="stylesheet" />
+
 @{
     var pickUp = Model.Order.PickUp?.ToString("dd'/'MM'/'yyyy") ?? string.Empty;
 }
+
 <div class="container">
     <h3>Detalles: @Model.Order.FriendlyBookingId</h3>
 
@@ -28,7 +31,7 @@
         </table>
     </div>
     <br />
-    <table class="table table-user-information" style="max-width: 600px">
+    <table class="table table-user-information" >
         <tbody>
             <tr>
                 <td><strong>Estado</strong></td>
@@ -82,7 +85,7 @@
             <tr>
                 <td><strong>Comentarios Agregados</strong></td>
                 <td>
-                    <textarea id="comments" style="resize: vertical; width:100%">@Model.Order.ManagementComments</textarea>
+                    <textarea id="comments">@Model.Order.ManagementComments</textarea>
                     <span style="display:none;" id="commentsChanged"></span>
                 </td>
                 <td>

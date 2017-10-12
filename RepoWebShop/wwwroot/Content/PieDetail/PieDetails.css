@@ -1,0 +1,13 @@
+﻿.thumbnailDetail {
+    padding: 0;
+    background-color: white;
+    max-width: 500px;
+    margin: 30px auto;
+}
+    .thumbnailDetail img {
+        width: 100%;
+    }
+    .thumbnailDetail .caption-full {
+        padding: 9px;
+        color: #333;
+    }

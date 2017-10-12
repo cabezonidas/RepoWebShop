@@ -1,11 +1,13 @@
 ﻿@model CalendarViewModel
 
+<link href="~/Content/Calendar/Index.css" rel="stylesheet" />
+
 <div class="container">
     @{
         for (int i = 0; i <= 6; i++)
         {
-            <div class="col-sm-6 col-lg-4 col-md-6">
-                <table style="width:100%;" >
+            <div class="col-sm-6 col-lg-4 col-md-6" >
+                <table>
                     <tbody>
                         <tr>
                             <td>

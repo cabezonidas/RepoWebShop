@@ -1,7 +1,9 @@
 ﻿@model PieDetailViewModel
 
+<link href="~/Content/PieDetail/PieDetails.css" rel="stylesheet" />
+
 <div class="container">
-    <div class="thumbnail" style="margin:30px auto;">
+    <div class="thumbnailDetail" >
         <img alt="@Model.PieDetail.Name" src="@Model.PieDetail.ImageUrl">
         <div class="caption-full">
             <a href="#">@Model.PieDetail.Name</a>

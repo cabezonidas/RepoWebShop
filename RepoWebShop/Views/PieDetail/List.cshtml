@@ -1,61 +1,56 @@
 ﻿@model PieDetailsListViewModel
 
-<h3 id="category-title" style="text-align: center;">
-</h3>
+<link href="~/Content/PieDetail/List.css" rel="stylesheet" />
 
 
-<div class="container" id="container"></div>
 
+<div class="container" id="container">
+    <h3 id="category-title" />
+</div>
 
-    <script type="text/javascript">
-        function getParameterByName(name){
-            var regexS = "[\\?&]" + name + "=([^&#]*)",
-            regex = new RegExp(regexS),
-            results = regex.exec(window.location.search);
-            if( results == null ){
-                return "";
-            } else {
-                return decodeURIComponent(results[1].replace(/\+/g, " "));
-            }
+<script type="text/javascript">
+    function getParameterByName(name){
+        var regexS = "[\\?&]" + name + "=([^&#]*)",
+        regex = new RegExp(regexS),
+        results = regex.exec(window.location.search);
+        if( results == null ){
+            return "";
+        } else {
+            return decodeURIComponent(results[1].replace(/\+/g, " "));
         }
+    }
 
-        var category = getParameterByName("category");
+    var category = getParameterByName("category");
 
-        if(category)
-            $('#category-title').append(category);
-        else
-            $('#category-title').append("Todos los productos");
+    if(category)
+        $('#category-title').append(category);
+    else
+        $('#category-title').append("Todos los productos");
 
-        $(document).ready(function () {
-            LoadPies();
+    $(document).ready(function () {
+        LoadPies();
+    });
+        
+    function LoadPies() {
+        $.ajax({
+            type: 'GET',
+            url: '/api/PieDetailData/LoadMorePieDetails/' + category,
+            dataType: 'json',
+            success: onLoadSuccess,
+            error: function (ex) { console.log(ex); }
         });
+        return false;
+    }
 
-        //$(window).scroll(function () {
-        //    if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
-        //        LoadMorePies();
-        //    }
-        //});
-
-        function LoadPies() {
-            $.ajax({
-                type: 'GET',
-                url: '/api/PieDetailData/LoadMorePieDetails/' + category,
-                dataType: 'json',
-                success: onLoadSuccess,
-                error: function (ex) { console.log(ex); }
-            });
-            return false;
+    function onLoadSuccess(jsonData) {
+        if (jsonData == null) {
+            console.log('no data returned');
+            return;
         }
-
-        function onLoadSuccess(jsonData) {
-            if (jsonData == null) {
-                console.log('no data returned');
-                return;
-            }
-            $.each(jsonData, function (index, row) {
-                $.get("/api/PieDetailData/GetOverview/" + row.pieDetail.pieDetailId, function(data) {
-                  $("#container").append(data);
-                });
+        $.each(jsonData, function (index, row) {
+            $.get("/api/PieDetailData/GetOverview/" + row.pieDetail.pieDetailId, function(data) {
+                $("#container").append(data);
             });
-        }
-    </script>
+        });
+    }
+</script>

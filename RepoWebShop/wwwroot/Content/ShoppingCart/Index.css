@@ -1,0 +1,41 @@
+﻿#MP-Checkout-dialog {
+    border: none !important;
+    max-height: 650px !important;
+}
+
+#MP-Checkout-IFrame {
+    max-height: 650px !important;
+}
+
+.remove-item {
+    color: darkred;
+}
+
+tfoot td {
+    vertical-align: middle;
+}
+
+textarea {
+    resize: vertical;
+}
+
+table {
+    text-align: center;
+}
+
+    table img {
+        margin: 0px auto;
+    }
+
+.payment-item {
+    background-color: rgba(239, 234, 33, 0.26);
+    padding: 40px;
+    margin: 25px;
+    margin-left: 25px;
+    margin-right: 25px;
+    border-radius: 40px;
+}
+
+.submit-btn {
+    margin: 30px;
+}

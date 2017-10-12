@@ -1,13 +1,13 @@
 ﻿@model HomeViewModel
 
+<link href="~/Content/Home/Index.css" rel="stylesheet" />
 
-@*@await Html.PartialAsync("Carousel")*@
+
 
 <header class="intro-header">
-    <img class="img-responsive" style="margin: 0px auto;" alt="La Reposteria Shop'" src="~/Pictures/logo.png" />
+    <img class="img-responsive" alt="La Reposteria Shop'" src="~/Pictures/logo.png" />
     <div class="container">
-        <div class="intro-message">
-            
+        <div class="intro-message">            
             <hr class="intro-divider">
             <h1>¡Hola!</h1>
             <h3>Este es el sitio de la mejor pastelería artesanal de Buenos Aires</h3>
@@ -15,7 +15,7 @@
     </div>
 </header>
 
-
+@*@await Html.PartialAsync("Carousel")*@
 @*<section class="bg-light" id="piesoftheweek">
     <div class="container">
         <h2>Destacados de la semana</h2>
@@ -29,50 +29,6 @@
     </div>
 </section>*@
 
-@*<section class="services" id="services">
-    <div class="container">
-        <div class="section-heading text-center">
-            <h2>Disfruta de nuestros servicios y delicias</h2>
-            <p class="text-muted">Mira todo lo que tenemos para ofrecerte!</p>
-        </div>
-        <div class="row">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="service-item">
-                            <i class="fa fa-shopping-cart text-primary"></i>
-                            <h3>Compra Online</h3>
-                            <p class="text-muted">Algunos de nuestros productos estan disponibles para ser comprados a través de esta web</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="service-item">
-                            <i class="fa fa-birthday-cake text-primary"></i>
-                            <h3>Cumpleaños</h3>
-                            <p class="text-muted">Encarganos tu torta de cumpleaños, con los sabores que quieras.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="service-item">
-                            <i class="fa fa-gift text-primary"></i>
-                            <h3>Desayunos</h3>
-                            <p class="text-muted">Sorprendé a ese ser querido con un desayuno continental sorpresa!</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="service-item">
-                            <i class="fa fa-users text-primary"></i>
-                            <h3>Eventos</h3>
-                            <p class="text-muted">Contactanos para organizar tanto tu catering, como la mesa dulce!</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>*@
 
 <section class="services" id="services">
     <div class="wrap group center-block">
@@ -82,7 +38,7 @@
         </div>
         
         <ul class="repo-features group">
-            <li style="height: 257px;">
+            <li >
                 <div class="service-item">
                     <a asp-controller="PieDetail" asp-action="List">
                         <i class="fa fa-shopping-cart text-primary"></i>
@@ -91,7 +47,7 @@
                     </a>
                 </div>
             </li>
-            <li style="height: 257px;">
+            <li >
                 <div class="service-item">
                     <a asp-controller="PieDetail" asp-action="List">
                         <i class="fa fa-birthday-cake text-primary"></i>
@@ -100,7 +56,7 @@
                     </a>
                 </div>
             </li>
-            <li style="height: 257px;">
+            <li >
                 <div class="service-item">
                     <a href="#">
                         <i class="fa fa-gift text-primary"></i>
@@ -109,7 +65,7 @@
                     </a>
                 </div>
             </li>
-            <li style="height: 257px;">
+            <li >
                 <div class="service-item">
                     <a href="#">
                         <i class="fa fa-users text-primary"></i>
@@ -118,7 +74,7 @@
                     </a>
                 </div>
             </li>
-            <li style="height: 257px;">
+            <li >
                 <div class="service-item">
                     <a href="#">
                         <i class="fa fa-apple text-primary"></i>
@@ -127,7 +83,7 @@
                     </a>
                 </div>
             </li>
-            <li style="height: 257px;">
+            <li>
                 <div class="service-item">
                     <a href="#">
                         <i class="fa fa-angellist text-primary"></i>

@@ -1,10 +1,12 @@
 ﻿@model PieDetailViewModel
 
+<link href="~/Content/Shared/PiePriceCarousel.css" rel="stylesheet" />
+
 @{
     string id = Model.PieDetail.PieDetailId.ToString() + "-" + Guid.NewGuid().ToString();
 }
 
-<div id="@id" class="carousel slide" style="height:150px; margin:10px;">
+<div id="@id" class="carousel slide">
     <div class="carousel-inner">
         @{
             var pies = Model.Pies.ToArray();
@@ -18,11 +20,11 @@
     </div>
     @if(pies.Length > 1)
     { 
-        <a class='carousel-control left' href='#@id' data-slide='prev' style='background-image:none;'>
-            <span class='glyphicon glyphicon-chevron-left' aria-hidden='true' style='color:darkseagreen'></span>
+        <a class='carousel-control left' href='#@id' data-slide='prev'>
+            <span class='glyphicon glyphicon-chevron-left' aria-hidden='true' ></span>
         </a>
-        <a class='carousel-control right' href='#@id' data-slide='next' style='background-image:none;'>
-            <span class='glyphicon glyphicon-chevron-right' aria-hidden='true' style='color:darkseagreen'></span>
+        <a class='carousel-control right' href='#@id' data-slide='next'>
+            <span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
         </a>
     }
 </div>
