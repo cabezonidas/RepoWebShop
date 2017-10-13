@@ -1,6 +1,28 @@
-﻿.pieOverviewImage {
+﻿.caption h3 {
+    font-family: 'Vast Shadow', cursive;
+    color: forestgreen;
+    text-align: center;
+}
+
+    .caption h3 a {
+        color: forestgreen;
+    }
+
+        .caption h3 a:visited, a:hover, a:focus, a:hover, a:active {
+            text-decoration: none;
+            color: forestgreen;
+        }
+
+p.shortDesc {
+    font-family: 'Gloria Hallelujah', cursive;
+    font-size: large;
+    text-align: center;
+    color: darkslategrey;
+}
+
+.pieOverviewImage {
     position: relative;
-    margin: 2%;
+    margin: 5%;
     overflow: hidden;
 }
 
@@ -18,12 +40,13 @@
 
 .thumbnail {
     padding: 0;
-    background-color: white;
+    background-color: #dbe9d8;
     max-width: 500px;
+    
 }
-
     .thumbnail img {
         width: 100%;
+        margin: auto;
     }
 
 
@@ -36,3 +59,60 @@
     .caption h4 {
         white-space: nowrap;
     }
+
+
+
+/*Ribbon*/
+
+.ribbon {
+    position: absolute;
+    left: 6px;
+    top: -9px;
+    z-index: 1;
+    overflow: hidden;
+    width: 150px;
+    height: 150px;
+    text-align: right;
+}
+
+    .ribbon span {
+        font-size: 18px;
+        color: #FFF;
+        text-transform: uppercase;
+        text-align: center;
+        line-height: 40px;
+        transform: rotate(-45deg);
+        -webkit-transform: rotate(-45deg);
+        width: 120px;
+        display: block;
+        background: #79A70A;
+        background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+        box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+        position: absolute;
+        top: 13px;
+        left: -27px;
+    }
+
+        .ribbon span::before {
+            content: "";
+            position: absolute;
+            left: 0px;
+            top: 100%;
+            z-index: -1;
+            border-left: 3px solid #79A70A;
+            border-right: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+            border-top: 3px solid #79A70A;
+        }
+
+        .ribbon span::after {
+            content: "";
+            position: absolute;
+            right: 0px;
+            top: 100%;
+            z-index: -1;
+            border-left: 3px solid transparent;
+            border-right: 3px solid #79A70A;
+            border-bottom: 3px solid transparent;
+            border-top: 3px solid #79A70A;
+        }

@@ -2,17 +2,18 @@
 
 <link href="~/Content/Shared/PieOverviewSummary.css" rel="stylesheet" />
 
-<div class="col-sm-4 col-lg-4 col-md-4">
+<div class="col-sm-12 col-lg-4 col-md-4">
     <div class="thumbnail">
+        <div class="ribbon"><span>@Model.PieDetail.PreparationTime Hs</span></div>
         <div class="pieOverviewImage">
-            <img src="@Model.PieDetail.ImageThumbnailUrl" alt="" >
+            <img src="@Model.PieDetail.ImageThumbnailUrl" >
             <div class="caption">
                 <h3>
                     <a asp-controller="PieDetail"
                        asp-action="Details"
                        asp-route-id="@Model.PieDetail.PieDetailId">@Model.PieDetail.Name</a>
                 </h3>
-                <p>@Model.PieDetail.ShortDescription</p>
+                <p class="shortDesc">@Model.PieDetail.ShortDescription</p>
             </div>
             @Html.Partial("PiePriceCarousel", Model)
         </div>

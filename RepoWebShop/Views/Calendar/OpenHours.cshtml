@@ -2,7 +2,7 @@
 @{var daysId = Model.OpenHours.OrderBy(x => x.DayId).Select(x => x.DayId).Distinct(); }
 <div class="container">
     <div class="col-sm-4 col-lg-4 col-md-4">
-        <h2>Horarios de Atencion</h2>
+        <h1>Nuestros Horarios</h1>
         <div >
             <table id="horarios" class="table" >
                 <tr>
@@ -31,7 +31,7 @@
     <div class="col-sm-4 col-lg-4 col-md-4">
         @if (Model.PublicHolidays.Any())
         {
-            <h2>Fechas especiales</h2>
+            <h1>Fechas especiales</h1>
         }
 
         @foreach (var holiday in Model.PublicHolidays.OrderBy(x => x.Date))
@@ -40,13 +40,13 @@
                 @{
                     if (holiday.OpenHours == null)
                     {
-                        <h4>@holiday.Date.ToString("dd'/'MM'/'yyyy") - Cerrado</h4>
+                        <p>@holiday.Date.ToString("dd'/'MM'/'yyyy") - Cerrado</p>
                     }
                     else
                     {
-                        <h4>
+                        <p>
                             @holiday.Date.ToString("dd'/'MM'/'yyyy") - Abierto desde @holiday.OpenHours.StartingAt.ToString("hh\\:mm") hasta @holiday.OpenHours.StartingAt.Add(holiday.OpenHours.Duration).ToString("hh\\:mm")
-                        </h4>
+                        </p>
                     }
                 }
             </div>
@@ -56,8 +56,8 @@
     <div class="col-sm-4 col-lg-4 col-md-4">
         @if (Model.Vacations.Any())
         {
-            <h2>Vacaciones</h2>
-            <h4>Nosotros tambien necesitamos descansar!</h4>
+            <h1>Vacaciones</h1>
+            <p>Nosotros tambien necesitamos descansar!</p>
             foreach (var vac in Model.Vacations)
             {
                 <p>Cerramos el @vac.StartDate.ToString("dd'/'MM'/'yyyy") hasta el @vac.EndDate.ToString("dd'/'MM'/'yyyy")</p>

@@ -19,7 +19,7 @@ namespace RepoWebShop.Controllers
         {
             var result = new List<PieDetailViewModel>();
 
-            foreach(var pieOfTheWeek in _pieRepository.PiesOfTheWeek)
+            foreach(var pieOfTheWeek in _pieRepository.PiesOfTheWeek.Take(3))
             {
                 var p = new PieDetailViewModel()
                 {

@@ -4,7 +4,7 @@ body {
     min-width: 320px;
     height: 100%;
     padding-top: 25px;
-    font-family: 'Source Sans Pro', sans-serif;
+    font-family: 'Sriracha', cursive;
 }
 
 #body {
@@ -28,3 +28,16 @@ section {
     border-color: black !important;
     margin: 5px;
 }
+
+h1 {
+    font-family: 'Playball', cursive;
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+p {
+    font-family: 'Kalam', cursive;
+    font-size: large;
+}
+
+

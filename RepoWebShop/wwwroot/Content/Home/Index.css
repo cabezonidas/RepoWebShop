@@ -3,6 +3,10 @@ header img {
     margin: 0px auto;
 }
 
+.welcome-msg {
+    text-shadow: 4px 4px 6px #000000;
+}
+
 .intro-header {
     padding-top: 50px;
     padding-bottom: 50px;
@@ -37,6 +41,22 @@ header img {
 /** </intro> **/
 
 /** <services> **/
+div.service-item h3 {
+    font-family: 'Vast Shadow', cursive;
+    color: black;
+    text-align: center;
+}
+
+    div.service-item h3 a {
+        color: forestgreen;
+    }
+
+        div.service-item h3 a:visited, a:hover, a:focus, a:hover, a:active {
+            text-decoration: none;
+            color: forestgreen;
+        }
+
+
 .group:after {
     content: "";
     display: table;
@@ -217,14 +237,27 @@ section.services .service-item {
         font-size: 80px;
         display: block;
         margin-bottom: 15px;
-        color: green;
+        color: saddlebrown;
         /*background: linear-gradient(to left, green, green);*/
         /*-webkit-background-clip: text;*/
         /*-webkit-text-fill-color: transparent;*/
     }
 /** </services> **/
 
+/** <Pies of the week> **/
+#piesoftheweek {
+    background-color: lightgrey;
+
+}
+#piesoftheweek h1 {
+    text-align: center;
+}
+/** </Pies of the week> **/
+
 /** <team> **/
+#team {
+    background-color: white;
+}
 .team-member {
     margin-bottom: 50px;
     text-align: center;
