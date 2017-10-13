@@ -11,7 +11,8 @@
     "popper.js": "^1.12.5",
     "jquery-easing": "*",
     "font-awesome": "^4.7.0",
-    "simple-line-icons": "^2.4.1"
+    "simple-line-icons": "^2.4.1",
+    "glyphicons" : "^0.0.2"
   },
   "resolutions": {
     "jquery": "3.2.1"
