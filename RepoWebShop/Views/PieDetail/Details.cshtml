@@ -3,15 +3,29 @@
 <link href="~/Content/PieDetail/PieDetails.css" rel="stylesheet" />
 
 <div class="container">
-    <div class="thumbnailDetail" >
-        <img alt="@Model.PieDetail.Name" src="@Model.PieDetail.ImageUrl">
-        <div class="caption-full">
-            <a href="#">@Model.PieDetail.Name</a>
-
-            <h4>@Model.PieDetail.ShortDescription</h4>
-            <p>@Model.PieDetail.LongDescription</p>
-            <p>Tiempo de preparación: @Model.PieDetail.PreparationTime hs</p>
-            @Html.Partial("PiePriceCarousel", Model)
+    <div class="thumbnailDetail">
+        <div class="row short-Desc">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <img alt="@Model.PieDetail.Name" src="@Model.PieDetail.ImageUrl">
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="caption-full">
+                    <h1>@Model.PieDetail.Name</h1>
+                    @Html.Partial("PiePriceCarousel", Model)
+                    <p><strong>Tiempo de preparación: @Model.PieDetail.PreparationTime hs</strong></p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <h4>@Model.PieDetail.ShortDescription</h4>
+                <p>@Model.PieDetail.LongDescription</p>
+            </div>
+        </div>
+        <div style="text-align: center;">
+            <a asp-action="List" asp-controller="PieDetail" class="btn btn-primary submit-btn">
+                Ver más
+            </a>
         </div>
     </div>
 </div>

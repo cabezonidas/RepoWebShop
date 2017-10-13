@@ -1,12 +1,25 @@
 ﻿.thumbnailDetail {
-    padding: 0;
-    background-color: white;
-    max-width: 500px;
+    padding: 20px;
+    background-color: #dbe9d8;
+    max-width: 900px;
     margin: 30px auto;
+    border-radius: 20px;
 }
-    .thumbnailDetail img {
-        width: 100%;
+.thumbnailDetail h1 {
+
+}
+    .short-Desc {
+        padding: 20px;
+        background-color: #dbe9d8;
+        max-width: 900px;
+        margin: 30px auto;
+        text-align: center;
     }
+.thumbnailDetail img {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 20px;
+}
     .thumbnailDetail .caption-full {
         padding: 9px;
         color: #333;

@@ -99,9 +99,9 @@ namespace RepoWebShop.Repositories
                       <p style='font-size:10px;'>Codigo de Reserva </p>" +
                       $"<h1>{order.FriendlyBookingId}</h1>" +
                       (String.IsNullOrEmpty(order.MercadoPagoTransaction) ? "" : $"<p>Comprobante MercadoPago <strong>{order.MercadoPagoTransaction}</strong></p>") +
-                      $"<p>Tiempo de Elaboracion <strong>{order.PreparationTime}hs</strong></p>" +
+                      //$"<p>Tiempo de Elaboracion <strong>{order.PreparationTime}hs</strong></p>" +
+                      (!order.PickUp.HasValue ? "" : $"<p>Orden lista el <strong>{order.PickUp.Value.ToString("dd-MM-yyyy") + "</strong> a las <strong>" + order.PickUp.Value.ToString("hh\\:mm")} </strong></p>") +
                       $"<p><strong>Detalle de Compra ${order.OrderTotal}</strong></p>" +
-
                       @"<table style='margin: auto;'>
                         <tr>
                           <th style='border-bottom: 1px solid #ddd;'>Cantidad</th>

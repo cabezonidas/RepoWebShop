@@ -64,12 +64,13 @@ div.service-item h3 {
 }
 
 ul.repo-features li {
+    overflow: hidden;
     height: 257px;
     width: 32%;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    padding: 0;
+    padding: 5px;
     float: left;
     margin-right: 2%;
     margin-bottom: 2%;
@@ -212,6 +213,8 @@ section.services {
         margin: 0 auto;
     }
 
+
+
 .service-item a {
     text-decoration: none;
 }
@@ -259,8 +262,14 @@ section.services .service-item {
     background-color: white;
 }
 .team-member {
+    background-color: antiquewhite;
+    padding-top: 20px;
+    padding-bottom: 20px;
     margin-bottom: 50px;
     text-align: center;
+    border-radius: 20px;
+    border-color: bisque;
+    border-style: double;
 }
 
     .team-member img {
@@ -277,5 +286,32 @@ section.services .service-item {
 
     .team-member p {
         margin-top: 0;
+    }
+img.membericon {
+    border-style: none;
+    padding: 5px;
+    max-width: 50px;
+    max-height: 50px;
+    vertical-align: top;
+}
+blockquote {
+    background: #f9f9f9;
+    border-left: 10px solid #ccc;
+    margin: 1.5em 10px;
+    padding: 0.5em 10px;
+    quotes: "\201C""\201D""\2018""\240";
+}
+
+    blockquote:before {
+        color: #ccc;
+        content: open-quote;
+        font-size: 4em;
+        line-height: 0.1em;
+        margin-right: 0.25em;
+        vertical-align: -0.4em;
+    }
+
+    blockquote h1 {
+        display: inline;
     }
 /** </team> **/

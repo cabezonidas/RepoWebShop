@@ -19,8 +19,9 @@ namespace RepoWebShop.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailRepository _emailRespository;
         private readonly IMapper _mp;
+        private readonly ICalendarRepository _calendarRepository;
 
-        public OrderController(IMapper mp, IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, ShoppingCart shoppingCart, UserManager<ApplicationUser> userManager)
+        public OrderController(ICalendarRepository calendarRepository, IMapper mp, IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, ShoppingCart shoppingCart, UserManager<ApplicationUser> userManager)
         {
             _pieDetailRepository = pieDetailRepository;
             _orderRepository = orderRepository;
@@ -28,6 +29,7 @@ namespace RepoWebShop.Controllers
             _userManager = userManager;
             _emailRespository = emailRespository;
             _mp = mp;
+            _calendarRepository = calendarRepository;
         }
 
         public IActionResult Status(string id)
@@ -132,6 +134,7 @@ namespace RepoWebShop.Controllers
                 order.CustomerComments = _shoppingCart.GetShoppingCartComments();
                 order.BookingId = _shoppingCart.ShoppingCartId;
                 order.Status = "reservation";
+                order.PickUp = _calendarRepository.GetPickupEstimate(_shoppingCart.GetShoppingCartPreparationTime());
 
                 _orderRepository.CreateOrder(order);
                 _shoppingCart.ClearCart();

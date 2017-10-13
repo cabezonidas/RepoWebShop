@@ -11,11 +11,13 @@ namespace RepoWebShop.Repositories
     {
         private readonly AppDbContext _appDbContext;
         private readonly IMapper _mapper;
+        private readonly ICalendarRepository _calendarRepository;
 
-        public ShoppingCartRepository(IMapper mapper, AppDbContext appDbContext)
+        public ShoppingCartRepository(IMapper mapper, AppDbContext appDbContext, ICalendarRepository calendarRepository)
         {
             _appDbContext = appDbContext;
             _mapper = mapper;
+            _calendarRepository = calendarRepository;
         }
 
         private ShoppingCartComment GetShoppingCartComments(string bookingId)
@@ -49,6 +51,8 @@ namespace RepoWebShop.Repositories
 
             order.PreparationTime = preparationTime;
 
+            order.PickUp = _calendarRepository.GetPickupEstimate(order.PreparationTime);
+
             _appDbContext.ShoppingCartItems.RemoveRange(shoppingCartItems);
 
             _appDbContext.SaveChanges();
@@ -68,9 +72,7 @@ namespace RepoWebShop.Repositories
             var order = _mapper.Map<PaymentNotice, Order>(paymentNotice);
 
             order.PickedUp = false;
-            order.OrderPlaced = DateTime.Now;      
-            
-            //order.PreparationTime = _shoppingCart.GetShoppingCartPreparationTime();
+            order.OrderPlaced = DateTime.Now;
 
             _appDbContext.Orders.Add(order);
             _appDbContext.SaveChanges();

@@ -22,7 +22,7 @@ namespace RepoWebShop.TagHelpers
                     <div class='col-lg-12 text-center'>
                         <h2 class='section-heading'>
                             Seguinos
-                            <i class='fa fa-heart'></i>
+                            <i class='fa fa-heart fa-beat'></i>
                             !
                         </h2>
                     </div>

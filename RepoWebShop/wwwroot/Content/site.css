@@ -19,7 +19,7 @@ section {
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
-    background-color: greenyellow !important;
+    background-color: cadetblue !important;
     border-color: darkseagreen !important;
 }
 
