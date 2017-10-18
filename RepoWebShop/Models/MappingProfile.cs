@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json.Linq;
 using RepoWebShop.ViewModels;
 
 namespace RepoWebShop.Models
