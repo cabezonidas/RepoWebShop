@@ -17,7 +17,9 @@
     <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
     <link href="~/lib/DataTables/media/css/jquery.dataTables.css" rel="stylesheet" />
     <link href="~/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
-
+    
+    <link href="~/lib/owl.carousel/dist/assets/owl.carousel.css" rel="stylesheet" />
+    
     <link href="~/Content/timepicker.css" rel="stylesheet" />
     <link href="~/Content/site.css" rel="stylesheet" />
     <link href="~/Content/Shared/_Layout.css" rel="stylesheet" />
@@ -28,6 +30,8 @@
     <script src="~/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
     <script src="~/lib/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
     <script src="~/lib/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/owl.carousel/dist/owl.carousel.js"></script>
+
     <script src="~/CommonJs/Formatting.js"></script>
     <script type="text/javascript">
         $.ajaxSetup({ cache: false });
@@ -48,7 +52,7 @@
                 <ul class="nav navbar-nav">
                     <li><a asp-controller="Home" asp-action="Index">Inicio</a></li>
                     @await Component.InvokeAsync("CategoryMenu")
-                    <li><a href="#">Fotos</a></li>
+                    <li><a asp-controller="Photos" asp-action="Index">Fotos</a></li>
                     <li><a asp-controller="Contact" asp-action="Index">Contacto</a></li>
                     <li><a asp-controller="Calendar" asp-action="OpenHours">Horarios</a></li>
                     @await  Component.InvokeAsync("ShoppingCartSummary")

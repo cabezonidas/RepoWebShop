@@ -1,0 +1,51 @@
+﻿
+
+
+
+<div class="owl-carousel owl-theme" id="test1">
+    @*<div class="item" style="border-style:dotted; height: 400px;">
+        <h4>1</h4>
+        <img style="padding:10px;" class="owl-lazy" data-src="https://farm9.staticflickr.com/8303/7923305570_44190ba80c_n.jpg" alt="">
+    </div>*@
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: 'https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=aa397404e60a8722ab8599d8c43937b7&photoset_id=72157631388626826&user_id=85024949%40N08&format=json&nojsoncallback=?',
+            success: function (data) {
+                //https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{o-secret}_o.(jpg|gif|png)
+                data.photoset.photo.forEach(function (element) {
+                    var source = '<img style="padding:10px;" class="owl-lazy" data-src="https://farm' + element.farm + '.staticflickr.com/' + element.server + '/' + element.id + '_' + element.secret + '_n.jpg" alt="">';
+                    $('#test1').append(
+                        '<div class="item" style="border-style:dotted; height: 400px;">' +
+                            '<h4>1</h4>' +
+                            source +
+                        '</div>'
+                    )
+                    console.log(source);
+                });
+                $('.owl-carousel').owlCarousel({
+                    lazyLoad: true,
+                    loop: true,
+                    margin: 10,
+                    //nav: true,
+                    center: true,
+                    responsive: {
+                        0: {
+                            items: 1.25
+                        },
+                        480: {
+                            items: 4
+                        }
+                    }
+                })
+
+                console.log(data);
+            }
+        });
+    });
+
+</script>
