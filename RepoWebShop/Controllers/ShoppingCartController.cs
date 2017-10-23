@@ -52,7 +52,7 @@ namespace RepoWebShop.Controllers
 
         public RedirectToActionResult AddToShoppingCart(int pieId)
         {
-            var selectedPie = _pieRepository.Pies.FirstOrDefault(p => p.PieId == pieId);
+            var selectedPie = _pieRepository.ActivePies.FirstOrDefault(p => p.PieId == pieId);
 
             if (selectedPie != null)
             {
@@ -63,7 +63,7 @@ namespace RepoWebShop.Controllers
 
         public RedirectToActionResult RemoveFromShoppingCart(int pieId)
         {
-            var selectedPie = _pieRepository.Pies.FirstOrDefault(p => p.PieId == pieId);
+            var selectedPie = _pieRepository.AllPies.FirstOrDefault(p => p.PieId == pieId);
 
             if (selectedPie != null)
             {

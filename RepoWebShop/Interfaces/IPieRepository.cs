@@ -5,7 +5,8 @@ namespace RepoWebShop.Interfaces
 {
     public interface IPieRepository
     {
-        IEnumerable<Pie> Pies { get; }
+        IEnumerable<Pie> ActivePies { get; }
+        IEnumerable<Pie> AllPies { get; } 
         IEnumerable<PieDetail> PiesOfTheWeek { get; }
         Pie GetPieById(int pieId);
         Pie Add(Pie pie);

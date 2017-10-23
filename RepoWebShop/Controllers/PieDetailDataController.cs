@@ -79,7 +79,7 @@ namespace RepoWebShop.Controllers
             return new PieDetailViewModel()
             {
                 PieDetail = dbPieDetail,
-                Pies = _pieRepository.Pies.Where(x => x.PieDetail.PieDetailId == dbPieDetail.PieDetailId)
+                Pies = _pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == dbPieDetail.PieDetailId)
             };
         }
     }

@@ -42,7 +42,7 @@ namespace RepoWebShop.Repositories
         {
             get
             {
-                var pieDetailsWithReferences = _pieRepository.Pies.Select(x => x.PieDetailId).Distinct();
+                var pieDetailsWithReferences = _pieRepository.ActivePies.Select(x => x.PieDetailId).Distinct();
                 return PieDetails.Where(x => pieDetailsWithReferences.Contains(x.PieDetailId));
             }
             

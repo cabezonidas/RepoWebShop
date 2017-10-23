@@ -14,7 +14,18 @@ namespace RepoWebShop.Repositories
             _appDbContext = appDbContext;
         }
 
-        public IEnumerable<Pie> Pies
+        public IEnumerable<Pie> ActivePies
+        {
+            get
+            {
+                return _appDbContext.Pies
+                    .Include(p => p.PieDetail)
+                    .Include(c => c.PieDetail.Category)
+                    .Where(x => x.IsActive);
+            }
+        }
+
+        public IEnumerable<Pie> AllPies
         {
             get
             {
@@ -43,7 +54,7 @@ namespace RepoWebShop.Repositories
         public void Delete(int pieId)
         {
             Pie pie = _appDbContext.Pies.FirstOrDefault(x => x.PieId == pieId);
-            _appDbContext.Pies.Remove(pie);
+            pie.IsActive = false;
             _appDbContext.SaveChanges();
         }
 

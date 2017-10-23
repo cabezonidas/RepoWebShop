@@ -35,14 +35,14 @@ namespace RepoWebShop.Controllers
         [Route("GetPies/{id}")]
         public IActionResult GetPies(int id)
         {
-            return Ok(_pieRepository.Pies.Where(x => x.PieDetail.PieDetailId == id));
+            return Ok(_pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == id));
         }
 
         [HttpGet]
         [Route("PieDetailHasChildren/{id}")]
         public IActionResult PieDetailHasChildren(int id)
         {
-            return Ok(_pieRepository.Pies.Where(x => x.PieDetail.PieDetailId == id).Count() > 0);
+            return Ok(_pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == id).Count() > 0);
         }
 
 

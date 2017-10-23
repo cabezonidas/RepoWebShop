@@ -24,7 +24,7 @@ namespace RepoWebShop.Controllers
                 var p = new PieDetailViewModel()
                 {
                     PieDetail = pieOfTheWeek,
-                    Pies = _pieRepository.Pies.Where(x => x.PieDetail.PieDetailId == pieOfTheWeek.PieDetailId)
+                    Pies = _pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == pieOfTheWeek.PieDetailId)
                 };
                 result.Add(p);
             };

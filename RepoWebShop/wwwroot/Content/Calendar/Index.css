@@ -10,3 +10,7 @@ div.timepicker {
     table.timeframestable {
         vertical-align: top;
     }
+
+.input-group-addon {
+    max-width: 38px;
+}

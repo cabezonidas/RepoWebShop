@@ -33,7 +33,7 @@ namespace RepoWebShop.Controllers
             IEnumerable<PieDetail> pieDetails;
             string currentCategory = string.Empty;
 
-            var piesWithPrice = _pieRepository.Pies.Select(x => x.PieDetail.PieDetailId).Distinct();
+            var piesWithPrice = _pieRepository.ActivePies.Select(x => x.PieDetail.PieDetailId).Distinct();
 
             bool test = piesWithPrice.Contains(111);
 
@@ -57,7 +57,7 @@ namespace RepoWebShop.Controllers
                     new PieDetailViewModel()
                     {
                         PieDetail = pieDetail,
-                        Pies = _pieRepository.Pies.Where(x => x.PieDetail.PieDetailId == pieDetail.PieDetailId)
+                        Pies = _pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == pieDetail.PieDetailId)
                     }
                 );
             }
@@ -75,7 +75,7 @@ namespace RepoWebShop.Controllers
             if (pieDetail == null)
                 return NotFound();
 
-            var result = new PieDetailViewModel() { PieDetail = pieDetail, Pies = _pieRepository.Pies.Where(x => x.PieDetail.PieDetailId == pieDetail.PieDetailId) };
+            var result = new PieDetailViewModel() { PieDetail = pieDetail, Pies = _pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == pieDetail.PieDetailId) };
 
             return View(result);
         }

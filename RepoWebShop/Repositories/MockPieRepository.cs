@@ -9,7 +9,7 @@ namespace RepoWebShop.Repositories
     {
         private readonly ICategoryRepository _categoryRepository = new MockCategoryRepository();
         
-        public IEnumerable<Pie> Pies
+        public IEnumerable<Pie> ActivePies
         {
             get
             {
@@ -22,7 +22,9 @@ namespace RepoWebShop.Repositories
                 };
             }
         }
-        
+
+        public IEnumerable<Pie> AllPies => throw new NotImplementedException();
+
         IEnumerable<PieDetail> IPieRepository.PiesOfTheWeek => throw new NotImplementedException();
 
         public Pie Add(Pie pie)
