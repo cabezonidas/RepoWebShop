@@ -1,0 +1,13 @@
+﻿@model PhotosetList
+
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Fotos<b class="caret"></b></a>
+    <ul class="dropdown-menu">
+        @foreach (var item in Model.Photosets.Photoset)
+        {
+            <li>
+                <a asp-controller="Photos" asp-action="Details" asp-route-id="@item.Id" >@item.Title._Content</a>
+            </li>
+        }
+    </ul>
+</li>

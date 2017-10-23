@@ -23,19 +23,6 @@
     <link href="~/Content/timepicker.css" rel="stylesheet" />
     <link href="~/Content/site.css" rel="stylesheet" />
     <link href="~/Content/Shared/_Layout.css" rel="stylesheet" />
-    
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/lib/moment/moment.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="~/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-    <script src="~/lib/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
-    <script src="~/lib/DataTables/media/js/jquery.dataTables.min.js"></script>
-    <script src="~/lib/owl.carousel/dist/owl.carousel.js"></script>
-
-    <script src="~/CommonJs/Formatting.js"></script>
-    <script type="text/javascript">
-        $.ajaxSetup({ cache: false });
-    </script>
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -52,7 +39,7 @@
                 <ul class="nav navbar-nav">
                     <li><a asp-controller="Home" asp-action="Index">Inicio</a></li>
                     @await Component.InvokeAsync("CategoryMenu")
-                    <li><a asp-controller="Photos" asp-action="Index">Fotos</a></li>
+                    @await Component.InvokeAsync("PhotosMenu")
                     <li><a asp-controller="Contact" asp-action="Index">Contacto</a></li>
                     <li><a asp-controller="Calendar" asp-action="OpenHours">Horarios</a></li>
                     @await  Component.InvokeAsync("ShoppingCartSummary")
@@ -65,6 +52,20 @@
             </div>
         </div>
     </nav>
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/moment/moment.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/lib/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+    <script src="~/lib/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/owl.carousel/dist/owl.carousel.js"></script>
+
+    <script src="~/CommonJs/Formatting.js"></script>
+    <script type="text/javascript">
+        $.ajaxSetup({ cache: false });
+    </script>
+
     <div id="body">
         @RenderBody()
     </div>
@@ -80,6 +81,8 @@
     <media-footer media="@SocialMedia" ></media-footer>
     
     @RenderSection("scripts", required: false)
+
+
 </body>
 
 </html>

@@ -1,21 +1,11 @@
-﻿@model List<PhotosetPhotos>
+﻿@model PhotosetList
 
 @{
-    foreach (var photoset in Model)
+    foreach (var photoset in Model.Photosets.Photoset)
     {
-        <div style="text-align: center; ">
-            <h1>@photoset.Photoset.Title</h1>
-            <div class="owl-carousel owl-theme">
-                @{
-                    foreach (var photo in photoset.Photoset.Photo)
-                    {
-                        <div class="item" style="border-style: solid; border-radius: 5px; ">
-                            <h4>@photo.Title</h4>
-                            @{var source = $"https://farm{photo.Farm}.staticflickr.com/{photo.Server}/{photo.Id}_{photo.Secret}_n.jpg";}
-                            <img style="padding:10px;" class="owl-lazy" data-src="@source" alt="">
-                        </div>
-                    }
-                }
+        <div style="display:none; text-align: center; touch-action: manipulation;" class="photosetcontainer" id="@photoset.Id">
+            <h1>@photoset.Title._Content</h1>
+            <div id="@photoset.Id" class="owl-carousel owl-theme photoset">
             </div>
         </div>
     }
@@ -23,11 +13,38 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.owl-carousel').owlCarousel({
+        $('.photoset').each(function () {
+            getPictures($(this)[0].id);
+        })
+    });
+
+    function getPictures(photoset) {
+        var url = 'https://api.flickr.com/services/rest/';
+        $.ajax({
+            type: 'GET',
+            url: url + '?method=flickr.photosets.getPhotos&api_key=d097bef2694e1f6fea5d594b19967deb&photoset_id=' + photoset + '&format=json&user_id=85024949%40N08&nojsoncallback=?";',
+            dataType: 'json',
+            success: onsuccess
+        });
+    }
+
+    function onsuccess(data) {
+        /*var photoset = data.photoset;
+        var selector = $('div#' + photoset.id + '.owl-carousel');
+        var photos = photoset.photo;
+        photos.forEach(function (e) {
+            var source = "https://farm" + e.farm + ".staticflickr.com/" + e.server + "/" + e.id + "_" + e.secret + "_n.jpg";
+            var html = `
+                <div class="item" style= "border-style: solid; border-radius: 5px; ">
+                    <h4>` + e.title + `</h4>
+                    <img style="padding:10px;" class="owl-lazy" data-src="` + source + `" alt="">
+                </div>`
+            selector.append(html);
+        });
+        selector.owlCarousel({
             lazyLoad: true,
             loop: true,
             margin: 10,
-            //nav: true,
             center: true,
             responsive: {
                 0: {
@@ -40,6 +57,7 @@
                     items: 4.4
                 }
             }
-        })
-    });
+        });
+        $('div#' + photoset.id + '.photosetcontainer').show();*/
+    }
 </script>

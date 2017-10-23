@@ -1,0 +1,34 @@
+﻿@model PhotosetPhotos
+
+@{
+    Random rnd = new Random();
+    //string[] arraylist = { "", "item--medium", "item--large", "item--full" };
+    string[] arraylist = { "", "item--medium" };
+    string s = arraylist[rnd.Next(arraylist.Length)];
+}
+
+<link href="~/Content/Photos/Details.css" rel="stylesheet" />
+
+<div class="container">
+    <div class="message">
+        Sorry, your browser does not support CSS Grid. 😅
+    </div>
+    <div class="section">
+        <h1>@Model.Photoset.Title</h1>
+        <div class="grid">
+            @{
+                foreach (var photo in Model.Photoset.Photo)
+                {
+                    var source = $"https://farm{photo.Farm}.staticflickr.com/{photo.Server}/{photo.Id}_{photo.Secret}_n.jpg";
+                    <div class="item @arraylist[rnd.Next(arraylist.Length)]" style="background-image:url('@source')">
+                        <div class="item__details">
+                            @photo.Title
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+

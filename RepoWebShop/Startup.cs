@@ -62,6 +62,7 @@ namespace RepoWebShop
             services.AddTransient<IEmailRepository, EmailRepository>();
             services.AddTransient<IShoppingCartRepository, ShoppingCartRepository>();
             services.AddTransient<ICalendarRepository, CalendarRepository>();
+            services.AddSingleton<IPhotosetAlbums, PhotosetAlbums>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IMercadoPago, MercadoPago>();
             services.AddSingleton<IConfiguration>(_configurationRoot);

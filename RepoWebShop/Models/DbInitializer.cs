@@ -115,6 +115,8 @@ namespace RepoWebShop.Models
             Task<ApplicationUser> admin = userManager.FindByNameAsync(username);
             admin.Wait();
 
+            var password = "Lgaga132!";
+
             if (admin.Result == null)
             {
                 ApplicationUser administrator = new ApplicationUser()
@@ -126,9 +128,10 @@ namespace RepoWebShop.Models
                     ZipCode="6022",
                     AddressLine1="7B What st",
                     LastName="Cabeza",
-                    FirstName="Sebastian"
+                    FirstName="Sebastian",
+                    Password = password
                 };
-                Task<IdentityResult> newUser = userManager.CreateAsync(administrator, "Lgaga132!");
+                Task<IdentityResult> newUser = userManager.CreateAsync(administrator, password);
                 newUser.Wait();
 
                 if (newUser.Result.Succeeded)
