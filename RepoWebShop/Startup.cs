@@ -37,6 +37,12 @@ namespace RepoWebShop
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddAuthentication().AddFacebook(facebookOptions =>
+            {
+                facebookOptions.AppId = _configurationRoot["FacebookAppId"];
+                facebookOptions.AppSecret = _configurationRoot["FacebookAppSecret"];
+            });
+
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings

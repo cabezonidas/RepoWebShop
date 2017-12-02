@@ -19,14 +19,14 @@ namespace RepoWebShop.TagHelpers
             output.Content.AppendHtml(
             @"<div class='container' >
                 <div class='row'>
-                    <div class='col-lg-6 col-md-0 col-sm-0 text-center'>
+                    <div class='col-lg-6 col-md-6 hidden-sm hidden-xs text-center'>
                         <h2 class='section-heading'>
                             Seguinos
                             <i class='fa fa-heart fa-beat'></i>
                             !
                         </h2>
                     </div>
-                    <div class='col-lg-6 col-md-12 col-sm-12 text-center'>
+                    <div class='col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center'>
                         <ul class='list-inline list-social'>"
                             +
                             String.Concat(Media.Select(x =>
@@ -37,6 +37,11 @@ namespace RepoWebShop.TagHelpers
                             </li>"))
                             +
                         @"</ul>
+                    </div>
+                    <div class='hidden-lg hidden-md hidden-sm col-xs-12 text-center'>
+                        <h2 class='section-heading'>
+                            &zwnj;
+                        </h2>
                     </div>
                 </div>
             </div>");

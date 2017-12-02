@@ -9,6 +9,7 @@ using RepoWebShop.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using RepoWebShop.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -29,12 +30,20 @@ namespace RepoWebShop.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult Login(string returnUrl)
+        public async Task<IActionResult> Login(string returnUrl)
         {
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
             return View(new LoginViewModel
             {
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList(),
                 ReturnUrl = returnUrl
             });
+        }
+
+        [AllowAnonymous]
+        public IActionResult ExternalLogin()
+        {
+            return View();
         }
 
         [HttpPost]
