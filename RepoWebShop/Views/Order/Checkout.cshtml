@@ -1,19 +1,124 @@
 ﻿@model Order
-<div class="container">
-    <form asp-action="Checkout" method="post" class="form-horizontal" role="form">
-        <h4>Estás a un paso de tus delicias.</h4>
-        <div asp-validation-summary="All" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="PhoneNumber" class="col-md-2 control-label"></label>
-            <div class="col-md-5">
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
+
+
+    @*if (Model == null || Model.OrderLines == null || Model.OrderLines.Count() == 0)
+    {
+        <div class="container">
+            <h4>Tu carrito esta vacío. Date una vuelta por <a href="@Url.Action("Index","Home")">nuestros productos</a>.</h4>
         </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-5">
-                <input type="submit" class="btn btn-primary" value="Reservar" />
-            </div>
+    }*@
+
+        <link rel="stylesheet" href="~/lib/intl-tel-input/build/css/intlTelInput.css">
+        <link rel="stylesheet" href="~/Content/Order/Checkout.css">
+
+        <div class="container">
+            <h4>Estás a un paso de tus delicias.</h4>
         </div>
-    </form>
-</div>
+
+        <div class="container">
+            <form asp-action="Checkout" method="post" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="col-md-2 control-label"></label>
+                    <div class="col-md-5">
+                        <input class="form-control" type="tel" id="phone" />
+                        <input asp-for="PhoneNumber" class="form-control" type="tel" id="phoneBinded" style="display:none;" />
+                        <input id="save" type="button" class="btn btn-primary" value="Guardar" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        <br />
+                        <span class="text-danger" id="mobileError" style="display:none;">Por favor, ingrese un número válido.</span>
+                    </div>
+                </div>
+
+                <div class="form-group" style="display:none;" id="msgValidation">
+                    <label class="col-md-2 control-label">Código</label>
+                    <div class="col-md-5">
+                        <input class="form-control" type="tel" id="code" style="max-width:100px; display:inline-block" />
+                        <input id="verify" type="button" class="btn btn-primary" value="Validar" />
+                        <br />
+                        <span class="text-danger" id="codeError" style="display:none;">Por favor, ingrese el número que recibió en su teléfono.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-5">
+                        <input id="submitOrder" type="submit" class="btn btn-primary" value="¡Completar Reserva!" style="display:none;" disabled="disabled" />
+                    </div>
+                </div>
+            </form>
+
+
+
+        </div>
+
+        <script src="~/lib/intl-tel-input/build/js/intlTelInput.min.js"></script>
+
+        <script type="text/javascript">
+            $("#phone").intlTelInput({
+                initialCountry: "nz",
+                geoIpLookup: function (callback) {
+                    $.get("http://ipinfo.io", function () { }, "jsonp").always(function (resp) {
+                        var countryCode = (resp && resp.country) ? resp.country : "";
+                        callback(countryCode);
+                    });
+                },
+                preferredCountries: ['ar', 'nz'],
+                separateDialCode: true,
+                utilsScript: "/lib/intl-tel-input/build/js/utils.js"
+            });
+
+            function msgSent() {
+                $('#msgValidation').show();
+                $('#phoneBinded').val($("#phone").intlTelInput("getNumber"));
+            }
+            function msgNotSent() {
+                $("#mobileError").show();
+            }
+
+            function verifyNumber() {
+                console.log('test');
+                $("input#save").prop('disabled', true);
+                $("input#phone").prop('disabled', true);
+                if ($("#phone").intlTelInput("getValidationError") == 0) {
+                    $("#mobileError").hide();
+                    $.ajax({
+                        url: '/api/AccountData/SendText/' + $("#phone").intlTelInput("getNumber").replace('+', ''),
+                        type: "POST",
+                        success: msgSent,
+                        error: msgNotSent
+                    })
+                } else {
+                    $("#mobileError").show();
+                    $("input#save").prop('disabled', false);
+                    $("input#phone").prop('disabled', false);
+                }
+            }
+
+            function validCode() {
+                $("#code").prop('disabled', true);
+                $("#verify").prop('disabled', true);
+                $("#codeError").hide();
+
+                $("#submitOrder").prop('disabled', false).show();
+            }
+
+            function invalidCode() {
+                $("#codeError").show();
+            }
+
+            function verifyCode() {
+                $.ajax({
+                    url: '/api/AccountData/VerifyCode/' + $("#code").val(),
+                    type: "GET",
+                    success: validCode,
+                    error: invalidCode
+                });
+            }
+
+            $("input#save").on('click', verifyNumber);
+
+            $("input#verify").on('click', verifyCode);
+        </script>
+    }
+
+
+

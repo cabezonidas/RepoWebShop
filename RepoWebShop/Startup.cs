@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Repositories;
+using Microsoft.AspNetCore.Http;
+using React.AspNet;
 
 namespace RepoWebShop
 {
@@ -26,7 +28,7 @@ namespace RepoWebShop
                 .Build();
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(_configurationRoot.GetConnectionString("DefaultConnection")));
@@ -68,11 +70,14 @@ namespace RepoWebShop
             services.AddSingleton<IConfiguration>(_configurationRoot);
             services.AddScoped(sp => ShoppingCart.GetCart(sp));
 
+            services.AddReact();
+
             services.AddMvc();
             services.AddAutoMapper();
             services.AddMemoryCache();
             services.AddSession();
             
+            return services.BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,6 +92,26 @@ namespace RepoWebShop
             {
                 app.UseExceptionHandler("/AppException");
             }
+
+            // Initialise ReactJS.NET. Must be before static files.
+            app.UseReact(config =>
+            {
+                // If you want to use server-side rendering of React components,
+                // add all the necessary JavaScript files here. This includes
+                // your components as well as all of their dependencies.
+                // See http://reactjs.net/ for more information. Example:
+                //config
+                //  .AddScript("~/Scripts/First.jsx")
+                //  .AddScript("~/Scripts/Second.jsx");
+
+                // If you use an external build too (for example, Babel, Webpack,
+                // Browserify or Gulp), you can improve performance by disabling
+                // ReactJS.NET's version of Babel and loading the pre-transpiled
+                // scripts. Example:
+                //config
+                //  .SetLoadBabel(false)
+                //  .AddScriptWithoutTransform("~/Scripts/bundle.server.js");
+            });
 
             app.UseStaticFiles();
             app.UseSession();

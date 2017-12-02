@@ -31,15 +31,20 @@ section.contact {
     text-align: center;
     background-color: #a1e699;
     color: black;
-    margin-top: 25px;
-    padding: 30px;
+    margin-top: 5px;
+    padding: 10px;
+    padding-bottom: 15px;
     width: 100%;
+    position: fixed;
+    z-index: 1;
+    bottom: 0px;
+    margin-bottom: -25px;
 }
 
     section.contact h2 {
         margin-top: 0px;
-        margin-bottom: 25px;
-        font-size: 35px;
+        margin-bottom: 5px;
+        font-size: 30px;
     }
 
         section.contact h2 i {

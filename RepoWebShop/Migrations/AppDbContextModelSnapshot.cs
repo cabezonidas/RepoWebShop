@@ -534,6 +534,24 @@ namespace RepoWebShop.Migrations
                     b.ToTable("ShoppingCartItems");
                 });
 
+            modelBuilder.Entity("RepoWebShop.Models.ShoppingCartValidationNumber", b =>
+                {
+                    b.Property<int>("ShoppingCartValidationNumberId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<string>("ShoppingCartId");
+
+                    b.Property<DateTime?>("Validated");
+
+                    b.Property<string>("ValidationNumber");
+
+                    b.HasKey("ShoppingCartValidationNumberId");
+
+                    b.ToTable("ShoppingCartValidationNumbers");
+                });
+
             modelBuilder.Entity("RepoWebShop.Models.Vacation", b =>
                 {
                     b.Property<int>("VacationId")

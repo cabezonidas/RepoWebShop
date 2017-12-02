@@ -127,6 +127,11 @@ namespace RepoWebShop.Controllers
                 ModelState.AddModelError("", "Tu carrito no puede estar vacío, agrega algunos productos.");
             }
 
+            if(!_shoppingCart.IsPhoneValidated())
+            {
+                ModelState.AddModelError("", "El número de teléfono no esta verificado.");
+            }
+
             if (ModelState.IsValid)
             {
                 order.OrderTotal = _shoppingCart.ShoppingCartItems.Select(x => x.Amount * x.Pie.Price).Sum();
