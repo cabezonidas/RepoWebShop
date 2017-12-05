@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Repositories;
-using Microsoft.AspNetCore.Http;
 using React.AspNet;
 
 namespace RepoWebShop

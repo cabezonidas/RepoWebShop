@@ -16,11 +16,13 @@
 
 .navbar .nav > li > a {
     font-size: 1.2em;
+    font-family: Playball, cursive; 
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     color: darkgreen;
 }
 
 .nav.navbar-nav li > ul > li > a {
+    font-family: Playball, cursive;
     color: #000 !important;
     font-size: 1.2em;
 }

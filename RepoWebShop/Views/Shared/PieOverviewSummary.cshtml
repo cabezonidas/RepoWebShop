@@ -6,15 +6,17 @@
     <div class="thumbnail">
         <div class="ribbon"><span>@Model.PieDetail.PreparationTime Hs</span></div>
         <div class="pieOverviewImage">
-            <img src="@Model.PieDetail.ImageThumbnailUrl" >
-            <div class="caption">
-                <h3>
-                    <a asp-controller="PieDetail"
-                       asp-action="Details"
-                       asp-route-id="@Model.PieDetail.PieDetailId">@Model.PieDetail.Name</a>
-                </h3>
-                <p class="shortDesc">@Model.PieDetail.ShortDescription</p>
-            </div>
+            <a asp-controller="PieDetail"
+               asp-action="Details"
+               asp-route-id="@Model.PieDetail.PieDetailId">
+                <img src="@Model.PieDetail.ImageThumbnailUrl">
+                <div class="caption">
+                    <h3>
+                        @Model.PieDetail.Name
+                    </h3>
+                    <p class="shortDesc">@Model.PieDetail.ShortDescription</p>
+                </div>
+            </a>
             @Html.Partial("PiePriceCarousel", Model)
         </div>
     </div>
