@@ -112,7 +112,10 @@ namespace RepoWebShop.Controllers
         [Authorize]
         public IActionResult Checkout()
         {
-            return View();
+            if (_shoppingCart.GetShoppingCartItems().Count() > 0)
+                return View();
+            else
+                return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]

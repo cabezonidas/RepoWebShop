@@ -4,13 +4,13 @@ body {
     min-width: 320px;
     height: 100%;
     padding-top: 25px;
-    font-family: 'Sriracha', cursive;
+    font-family: 'Kalam', cursive;
 }
 
 #body {
     background-color: white;
-    /*padding-bottom: 150px;*/
     padding-top: 25px;
+    width: 100%;
 }
 
 section {
@@ -39,5 +39,3 @@ p {
     font-family: 'Kalam', cursive;
     font-size: large;
 }
-
-

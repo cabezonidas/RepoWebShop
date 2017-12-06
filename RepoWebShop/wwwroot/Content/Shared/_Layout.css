@@ -64,6 +64,10 @@ section.contact {
         margin-bottom: 5px;
     }
 
+    section.contact ul.list-social img {
+        width: 30px;
+    }
+
     section.contact ul.list-social li.social-twitter a {
         background-color: #1da1f2;
     }
