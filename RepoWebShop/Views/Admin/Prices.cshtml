@@ -1,0 +1,66 @@
+﻿<link href="~/Content/Admin/Prices.css" rel="stylesheet" />
+<div class="container">
+    <h2>Precios</h2>
+    <h3>
+        Aumento
+        <input type="number" id="percentage" value="10" />
+    </h3>
+    <table class="table-striped" id="table-prices">
+        <tr>
+            <th>Producto</th>
+            <th>Precio Actual</th>
+            <th>Precio Nuevo</th>
+            <th></th>
+        </tr>
+    </table>
+</div>
+<script type="text/javascript">
+    var url = "/api/AdminData/GetPrices/";
+    $.ajax({
+        url: url,
+        method: "GET",
+        success: function (result) {
+            $.each(result, function (index, item) {
+                $('#table-prices').append(getRow(item));
+            });
+        },
+        error: function (error) {
+            alert('Algo salio mal.');
+        }
+    });
+
+    function getRow(item) {
+        var row = $('<tr>');
+        row.append('<td>' + item.pieDetail.name + ' ' + item.name + '</td>');
+        row.append('<td><div class="oldPrice" id="' + item.pieId + '">' + item.price + '</div></td>');
+        var suggestedPrice = Math.round(item.price * (1 + ($("#percentage").val() / 100)));
+        row.append('<td><input class="suggestedPrice" id="' + item.pieId + '" type="number" value="' + suggestedPrice + '" /></td>');
+        row.append('<td><input type="button" value="Actualizar" onclick="updatePrice(' + item.pieId + ')"/></td>');
+        return row;
+    }
+
+    function updatePrice(pieId) {
+        var newPrice = $('input#' + pieId + '.suggestedPrice').val();
+        var url = "/api/AdminData/UpdatePrice/" + pieId + "/" + newPrice;
+        $.ajax({
+            url: url,
+            method: "PUT",
+            success: function () {
+                console.log(pieId);
+                $('div#' + pieId + '.oldPrice').html(newPrice);
+            },
+            error: function (error) {
+                alert('Algo salio mal.');
+            }
+        });
+    }
+
+    $('#percentage').on('change', function () {
+        var oldprices = $('div.oldPrice');
+        var percentage = $('#percentage');
+        $.each(oldprices, function (index, item) {
+            var newPrice = Math.round($(item).html() * (1 + ($("#percentage").val() / 100)));
+            $('input#' + item.id + '.suggestedPrice').val(newPrice);
+        });
+    })
+</script>

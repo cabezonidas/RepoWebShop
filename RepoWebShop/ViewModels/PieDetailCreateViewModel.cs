@@ -39,7 +39,9 @@ namespace RepoWebShop.ViewModels
         [Required]
         [Display(Name = "Tiempo de preparacion (hs)")]
         public int PreparationTime { get; set; }
-        
+
         public List<SelectListItem> Categories { set; get; }
+
+        public bool IsActive { set; get; }
     }
 }

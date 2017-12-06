@@ -12,5 +12,6 @@ namespace RepoWebShop.Interfaces
         Task<int> Add(PieDetail pieDetail);
         Task<int> Update(PieDetail pieDetail);
         void Delete(int pieDetailId);
+        void Restore(int pieDetailId);
     }
 }

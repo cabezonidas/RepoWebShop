@@ -3,7 +3,14 @@
 <link href="~/Content/Admin/EditPieDetail.css" rel="stylesheet" />
 
 <div class="container">
-    <h2>Edicion de producto</h2>
+    <h2>Editar @Model.Name</h2>
+    @{
+        if (!Model.IsActive)
+        {
+            <p class="text-muted" style="display:inline-block">Inactivo - </p>
+            <a href="#" class="restorePieDetail" id='@Model.PieDetailId' onclick="restorePieDetail('@Model.PieDetailId');">Restaurar</a>
+        }
+    }
     <form asp-controller="Admin" asp-action="EditPieDetail" method="post" class="form-horizontal" role="form">
         <hr />
         <div asp-validation-summary="All" class="text-danger"></div>
@@ -73,7 +80,7 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" class="btn btn-primary" value="Guardar" />
-                <a class="btn btn-primary" id="delete-pieDetail" style="display:none;" >Eliminar</a>
+                <a class="btn btn-primary" id="delete-pieDetail" >Eliminar</a>
             </div>
         </div>
     </form>
@@ -85,6 +92,7 @@
                         <th>Nombre</th>
                         <th>Precio</th>
                         <th>Descripcion de Tamaño</th>
+                        <th>Estado</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -100,24 +108,35 @@
     var dataTable;
     $(document).ready(function () {
         getPies();
-        allowDeletion(@Model.PieDetailId);
         $("#delete-pieDetail").on('click', function (data) {
             deletePieDetail(@Model.PieDetailId);
         });
     });
 
-
-    function allowDeletion(id) {
-        var url = "/api/AdminData/PieDetailHasChildren/" + id;
+    function restorePieDetail(id) {
+        var url = "/api/AdminData/RestorePieDetail/" + id;
         $.ajax({
             url: url,
-            method: "GET",
-            success: function (data) {
-                if (data == false)
-                    $('#delete-pieDetail').show();
+            method: "POST",
+            success: function () {
+                window.location.assign("/Admin/AllProducts");
             },
             error: function (error) {
-                console.log(error);
+                alert('Algo salio mal.');
+            }
+        });
+    }
+
+    function restorePie(id) {
+        var url = "/api/AdminData/RestorePie/" + id;
+        $.ajax({
+            url: url,
+            method: "POST",
+            success: function () {
+                window.location.reload();
+            },
+            error: function (error) {
+                alert('Algo salio mal.');
             }
         });
     }
@@ -185,7 +204,15 @@
         row.append('<td><a href="/Admin/EditPieDetail/' + '@Model.PieDetailId' + "/" + item.pieId + '">' + item.name + '</a></td>');
         row.append('<td>' + item.price + '</td>');
         row.append('<td>' + item.sizeDescription + '</td>');
-        row.append('<td>' + '<a class="deletePie" id="' + item.pieId + '" href="#">Eliminar</a>' + '</td>');
+        if (item.isActive){
+            row.append('<td>Activo</td>');
+            row.append('<td>' + '<a class="deletePie" id="' + item.pieId + '" href="#">Eliminar</a>' + '</td>');
+        }
+        else {
+            row.append('<td>Inactivo</td>');
+            row.append('<td>' + '<a onclick="restorePie(' + item.pieId + ')" class="restorePie" id="' + item.pieId + '" href="#">Restaurar</a>' + '</td>');
+        }
+            
         return row;
     }
 </script>

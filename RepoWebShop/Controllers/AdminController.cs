@@ -35,6 +35,10 @@ namespace RepoWebShop.Controllers
         {
             return View();
         }
+        public IActionResult Prices()
+        {
+            return View();
+        }
         public IActionResult AllProducts()
         {
             return View();

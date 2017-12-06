@@ -47,7 +47,10 @@
 
     function getRow(item) {
         var row = $('<tr>');
-        row.append('<td><a href="/Admin/EditPieDetail/' + item.pieDetailId + '">' + item.name + '</a></td>');
+        var state = '';
+        if (!item.isActive)
+            state = '<div class="text-muted"> Inactivo</div>';
+        row.append('<td><a href="/Admin/EditPieDetail/' + item.pieDetailId + '">' + item.name + '</a>' + state + '</td>');
         row.append('<td>' + item.shortDescription + '</td>');
         row.append('<td>' + item.category.categoryName + '</td>');
         return row;

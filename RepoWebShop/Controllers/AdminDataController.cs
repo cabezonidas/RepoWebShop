@@ -32,17 +32,39 @@ namespace RepoWebShop.Controllers
         }
 
         [HttpGet]
+        [Route("GetPrices")]
+        public IActionResult GetPrices()
+        {
+            return Ok(_pieRepository.AllPies.OrderBy(x=>x.PieDetail.Name + x.Name));
+        }
+
+        [HttpPut]
+        [Route("UpdatePrice/{pieId}/{price}")]
+        public IActionResult UpdatePrice(int pieId, int price)
+        {
+            try
+            {
+                _pieRepository.UpdatePrice(pieId, price);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
         [Route("GetPies/{id}")]
         public IActionResult GetPies(int id)
         {
-            return Ok(_pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == id));
+            return Ok(_pieRepository.AllPies.Where(x => x.PieDetail.PieDetailId == id));
         }
 
         [HttpGet]
         [Route("PieDetailHasChildren/{id}")]
         public IActionResult PieDetailHasChildren(int id)
         {
-            return Ok(_pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == id).Count() > 0);
+            return Ok(_pieRepository.AllPies.Where(x => x.PieDetail.PieDetailId == id).Count() > 0);
         }
 
 
@@ -61,6 +83,21 @@ namespace RepoWebShop.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("RestorePie/{pieId}")]
+        public IActionResult RestorePie(int pieId)
+        {
+            try
+            {
+                _pieRepository.Restore(pieId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpDelete]
         [Route("DeletePieDetail/{pieDetailId}")]
         public IActionResult DeletePieDetail(int pieDetailId)
@@ -68,6 +105,21 @@ namespace RepoWebShop.Controllers
             try
             {
                 _pieDetailRepository.Delete(pieDetailId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("RestorePieDetail/{pieDetailId}")]
+        public IActionResult RestorePieDetail(int pieDetailId)
+        {
+            try
+            {
+                _pieDetailRepository.Restore(pieDetailId);
                 return Ok();
             }
             catch (Exception ex)

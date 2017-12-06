@@ -566,9 +566,26 @@ namespace RepoWebShop.Models
                                 $"\"pending\":\"{host}/Order/Status/{friendlyBookingId}\"," +
                                 $"\"failure\":\"{host}/Order/Status/{friendlyBookingId}\"" +
                             "}," +
+                        "\"payment_methods\":" +
+                            "{" +
+                                "\"excluded_payment_types\":" +
+                                    "[{" +
+                                        "\"id\": \"ticket\"" +
+                                    "}," +
+                                    "{" +
+                                        "\"id\": \"bank_transfer\"" +
+                                    "}," +
+                                    "{" +
+                                        "\"id\": \"atm\"" +
+                                    "}]" +
+                            "}," +
+
                         "\"auto_return\":\"approved\"," +
                         $"\"external_reference\":\"{bookingId}\"," +
                         $"\"additional_info\":\"{bookingId}\"" +
+
+
+
                 "}";
 
                 Hashtable preference = CreatePreference(preferenceData);

@@ -11,5 +11,7 @@ namespace RepoWebShop.Interfaces
         Pie GetPieById(int pieId);
         Pie Add(Pie pie);
         void Delete(int pieId);
+        void Restore(int pieId);
+        void UpdatePrice(int pieId, int price);
     }
 }

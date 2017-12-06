@@ -34,9 +34,7 @@ namespace RepoWebShop.Controllers
             string currentCategory = string.Empty;
 
             var piesWithPrice = _pieRepository.ActivePies.Select(x => x.PieDetail.PieDetailId).Distinct();
-
-            bool test = piesWithPrice.Contains(111);
-
+            
             if (string.IsNullOrEmpty(category))
             {
                 pieDetails = _pieDetailRepository.PieDetailsWithChildren.OrderBy(p => p.Name);

@@ -21,7 +21,9 @@
     <link href="~/Content/timepicker.css" rel="stylesheet" />
     <link href="~/Content/site.css" rel="stylesheet" />
     <link href="~/Content/Shared/_Layout.css" rel="stylesheet" />
-    <script type="text/javascript" src="~/CommonJs/ZendeskChat.js"></script>
+    @*<script type="text/javascript" src="~/CommonJs/ZendeskChat.js"></script>*@
+    <script type="text/javascript" src="~/CommonJs/ZopimChat.js"></script>
+    @*<script type="text/javascript" src="~/CommonJs/LiveChat.js"></script>*@
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -37,7 +39,8 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a asp-controller="Home" asp-action="Index">Inicio</a></li>
-                    @await Component.InvokeAsync("CategoryMenu")
+                    <li><a asp-controller="PieDetail" asp-action="List">Comprar</a></li>
+                    @*@await Component.InvokeAsync("CategoryMenu")*@
                     @await Component.InvokeAsync("PhotosMenu")
                     <li><a asp-controller="Contact" asp-action="Index">Contacto</a></li>
                     <li><a asp-controller="Calendar" asp-action="OpenHours">Horarios</a></li>

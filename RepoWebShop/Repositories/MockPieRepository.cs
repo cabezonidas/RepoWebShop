@@ -41,5 +41,15 @@ namespace RepoWebShop.Repositories
         {
             throw new System.NotImplementedException();
         }
+
+        public void Restore(int pieId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdatePrice(int pieId, int price)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

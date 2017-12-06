@@ -21,7 +21,7 @@ namespace RepoWebShop.Repositories
                 return _appDbContext.Pies
                     .Include(p => p.PieDetail)
                     .Include(c => c.PieDetail.Category)
-                    .Where(x => x.IsActive);
+                    .Where(x => x.IsActive && x.PieDetail.IsActive);
             }
         }
 
@@ -39,7 +39,8 @@ namespace RepoWebShop.Repositories
         {
             get
             {
-                return _appDbContext.PieDetails.Where(p => p.IsPieOfTheWeek);
+                var activePies = _appDbContext.Pies.Where(x => x.IsActive == true).Select(x => x.PieDetailId).Distinct();
+                return _appDbContext.PieDetails.Where(p => p.IsActive && p.IsPieOfTheWeek && activePies.Contains(p.PieDetailId));
             }
         }
 
@@ -61,6 +62,20 @@ namespace RepoWebShop.Repositories
         public Pie GetPieById(int pieId)
         {
             return _appDbContext.Pies.Include(p => p.PieDetail).FirstOrDefault(p => p.PieId == pieId);
+        }
+
+        public void Restore(int pieId)
+        {
+            var pie = _appDbContext.Pies.FirstOrDefault(x => x.PieId == pieId);
+            pie.IsActive = true;
+            _appDbContext.SaveChanges();
+        }
+
+        public void UpdatePrice(int pieId, int price)
+        {
+            var pie = _appDbContext.Pies.FirstOrDefault(x => x.PieId == pieId);
+            pie.Price = price;
+            _appDbContext.SaveChanges();
         }
     }
 }

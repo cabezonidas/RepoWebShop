@@ -51,7 +51,8 @@ namespace RepoWebShop.Repositories
         public void Delete(int pieDetailId)
         {
             PieDetail pieDetail = _appDbContext.PieDetails.FirstOrDefault(x => x.PieDetailId == pieDetailId);
-            _appDbContext.PieDetails.Remove(pieDetail);
+            pieDetail.IsActive = false;
+            //_appDbContext.PieDetails.Remove(pieDetail);
             _appDbContext.SaveChanges();
         }
 
@@ -74,6 +75,13 @@ namespace RepoWebShop.Repositories
         public PieDetail GetPieDetailById(int pieDetailId)
         {
             return _appDbContext.PieDetails.FirstOrDefault(p => p.PieDetailId == pieDetailId);
+        }
+
+        public void Restore(int pieDetailId)
+        {
+            var pieDetail = _appDbContext.PieDetails.FirstOrDefault(x => x.PieDetailId == pieDetailId);
+            pieDetail.IsActive = true;
+            _appDbContext.SaveChanges();
         }
     }
 }

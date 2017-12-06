@@ -1,0 +1,11 @@
+﻿td {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+th {
+    text-align: center;
+}
+
+#percentage {
+    width: 150px;
+}

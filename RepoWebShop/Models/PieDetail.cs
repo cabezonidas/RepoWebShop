@@ -35,5 +35,7 @@ namespace RepoWebShop.Models
         public int PreparationTime { get; set; }
         [Display(Name = "Categoria")]
         public virtual Category Category { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }
