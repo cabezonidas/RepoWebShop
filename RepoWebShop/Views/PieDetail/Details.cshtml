@@ -6,13 +6,15 @@
     <div class="thumbnailDetail">
         <div class="row short-Desc">
             <div class="col-sm-6 col-md-6 col-lg-6">
-                <img alt="@Model.PieDetail.Name" src="~/Pictures/logo.png">
+                <div style="width:300px; height: 300px; display:none;" class="owl-carousel owl-theme" id="owlCarousel">
+                </div>
+                <img alt="@Model.PieDetail.Name" src="~/Pictures/logo.png" id="defaultPicture">
             </div>
             <div class="col-sm-6 col-md-6 col-lg-6">
                 <div class="caption-full">
                     <h1>@Model.PieDetail.Name</h1>
                     @Html.Partial("PiePriceCarousel", Model)
-                    <p><strong>Tiempo de preparación: @Model.PieDetail.PreparationTime hs</strong></p>
+                    <p><strong>Preparación: @Model.PieDetail.PreparationTime hs</strong></p>
                 </div>
             </div>
         </div>
@@ -27,7 +29,7 @@
                 Ver más
             </a>
         </div>
-    </div>
+    </div>  
 </div>
 <script type="text/javascript">
     $(function () {
@@ -35,19 +37,31 @@
             interval: 2000
         });
     });
+    
+    $.ajax({
+        url: "/api/PieDetailData/GetPieDetailFotos/" + '@Model.PieDetail.FlickrAlbumId',
+        method: "GET",
+        success: function (result) {
+            buildCarousel(result);
+        },
+        error: function (error) {
+            alert('Algo salio mal.');
+        }
+    });
 
-    function removeFromSystem(setId) {
-        $.ajax({
-            url: "/api/PieDetailData/GetPieDetailFotos/" + setId,
-            method: "GET",
-            success: function (result) {
-                alert('Ok!');
-                console.log(result);
-            },
-            error: function (error) {
-                alert('Algo salio mal.');
-            }
+    function buildCarousel(result) {
+        $.each(result, function (index, item) { 
+            $('#owlCarousel').append('<img style="margin:auto;" class="owl-lazy" data-src="' + item + 'm.jpg" alt="">');
+        })
+        $('#owlCarousel').owlCarousel({
+            items: 1,
+            center: true,
+            lazyLoad: true,
+            loop: true,
+            margin: 10
         });
+        $('#defaultPicture').hide();
+        $('#owlCarousel').show();
     }
-    removeFromSystem('72157661292514217');
+
 </script>
