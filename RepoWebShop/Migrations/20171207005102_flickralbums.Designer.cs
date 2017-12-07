@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171207005102_flickralbums")]
+    partial class flickralbums
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -246,7 +247,7 @@ namespace RepoWebShop.Migrations
                     b.Property<int>("GalleryFlickrAlbumId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<long>("FlickrSetId");
+                    b.Property<string>("FlickrSetId");
 
                     b.Property<bool>("InGallery");
 
@@ -450,7 +451,11 @@ namespace RepoWebShop.Migrations
 
                     b.Property<int>("CategoryId");
 
-                    b.Property<long>("FlickrAlbumId");
+                    b.Property<string>("ImageThumbnailUrl")
+                        .IsRequired();
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired();
 
                     b.Property<bool>("InStock");
 

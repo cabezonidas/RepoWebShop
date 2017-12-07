@@ -6,7 +6,7 @@
     <div class="thumbnailDetail">
         <div class="row short-Desc">
             <div class="col-sm-6 col-md-6 col-lg-6">
-                <img alt="@Model.PieDetail.Name" src="@Model.PieDetail.ImageUrl">
+                <img alt="@Model.PieDetail.Name" src="~/Pictures/logo.png">
             </div>
             <div class="col-sm-6 col-md-6 col-lg-6">
                 <div class="caption-full">
@@ -35,4 +35,19 @@
             interval: 2000
         });
     });
+
+    function removeFromSystem(setId) {
+        $.ajax({
+            url: "/api/PieDetailData/GetPieDetailFotos/" + setId,
+            method: "GET",
+            success: function (result) {
+                alert('Ok!');
+                console.log(result);
+            },
+            error: function (error) {
+                alert('Algo salio mal.');
+            }
+        });
+    }
+    removeFromSystem('72157661292514217');
 </script>

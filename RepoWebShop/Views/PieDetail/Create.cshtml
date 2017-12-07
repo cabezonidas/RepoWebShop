@@ -37,6 +37,14 @@
         </div>
 
         <div class="form-group">
+            <label asp-for="FlickrAlbumId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="FlickrAlbumId" class="form-control" />
+                <span asp-validation-for="FlickrAlbumId" class="text-danger"></span>
+            </div>
+        </div>
+
+        @*<div class="form-group">
             <label asp-for="ImageUrl" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <input asp-for="ImageUrl" class="form-control" />
@@ -50,7 +58,7 @@
                 <input asp-for="ImageThumbnailUrl" class="form-control" />
                 <span asp-validation-for="ImageThumbnailUrl" class="text-danger"></span>
             </div>
-        </div>
+        </div>*@
 
         <div class="form-group">
             <label asp-for="CategoryId" class="col-md-2 control-label"></label>

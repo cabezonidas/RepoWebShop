@@ -14,14 +14,18 @@ namespace RepoWebShop.Controllers
         private readonly IPieDetailRepository _pieDetailRepository;
         private readonly IPieRepository _pieRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IPhotosGalleryRepository _galleryRepository;
+        private readonly IPhotosetAlbums _photosetAlbums;
         private readonly AppDbContext _appDbContext;
 
-        public AdminDataController(AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
+        public AdminDataController(AppDbContext appDbContext, IPhotosetAlbums photosetAlbums, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository, IPhotosGalleryRepository galleryRepository)
         {
+            _galleryRepository = galleryRepository;
             _pieDetailRepository = pieDetailRepository;
             _categoryRepository = categoryRepository;
             _pieRepository = pieRepository;
             _appDbContext = appDbContext;
+            _photosetAlbums = photosetAlbums;
         }
 
         [HttpGet]
@@ -90,6 +94,51 @@ namespace RepoWebShop.Controllers
             try
             {
                 _pieRepository.Restore(pieId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("AddFlickrSetToGallery/{setId}")]
+        public IActionResult AddFlickrSetToGallery(string setId)
+        {
+            try
+            {
+                _galleryRepository.AddFlickrAlbum(setId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        [Route("RemoveFlickrFromToGallery/{setId}")]
+        public IActionResult RemoveFlickrSetFromGallery(string setId)
+        {
+            try
+            {
+                _galleryRepository.RemoveFlickrAlbum(setId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        [Route("HideFlickrFromToGallery/{setId}")]
+        public IActionResult HideFlickrSetFromGallery(string setId)
+        {
+            try
+            {
+                _galleryRepository.HideFlickrAlbum(setId);
                 return Ok();
             }
             catch (Exception ex)

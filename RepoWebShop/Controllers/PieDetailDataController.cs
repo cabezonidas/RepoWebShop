@@ -2,6 +2,7 @@
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,11 +13,28 @@ namespace RepoWebShop.Controllers
     {
         private readonly IPieDetailRepository _pieDetailRepository;
         private readonly IPieRepository _pieRepository;
+        private readonly IPhotosetAlbums _photosetAlbums;
 
-        public PieDetailDataController(IPieDetailRepository pieDetailRepository, IPieRepository pieRepository)
+        public PieDetailDataController(IPieDetailRepository pieDetailRepository, IPieRepository pieRepository, IPhotosetAlbums photosetAlbums)
         {
             _pieDetailRepository = pieDetailRepository;
             _pieRepository = pieRepository;
+            _photosetAlbums = photosetAlbums;
+        }
+
+        [HttpGet]
+        [Route("GetPieDetailFotos/{setId}")]
+        public IActionResult GetPieDetailFotos(string setId)
+        {
+            try
+            {
+                var photos = _photosetAlbums.GetPhotos(Int64.Parse(setId));               
+                return Ok(photos.Photoset.Photo.Select(x => $"https://farm{x.Farm}.staticflickr.com/{x.Server}/{x.Id}_{x.Secret}_"));
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet]

@@ -25,12 +25,16 @@ namespace RepoWebShop.ViewModels
         public string LongDescription { get; set; }
 
         [Required]
-        [Display(Name = "Imagen calidad alta")]
-        public string ImageUrl { get; set; }
+        [Display(Name = "Album Flickr Id")]
+        public string FlickrAlbumId { get; set; }
 
-        [Required]
-        [Display(Name = "Imagen calidad media")]
-        public string ImageThumbnailUrl { get; set; }
+        //[Required]
+        //[Display(Name = "Imagen calidad alta")]
+        //public string ImageUrl { get; set; }
+
+        //[Required]
+        //[Display(Name = "Imagen calidad media")]
+        //public string ImageThumbnailUrl { get; set; }
 
         [Required]
         [Display(Name = "Categoria")]

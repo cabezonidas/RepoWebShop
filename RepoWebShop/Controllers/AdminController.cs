@@ -16,14 +16,20 @@ namespace RepoWebShop.Controllers
     public class AdminController : Controller
     {
         private readonly IPieDetailRepository _pieDetailRepository;
+        private readonly IPhotosGalleryRepository _galleryRepository;
+        private readonly IPhotosetAlbums _photosetAlbums;
         private readonly IPieRepository _pieRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly AppDbContext _appDbContext;
         private readonly IMapper _mapper;
         private readonly List<SelectListItem> _categories;
 
-        public AdminController(IMapper mapper, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
+        
+
+        public AdminController(IPhotosGalleryRepository galleryRepository, IPhotosetAlbums photosetAlbums, IMapper mapper, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
         {
+            _galleryRepository = galleryRepository;
+            _photosetAlbums = photosetAlbums;
             _pieDetailRepository = pieDetailRepository;
             _categoryRepository = categoryRepository;
             _pieRepository = pieRepository;
@@ -57,6 +63,42 @@ namespace RepoWebShop.Controllers
                 pieDetailCreateViewModel.Categories = _categories;
                 return View(pieDetailCreateViewModel);
             }
+        }
+
+        [HttpGet]
+        public IActionResult Galleries()
+        {
+            var result = new List<GalleryFlickrAlbumViewModel>();
+            var savedAlbums = _galleryRepository.GetFlickrAlbums();
+
+            foreach(var set in _photosetAlbums.Albums.Photosets.Photoset)
+            {
+                GalleryFlickrAlbumViewModel album = new GalleryFlickrAlbumViewModel();
+                album.FlickrSetId = set.Id;
+                album.FlickrSetTitle = set.Title._Content;
+                album.InFlickr = true;
+                var savedAlbum = savedAlbums.FirstOrDefault(x => x.FlickrSetId == set.Id);
+                if(savedAlbum == null)
+                    album.InGallery = false;
+                else
+                {
+                    album.InGallery = savedAlbum.InGallery;
+                    album.GalleryFlickrAlbumId = savedAlbum.GalleryFlickrAlbumId;
+                }
+                result.Add(album);
+            }
+
+            foreach(var orphanAlbum in savedAlbums.Where(x => !result.Select(y => y.FlickrSetId).Contains(x.FlickrSetId)))
+            {
+                GalleryFlickrAlbumViewModel album = new GalleryFlickrAlbumViewModel();
+                album.GalleryFlickrAlbumId = orphanAlbum.GalleryFlickrAlbumId;
+                album.FlickrSetId = orphanAlbum.FlickrSetId;
+                album.InFlickr = false;
+                album.InGallery = orphanAlbum.InGallery;
+                result.Add(album);
+            }
+            
+            return View(result.OrderBy(x => x.FlickrSetTitle));
         }
 
         [HttpPost]

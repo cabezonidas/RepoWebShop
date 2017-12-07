@@ -1,0 +1,127 @@
+﻿@model IEnumerable<GalleryFlickrAlbumViewModel>
+<style>
+
+</style>
+
+<div class="container">
+    <h2>Fotos</h2>
+    <table class="table table-striped" >
+        <thead>
+            <tr>
+                <th>
+                    Album Id
+                </th>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    En Flickr
+                </th>
+                <th>
+                    En Galleria
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ 
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.FlickrSetId
+                        </td>
+                        <td>
+                            @item.FlickrSetTitle
+                        </td>
+                        <td>
+                            @{ 
+                                if (item.InFlickr)
+                                {
+                                    <div>Sí</div>
+                                }
+                                else
+                                {
+                                    <div>No</div>
+                                }
+                            }
+                        </td>
+                        <td>
+                            @{
+                                if (item.InGallery)
+                                {
+                                    <div>Sí</div>
+                                }
+                                else
+                                {
+                                    <div>No</div>
+                                }
+                            }
+                        </td>
+                        <td>
+                            @{
+                                if (!item.InFlickr)
+                                {
+                                    <input type="button" value="Borrar" onclick="removeFromSystem('@item.FlickrSetId')" />
+                                }
+                                else
+                                {
+                                    if (item.InGallery)
+                                    {
+                                        <input type="button" value="Ocultar" onclick="hideFromGallery('@item.FlickrSetId')" />
+                                    }
+                                    else
+                                    {
+                                        <input type="button" value="Mostrar" onclick="showInGallery('@item.FlickrSetId')" />
+                                    }
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+<script type="text/javascript">
+    function removeFromSystem(setId){
+        $.ajax({
+            url: "/api/AdminData/RemoveFlickrFromToGallery/" + setId,
+            method: "DELETE",
+            success: function (result) {
+                window.location.reload();
+            },
+            error: function (error) {
+                alert('Algo salio mal.');
+            }
+        });
+    }
+    function hideFromGallery(setId){
+        $.ajax({
+            url: "/api/AdminData/HideFlickrFromToGallery/" + setId,
+            method: "DELETE",
+            success: function (result) {
+                window.location.reload();
+            },
+            error: function (error) {
+                alert('Algo salio mal.');
+            }
+        });
+    }
+    function showInGallery(setId) {
+        $.ajax({
+            url: "/api/AdminData/AddFlickrSetToGallery/" + setId,
+            method: "POST",
+            success: function (result) {
+                window.location.reload();
+            },
+            error: function (error) {
+                alert('Algo salio mal.');
+            }
+        });
+    }
+</script>

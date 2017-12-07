@@ -19,19 +19,6 @@ namespace RepoWebShop.Repositories
 
         private List<PhotosetPhotos> pictures = new List<PhotosetPhotos>();
 
-            //{
-            //    var photoSetid = photoset.Id;
-            //    var queryString = $"?method=flickr.photosets.getPhotos&api_key={_config["FlickrClientId"]}&photoset_id={photoSetid}&format=json&user_id={_config["FlickrUserId"]}&nojsoncallback=?";
-
-            //    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiUrl + queryString);
-            //    request.Proxy.Credentials = CredentialCache.DefaultCredentials;
-            //    request.Accept = "application/json";
-            //    request.Method = "GET";
-
-            //    HttpWebResponse apiResult = (HttpWebResponse)request.GetResponse();
-            //    result.Add(new JsonSerializer().Deserialize<PhotosetPhotos>(new JsonTextReader(new StreamReader(apiResult.GetResponseStream()))));
-            //}
-
         public PhotosetAlbums(IConfiguration config)
         {
             _config = config;
@@ -42,7 +29,8 @@ namespace RepoWebShop.Repositories
         {
             get
             {
-                return albums;
+                //return albums;
+                return GetPhotosets();
             }
         }
 

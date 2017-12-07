@@ -21,12 +21,18 @@ namespace RepoWebShop.Models
         [Display(Name = "Descripcion completa")]
         public string LongDescription { get; set; }
         public string AllergyInformation { get; set; }
+
+        //[Required]
+        //[Display(Name = "Url calidad alta")]
+        //public string ImageUrl { get; set; }
+        //[Required]
+        //[Display(Name = "Url calidad baja")]
+        //public string ImageThumbnailUrl { get; set; }
+
         [Required]
-        [Display(Name = "Url calidad alta")]
-        public string ImageUrl { get; set; }
-        [Required]
-        [Display(Name = "Url calidad baja")]
-        public string ImageThumbnailUrl { get; set; }
+        [Display(Name = "Album Id Flick")]
+        public long FlickrAlbumId { get; set; }
+
         public bool IsPieOfTheWeek { get; set; }
         public bool InStock { get; set; }
         public int CategoryId { get; set; }
