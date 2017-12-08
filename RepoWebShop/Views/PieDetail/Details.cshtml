@@ -1,26 +1,30 @@
 ﻿@model PieDetailViewModel
 
 <link href="~/Content/PieDetail/PieDetails.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick.css" />
+<link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick-theme.css" />
 
 <div class="container">
     <div class="thumbnailDetail">
+        <div class="header">
+            <h1>@Model.PieDetail.Name</h1>
+        </div>
         <div class="row short-Desc">
-            <div class="col-sm-6 col-md-6 col-lg-6">
-                <div style="width:300px; height: 300px; display:none;" class="owl-carousel owl-theme" id="owlCarousel">
-                </div>
+            <div class="col-sm-6 col-md-6 col-lg-6" id="pictures">
+                <div class="slider-for" style="display:none;"></div>
+                <div class="slider-nav" style="display:none;"></div>
                 <img alt="@Model.PieDetail.Name" src="~/Pictures/logo.png" id="defaultPicture">
             </div>
-            <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="col-sm-6 col-md-6 col-lg-6" id="prices">
                 <div class="caption-full">
-                    <h1>@Model.PieDetail.Name</h1>
+                    <h4><strong>@Model.PieDetail.ShortDescription</strong></h4>
                     @Html.Partial("PiePriceCarousel", Model)
                     <p><strong>Preparación: @Model.PieDetail.PreparationTime hs</strong></p>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-12">
-                <h4>@Model.PieDetail.ShortDescription</h4>
+            <div class="col-sm-12 col-md-12 col-lg-12" id="description">
                 <p>@Model.PieDetail.LongDescription</p>
             </div>
         </div>
@@ -50,18 +54,33 @@
     });
 
     function buildCarousel(result) {
-        $.each(result, function (index, item) { 
-            $('#owlCarousel').append('<img style="margin:auto;" class="owl-lazy" data-src="' + item + 'm.jpg" alt="">');
+        $.each(result, function (index, item) {
+            $('.slider-for').append('<div><img src="' + item + 'b.jpg" alt="" class="main"></div>');
+            $('.slider-nav').append('<div><img src="' + item + 'q.jpg" alt="" class="nav"></div>');
         })
-        $('#owlCarousel').owlCarousel({
-            items: 1,
-            center: true,
-            lazyLoad: true,
-            loop: true,
-            margin: 10
+        $('.slider-for').slick({
+            lazyLoad: 'ondemand',
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            infinite: true,
+            arrows: false,
+            fade: true,
+            asNavFor: '.slider-nav'
         });
+        $('.slider-nav').slick({
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            infinite: true,
+            asNavFor: '.slider-for',
+            dots: true,
+            centerMode: true,
+            focusOnSelect: true,
+            arrows: true
+        });
+
         $('#defaultPicture').hide();
-        $('#owlCarousel').show();
+        $('.slider-for').show();
+        $('.slider-nav').show();
     }
 
 </script>

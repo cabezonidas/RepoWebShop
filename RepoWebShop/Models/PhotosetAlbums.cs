@@ -36,12 +36,20 @@ namespace RepoWebShop.Repositories
 
         public PhotosetPhotos GetPhotos(long id)
         {
-            var result = pictures.FirstOrDefault(x => x.Photoset.Id == id);
-            if (result != null)
-                return result;
-            else
+            PhotosetPhotos result;
+            try
+            {
+                result = pictures.FirstOrDefault(x => x.Photoset.Id == id);
+                if (result == null)
+                    throw new Exception("Not pictures loaded.");
+            }
+            catch
+            {
                 GetPics(id);
-            return pictures.FirstOrDefault(x => x.Photoset.Id == id);
+                result = pictures.FirstOrDefault(x => x.Photoset.Id == id);
+            }
+
+            return result;
         }
 
         private PhotosetList GetPhotosets()

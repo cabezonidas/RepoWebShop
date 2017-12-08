@@ -1,29 +1,63 @@
-﻿.thumbnailDetail {
+﻿.header h1 {
+    text-align: center;
+}
+
+.thumbnailDetail {
+    padding: 10px;
+    background-color: #dbe9d8;
+    max-width: 900px;
+    margin: 10px auto;
+    border-radius: 20px;
+}
+
+    .thumbnailDetail h1 {
+    }
+
+.short-Desc {
     padding: 20px;
     background-color: #dbe9d8;
     max-width: 900px;
     margin: 30px auto;
-    border-radius: 20px;
+    text-align: center;
 }
-.thumbnailDetail h1 {
 
+img.main {
+    width: 100%;
 }
-    .short-Desc {
-        padding: 20px;
-        background-color: #dbe9d8;
-        max-width: 900px;
-        margin: 30px auto;
+
+@media screen and (max-width: 400px) {
+    img.nav {
+        width: 40px;
+        padding: 5px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    img.nav {
+        width: 60px;
+        padding: 5px;
+    }
+}
+
+@media screen and (min-width: 600px) {
+    img.nav {
+        width: 80px;
+        padding: 10px;
+    }
+}
+
+
+
+.thumbnailDetail .caption-full {
+    padding: 9px;
+    color: #333;
+}
+
+#description {
+    margin: 10px;
+}
+
+    #description h4 {
         text-align: center;
     }
-.thumbnailDetail img {
-    width: 100%;
-    margin-top: 10px;
-    border-radius: 20px;
-}
-    .thumbnailDetail .caption-full {
-        padding: 9px;
-        color: #333;
-    }
-
-
 /***************************************/
