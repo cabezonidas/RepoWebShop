@@ -2,15 +2,32 @@
 
 <link href="~/Content/Shared/PieOverviewSummary.css" rel="stylesheet" />
 
-<div class="col-xs-12 col-sm-6 col-lg-4 col-md-4">
-    <div class="thumbnail">
+<link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick.css" />
+<link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick-theme.css" />
+
+<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 center-block">
+    <div class="thumbnail center-block">
         <div class="ribbon"><span>@Model.PieDetail.PreparationTime Hs</span></div>
         <div class="pieOverviewImage">
             <a asp-controller="PieDetail"
                asp-action="Details"
                asp-route-id="@Model.PieDetail.PieDetailId">
-                @*<img src="~/Pictures/logo.png">*@
-                <img src="https://farm5.staticflickr.com/4536/23986590027_a03e31cb49_m.jpg">
+
+                <div class="frame-square">
+                    <div class="crop">
+                        @{
+                            if (String.IsNullOrEmpty(Model.PrimaryPicture))
+                            {
+                                <img src="~/Pictures/imgnotfound.png">
+                            }
+                            else
+                            {
+                                var source = Model.PrimaryPicture + (Model.IsMobile ? "m" : "b") + ".jpg";
+                                <img src="@source" alt="">
+                            }
+                        }
+                    </div>
+                </div>
                 <div class="caption">
                     <h3>
                         @Model.PieDetail.Name
@@ -22,4 +39,3 @@
         </div>
     </div>
 </div>
-

@@ -71,7 +71,7 @@ namespace RepoWebShop.Controllers
             var result = new List<GalleryFlickrAlbumViewModel>();
             var savedAlbums = _galleryRepository.GetFlickrAlbums();
 
-            foreach(var set in _photosetAlbums.Albums.Photosets.Photoset)
+            foreach(var set in _photosetAlbums.Photosets.Photosets.Photoset)
             {
                 GalleryFlickrAlbumViewModel album = new GalleryFlickrAlbumViewModel();
                 album.FlickrSetId = set.Id;

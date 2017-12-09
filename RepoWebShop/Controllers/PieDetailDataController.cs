@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace RepoWebShop.Controllers
 {
@@ -28,14 +30,16 @@ namespace RepoWebShop.Controllers
         {
             try
             {
-                var photos = _photosetAlbums.GetPhotos(Int64.Parse(setId));               
-                return Ok(photos.Photoset.Photo.Select(x => $"https://farm{x.Farm}.staticflickr.com/{x.Server}/{x.Id}_{x.Secret}_"));
+                var albumId = Int64.Parse(setId);
+                return Ok(_photosetAlbums.GetPieDetailFotos(albumId));
             }
             catch
             {
                 return BadRequest();
             }
         }
+
+        
 
         [HttpGet]
         [Route("LoadMorePieDetails")]
@@ -96,6 +100,8 @@ namespace RepoWebShop.Controllers
         {
             return new PieDetailViewModel()
             {
+                IsMobile = this.Request.IsMobile(),
+                PrimaryPicture = _photosetAlbums.GetPrimaryPicture(dbPieDetail.FlickrAlbumId),
                 PieDetail = dbPieDetail,
                 Pies = _pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == dbPieDetail.PieDetailId)
             };

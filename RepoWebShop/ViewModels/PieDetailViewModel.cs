@@ -11,5 +11,7 @@ namespace RepoWebShop.ViewModels
 
         public PieDetail PieDetail { get; set; }
         public IEnumerable<Pie> Pies { get; set; }
+        public string PrimaryPicture { get; set; }
+        public bool IsMobile { get; internal set; }
     }
 }

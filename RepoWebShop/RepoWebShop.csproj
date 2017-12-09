@@ -22,6 +22,18 @@
     <None Remove="Helpers\**" />
   </ItemGroup>
 
+
+
+  <ItemGroup>
+    <Compile Remove="Models\Album.cs" />
+  </ItemGroup>
+
+
+
+  <ItemGroup>
+    <Content Remove="wwwroot\CommonJs\DetectMobileBrowser.js" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Update="wwwroot\**\*">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

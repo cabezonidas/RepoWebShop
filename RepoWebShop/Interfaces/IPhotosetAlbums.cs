@@ -8,8 +8,8 @@ namespace RepoWebShop.Interfaces
 {
     public interface IPhotosetAlbums
     {
-        PhotosetList Albums { get; }
-
-        PhotosetPhotos GetPhotos(long id);
+        PhotosetList Photosets { get; }
+        IEnumerable<string> GetPieDetailFotos(long flickrAlbumId);
+        string GetPrimaryPicture(long flickrAlbumId);
     }
 }

@@ -23,12 +23,12 @@ namespace RepoWebShop.Controllers
         { 
             //Asi obtengo las descripciones de las fotos (lo puedo hacer en JS tmb)
             //https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=d097bef2694e1f6fea5d594b19967deb&secret=f6c592763d4a8387&photo_id=7923298054
-            return View(_photosetAlbums.GetPhotos(id));
+            return View();
         }
 
         public IActionResult Index()
         {
-            return View(_photosetAlbums.Albums);
+            return View(_photosetAlbums.Photosets);
         }
     }
 }

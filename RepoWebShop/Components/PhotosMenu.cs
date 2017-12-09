@@ -17,7 +17,7 @@ namespace RepoWebShop.Components
 
         public IViewComponentResult Invoke()
         {
-            return View(_photosetAlbums.Albums);
+            return View(_photosetAlbums.Photosets);
         }
     }
 }
