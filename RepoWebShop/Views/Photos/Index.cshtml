@@ -1,63 +1,110 @@
-﻿@model PhotosetList
+﻿@model IEnumerable<PhotosetPhotos>
 
-@{
-    foreach (var photoset in Model.Photosets.Photoset)
-    {
-        <div style="display:none; text-align: center; touch-action: manipulation;" class="photosetcontainer" id="@photoset.Id">
-            <h1>@photoset.Title._Content</h1>
-            <div id="@photoset.Id" class="owl-carousel owl-theme photoset">
+<link href="~/Content/Photos/Index.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick.css" />
+<link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick-theme.css" />
+
+<section class="container">
+    <div id="topsection"></div>
+    <h1 id="toptitle" class="hidden-lg hidden-md">Galería de fotos</h1>
+    <div class="hidden-lg hidden-md col-sm-12 col-xs-12" id="top-filters">
+        <h2>
+            Álbumes
+        </h2>
+        <div id="photosfilter-mobile" class="photosfilter">
+        @{
+            foreach (var photosetPhotos in Model)
+            {
+                <div>
+                    <a href="#@photosetPhotos.Photoset.Id">@photosetPhotos.Photoset.Title</a>
+                </div>
+            }
+        }
+        </div>
+
+    </div>
+    
+    <div class="arrow-up" id="arrow-up" style="display:none;">
+        <a href="#topsection" class="hide-on-palm arrow-up" >
+            <span class="fa-stack fa-2x">
+                <i class="fa fa-chevron-up fa-stack-1x"></i>
+            </span>
+        </a>
+    </div>
+
+    <div class="col-lg-2 col-md-3 hidden-sm hidden-xs" >   
+
+        <div class="affix" id="leftpanel" >
+            <h2>
+                Álbumes
+            </h2>
+            <div class="photosfilter">
+                @{
+                    foreach (var photosetPhotos in Model)
+                    {
+                        <div class="">
+                            <a href="#@photosetPhotos.Photoset.Id">@photosetPhotos.Photoset.Title</a>
+                        </div>
+                    }
+                }
             </div>
         </div>
-    }
-}
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.photoset').each(function () {
-            getPictures($(this)[0].id);
-        })
-    });
+    </div>
+    <div class="col-lg-10 col-md-9 col-sm-12 col-xs-12">
+        <h1 id="toptitle" class="hidden-sm hidden-xs">Galería de fotos</h1>
+        @{
+            foreach (var photosetPhotos in Model)
+            {
+                <div class="album" id="@photosetPhotos.Photoset.Id">
+                    <h2>@photosetPhotos.Photoset.Title</h2>
+                    <div class="grid">
+                        @{
+                            foreach (var photo in photosetPhotos.Photoset.Photo)
+                            {
+                                var url = $"https://farm{photo.Farm}.staticflickr.com/{photo.Server}/{photo.Id}_{photo.Secret}_";
+                                url += "b.jpg";
+                                <div class="item item--medium" style="background-image: url('@url');">
+                                    <div class="item__details">
+                                        @photo.Title
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</section>
+<div class="message">
+    Sorry, your browser does not support CSS Grid. 😅
+</div>
 
-    function getPictures(photoset) {
-        var url = 'https://api.flickr.com/services/rest/';
-        $.ajax({
-            type: 'GET',
-            url: url + '?method=flickr.photosets.getPhotos&api_key=d097bef2694e1f6fea5d594b19967deb&photoset_id=' + photoset + '&format=json&user_id=85024949%40N08&nojsoncallback=?";',
-            dataType: 'json',
-            success: onsuccess
-        });
-    }
-
-    function onsuccess(data) {
-        /*var photoset = data.photoset;
-        var selector = $('div#' + photoset.id + '.owl-carousel');
-        var photos = photoset.photo;
-        photos.forEach(function (e) {
-            var source = "https://farm" + e.farm + ".staticflickr.com/" + e.server + "/" + e.id + "_" + e.secret + "_n.jpg";
-            var html = `
-                <div class="item" style= "border-style: solid; border-radius: 5px; ">
-                    <h4>` + e.title + `</h4>
-                    <img style="padding:10px;" class="owl-lazy" data-src="` + source + `" alt="">
-                </div>`
-            selector.append(html);
-        });
-        selector.owlCarousel({
-            lazyLoad: true,
-            loop: true,
-            margin: 10,
-            center: true,
-            responsive: {
-                0: {
-                    items: 1.1
-                },
-                480: {
-                    items: 2.2
-                },
-                768: {
-                    items: 4.4
+<script>
+    $(function () {
+        $('a[href *=\\#]:not([href =\\#])').click(function () {
+            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                if (target.length) {
+                    $('html,body').animate({
+                        scrollTop: target.offset().top - 65
+                    }, 1000);
+                    return false;
                 }
             }
         });
-        $('div#' + photoset.id + '.photosetcontainer').show();*/
+    });
+
+    window.onscroll = function () { scrollFunction() };
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 120 || document.documentElement.scrollTop > 120) {
+            $("#arrow-up").fadeIn('block');
+        } else {
+            $("#arrow-up").fadeOut();
+        }
     }
+
 </script>

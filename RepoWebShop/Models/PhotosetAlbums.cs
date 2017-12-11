@@ -119,6 +119,14 @@ namespace RepoWebShop.Repositories
             return result;
         }
 
+        public IEnumerable<PhotosetPhotos> GetGalleryPictures(IEnumerable<long> albums)
+        {
+            List<PhotosetPhotos> result = new List<PhotosetPhotos>();
+            foreach (var album in albums)
+                result.Add(Photos(album));
+            return result.AsEnumerable();
+        }
+
         private class PhotosetPhotosRefresh
         {
             public PhotosetPhotos PhotosetPhotos;

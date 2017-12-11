@@ -13,10 +13,12 @@ namespace RepoWebShop.Controllers
     public class PhotosController : Controller
     {
         private readonly IPhotosetAlbums _photosetAlbums;
+        private readonly IPhotosGalleryRepository _photosGalleryRepository;
 
-        public PhotosController(IPhotosetAlbums photosetAlbums)
+        public PhotosController(IPhotosetAlbums photosetAlbums, IPhotosGalleryRepository photosGalleryRepository)
         {
             _photosetAlbums = photosetAlbums;
+            _photosGalleryRepository = photosGalleryRepository;
         }
 
         public IActionResult Details(Int64 id)
@@ -28,7 +30,8 @@ namespace RepoWebShop.Controllers
 
         public IActionResult Index()
         {
-            return View(_photosetAlbums.Photosets);
+            var view = _photosGalleryRepository.GetGalleryPictures();
+            return View(view);
         }
     }
 }

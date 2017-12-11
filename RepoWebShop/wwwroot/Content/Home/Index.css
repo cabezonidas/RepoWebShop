@@ -369,3 +369,14 @@ blockquote {
         display: inline;
     }
 /** </team> **/
+
+/** <afip> **/
+section#afip {
+    text-align: center;
+    padding: 0px;
+}
+
+    section#afip img {
+        width: 45px;
+    }
+/** </afip> **/

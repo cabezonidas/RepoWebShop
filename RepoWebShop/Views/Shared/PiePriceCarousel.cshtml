@@ -1,12 +1,41 @@
 ﻿@model PieDetailViewModel
 
 <link href="~/Content/Shared/PiePriceCarousel.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick.css" />
+<link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick-theme.css" />
 
 @{
     string id = Model.PieDetail.PieDetailId.ToString() + "-" + Guid.NewGuid().ToString();
 }
 
-<div id="@id" class="carousel slide">
+<div class="prices" id="@id" style="display:none;">
+    @{
+        var pies = Model.Pies.ToArray();
+        for (int i = 0; i < pies.Count(); i++)
+        {
+            <div class='price-carousel'>
+                @Html.Partial("PiePriceCarouselItem", pies[i])
+            </div>
+        }
+    }
+</div>
+
+<script>
+    @{ var selector = "#" + id + ".prices"; }
+    $('@selector').slick({
+        arrows: false,
+        dots: true,
+        autoplay: true,
+        autoplaySpeed: 2500,
+        focusOnSelect: true,
+        pauseOnFocus: true,
+        pauseOnHover: true,
+        pauseOnDotsHover: true
+    });
+    $('@selector').show();
+</script>
+
+@*<div id="@id" class="carousel slide">
     <div class="carousel-inner">
         @{
             var pies = Model.Pies.ToArray();
@@ -27,4 +56,4 @@
             <span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
         </a>
     }
-</div>
+</div>*@

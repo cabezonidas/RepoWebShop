@@ -25,7 +25,7 @@ namespace RepoWebShop.TagHelpers
                             <i class='fa fa-heart fa-beat'></i>
                         </h2>
                     </div>
-                    <div class='col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center'>
+                    <div class='col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center'>
                         <ul class='list-inline list-social'>"
                             +
                             String.Concat(Media.Select(x =>
@@ -35,15 +35,9 @@ namespace RepoWebShop.TagHelpers
                                 @"</a>
                             </li>"))
                             +
-                            @"<li class='list-inline-item'>
-                                <a href='http://qr.afip.gob.ar/?qr=-3Dafrs7S3zSZ4ok4IozMQ,,' target='_F960AFIPInfo'>
-                                    <img src='http://www.afip.gob.ar/images/f960/DATAWEB.jpg' border='0'>
-                                </a>
-                            </li>"
-                            +
                         @"</ul>
                     </div>
-                    <div class='hidden-lg hidden-md hidden-sm col-xs-12 text-center'>
+                    <div class='hidden-lg hidden-md col-sm-6 col-xs-6 text-center'>
                         <h2 class='section-heading'>
                             &zwnj;
                         </h2>

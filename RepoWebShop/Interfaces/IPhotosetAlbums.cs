@@ -11,5 +11,6 @@ namespace RepoWebShop.Interfaces
         PhotosetList Photosets { get; }
         IEnumerable<string> GetPieDetailFotos(long flickrAlbumId);
         string GetPrimaryPicture(long flickrAlbumId);
+        IEnumerable<PhotosetPhotos> GetGalleryPictures(IEnumerable<long> albums);
     }
 }
