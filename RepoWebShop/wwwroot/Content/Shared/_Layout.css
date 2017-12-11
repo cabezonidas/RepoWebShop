@@ -4,6 +4,20 @@
     z-index: 140;
 }
 
+#navbrand {
+    padding-left: 25px;
+    max-width: 225px;
+    overflow: hidden;
+}
+
+    #navbrand li {
+        display: inline-block;
+    }
+
+        #navbrand li a {
+            margin-left: 10px;
+        }
+
 .navbar-inverse {
     background-color: #a1e699;
     border-color: #19800a;
