@@ -1,0 +1,25 @@
+﻿.bdaypage {
+    background-color: #dbe9d8;
+    border-radius: 5px;
+}
+
+    .bdaypage h1 {
+        text-align: center;
+    }
+
+.photos {
+    margin: 25px;
+}
+
+.slick-for {
+}
+
+.slider-for img {
+    padding: 5px;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.slider-nav img {
+    padding: 5px;
+}

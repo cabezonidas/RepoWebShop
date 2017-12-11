@@ -1,3 +1,74 @@
-﻿<div class="container">
+﻿@model IEnumerable<PhotosetPhotos>
+
+
+<link href="~/Content/Services/Birthdays.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick.css" />
+<link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick-theme.css" />
+
+<div class="container bdaypage">
     <h1>Cumpleaños</h1>
+    @{ 
+        var album = Model.FirstOrDefault(x => x.Photoset.Id == 72157631388046352);
+    }
+    <div class="grid">
+        <div class="row">
+            <div class="col-lg-5 col-md-4 col-sm-6 col-xs-6">
+                <div class="photos">
+                @{
+                    if (album != null)
+                    {
+                        <div class="slider-for">
+                            @foreach (var photo in album.Photoset.Photo)
+                            {
+                                var url = $"https://farm{photo.Farm}.staticflickr.com/{photo.Server}/{photo.Id}_{photo.Secret}_b.jpg";
+                                <img src="@url" />
+                            }
+                        </div>
+                        <div class="slider-nav">
+                            @foreach (var photo in album.Photoset.Photo)
+                            {
+                                var url = $"https://farm{photo.Farm}.staticflickr.com/{photo.Server}/{photo.Id}_{photo.Secret}_q.jpg";
+                                <img src="@url" />
+                            }
+                        </div>
+                    }
+                }
+                </div>
+            </div>
+            <div class="col-lg-7 col-md-8 col-sm-6 col-xs-6">
+                <h2>Tortas de Cumpleaños</h2>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    $('.slider-for').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+        fade: true,
+        dots: false,
+        asNavFor: '.slider-nav'
+    });
+    $('.slider-nav').slick({
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        arrows: true,
+        asNavFor: '.slider-for',
+        responsive: [
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 3,
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 2,
+                }
+            }
+        ]
+    });
+</script>
