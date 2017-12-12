@@ -1,46 +1,46 @@
-﻿@model IEnumerable<PhotosetPhotos>
+﻿@model PhotosetPhotos
 
-
-<link href="~/Content/Services/Birthdays.css" rel="stylesheet" />
+<link href="~/Content/Shared/AlbumCarousel.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick.css" />
 <link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick-theme.css" />
 
-<section class="container">
+<div class="">
     <!-- Gallery -->
-    <div class="gallery-div" >
+    <div class="gallery-div">
         <div class="header">
-            <h2>@Model.First(x => x.Photoset.Id == 72157689990349894).Photoset.Title</h2>
+            <h2>@Model.Photoset.Title</h2>
         </div>
-        <div class="gallery ul">
+        <div id="@Model.Photoset.Id" class="gallery ul">
             @{
-                foreach (var photo in Model.First(x => x.Photoset.Id == 72157689990349894).Photoset.Photo)
+                var classname = Model.Photoset.Id + "-item";
+                foreach (var photo in Model.Photoset.Photo)
                 {
                     var url = $"https://farm{photo.Farm}.staticflickr.com/{photo.Server}/{photo.Id}_{photo.Secret}";
                     var full = url + "_h.jpg";
                     var thumb = url + "_q.jpg";
-                    <div class="item li" data-full="@full">
+                    <div class="item li @classname" data-full="@full">
                         <img src="@thumb" />
                     </div>
                 }
             }
         </div>
     </div>
-    <div class="lightbox">
-        <figure>
+    <div class="lightbox" id="lb-@Model.Photoset.Id">
+        <figure id="fig-@Model.Photoset.Id">
 
         </figure>
     </div>
-</section>
+</div>
 
 <script>
     $(function () {
         // Cache vars
-        var $lightbox = $('.lightbox'),
-            $figure = $('figure'),
-            $close = $('.close');
+        var $lightbox = $('#lb-@Model.Photoset.Id'),
+            $figure = $('#fig-@Model.Photoset.Id');
+            //$close = $('.close');
 
         // Handle item click
-        $('.item').on('click', function () {
+        $('.@classname').on('click', function () {
             var full = $(this).attr('data-full');
             toggleLightbox(full);
         });
@@ -58,17 +58,17 @@
                     .fadeIn(200);
             }
         }
-        // Close 
+        // Close
         $lightbox.on('click', toggleLightbox);
     });
-
-    $('.gallery').slick({
+    var sliderSelector = '@Model.Photoset.Id' + ".gallery";
+    $('#' + sliderSelector).slick({
         dots: true,
         infinite: true,
         arrows: true,
         speed: 300,
-        slidesToShow: 3,
-        centerMode: true,
+        //slidesToShow: 3,
+        //centerMode: true,
         variableWidth: true
     })
 </script>

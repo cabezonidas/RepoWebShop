@@ -33,5 +33,10 @@ namespace RepoWebShop.Controllers
             var view = _photosGalleryRepository.GetGalleryPictures();
             return View(view);
         }
+
+        public IActionResult Default()
+        {
+            return View();
+        }
     }
 }

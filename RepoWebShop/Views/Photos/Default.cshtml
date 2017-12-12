@@ -1,0 +1,26 @@
+﻿<link href="~/Content/Photos/Default.css" rel="stylesheet" />
+
+<section class="container" id="default">
+
+</section>
+
+<script type="text/javascript">
+    $.get("/api/PhotosData/GetAlbum/72157689990349894", function (data) {
+        $("#default.container").append(data);
+    });
+    $.get("/api/PhotosData/GetAlbum/72157631388046352", function (data) {
+        $("#default.container").append(data);
+    });
+    $.get("/api/PhotosData/GetAlbum/72157690633427305", function (data) {
+        $("#default.container").append(data);
+    });
+    $.get("/api/PhotosData/GetAlbum/72157631388215678", function (data) {
+        $("#default.container").append(data);
+    });
+    $.get("/api/PhotosData/GetAlbum/72157690561690845", function (data) {
+        $("#default.container").append(data);
+    });
+    $.get("/api/PhotosData/GetAlbum/72157661292514217", function (data) {
+        $("#default.container").append(data);
+    });
+</script>

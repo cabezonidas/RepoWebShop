@@ -1,38 +1,37 @@
-﻿section.container {
-    padding: 10px;
-    background-color: #dbe9d8;
-    max-width: 900px;
-    margin: 10px auto;
-    border-radius: 20px;
+﻿.gallery-div {
     font-family: 'Playball';
 }
 
-.gallery:hover > .li {
-    opacity: 0.5;
+.gallery {
+    margin: 25px;
 }
 
-.gallery .li {
-    transition: all .2s ease-in-out;
-}
+    .gallery:hover > .li {
+        opacity: 0.5;
+    }
 
-    .gallery .li img {
+    .gallery .li {
         transition: all .2s ease-in-out;
-        padding: 5px;
     }
 
-        .gallery .li img:hover {
-            transform: scale(1.05, 1.05);
+        .gallery .li img {
+            transition: all .2s ease-in-out;
+            padding: 5px;
         }
 
-    .gallery .li:hover {
-        opacity: 1;
-        cursor: -webkit-zoom-in;
-        cursor: -moz-zoom-in;
-    }
+            .gallery .li img:hover {
+                transform: scale(1.05, 1.05);
+            }
 
-        .gallery .li:hover > .li {
-            box-shadow: 1px 1px 1px 5px #a1e699;
+        .gallery .li:hover {
+            opacity: 1;
+            cursor: -webkit-zoom-in;
+            cursor: -moz-zoom-in;
         }
+
+            .gallery .li:hover > .li {
+                box-shadow: 1px 1px 1px 5px #a1e699;
+            }
 
 .lightbox {
     position: fixed;
@@ -45,6 +44,7 @@
     display: none;
     cursor: -webkit-zoom-out;
     cursor: -moz-zoom-out;
+    z-index: 1;
 }
 
 @media screen and (max-width: 768px) {
