@@ -51,35 +51,10 @@
         </div>
 
     </div>
-    <div class="col-lg-10 col-md-9 col-sm-12 col-xs-12">
+    <div class="col-lg-10 col-md-9 col-sm-12 col-xs-12" id="allAlbums">
         <h1 id="toptitle" class="hidden-sm hidden-xs">Galería de fotos</h1>
-        @{
-            foreach (var photosetPhotos in Model)
-            {
-                <div class="album" id="@photosetPhotos.Photoset.Id">
-                    <h2>@photosetPhotos.Photoset.Title</h2>
-                    <div class="grid">
-                        @{
-                            foreach (var photo in photosetPhotos.Photoset.Photo)
-                            {
-                                var url = $"https://farm{photo.Farm}.staticflickr.com/{photo.Server}/{photo.Id}_{photo.Secret}_";
-                                url += "b.jpg";
-                                <div class="item item--medium" style="background-image: url('@url');">
-                                    <div class="item__details">
-                                        @photo.Title
-                                    </div>
-                                </div>
-                            }
-                        }
-                    </div>
-                </div>
-            }
-        }
     </div>
 </section>
-<div class="message">
-    Sorry, your browser does not support CSS Grid. 😅
-</div>
 
 <script>
     $(function () {
@@ -107,4 +82,13 @@
         }
     }
 
+
+    @foreach(var item in Model)
+    {
+        <text>
+            $.get("/api/PhotosData/GetAlbum/@item.Photoset.Id", function (data) {
+                $("#allAlbums").append(data);
+            });
+        </text>
+    }
 </script>

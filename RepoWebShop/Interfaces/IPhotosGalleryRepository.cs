@@ -13,5 +13,6 @@ namespace RepoWebShop.Interfaces
         void RemoveFlickrAlbum(string setId);
         IEnumerable<GalleryFlickrAlbum> GetFlickrAlbums();
         IEnumerable<PhotosetPhotos> GetGalleryPictures();
+        IEnumerable<PhotosetPhotos> GetAllAlbums();
     }
 }

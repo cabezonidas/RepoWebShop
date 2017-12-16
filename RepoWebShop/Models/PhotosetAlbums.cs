@@ -127,6 +127,11 @@ namespace RepoWebShop.Repositories
             return result.AsEnumerable();
         }
 
+        public PhotosetPhotos GetGalleryPictures(long album)
+        {
+            return Photos(album);
+        }
+
         private class PhotosetPhotosRefresh
         {
             public PhotosetPhotos PhotosetPhotos;

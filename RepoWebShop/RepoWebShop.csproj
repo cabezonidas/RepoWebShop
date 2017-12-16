@@ -31,7 +31,9 @@
 
 
   <ItemGroup>
+    <Content Remove="Views\Photos\Default.cshtml" />
     <Content Remove="wwwroot\CommonJs\DetectMobileBrowser.js" />
+    <Content Remove="wwwroot\Content\Photos\Default.css" />
   </ItemGroup>
 
   <ItemGroup>

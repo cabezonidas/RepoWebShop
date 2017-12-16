@@ -39,7 +39,40 @@ namespace RepoWebShop.Controllers
             }
         }
 
-        
+        [HttpPost]
+        [Route("AddPieOfTheWeek/{pieDetailId}")]
+        public IActionResult AddPieOfTheWeek(int pieDetailId)
+        {
+            try
+            {
+                var pieDetail = _pieDetailRepository.GetPieDetailById(pieDetailId);
+                pieDetail.IsPieOfTheWeek = true;
+                _pieDetailRepository.Update(pieDetail);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Route("RemovePieOfTheWeek/{pieDetailId}")]
+        public IActionResult RemovePieOfTheWeek(int pieDetailId)
+        {
+            try
+            {
+                var pieDetail = _pieDetailRepository.GetPieDetailById(pieDetailId);
+                pieDetail.IsPieOfTheWeek = false;
+                _pieDetailRepository.Update(pieDetail);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
 
         [HttpGet]
         [Route("LoadMorePieDetails")]

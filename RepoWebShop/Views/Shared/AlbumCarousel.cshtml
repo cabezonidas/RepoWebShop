@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick.css" />
 <link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick-theme.css" />
 
-<div class="">
+<div class="partialView" id="@Model.Photoset.Id" style="display:none;">
     <!-- Gallery -->
     <div class="gallery-div">
         <div class="header">
@@ -34,18 +34,14 @@
 
 <script>
     $(function () {
-        // Cache vars
         var $lightbox = $('#lb-@Model.Photoset.Id'),
             $figure = $('#fig-@Model.Photoset.Id');
-            //$close = $('.close');
 
-        // Handle item click
         $('.@classname').on('click', function () {
             var full = $(this).attr('data-full');
             toggleLightbox(full);
         });
 
-        // Toggle lightbox
         function toggleLightbox(url) {
             if ($lightbox.is('.open')) {
                 $lightbox
@@ -58,17 +54,22 @@
                     .fadeIn(200);
             }
         }
-        // Close
         $lightbox.on('click', toggleLightbox);
     });
+
     var sliderSelector = '@Model.Photoset.Id' + ".gallery";
+
+    @{var centerMode = Model.Photoset.Photo.Count() == 1 ? "true" : "false"; }
+
     $('#' + sliderSelector).slick({
-        dots: true,
+        dots: false,
         infinite: true,
+        centerMode: @centerMode,
         arrows: true,
         speed: 300,
-        //slidesToShow: 3,
-        //centerMode: true,
         variableWidth: true
     })
+
+    var partialViewSelector = '@Model.Photoset.Id' + '.partialView';
+    $('#' + partialViewSelector).fadeIn();
 </script>

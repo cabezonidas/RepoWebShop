@@ -7,6 +7,7 @@
             <thead>
                 <tr>
                     <th>Nombre</th>
+                    <th>Destacado</th>
                     <th>Descripcion</th>
                     <th>Categoria</th>
                 </tr>
@@ -51,8 +52,30 @@
         if (!item.isActive)
             state = '<div class="text-muted"> Inactivo</div>';
         row.append('<td><a href="/Admin/EditPieDetail/' + item.pieDetailId + '">' + item.name + '</a>' + state + '</td>');
+
+        if (item.isPieOfTheWeek)
+            row.append('<td><input type="button" value="Quitar" onclick="removeHighlight(' + item.pieDetailId + ');" /></td>');
+        else
+            row.append('<td><input type="button" value="Agregar" onclick="addHighlight(' + item.pieDetailId + ');" /></td>');
         row.append('<td>' + item.shortDescription + '</td>');
         row.append('<td>' + item.category.categoryName + '</td>');
+        console.log(item);
         return row;
     }
+
+    function removeHighlight(pieDetailId) {
+        $.post("/api/PieDetailData/RemovePieOfTheWeek/" + pieDetailId, function (data) {
+            window.location.reload();
+        }).fail(function () {
+            alert('No se pudo hacer el cambio.');
+        });
+    }
+
+    function addHighlight(pieDetailId) {
+        $.post("/api/PieDetailData/AddPieOfTheWeek/" + pieDetailId, function (data) {
+            window.location.reload();
+        }).fail(function () {
+            alert('No se pudo hacer el cambio.');
+        });
+    };
 </script>

@@ -22,7 +22,7 @@ namespace RepoWebShop.Controllers
         [Route("GetAlbum/{Id}")]
         public ActionResult GetAlbum(long Id)
         {
-            var album = _galleryRepository.GetGalleryPictures().FirstOrDefault(x => x.Photoset.Id == Id);
+            var album = _photosetAlbums.GetGalleryPictures(Id);
             if (album == null)
                 return NotFound();
             else
