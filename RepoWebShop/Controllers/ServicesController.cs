@@ -36,7 +36,7 @@ namespace RepoWebShop.Controllers
 
         public ViewResult SpecialCakes()
         {
-            return View();
+            return View(_photosRepository.GetGalleryPictures());
         }
 
         public ViewResult SweetTable()

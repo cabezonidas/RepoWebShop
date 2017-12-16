@@ -59,16 +59,19 @@
 
     var sliderSelector = '@Model.Photoset.Id' + ".gallery";
 
-    @{var centerMode = Model.Photoset.Photo.Count() == 1 ? "true" : "false"; }
-
-    $('#' + sliderSelector).slick({
-        dots: false,
-        infinite: true,
-        centerMode: @centerMode,
-        arrows: true,
-        speed: 300,
-        variableWidth: true
-    })
+    @if(Model.Photoset.Photo.Count() > 1)
+    {
+        <text>
+            $('#' + sliderSelector).slick({
+                dots: false,
+                infinite: true,
+                centerMode: false,
+                arrows: true,
+                speed: 300,
+                variableWidth: true
+            });
+        </text>
+    }
 
     var partialViewSelector = '@Model.Photoset.Id' + '.partialView';
     $('#' + partialViewSelector).fadeIn();

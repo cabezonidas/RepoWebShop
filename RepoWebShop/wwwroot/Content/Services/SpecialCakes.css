@@ -1,0 +1,38 @@
+﻿div.header h2 {
+    display: none;
+}
+
+section.container {
+    padding: 10px;
+    background-color: #dbe9d8;
+    max-width: 900px;
+    margin: 10px auto;
+    border-radius: 20px;
+    font-family: 'Playball';
+}
+
+.row {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.step {
+    background-color: #fcfbdf99;
+    margin: 5px;
+    padding: 10px;
+    padding-left: 20px;
+    border-radius: 5px;
+}
+
+
+.row div.step :hover {
+    transform: scale(1.05, 1.05);
+}
+
+.step p {
+    font-family: 'Playball';
+}
