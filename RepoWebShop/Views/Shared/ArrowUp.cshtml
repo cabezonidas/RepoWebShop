@@ -1,0 +1,21 @@
+﻿<link href="~/Content/Shared/ArrowUp.css" rel="stylesheet" />
+
+<div class="arrow-up" id="arrow-up" style="display:none;">
+    <a href="#topsection" class="hide-on-palm arrow-up">
+        <span class="fa-stack fa-2x">
+            <i class="fa fa-chevron-up fa-stack-1x"></i>
+        </span>
+    </a>
+</div>
+
+<script type="text/javascript">
+    window.onscroll = function () { scrollFunction() };
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 120 || document.documentElement.scrollTop > 120) {
+            $("#arrow-up").fadeIn('block');
+        } else {
+            $("#arrow-up").fadeOut();
+        }
+    }
+</script>

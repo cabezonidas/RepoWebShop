@@ -11,22 +11,7 @@ h1, h2 {
     border-radius: 5px;
 }
 
-#arrow-up {
-    position: fixed;
-    z-index: 20;
-    bottom: 100px;
-    right: 20px;
-}
 
-    #arrow-up i {
-        color: white;
-    }
-
-.arrow-up {
-    color: white;
-    background-color: #dbe9d8;
-    border-radius: 15px;
-}
 
 
 
