@@ -1,7 +1,14 @@
-﻿section.container {
-    padding-top: 0px;
-}
+﻿
+
+
+
+
+
+
+
+
 /*************************/
+
 h1, h2 {
     text-align: center;
 }
@@ -10,10 +17,6 @@ h1, h2 {
     background-color: #dbe9d8;
     border-radius: 5px;
 }
-
-
-
-
 
 @media screen and (max-width: 680px) {
     .intro-message {
