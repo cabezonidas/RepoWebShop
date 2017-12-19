@@ -1,0 +1,13 @@
+﻿@model string
+<link href="~/Content/Shared/Card.css" rel="stylesheet">
+
+@{var title = String.IsNullOrEmpty(Model) ? "De las Artes" : Model; }
+
+<section class="container">
+    <div class="rectangle">
+        <h1>@title</h1>
+    </div>
+    <div class="triangle-l"></div>
+    <div class="content">
+    </div>
+</section>

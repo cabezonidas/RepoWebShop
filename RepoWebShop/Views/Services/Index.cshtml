@@ -1,0 +1,23 @@
+﻿<link href="~/Content/Services/Index.css" rel="stylesheet" />
+
+<section class="services">
+    <h1 class="text-center">Servicios</h1>
+    <div class="section-heading text-center">
+        <h2 class="text-muted">Mira todo lo que tenemos para ofrecerte!</h2>
+    </div>
+    <div class="container">
+        @Html.Partial("~/Views/Services/Service.cshtml", new ServiceViewModel("List", "PieDetail", "fa-shopping-cart", "Comprar", "Compra nuestros productos a través de esta web."))
+        @Html.Partial("~/Views/Services/Service.cshtml", new ServiceViewModel("SpecialCakes", "Services", "fa-birthday-cake", "Cumples", "Encarganos tu torta de cumpleaños, con los sabores que quieras."))
+        @Html.Partial("~/Views/Services/Service.cshtml", new ServiceViewModel("SpecialCakes", "Services", "fa-users", "Fiestas", "Sorprendé a ese ser querido con un desayuno continental sorpresa!"))
+
+        @Html.Partial("~/Views/Services/Service.cshtml", new ServiceViewModel("Breakfast", "Services", "fa-gift", "Desayunos", "Sorprendé a ese ser querido con un desayuno continental sorpresa!"))
+        @Html.Partial("~/Views/Services/Service.cshtml", new ServiceViewModel("Catering", "Services", "fa-cutlery", "Catering", "Hacemos el catering para tu evento. Super novedoso y exquisito. Mira!"))
+        @Html.Partial("~/Views/Services/Service.cshtml", new ServiceViewModel("SweetTable", "Services", "fa-coffee", "Mesa dulce", "Prepara una mesa dulce para terminar de enloquecer a tus invitados."))
+    </div>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.service').matchHeight();
+    });
+</script>

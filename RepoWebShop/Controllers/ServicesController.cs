@@ -19,6 +19,11 @@ namespace RepoWebShop.Controllers
         }
 
 
+        public ViewResult Index()
+        {
+            return View();
+        }
+
         public ViewResult Birthdays()
         {
             return View(_photosRepository.GetGalleryPictures());

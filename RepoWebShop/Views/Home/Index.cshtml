@@ -1,17 +1,14 @@
 ﻿@model HomeViewModel
 
 <link href="~/Content/Home/Index.css" rel="stylesheet" />
-
-
+<link href="~/Content/animate.css" rel="stylesheet" />
 
 <header class="intro-header" id="intro-header">
-    <img class="img-responsive" alt="La Reposteria Shop'" src="~/Pictures/logo.png" />
+    <img class="img-responsive animated bounceInLeft" alt="La Reposteria Shop'" src="~/Pictures/logo.png" />
     <div class="container">
         <div class="intro-message">     
-            @*<h1 class="text-warning welcome-msg">¡Hola!</h1>*@
             <div class="row">
                 <div class="col-lg-12 col-md-12 hidden-sm hidden-xs">
-
                     <hr class="intro-divider">
                     <h1>Bienvenido al sitio de la mejor pastelería artesanal de Buenos Aires</h1>
                 </div>
@@ -24,135 +21,8 @@
     </div>
 </header>
 
-@*@await Html.PartialAsync("Carousel")*@
 
-<section class="services" id="services">
-    <h1 class="text-center">Servicios</h1>
-    <div class="wrap group center-block">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 hidden-sm hidden-xs">
-                <div class="section-heading text-center">
-                    <h2 class="text-muted">Mira todo lo que tenemos para ofrecerte!</h2>
-                </div>
-
-                <ul class="repo-features group">
-                    <li>
-                        <div class="service-item">
-                            <a asp-controller="PieDetail" asp-action="List">
-                                <i class="fa fa-shopping-cart text-primary"></i>
-                                <h3>Comprar</h3>
-                                <p class="text-muted">Compra nuestros productos a través de esta web.</p>
-                            </a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="service-item">
-                            <a asp-controller="Services" asp-action="SpecialCakes">
-                                <i class="fa fa-birthday-cake text-primary"></i>
-                                <h3>Cumples</h3>
-                                <p class="text-muted">Encarganos tu torta de cumpleaños, con los sabores que quieras.</p>
-                            </a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="service-item">
-                            <a asp-controller="Services" asp-action="Breakfast">
-                                <i class="fa fa-gift text-primary"></i>
-                                <h3>Desayunos</h3>
-                                <p class="text-muted">Sorprendé a ese ser querido con un desayuno continental sorpresa!</p>
-                            </a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="service-item">
-                            <a asp-controller="Services" asp-action="Catering">
-                                <i class="fa fa-cutlery text-primary"></i>
-                                <h3>Catering</h3>
-                                <p class="text-muted">Hacemos el catering para tu evento. Super novedoso y exquisito. Mira!</p>
-                            </a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="service-item">
-                            <a asp-controller="Services" asp-action="SpecialCakes">
-                                <i class="fa fa-users text-primary"></i>
-                                <h3>Fiestas</h3>
-                                <p class="text-muted">Desde casamientos hasta bautismos. Tortas bien top y deliciosas!</p>
-                            </a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="service-item">
-                            <a asp-controller="Services" asp-action="SweetTable">
-                                <i class="fa fa-coffee text-primary"></i>
-                                <h3>Mesa dulce</h3>
-                                <p class="text-muted">Prepara una mesa dulce para terminar de enloquecer a tus invitados.</p>
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="hidden-lg hidden-md col-sm-12 col-xs-12">
-                <ul class="repo-features group">
-                    <li>
-                        <div class="service-item">
-                            <a asp-controller="PieDetail" asp-action="List">
-                                <i class="fa fa-shopping-cart text-primary"></i>
-                                <h3>Comprar</h3>
-                                <p class="text-muted">Compra online</p>
-                            </a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="service-item">
-                            <a asp-controller="Services" asp-action="Birthdays">
-                                <i class="fa fa-birthday-cake text-primary"></i>
-                                <h3>Cumples</h3>
-                                <p class="text-muted">Tortas especiales</p>
-                            </a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="service-item">
-                            <a asp-controller="Services" asp-action="Breakfast">
-                                <i class="fa fa-gift text-primary"></i>
-                                <h3>Desayunos</h3>
-                                <p class="text-muted">Súper ricos y completos</p>
-                            </a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="service-item">
-                            <a asp-controller="Services" asp-action="Catering">
-                                <i class="fa fa-cutlery text-primary"></i>
-                                <h3>Catering</h3>
-                                <p class="text-muted">Catering novedoso y exquisito</p>
-                            </a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="service-item">
-                            <a asp-controller="Services" asp-action="SpecialCakes">
-                                <i class="fa fa-users text-primary"></i>
-                                <h3>Fiestas</h3>
-                                <p class="text-muted">Casamientos, bautismos y 15s!</p>
-                            </a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="service-item">
-                            <a asp-controller="Services" asp-action="SweetTable">
-                                <i class="fa fa-coffee text-primary"></i>
-                                <h3>Mesa dulce</h3>
-                                <p class="text-muted">De todo rico</p>
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            </div>
-        </div>
-</section>
+@Html.Partial("~/Views/Services/Index.cshtml");
 
 
 <section class="bg-light" id="piesoftheweek">
