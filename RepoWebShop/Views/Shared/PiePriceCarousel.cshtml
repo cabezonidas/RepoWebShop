@@ -1,8 +1,6 @@
 ﻿@model PieDetailViewModel
 
 <link href="~/Content/Shared/PiePriceCarousel.css" rel="stylesheet" />
-<link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick.css" />
-<link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick-theme.css" />
 
 @{
     string id = Model.PieDetail.PieDetailId.ToString() + "-" + Guid.NewGuid().ToString();
@@ -34,26 +32,3 @@
     });
     $('@selector').show();
 </script>
-
-@*<div id="@id" class="carousel slide">
-    <div class="carousel-inner">
-        @{
-            var pies = Model.Pies.ToArray();
-            for (int i = 0; i < pies.Count(); i++)
-            {
-                <div class='@(i == 0 ? "active item" : "item")'>
-                    @Html.Partial("PiePriceCarouselItem", pies[i])
-                </div>
-            }
-        }
-    </div>
-    @if(pies.Length > 1)
-    { 
-        <a class='carousel-control left' href='#@id' data-slide='prev'>
-            <span class='glyphicon glyphicon-chevron-left' aria-hidden='true' ></span>
-        </a>
-        <a class='carousel-control right' href='#@id' data-slide='next'>
-            <span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
-        </a>
-    }
-</div>*@

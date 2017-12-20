@@ -1,44 +1,124 @@
-﻿/************************/
-h2, h1 {
+﻿
+
+.module {
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 3px;
+    margin-bottom: 3rem;
+    font-family: 'Kalam'
+}
+
+.module__heading {
+    margin-top: -1.5rem;
+    margin-right: -1.5rem;
+    margin-bottom: 1.5rem;
+    margin-left: -1.5rem;
+    padding: 0.75rem;
+    font-size: 1.5rem;
     text-align: center;
+    text-transform: uppercase;
+    color: white;
 }
 
-
-.grid {
-    padding: 10px;
-    padding-right: 15px;
+.module__heading--a {
+    background-color: #6e1e52;
 }
 
-.row {
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
+/* Pattern stuff */
+.custom-bullet {
+    margin-left: -25px;
+    list-style: none;
+    counter-reset: counter;
 }
 
-.step {
-    background-color: #fcfbdf99;
-    margin: 5px;
-    padding: 10px;
-    padding-left: 20px;
-    border-radius: 5px;
-    width: 100%;
-}
-
-    .step p {
-        font-family: 'Playball';
+    .custom-bullet > li:before {
+        counter-increment: counter;
+        content: counter(counter);
     }
 
-.row div.step:hover,
-.row div.step:focus {
-    -webkit-transform: scale(1.05);
-    transform: scale(1.05);
-    background-color: #faebd7;
+.custom-bullet--a {
+    position: relative;
 }
 
-.row div.step {
-    -webkit-transition: -webkit-transform 0.3s ease, border-color 0.3s ease;
-    transition: transform 0.3s ease, border-color 0.3s ease
+    .custom-bullet--a > li:before {
+        position: relative;
+        display: inline-block;
+        z-index: 100;
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-right: 1.75rem;
+        margin-bottom: 1.75rem;
+        border: 3px solid #6e1e52;
+        line-height: 2rem;
+        text-align: center;
+        color: #6e1e52;
+        background-color: white;
+        border-radius: 100em;
+        counter-increment: counter;
+        content: counter(counter);
+    }
+
+    .custom-bullet--a > li:after {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        z-index: 90;
+        left: 5rem;
+        margin-left: 1.5px;
+        border-left: 3px solid #6e1e52;
+        content: "";
+    }
+
+    .custom-bullet--a > li:last-child:before {
+        margin-bottom: 0;
+    }
+
+
+/************************/
+.special-cakes {
 }
+
+    .special-cakes ul {
+        list-style-type: none;
+    }
+
+    .special-cakes h2, h1 {
+        text-align: center;
+    }
+
+
+    .special-cakes .grid {
+        padding: 10px;
+        padding-right: 15px;
+    }
+
+    .special-cakes .row {
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    }
+
+    .special-cakes .step {
+        background-color: #fcfbdf99;
+        margin: 5px;
+        padding: 10px;
+        padding-left: 20px;
+        border-radius: 5px;
+        width: 100%;
+        font-family: 'Kalam';
+    }
+
+    .special-cakes .row div.step:hover,
+    .special-cakes .row div.step:focus {
+        -webkit-transform: scale(1.05);
+        transform: scale(1.05);
+        background-color: #faebd7;
+    }
+
+    .special-cakes .row div.step {
+        -webkit-transition: -webkit-transform 0.3s ease, border-color 0.3s ease;
+        transition: transform 0.3s ease, border-color 0.3s ease
+    }
