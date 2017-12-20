@@ -1,6 +1,8 @@
 ﻿@model  Pie
 
-<div class="container">
+<link href="~/Content/Admin/AddPieToPieDetail.css" rel="stylesheet" />
+
+<div class="container add-pie-to-pie-detail">
     <h2>Agregar version para @Model.PieDetail.Name</h2>
     <form asp-controller="Admin" asp-action="AddPieToPieDetail" method="post" class="form-horizontal" role="form">
         <hr />

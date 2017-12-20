@@ -1,11 +1,15 @@
-﻿td {
-    padding-left: 5px;
-    padding-right: 5px;
-}
-th {
-    text-align: center;
+﻿.prices {
+    font-family: Arial;
 }
 
-#percentage {
-    width: 150px;
-}
+    .prices td {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .prices th {
+        text-align: center;
+    }
+
+    .prices #percentage {
+        width: 150px;
+    }

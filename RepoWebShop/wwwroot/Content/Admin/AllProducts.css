@@ -1,3 +1,8 @@
-﻿table {
-    width: 100%;
+﻿.all-products {
+    font-family: Arial;
 }
+
+    .all-products table {
+        width: 100%;
+    }
+

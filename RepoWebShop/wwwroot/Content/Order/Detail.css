@@ -1,4 +1,8 @@
-﻿.table-user-information {
+﻿.order-detail {
+    font-family: Arial;
+}
+
+.table-user-information {
     max-width: 600px;
 }
 textarea {

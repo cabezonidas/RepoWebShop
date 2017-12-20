@@ -1,16 +1,19 @@
-﻿table {
-    margin: auto;
+﻿.calendar-index {
+    font-family: Arial;
 }
+    .calendar-index table {
+        margin: auto;
+    }
 
-div.timepicker {
-    margin: 5px;
-    width: 100px;
-}
+    .calendar-index div.timepicker {
+        margin: 5px;
+        width: 100px;
+    }
 
-    table.timeframestable {
+    .calendar-index table.timeframestable {
         vertical-align: top;
     }
 
-.input-group-addon {
-    max-width: 38px;
-}
+    .calendar-index .input-group-addon {
+        max-width: 38px;
+    }
