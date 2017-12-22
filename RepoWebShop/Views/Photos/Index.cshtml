@@ -6,8 +6,8 @@
 
 <section class="container">
     <div id="topsection"></div>
-    <h1 id="toptitle" class="hidden-lg hidden-md">Galería de fotos</h1>
-    <div class="hidden-lg hidden-md col-sm-12 col-xs-12" id="top-filters">
+    <h1 id="toptitle" class="">Fotos</h1>
+    <div class="" id="top-filters">
         <div id="photosfilter-mobile" class="photosfilter">
         @{
             foreach (var photosetPhotos in Model)
@@ -22,29 +22,10 @@
 
     </div>
     
-    @Html.Partial("ArrowUp");
+    @Html.Partial("ArrowUp")
     <div class="row">
-        <div class="col-lg-2 col-md-3 hidden-sm hidden-xs">
+        <div class="" id="allAlbums">
 
-            <div class="affix" id="leftpanel">
-                <h2>
-                    Álbumes
-                </h2>
-                <div class="photosfilter">
-                    @{
-                        foreach (var photosetPhotos in Model)
-                        {
-                            <div class="">
-                                <a href="#@photosetPhotos.Photoset.Id">@photosetPhotos.Photoset.Title</a>
-                            </div>
-                        }
-                    }
-                </div>
-            </div>
-
-        </div>
-        <div class="col-lg-10 col-md-9 col-sm-12 col-xs-12" id="allAlbums">
-            <h1 id="toptitle" class="hidden-sm hidden-xs">Galería de fotos</h1>
         </div>
     </div>
 </section>

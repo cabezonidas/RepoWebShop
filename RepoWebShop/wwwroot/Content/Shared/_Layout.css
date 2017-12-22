@@ -5,7 +5,6 @@
 }
 
 #navbrand {
-    padding-left: 25px;
     max-width: 225px;
     overflow: hidden;
 }
@@ -15,25 +14,27 @@
     }
 
         #navbrand li a {
-            margin-left: 10px;
+            margin-left: 30px;
         }
 
 .navbar-inverse {
-    background-color: #a1e699;
-    border-color: #19800a;
+    background-color: #883636;
 }
 
 .nav.navbar-nav.navbar-right li a {
-    color: darkgreen;
+    color: white;
     font-size: 1.2em;
 }
 
 .navbar .nav > li > a {
     font-size: 1.2em;
-    font-family: Playball, cursive;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-    color: darkgreen;
+    font-family: Playball;
+    color: #ffffff;
 }
+
+    .navbar .nav > li > a:hover {
+        background-color: #7e4343;
+    }
 
 .nav.navbar-nav li > ul > li > a {
     font-family: Playball, cursive;
@@ -45,7 +46,7 @@
 /** <Contact> **/
 section.contact {
     text-align: center;
-    background-color: #a1e699;
+    background-color: #c3d3c1;
     color: black;
     margin-top: 5px;
     padding: 10px;

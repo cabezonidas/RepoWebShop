@@ -12,14 +12,16 @@ namespace RepoWebShop.ViewModels
         public readonly string IconClass;
         public readonly string Title;
         public readonly string Description;
+        public readonly string Background;
 
-        public ServiceViewModel(string action, string controller, string iconClass, string title, string description)
+        public ServiceViewModel(string action, string controller, string iconClass, string title, string description, string background)
         {
             Action = action;
             Controller = controller;
             IconClass = iconClass;
             Title = title;
             Description = description;
+            Background = background;
         }
     }
 }

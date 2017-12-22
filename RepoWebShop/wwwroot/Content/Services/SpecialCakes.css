@@ -1,82 +1,11 @@
-﻿
-
-.module {
-    padding: 1.5rem;
-    background-color: white;
-    border-radius: 3px;
-    margin-bottom: 3rem;
-    font-family: 'Kalam'
-}
-
-.module__heading {
-    margin-top: -1.5rem;
-    margin-right: -1.5rem;
-    margin-bottom: 1.5rem;
-    margin-left: -1.5rem;
-    padding: 0.75rem;
-    font-size: 1.5rem;
-    text-align: center;
-    text-transform: uppercase;
-    color: white;
-}
-
-.module__heading--a {
-    background-color: #6e1e52;
-}
-
-/* Pattern stuff */
-.custom-bullet {
-    margin-left: -25px;
-    list-style: none;
-    counter-reset: counter;
-}
-
-    .custom-bullet > li:before {
-        counter-increment: counter;
-        content: counter(counter);
-    }
-
-.custom-bullet--a {
-    position: relative;
-}
-
-    .custom-bullet--a > li:before {
-        position: relative;
-        display: inline-block;
-        z-index: 100;
-        width: 2.5rem;
-        height: 2.5rem;
-        margin-right: 1.75rem;
-        margin-bottom: 1.75rem;
-        border: 3px solid #6e1e52;
-        line-height: 2rem;
-        text-align: center;
-        color: #6e1e52;
-        background-color: white;
-        border-radius: 100em;
-        counter-increment: counter;
-        content: counter(counter);
-    }
-
-    .custom-bullet--a > li:after {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        z-index: 90;
-        left: 5rem;
-        margin-left: 1.5px;
-        border-left: 3px solid #6e1e52;
-        content: "";
-    }
-
-    .custom-bullet--a > li:last-child:before {
-        margin-bottom: 0;
-    }
-
-
-/************************/
+﻿/************************/
 .special-cakes {
+    margin-top: -25px;
 }
+
+    .special-cakes .slick-arrow::before {
+        color: #6f6f6f;
+    }
 
     .special-cakes ul {
         list-style-type: none;
@@ -102,23 +31,52 @@
     }
 
     .special-cakes .step {
-        background-color: #fcfbdf99;
+        background-color: #e9f7cb8c;
         margin: 5px;
         padding: 10px;
-        padding-left: 20px;
-        border-radius: 5px;
+        border-radius: 2px;
         width: 100%;
         font-family: 'Kalam';
     }
+
+        .special-cakes .step h3 {
+            margin-top: 5px;
+            padding: 4px;
+            text-align: center;
+            background-color: #60ad76;
+            color: white;
+            font-family: 'Playball';
+            -moz-box-shadow: 0px 0px 4px rgba(0,0,0,0.55);
+            -khtml-box-shadow: 0px 0px 4px rgba(0,0,0,0.55);
+            -webkit-box-shadow: 0px 0px 4px rgba(0,0,0,0.55);
+        }
+
+
+        .special-cakes .step p {
+            margin: 1px;
+            padding: 1px;
+            padding-left: 2px;
+            text-align: center;
+        }
 
     .special-cakes .row div.step:hover,
     .special-cakes .row div.step:focus {
         -webkit-transform: scale(1.05);
         transform: scale(1.05);
-        background-color: #faebd7;
+        background-color: #ecf7dc;
     }
 
     .special-cakes .row div.step {
         -webkit-transition: -webkit-transform 0.3s ease, border-color 0.3s ease;
         transition: transform 0.3s ease, border-color 0.3s ease
     }
+
+#allAlbums h2 {
+    display: none;
+}
+
+
+.contact-mail {
+    font-family: 'Kalam';
+    text-align: center;
+}

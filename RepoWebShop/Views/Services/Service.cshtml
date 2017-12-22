@@ -5,7 +5,7 @@
 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
     <div class="service">
         <a asp-controller="@Model.Controller" asp-action="@Model.Action" class="service-link">
-            <div class="service-content">
+            <div class="service-content" style="background-image:url('@Model.Background')">
                 <i class="fa @Model.IconClass text-primary"></i>
                 <h3>@Model.Title</h3>
                 <p class="text-muted">@Model.Description</p>

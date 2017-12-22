@@ -79,9 +79,8 @@
     <div id="body">
         @RenderBody()
     </div>    
-    <div style="height:100px;">
-        &zwnj;
-    </div>
+
+
     @{
         var SocialMedia = new List<MediaViewModel>()
         {
@@ -91,7 +90,7 @@
             new MediaViewModel() { Icon = "fa-whatsapp", Class = "social-whatsapp", Ref = "https://api.whatsapp.com/send?phone=6421780906" }
         };
     }
-    <media-footer media="@SocialMedia" ></media-footer>
+    @*<media-footer media="@SocialMedia" ></media-footer>*@
     
     @RenderSection("scripts", required: false)
 

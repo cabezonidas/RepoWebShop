@@ -1,18 +1,18 @@
 ﻿section.container {
     padding-top: 0px;
 }
-/*************************/
+
 h1, h2 {
     text-align: center;
 }
 
 #allAlbums {
-    background-color: #dbe9d8;
-    border-radius: 5px;
+    margin: 5px;
 }
 
-
-
+    #allAlbums .slick-arrow:before {
+        color: #883636;
+    }
 
 
 @media screen and (max-width: 680px) {
@@ -26,11 +26,6 @@ h1, h2 {
     }
 }
 
-#leftpanel .photosfilter {
-    background-color: #dbe9d8;
-    border-radius: 5px;
-    padding: 15px;
-}
 
 #photosfilter-mobile {
     text-align: center;
@@ -38,7 +33,7 @@ h1, h2 {
 
     #photosfilter-mobile div {
         display: inline-block;
-        background-color: #a1e699;
+        background-color: #ffffff;
         margin: 2px;
         padding: 4px;
         padding-left: 8px;
@@ -47,11 +42,12 @@ h1, h2 {
     }
 
 .photosfilter a {
-    color: #2a7016;
+    color: #883636;
+    font-size: large;
 }
 
     .photosfilter a:visited {
-        color: green;
+        color: 883636;
     }
 
     .photosfilter a:hover {

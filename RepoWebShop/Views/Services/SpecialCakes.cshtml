@@ -1,146 +1,61 @@
 ﻿@model IEnumerable<PhotosetPhotos>
 
-
-
-
-
-
 <link href="~/Content/Services/SpecialCakes.css" rel="stylesheet" />
-@Html.Partial("~/Views/Shared/Card.cshtml", "Tortas Festivas")
 
-<div class="special-cakes">
-    <h2>¿Cómo funciona?</h2>
+<div class="container">
+    <div class="special-cakes">
+        <h2>Armá tu torta</h2>
 
-    <section class="module">
-
-        <h1 class="module__heading module__heading--a">Circled</h1>
-
-        <ol class="custom-bullet custom-bullet--a">
-            <li>Lorem ipsum dolor sit amet</li>
-            <li>Consectetur adipiscing elit</li>
-            <li>Integer molestie lorem at massa</li>
-            <li>Facilisis in pretium nisl aliquet</li>
-            <li>Nulla volutpat aliquam velit</li>
-        </ol>
-
-    </section>
-
-    <div class="grid" id="localPage">
-        <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                <div class="step">
-                    <h3>1. Tamaño</h3>
-                    <ul>
-                        <li >
-                            1 kg [Redonda] (10-12 personas)
-                        </li>
-                        <li>
-                            1.5 kg [Redonda] (13-15 personas)
-                        </li>
-                        <li>
-                            De 2 kg a 5 kg. [Rectangular]
-                        </li>
-                    </ul>
-                    <p>
-                        Se estima que medio kg es suficiente para 5 personas.
-                    </p>
+        <div class="grid" id="localPage">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="step">
+                        <h3>Elegir Tamaño</h3>
+                        <p>De 1 kg a 1.5 kg [Redonda]</p>
+                        <p>De 2 kg a 5 kg. [Rectangular]</p>
+                        <p class="text-muted">Se estima que medio kg es suficiente para 5 personas.</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                <div class="step">
-                    <h3>2. Bisquit</h3>
-                    <ul>
-                        <li>
-                            Chocolate
-                        </li>
-                        <li>
-                            Vainilla
-                        </li>
-                        <li>
-                            Galesa (Pasta de azucar negra, con nueces)
-                        </li>
-                    </ul>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="step">
+                        <h3>Elegir Bisquit</h3>
+                        <p>Chocolate / Vainilla</p>
+                        <p>Galesa [Pasta de azucar negra, con nueces]</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                <div class="step">
-                    <h3>3. Relleno (x2)</h3>
-                    <ul>
-                        <li>
-                            Dulce de leche
-                        </li>
-                        <li>
-                            Crema
-                        </li>
-                        <li>
-                            Durazno & Crema
-                        </li>
-                        <li>
-                            Chocolate
-                        </li>
-                        <li>
-                            Nutella
-                        </li>
-                        <li>
-                            Etc.
-                        </li>
-                    </ul>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="step">
+                        <h3>Elegir Relleno</h3>
+                        <p>Dulce de leche, Crema, Durazno & Crema, Chocolate, Nutella, Etc.</p>
+                        <p class="text-muted">Hasta 2 rellenos por torta.</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                <div class="step">
-                    <h3>4. Cobertura</h3>
-                    <ul>
-                        <li>
-                            Glaceado
-                        </li>
-                        <li>
-                            Choco blanco
-                        </li>
-                        <li>
-                            Choco negro
-                        </li>
-                        <li>
-                            Pasta de azúcar
-                        </li>
-                    </ul>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="step">
+                        <h3>Elegir Cobertura</h3>
+                        <p>Glaceado, Choco blanco, Choco negro, Pasta de azúcar</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                <div class="step">
-                    <h3>5. Terminacion</h3>
-                    <ul>
-                        <li>
-                            Cerezas
-                        </li>
-                        <li>
-                            Frutillas
-                        </li>
-                        <li>
-                            Confites
-                        </li>
-                        <li>
-                            Etc.
-                        </li>
-                    </ul>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="step">
+                        <h3>Elegir Terminacion</h3>
+                        <p>Cerezas, Frutillas, Confites, Etc.</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                <div class="step">
-                    <h3>6. Dedicacion</h3>
-                    <ul>
-                        <li>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="step">
+                        <h3>Escribir Dedicacion</h3>
+                        <p>
                             ¡Feliz Cumple Tomy!
-                        </li>
-                    </ul>
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="" id="allAlbums">
-            <h1>Fotos</h1>
-        </div>
-        <div class="" id="contact">
-            <h2>¿Te gustan? Escribinos a <a href="mailto:info@lareposteria.com.ar">info@lareposteria.com.ar</a></h2>
+            <div class="" id="allAlbums">
+            </div>
+            <div class="contact-mail">
+                <h3>¿Te gustan? Escribinos a <a href="mailto:info@lareposteria.com.ar">info@lareposteria.com.ar</a></h3>
+            </div>
         </div>
     </div>
 </div>
