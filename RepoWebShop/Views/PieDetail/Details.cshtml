@@ -1,8 +1,6 @@
 ﻿@model PieDetailViewModel
 
 <link href="~/Content/PieDetail/PieDetails.css" rel="stylesheet" />
-<link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick.css" />
-<link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick-theme.css" />
 
 <div class="container">
     <div class="thumbnailDetail">
@@ -10,29 +8,51 @@
             <h1>@Model.PieDetail.Name</h1>
         </div>
         <div class="row short-Desc">
-            <div class="col-sm-6 col-md-6 col-lg-6" id="pictures">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" id="pictures">
                 <div id="photos"></div>
                 <img alt="@Model.PieDetail.Name" src="~/Pictures/imgnotfound.png" id="defaultPicture" style="display:none; width: 100%;">
-            </div>
-            <div class="col-sm-6 col-md-6 col-lg-6" id="prices">
-                <h2>Comprar</h2>
                 <div class="caption-full">
                     @Html.Partial("PiePriceCarousel", Model)
-                    <p><strong>Preparación: @Model.PieDetail.PreparationTime hs</strong></p>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-12" id="description">
+            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8" id="description">
                 <h3>@Model.PieDetail.ShortDescription</h3>
                 <br />
-                <p>@Model.PieDetail.LongDescription</p>
+                <p class="longdesc">@Model.PieDetail.LongDescription</p>
+                <h3><strong>Preparación: @Model.PieDetail.PreparationTime hs</strong></h3>
+                <table class="table static-prices animated flipInX">
+                    <thead>
+                        <tr>
+                            <th scope="col">Tamaño</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Precio</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var pie in Model.Pies)
+                            {
+                                <tr class="static-price">
+                                    <td class="unit-name">@pie.Name</td>
+                                    <td class="unit-description">@pie.SizeDescription</td>
+                                    <td class="unit-price">@pie.Price</td>
+                                    <td class='button'>
+                                        <a asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@pie.PieId'>
+                                            Comprar
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <div style="text-align: center;">
+                    <a asp-action="List" asp-controller="PieDetail" class="btn btn-primary submit-btn">
+                        Ver más
+                    </a>
+                </div>
             </div>
-        </div>
-        <div style="text-align: center;">
-            <a asp-action="List" asp-controller="PieDetail" class="btn btn-primary submit-btn">
-                Ver más
-            </a>
         </div>
     </div>  
 </div>

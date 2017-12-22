@@ -30,13 +30,17 @@
                 <div id="navbrand">
                     <ul class="nav navbar-nav">
                         <li>
-                            <a href="tel:+5491149250262">
+                            <a class="phone" href="tel:+5491149250262">
                                 <span class="fa fa-phone"></span>
                             </a>
                         </li>
                         <li>
                             <a asp-controller="Home" asp-action="Index">De las Artes</a>
                         </li>
+                        <li>
+                            @await Component.InvokeAsync("ShoppingCartSummary")
+                        </li>
+                        
                     </ul>
                 </div>
 
@@ -50,7 +54,6 @@
                     <li><a asp-controller="Photos" asp-action="Index">Fotos</a></li>
                     <li><a asp-controller="Contact" asp-action="Index">Contacto</a></li>
                     <li><a asp-controller="Calendar" asp-action="OpenHours">Horarios</a></li>
-                    @await  Component.InvokeAsync("ShoppingCartSummary")
                     @if (this.User.IsInRole("Administrator"))
                     {
                         <li><a asp-controller="Admin" asp-action="Index">Admin</a></li>

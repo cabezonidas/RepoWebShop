@@ -2,6 +2,8 @@
 .navbar {
     background-image: none;
     z-index: 140;
+    max-height: 50px;
+    overflow: hidden;
 }
 
 #navbrand {
@@ -13,9 +15,11 @@
         display: inline-block;
     }
 
-        #navbrand li a {
-            margin-left: 30px;
-        }
+@media screen and (max-width: 767px) {
+    #navbrand li a.phone {
+        margin-left: 30px;
+    }
+}
 
 .navbar-inverse {
     background-color: #883636;

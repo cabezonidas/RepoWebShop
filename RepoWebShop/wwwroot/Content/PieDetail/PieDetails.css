@@ -1,11 +1,21 @@
-﻿.header h1 {
+﻿.static-prices {
+    margin: 5px;
+}
+
+.table thead tr th {
+    text-align: center;
+}
+
+
+.header h1 {
     text-align: center;
     margin-bottom: -20px;
+    margin-top: -20px;
 }
+
 
 .thumbnailDetail {
     padding: 10px;
-    background-color: #dbe9d8;
     max-width: 900px;
     margin: 10px auto;
     border-radius: 20px;
@@ -14,9 +24,29 @@
     .thumbnailDetail h1 {
     }
 
+#pictures {
+    background-color: #dbe9d8;
+    border-radius: 3px;
+    border-style: solid;
+    border-color: grey;
+    border-width: 2px;
+}
+
+    #pictures h2 {
+        padding: 5px;
+        background-color: white;
+        border-radius: 3px;
+        border-style: solid;
+        border-width: 1px;
+        border-color: green;
+    }
+
+.longdesc {
+    font-size: larger;
+}
+
 .short-Desc {
     padding: 20px;
-    background-color: #dbe9d8;
     max-width: 900px;
     margin: 30px auto;
     text-align: center;
@@ -64,7 +94,6 @@ div.row p {
 }
 
 #description {
-    margin: 10px;
 }
 
     #description h4 {
