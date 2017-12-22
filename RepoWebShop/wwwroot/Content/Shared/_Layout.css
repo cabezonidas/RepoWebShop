@@ -2,8 +2,6 @@
 .navbar {
     background-image: none;
     z-index: 140;
-    max-height: 50px;
-    overflow: hidden;
 }
 
 #navbrand {

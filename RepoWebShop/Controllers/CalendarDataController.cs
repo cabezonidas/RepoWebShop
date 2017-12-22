@@ -15,12 +15,23 @@ namespace RepoWebShop.Controllers
     public class CalendarDataController : Controller
     {
         private readonly AppDbContext _appDbContext;
+        private readonly ICalendarRepository _calendarRepository;
         private readonly IMapper _mapper;
 
-        public CalendarDataController(AppDbContext appDbContext, IMapper mapper)
+        public CalendarDataController(AppDbContext appDbContext, IMapper mapper, ICalendarRepository calendarRepository)
         {
             _appDbContext = appDbContext;
             _mapper = mapper;
+            _calendarRepository = calendarRepository;
+        }
+
+        [HttpGet]
+        [Route("GetPickupDate/{hours}")]
+        public IActionResult GetPickupDate(int hours)
+        {
+            DateTime result = _calendarRepository.GetPickupEstimate(hours);
+            
+            return PartialView("PickupDate", result);
         }
 
         [HttpPost]
@@ -28,7 +39,7 @@ namespace RepoWebShop.Controllers
         public IActionResult OpenHoursAddTimeFrame(int dayId, string startingAt, string finishAt)
         {
             var openHours = new WorkingHours();
-            if(TryGetWorkingHours(startingAt, finishAt, dayId, out openHours))
+            if (TryGetWorkingHours(startingAt, finishAt, dayId, out openHours))
             {
                 _appDbContext.OpenHours.Add(_mapper.Map<WorkingHours, OpenHours>(openHours));
                 _appDbContext.SaveChanges();

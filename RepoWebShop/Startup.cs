@@ -12,6 +12,8 @@ using AutoMapper;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Repositories;
 using React.AspNet;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 namespace RepoWebShop
 {

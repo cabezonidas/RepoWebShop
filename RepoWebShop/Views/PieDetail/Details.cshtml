@@ -19,7 +19,7 @@
                 <h3>@Model.PieDetail.ShortDescription</h3>
                 <br />
                 <p class="longdesc">@Model.PieDetail.LongDescription</p>
-                <h3><strong>Preparación: @Model.PieDetail.PreparationTime hs</strong></h3>
+                <h3 class="alert alert-success">Preparación: @Model.PieDetail.PreparationTime hs</h3>
                 <table class="table static-prices animated flipInX">
                     <thead>
                         <tr>
@@ -36,7 +36,7 @@
                                 <tr class="static-price">
                                     <td class="unit-name">@pie.Name</td>
                                     <td class="unit-description">@pie.SizeDescription</td>
-                                    <td class="unit-price">@pie.Price</td>
+                                    <td class="unit-price">$@pie.Price</td>
                                     <td class='button'>
                                         <a asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@pie.PieId'>
                                             Comprar

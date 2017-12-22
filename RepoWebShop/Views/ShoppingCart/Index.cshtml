@@ -15,6 +15,10 @@
 else
 {
     <div class="container">
+        <div id="pickupDate">
+
+        </div>
+
         <h3>Tu pedido requiere @Model.PreparationTime hs para ser procedado.</h3>
         <h3>Pagá o reservá ahora y pasa a buscar tu orden el @Model.PickupDate.ToString("dd-MM-yyyy") a las @Model.PickupDate.TimeOfDay.ToString("hh\\:mm").</h3>
         <div class="alert alert-info">
@@ -146,6 +150,17 @@ else
             url: 'api/ShoppingCartData/AddComments/' + $('#comments').val()
         });
     });
+
+    function getEstimate(){
+        $.get('api/CalendarData/GetPickupDate/@Model.PreparationTime', function (data) {
+            
+            $('#pickupDate').empty();
+            $('#pickupDate').append(data);
+        });
+    }
+
+
+
 </script>
 <script type="text/javascript" src="https://www.mercadopago.com/org-img/jsapi/mptools/buttons/render.js"></script>
 

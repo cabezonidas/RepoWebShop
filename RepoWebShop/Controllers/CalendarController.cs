@@ -22,6 +22,7 @@ namespace RepoWebShop.Controllers
             _appDbContext = appDbContext;
         }
 
+
         [HttpGet]
         public ViewResult Index()
         {
