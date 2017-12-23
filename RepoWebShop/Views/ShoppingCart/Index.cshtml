@@ -2,8 +2,8 @@
 
 <link href="~/Content/ShoppingCart/Index.css" rel="stylesheet" />
 
-<div class="container">
-    <h1>Tu carrito de compras</h1>
+<div class="container  shopping-cart">
+    <h2>Tu carrito de compras</h2>
 </div>
 @if (Model.ShoppingCartTotal == 0)
 {
@@ -15,15 +15,9 @@
 else
 {
     <div class="container">
-        <div id="pickupDate">
 
-        </div>
 
-        <h3>Tu pedido requiere @Model.PreparationTime hs para ser procedado.</h3>
-        <h3>Pagá o reservá ahora y pasa a buscar tu orden el @Model.PickupDate.ToString("dd-MM-yyyy") a las @Model.PickupDate.TimeOfDay.ToString("hh\\:mm").</h3>
-        <div class="alert alert-info">
-            <p>La hora estimada es calculada teniendo en cuenta el tiempo de preparación, y nuestros horarios de producción y de atención al público, considerando feriados, y fechas especiales. Todos nuestros productos son frescos, y queremos asegurarnos de que recibas tu pedido en tiempo y forma.</p>
-        </div>
+
         
         <table class="table table-striped table-condensed">
             <thead>
@@ -46,7 +40,7 @@ else
                             </a>
                         </td>
                         <td class="text-center">@line.Amount</td>
-                        <td class="text-left">@line.Pie.PieDetail.Name @line.Pie.Name</td>
+                        <td class="text-left">@line.Pie.PieDetail.Name [@line.Pie.Name] - @Model.PreparationTime hs</td>
                         <td class="text-right">@line.Pie.Price.ToString("c")</td>
                         <td class="text-right">
                             @((line.Amount * line.Pie.Price).ToString("c"))
@@ -69,69 +63,98 @@ else
                 </tr>
             </tfoot>
         </table>
-        <div class="form-group" >
-            <label class="col-md-12 control-label">Comentarios</label>
-            <div class="col-md-12">
-                <textarea maxlength="250" id="comments" placeholder="Quisiera agregar 'Feliz Cumple Mati!', gracias :)" class="form-control" rows="4"></textarea>
+        <table class="form-group calendar-comments" >
+            <tbody>
+                <tr>
+                    <td class="pickupdate-td" style="width:115px;" valign="top">
+                        <label class="control-label ">Orden lista <a id="moreinfo" href="#estimation-time"><span class="fa fa-question-circle"></span></a></label>
+                        <div id="pickupDate">
+                            @Html.Partial("~/Views/Shared/PickupDate.cshtml", Model.PickupDate)
+                        </div>
+                    </td>
+                    <td valign="top">
+                        <label class="control-label">Comentarios</label>
+                        <textarea maxlength="250" id="comments" placeholder="Quisiera agregar 'Feliz Cumple Mati!', gracias :)" class="form-control" rows="4"></textarea>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container center-block">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="reserva payment-section animated flipInX">
+                <table id="second-payment">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="https://imgmp.mlstatic.com/org-img/banners/ar/medios/online/125X125.jpg" title="MercadoPago - Medios de pago" alt="MercadoPago - Medios de pago" width="125" height="125" />
+                            </td>
+                            <td>
+                                <p class="">No es necesario que tengas un usuario con nosotros.</p>
+                                <p class="">Elegí el medio de pago que más te convenga.</p>
+                                <a id="mercadolink" href="@Model.Mercadolink" name="MP-Checkout"
+                                   class="blue-S-Sq-Ar">
+                                    Comprar
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="mp-payment payment-section">
+                <table id="first-payment">
+                    <tbody>
+                        <tr>
+                            <td>
+
+                                <img class="" src="~/Pictures/logo.png" width="125">
+                            </td>
+                            <td>
+                                <p class="">Pagalo cuando lo retirás.</p>
+                                <p class="">Deberás disponer de una cuenta con nosotros.</p>
+                                <a class="btn btn-primary submit-btn" asp-controller="Order" asp-action="Checkout">Reservar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div class="container">
-        <div class="container-fluid">
-            <div class="row" >
-                <div class="col-lg-6 col-md-6">
-                    <div class="payment-item">
-                        <table align="center">
-                            <tr>
-                                <td>
-                                    <img class="img-responsive" alt="Mercado Pago'" src="~/Pictures/mercadopago_logo.png" width="125" height="125" style="display:inline-block">
-                                    <img src="https://imgmp.mlstatic.com/org-img/banners/ar/medios/online/125X125.jpg" title="MercadoPago - Medios de pago" alt="MercadoPago - Medios de pago" width="125" height="125" />
-                                    @*<img class="img-responsive" alt="Mercado Pago'" src="~/Pictures/mercadopago.png">*@
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a id="mercadolink" href="@Model.Mercadolink" name="MP-Checkout"
-                                       class="btn btn-primary submit-btn">
-                                        Pagar Ahora
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="text-muted">No es necesario que tengas un usuario con nosotros.</p>
-                                    <p class="text-muted">Elegí el medio de pago que mas te convenga.</p>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6">
-                    <div class="payment-item">
-                        <table align="center">
-                            <tr>
-                                <td>
-                                    <img class="img-responsive" alt="Mercado Pago'" src="~/Pictures/logo.png">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a class="btn btn-primary submit-btn" asp-controller="Order" asp-action="Checkout">Reservar</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="text-muted">Pagalo cuando lo retirás.</p>
-                                    <p class="text-muted">Deberás disponer de una cuenta con nosotros.</p>
-                                </td>
-                            </tr>
-                        </table>                        
-                    </div>
-                </div>
-            </div>
+    <div class="container" id="estimation-time">
+        <h3>Orden lista</h3>
+        <div class="" >
+            La fecha y hora te dice cuándo tu pedido va a estar listo para ser retirado.<br />
+            La hora estimada es calculada teniendo en cuenta el tiempo de preparación, y nuestros horarios de producción y atención al público. <br />
+            También tenemos en cuenta feriados, fechas especiales y vacaciones.<br />
+            Así que quedate tranquilo, que la fecha que calculamos es 100% precisa.<br />
+            Todos nuestros productos son frescos, y así nos aseguramos que vas a recibir tu pedido en tiempo y forma.  
+        </div>
+
+        <h3>¿Cuáles son los horarios de atención?</h3>
+        <div class="">
+            Los horarios de atención están publicados <a href="/Calendar/OpenHours">aquí</a>. <br />            
+            Antes de pasar por nuestro local, asegurate de saber nuestros horarios de atención.
+        </div>
+
+        <h3>¿Querés retirar tu compra en otra fecha?</h3>
+        <div class="">
+            No hay ningun problema, siempre y cuando la fecha sea posterior a la calculada por el sistema. <br />
+            En el campo 'Comentarios', escribinos cuándo lo querés retirar. <br />
+        </div>
+
+        <h3>¿Querés retirar tu compra antes?</h3>
+        <div class="">
+            En ese caso, tendrías que comunicarte con nosotros para ver si lo podemos hacer. <br />
+            Vamos a hacer todo lo posible por finalizar tus productos lo antes posible. <br />
+            A veces, simplemente no podremos. <br />
         </div>
     </div>
 }
+
 <script type="text/javascript">
     $.ajax({
         type: 'GET',
@@ -151,6 +174,8 @@ else
         });
     });
 
+    var myVar = setInterval(getEstimate, 60000);
+
     function getEstimate(){
         $.get('api/CalendarData/GetPickupDate/@Model.PreparationTime', function (data) {
             
@@ -159,6 +184,20 @@ else
         });
     }
 
+    $(function () {
+        $('a#moreinfo[href *=\\#]:not([href =\\#])').click(function () {
+            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                if (target.length) {
+                    $('html,body').animate({
+                        scrollTop: target.offset().top - 65
+                    }, 1000);
+                    return false;
+                }
+            }
+        });
+    });
 
 
 </script>

@@ -17,6 +17,7 @@ namespace RepoWebShop.Controllers
     {
         private readonly IPieDetailRepository _pieDetailRepository;
         private readonly IPhotosGalleryRepository _galleryRepository;
+        private readonly IPhotosGalleryRepository _photosGalleryRepository;
         private readonly IPhotosetAlbums _photosetAlbums;
         private readonly IPieRepository _pieRepository;
         private readonly ICategoryRepository _categoryRepository;
@@ -26,7 +27,7 @@ namespace RepoWebShop.Controllers
 
         
 
-        public AdminController(IPhotosGalleryRepository galleryRepository, IPhotosetAlbums photosetAlbums, IMapper mapper, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
+        public AdminController(IPhotosGalleryRepository galleryRepository, IPhotosGalleryRepository photosGalleryRepository, IPhotosetAlbums photosetAlbums, IMapper mapper, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
         {
             _galleryRepository = galleryRepository;
             _photosetAlbums = photosetAlbums;
@@ -35,6 +36,7 @@ namespace RepoWebShop.Controllers
             _pieRepository = pieRepository;
             _appDbContext = appDbContext;
             _mapper = mapper;
+            _photosGalleryRepository = photosGalleryRepository;
             _categories = _appDbContext.Categories.Select(x => new SelectListItem() { Value = x.CategoryId.ToString(), Text = x.CategoryName }).ToList();
         }
         public IActionResult Index()
@@ -60,7 +62,10 @@ namespace RepoWebShop.Controllers
             else
             {
                 var pieDetailCreateViewModel = _mapper.Map<PieDetail, PieDetailCreateViewModel>(pieDetail);
+                var albumes = _photosGalleryRepository.GetAllAlbums().Select(x => new SelectListItem() { Value = x.Photoset.Id.ToString(), Text = x.Photoset.Title });
+
                 pieDetailCreateViewModel.Categories = _categories;
+                pieDetailCreateViewModel.Albumes = albumes.ToList();
                 return View(pieDetailCreateViewModel);
             }
         }

@@ -1,4 +1,8 @@
-﻿#MP-Checkout-dialog {
+﻿div.container.shopping-cart {
+    margin-top: -25px;
+}
+
+#MP-Checkout-dialog {
     border: none !important;
     max-height: 650px !important;
 }
@@ -21,21 +25,52 @@ textarea {
 
 table {
     text-align: center;
+    width: 100%;
 }
 
     table img {
         margin: 0px auto;
     }
 
-.payment-item {
-    background-color: rgba(239, 234, 33, 0.26);
-    padding: 20px;
-    margin: 25px;
-    margin-left: 25px;
-    margin-right: 25px;
-    border-radius: 40px;
+.payment-section {
+    background-color: #fffaee;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #f5dea6;
+}
+
+
+#first-payment tbody tr td,
+#second-payment tbody tr td {
+    padding: 5px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+#first-payment {
+    background-color: #fffdfd;
 }
 
 .submit-btn {
-    margin: 30px;
+    margin: 1px;
+}
+
+textarea {
+    margin-top: 5px;
+    height: 138px !important;
+}
+
+#estimation-time {
+    padding: 25px;
+    padding-top: 5px;
+    margin-bottom: 25px;
+}
+
+@media screen and (min-width: 680px) {
+    #first-payment tbody tr td,
+    #second-payment tbody tr td {
+        font-size: large;
+    }
 }

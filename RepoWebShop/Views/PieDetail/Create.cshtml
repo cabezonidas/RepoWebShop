@@ -41,10 +41,19 @@
         <div class="form-group">
             <label asp-for="FlickrAlbumId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="FlickrAlbumId" class="form-control" />
+                <select asp-for="FlickrAlbumId" class="form-control" asp-items="@Model.Albumes"></select>
+                @*<select asp-for="CategoryId" class="form-control" asp-items="@Model.Categories"/>*@
                 <span asp-validation-for="FlickrAlbumId" class="text-danger"></span>
             </div>
         </div>
+
+        @*<div class="form-group">
+            <label asp-for="FlickrAlbumId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="FlickrAlbumId" class="form-control" />
+                <span asp-validation-for="FlickrAlbumId" class="text-danger"></span>
+            </div>
+        </div>*@
 
         @*<div class="form-group">
             <label asp-for="ImageUrl" class="col-md-2 control-label"></label>

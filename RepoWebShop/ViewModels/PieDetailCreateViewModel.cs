@@ -46,6 +46,8 @@ namespace RepoWebShop.ViewModels
 
         public List<SelectListItem> Categories { set; get; }
 
+        public List<SelectListItem> Albumes { set; get; } 
+
         public bool IsActive { set; get; }
     }
 }

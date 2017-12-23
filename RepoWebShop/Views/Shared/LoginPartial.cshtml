@@ -9,14 +9,14 @@
           method="post" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li><a href="#">Hola @User.Identity.Name</a></li>
-            <li><a href="javascript:document.getElementById('logoutForm').submit()">Cerrar Sesión</a></li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">Salir</a></li>
         </ul>
     </form>
 }
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li><a id="registerLink" asp-controller="Account" asp-action="Register">Registrarse</a></li>
-        <li><a id="loginLink" asp-controller="Account" asp-action="Login">Iniciar Sesión</a></li>
+        @*<li><a id="registerLink" asp-controller="Account" asp-action="Register">Registrarse</a></li>*@
+        <li><a id="loginLink" asp-controller="Account" asp-action="Login">Ingresar</a></li>
     </ul>
 }

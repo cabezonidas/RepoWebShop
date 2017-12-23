@@ -16,16 +16,18 @@ namespace RepoWebShop.Controllers
         private readonly IPieDetailRepository _pieDetailRepository;
         private readonly IPieRepository _pieRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IPhotosGalleryRepository _photosGalleryRepository;
         private readonly AppDbContext _appDbContext;
         private readonly IMapper _mapper;
 
-        public PieDetailController(IMapper mapper, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
+        public PieDetailController(IMapper mapper, AppDbContext appDbContext, IPhotosGalleryRepository photosGalleryRepository, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
         {
             _pieDetailRepository = pieDetailRepository;
             _categoryRepository = categoryRepository;
             _pieRepository = pieRepository;
             _appDbContext = appDbContext;
             _mapper = mapper;
+            _photosGalleryRepository = photosGalleryRepository;
         }
 
         public ViewResult List(string category)
@@ -97,10 +99,12 @@ namespace RepoWebShop.Controllers
         [HttpGet]
         public ViewResult Create()
         {
+            var albumes = _photosGalleryRepository.GetAllAlbums().Select(x => new SelectListItem() { Value = x.Photoset.Id.ToString(), Text = x.Photoset.Title });
             var categories = _appDbContext.Categories.Select(x => new SelectListItem() { Value = x.CategoryId.ToString(), Text = x.CategoryName });
             var pieDetailCreateViewModel = new PieDetailCreateViewModel()
             {
-                Categories = categories.ToList()
+                Categories = categories.ToList(),
+                Albumes = albumes.ToList()
             };
             return View(pieDetailCreateViewModel);
         }

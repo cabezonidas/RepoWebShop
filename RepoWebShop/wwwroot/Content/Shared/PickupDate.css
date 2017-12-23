@@ -1,21 +1,22 @@
 ﻿.full-date {
-    width: 150px;
+    margin: 1px;
+    width: 110px;
     font-family: Arial;
     text-align: center;
     padding: 5px;
-
 }
 
     .full-date .calendar {
+        border-color: #878787;
         border-style: solid;
-        border-width: 1px;
+        border-width: 1.2px;
         border-radius: 3px;
-        background-color: #fbfac5;
+        background: linear-gradient(to bottom right, #fcffc9 0%, #fff6e4 100%);
+        box-shadow: 2px 2px #888888;
     }
 
         .full-date .calendar .month {
-            background: #B11;
-            background: linear-gradient(to bottom right, #D66 0%, #A00 100%);
+            background: linear-gradient(to bottom right, #f98d8d 10%, #A00 100%);
             color: white;
             font-size: larger;
             padding-top: 2px;
@@ -31,6 +32,13 @@
         margin-top: 5px;
         font-size: larger;
         background-color: white;
+        background: #188f00;
+        background: linear-gradient(to bottom right, #fff 0%, #ffebeb 100%);
         padding: 2px;
         border-style: solid;
+        border-width: 1px;
+        border-radius: 5px;
+        box-shadow: 2px 2px #888888;
     }
+
+/*****************************/

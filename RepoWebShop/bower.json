@@ -16,7 +16,8 @@
     "owl.carousel": "^2.2.1",
     "intl-tel-input": "^12.1.4",
     "slick-carousel": "^1.8.1",
-    "matchheight": "^0.7.2"
+    "matchheight": "^0.7.2",
+    "Snap.svg": "^0.5.1"
   },
   "resolutions": {
     "jquery": "3.2.1"
