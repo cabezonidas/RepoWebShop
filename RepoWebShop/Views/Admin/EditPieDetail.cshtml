@@ -226,7 +226,7 @@
 
     function getRow(item) {
         var row = $('<tr>');
-        row.append('<td><a href="/Admin/EditPieDetail/' + '@Model.PieDetailId' + "/" + item.pieId + '">' + item.name + '</a></td>');
+        row.append('<td><a href="/Admin/EditPie/' + '@Model.PieDetailId' + "/" + item.pieId + '">' + item.name + '</a></td>');
         row.append('<td>' + item.price + '</td>');
         row.append('<td>' + item.sizeDescription + '</td>');
         if (item.isActive){

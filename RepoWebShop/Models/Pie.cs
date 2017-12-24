@@ -19,6 +19,7 @@ namespace RepoWebShop.Models
         [Display(Name = "Descripción del tamaño")]
         public string SizeDescription { get; set; }
 
+        [Display(Name = "Activo")]
         public bool IsActive { get; set; }
         public int PieDetailId { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using RepoWebShop.Models;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Interfaces
 {
@@ -13,5 +14,6 @@ namespace RepoWebShop.Interfaces
         void Delete(int pieId);
         void Restore(int pieId);
         void UpdatePrice(int pieId, int price);
+        Task<int> Update(Pie pie);
     }
 }

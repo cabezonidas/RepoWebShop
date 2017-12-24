@@ -1,17 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Repositories
 {
     public class PieRepository: IPieRepository
     {
         private readonly AppDbContext _appDbContext;
-        public PieRepository(AppDbContext appDbContext)
+        private readonly IMapper _mapper;
+
+        public PieRepository(AppDbContext appDbContext, IMapper mapper)
         {
             _appDbContext = appDbContext;
+            _mapper = mapper;
         }
 
         public IEnumerable<Pie> ActivePies
@@ -69,6 +74,18 @@ namespace RepoWebShop.Repositories
             var pie = _appDbContext.Pies.FirstOrDefault(x => x.PieId == pieId);
             pie.IsActive = true;
             _appDbContext.SaveChanges();
+        }
+        
+        public Task<int> Update(Pie pie)
+        {
+            Pie oldPieDetail = _appDbContext.Pies.First(x => x.PieId == pie.PieId);
+
+            oldPieDetail.IsActive = pie.IsActive;
+            oldPieDetail.Name = pie.Name;
+            oldPieDetail.Price = pie.Price;
+            oldPieDetail.SizeDescription = pie.SizeDescription;
+
+            return _appDbContext.SaveChangesAsync();
         }
 
         public void UpdatePrice(int pieId, int price)

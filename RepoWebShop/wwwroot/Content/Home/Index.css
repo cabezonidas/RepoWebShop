@@ -63,6 +63,11 @@ header img {
         margin-top: -30px;
     }
 
+        #piesoftheweek h1 a {
+            text-decoration: none;
+            color: black;
+        }
+
 .services {
     padding-top: -250px;
     background-color: #d7b24540;

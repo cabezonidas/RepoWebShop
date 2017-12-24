@@ -71,6 +71,33 @@ namespace RepoWebShop.Controllers
         }
 
         [HttpGet]
+        [Route("[Controller]/EditPie/{pieDetailId}/{pieId}")]
+        public IActionResult EditPie(int pieDetailId, int pieId)
+        {
+            var pie = _pieRepository.AllPies.FirstOrDefault(x => x.PieId == pieId);
+            if (pie == null || pie.PieDetailId != pieDetailId)
+                return NotFound();
+
+            else
+                return View(pie);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("[Controller]/EditPie/{pieDetailId}/{pieId}")]
+        public async Task<IActionResult> EditPie(Pie pie)
+        {
+
+            if (ModelState.IsValid)
+            {
+                await _pieRepository.Update(pie);
+
+                return RedirectToAction("AllProducts");
+            }
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult Galleries()
         {
             var result = new List<GalleryFlickrAlbumViewModel>();
@@ -112,13 +139,14 @@ namespace RepoWebShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                
                 await _pieDetailRepository.Update(_mapper.Map<PieDetailCreateViewModel, PieDetail>(pieDetailCreateViewModel));
 
                 return RedirectToAction("AllProducts");
             }
 
             pieDetailCreateViewModel.Categories = _categories;
+            var albumes = _photosGalleryRepository.GetAllAlbums().Select(x => new SelectListItem() { Value = x.Photoset.Id.ToString(), Text = x.Photoset.Title });
+            pieDetailCreateViewModel.Albumes = albumes.ToList();
 
             return View(pieDetailCreateViewModel);
         }

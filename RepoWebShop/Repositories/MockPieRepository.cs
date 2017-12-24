@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using RepoWebShop.Models;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Repositories
 {
@@ -43,6 +44,11 @@ namespace RepoWebShop.Repositories
         }
 
         public void Restore(int pieId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> Update(Pie pie)
         {
             throw new NotImplementedException();
         }
