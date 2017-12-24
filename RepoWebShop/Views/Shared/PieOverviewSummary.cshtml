@@ -3,7 +3,8 @@
 <link href="~/Content/Shared/PieOverviewSummary.css" rel="stylesheet" />
 
 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 center-block">
-    <div class="thumbnail center-block">
+    @{ var pieweek = Model.PieDetail.IsPieOfTheWeek ? "pieoftheweek" : string.Empty;}
+    <div class="thumbnail center-block @pieweek">
         <div class="ribbon"><span>@Model.PieDetail.PreparationTime Hs</span></div>
         <div class="pieOverviewImage">
             <a asp-controller="PieDetail"
@@ -27,8 +28,18 @@
                 </div>
                 <div class="caption">
                     <h3>
-                        @Model.PieDetail.Name
+                        @if (!string.IsNullOrEmpty(pieweek))
+                        {
+                            <span class="fa fa-star"></span>
+                        }
+                            @Model.PieDetail.Name
+
+                        @if (!string.IsNullOrEmpty(pieweek))
+                        {
+                            <span class="fa fa-star"></span>
+                        }
                     </h3>
+                    
                     <p class="shortDesc">@Model.PieDetail.ShortDescription</p>
                 </div>
             </a>

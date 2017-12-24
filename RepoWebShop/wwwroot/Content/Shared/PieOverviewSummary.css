@@ -7,6 +7,8 @@
     height: 100%;
     overflow: hidden;
     position: relative;
+    border-style: solid;
+    border-color: #00000017;
 }
 
     .crop img {
@@ -22,7 +24,9 @@
         left: -100%;
     }
 
-
+.fa.fa-star {
+    color: goldenrod;
+}
 
 .caption h3 {
     font-family: 'Playball', cursive;
@@ -67,7 +71,14 @@ p.shortDesc {
 .thumbnail {
     padding: 0;
     background-color: #dbe9d8;
+    -moz-box-shadow: inset 0 0 5px #423b3b;
+    -webkit-box-shadow: inset 0 0 5px #423b3b;
+    box-shadow: inset 0 0 2px #423b3b;
 }
+
+    .thumbnail.pieoftheweek {
+        background-color: #ecebc1;
+    }
 
 
 .caption {
@@ -77,6 +88,15 @@ p.shortDesc {
 
     .caption h4 {
         white-space: nowrap;
+    }
+
+    .caption h3 {
+        background-color: #ffffff75;
+        margin-top: 10px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        border-radius: 3px;
+        color: black;
     }
 
 
