@@ -10,12 +10,12 @@ namespace RepoWebShop.Controllers
     public class HomeController : Controller
     {
         private readonly IPieRepository _pieRepository;
-        private readonly IPhotosetAlbums _photosetAlbums;
+        private readonly IFlickrRepository _flickrRepository;
 
-        public HomeController(IPieRepository pieRepository, IPhotosetAlbums photosetAlbums)
+        public HomeController(IPieRepository pieRepository, IFlickrRepository flickrRepository)
         {
             _pieRepository = pieRepository;
-            _photosetAlbums = photosetAlbums;
+            _flickrRepository = flickrRepository;
         }
 
         public ViewResult Index()
@@ -27,7 +27,7 @@ namespace RepoWebShop.Controllers
                 var p = new PieDetailViewModel()
                 {
                     IsMobile = this.Request.IsMobile(),
-                    PrimaryPicture = _photosetAlbums.GetPrimaryPicture(pieOfTheWeek.FlickrAlbumId),
+                    PrimaryPicture = _flickrRepository.GetAlbumPictures(pieOfTheWeek.FlickrAlbumId).PrimaryPicture,
                     PieDetail = pieOfTheWeek,
                     Pies = _pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == pieOfTheWeek.PieDetailId)
                 };

@@ -9,10 +9,10 @@ namespace RepoWebShop.Controllers
 {
     public class ServicesController : Controller
     {
-        private readonly IPhotosGalleryRepository _photosRepository;
-        private readonly IPhotosetAlbums _photosetAlbums;
+        private readonly IGalleryRepository _photosRepository;
+        private readonly IFlickrRepository _photosetAlbums;
 
-        public ServicesController(IPhotosGalleryRepository photosRepository, IPhotosetAlbums photosetAlbums)
+        public ServicesController(IGalleryRepository photosRepository, IFlickrRepository photosetAlbums)
         {
             _photosRepository = photosRepository;
             _photosetAlbums = photosetAlbums;

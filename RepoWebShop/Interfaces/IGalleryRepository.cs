@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace RepoWebShop.Interfaces
 {
-    public interface IPhotosGalleryRepository
+    public interface IGalleryRepository
     {
         void AddFlickrAlbum(string setId);
         void HideFlickrAlbum(string setId);
         void RemoveFlickrAlbum(string setId);
         IEnumerable<GalleryFlickrAlbum> GetFlickrAlbums();
-        IEnumerable<PhotosetPhotos> GetGalleryPictures();
-        IEnumerable<PhotosetPhotos> GetAllAlbums();
+        IEnumerable<AlbumPictures> GetGalleryPictures();
+        IEnumerable<AlbumPictures> GetAllAlbums();
     }
 }

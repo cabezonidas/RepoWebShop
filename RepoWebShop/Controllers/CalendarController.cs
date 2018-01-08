@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
 using System;
@@ -15,11 +16,13 @@ namespace RepoWebShop.Controllers
     {
         private readonly IMapper _mapper;
         private readonly AppDbContext _appDbContext;
+        private readonly ICalendarRepository _calendarRepository;
 
-        public CalendarController(AppDbContext appDbContext, IMapper mapper)
+        public CalendarController(AppDbContext appDbContext, IMapper mapper, ICalendarRepository calendarRepository)
         {
             _mapper = mapper;
             _appDbContext = appDbContext;
+            _calendarRepository = calendarRepository;
         }
 
 
@@ -65,8 +68,8 @@ namespace RepoWebShop.Controllers
             var result = new OpenHoursViewModel()
             {
                 OpenHours = _appDbContext.OpenHours.Where(x => x.DayId >= 0 && x.DayId <= 7).OrderBy(x => x.StartingAt).ToList(),
-                PublicHolidays = _appDbContext.Holidays.Where(x => x.Date >= DateTime.Now.Date).Include(x => x.OpenHours),
-                Vacations = _appDbContext.Vacations.Where(x => x.EndDate >= DateTime.Now.Date)
+                PublicHolidays = _appDbContext.Holidays.Where(x => x.Date >= _calendarRepository.LocalTime().Date).Include(x => x.OpenHours),
+                Vacations = _appDbContext.Vacations.Where(x => x.EndDate >= _calendarRepository.LocalTime().Date)
             };
             return View(result);
         }
@@ -74,7 +77,7 @@ namespace RepoWebShop.Controllers
         [HttpGet]
         public ViewResult AddVacations()
         {
-            return View(new Vacation() { StartDate = DateTime.Now.Date, EndDate = DateTime.Now.Date });
+            return View(new Vacation() { StartDate = _calendarRepository.LocalTime().Date, EndDate = _calendarRepository.LocalTime().Date });
         }
 
         [HttpPost]
@@ -95,7 +98,7 @@ namespace RepoWebShop.Controllers
         [HttpGet]
         public ViewResult AddPublicHoliday()
         {
-            return View(new AddSpecialDateViewModel() { Date = DateTime.Now });
+            return View(new AddSpecialDateViewModel() { Date = _calendarRepository.LocalTime() });
         }
 
         [HttpPost]

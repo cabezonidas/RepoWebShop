@@ -16,9 +16,8 @@ namespace RepoWebShop.Controllers
     public class AdminController : Controller
     {
         private readonly IPieDetailRepository _pieDetailRepository;
-        private readonly IPhotosGalleryRepository _galleryRepository;
-        private readonly IPhotosGalleryRepository _photosGalleryRepository;
-        private readonly IPhotosetAlbums _photosetAlbums;
+        private readonly IGalleryRepository _galleryRepository;
+        private readonly IFlickrRepository _flickrRepository;
         private readonly IPieRepository _pieRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly AppDbContext _appDbContext;
@@ -27,26 +26,28 @@ namespace RepoWebShop.Controllers
 
         
 
-        public AdminController(IPhotosGalleryRepository galleryRepository, IPhotosGalleryRepository photosGalleryRepository, IPhotosetAlbums photosetAlbums, IMapper mapper, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
+        public AdminController(IGalleryRepository galleryRepository, IFlickrRepository flickrRepository, IMapper mapper, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
         {
             _galleryRepository = galleryRepository;
-            _photosetAlbums = photosetAlbums;
+            _flickrRepository = flickrRepository;
             _pieDetailRepository = pieDetailRepository;
             _categoryRepository = categoryRepository;
             _pieRepository = pieRepository;
             _appDbContext = appDbContext;
             _mapper = mapper;
-            _photosGalleryRepository = photosGalleryRepository;
             _categories = _appDbContext.Categories.Select(x => new SelectListItem() { Value = x.CategoryId.ToString(), Text = x.CategoryName }).ToList();
         }
+
         public IActionResult Index()
         {
             return View();
         }
+
         public IActionResult Prices()
         {
             return View();
         }
+
         public IActionResult AllProducts()
         {
             return View();
@@ -62,7 +63,7 @@ namespace RepoWebShop.Controllers
             else
             {
                 var pieDetailCreateViewModel = _mapper.Map<PieDetail, PieDetailCreateViewModel>(pieDetail);
-                var albumes = _photosGalleryRepository.GetAllAlbums().Select(x => new SelectListItem() { Value = x.Photoset.Id.ToString(), Text = x.Photoset.Title });
+                var albumes = _flickrRepository.Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content });
 
                 pieDetailCreateViewModel.Categories = _categories;
                 pieDetailCreateViewModel.Albumes = albumes.ToList();
@@ -103,7 +104,7 @@ namespace RepoWebShop.Controllers
             var result = new List<GalleryFlickrAlbumViewModel>();
             var savedAlbums = _galleryRepository.GetFlickrAlbums();
 
-            foreach(var set in _photosetAlbums.Photosets.Photosets.Photoset)
+            foreach(var set in _flickrRepository.Albums)
             {
                 GalleryFlickrAlbumViewModel album = new GalleryFlickrAlbumViewModel();
                 album.FlickrSetId = set.Id;
@@ -145,7 +146,7 @@ namespace RepoWebShop.Controllers
             }
 
             pieDetailCreateViewModel.Categories = _categories;
-            var albumes = _photosGalleryRepository.GetAllAlbums().Select(x => new SelectListItem() { Value = x.Photoset.Id.ToString(), Text = x.Photoset.Title });
+            var albumes = _flickrRepository.Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content });
             pieDetailCreateViewModel.Albumes = albumes.ToList();
 
             return View(pieDetailCreateViewModel);

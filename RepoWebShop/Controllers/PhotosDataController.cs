@@ -10,9 +10,9 @@ namespace RepoWebShop.Controllers
     [Route("api/[controller]")]
     public class PhotosDataController : Controller
     {
-        private readonly IPhotosetAlbums _photosetAlbums;
-        private readonly IPhotosGalleryRepository _galleryRepository;
-        public PhotosDataController(IPhotosetAlbums photosetAlbums, IPhotosGalleryRepository galleryRepository)
+        private readonly IFlickrRepository _photosetAlbums;
+        private readonly IGalleryRepository _galleryRepository;
+        public PhotosDataController(IFlickrRepository photosetAlbums, IGalleryRepository galleryRepository)
         {
             _photosetAlbums = photosetAlbums;
             _galleryRepository = galleryRepository;
@@ -22,7 +22,7 @@ namespace RepoWebShop.Controllers
         [Route("GetAlbum/{Id}")]
         public ActionResult GetAlbum(long Id)
         {
-            var album = _photosetAlbums.GetGalleryPictures(Id);
+            var album = _photosetAlbums.GetAlbumPictures(Id);
             if (album == null)
                 return NotFound();
             else

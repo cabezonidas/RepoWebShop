@@ -13,12 +13,15 @@ namespace RepoWebShop.Models
         private readonly ISession _session;
         private readonly AppDbContext _appDbContext;
         private readonly IShoppingCartRepository _shoppingCartRepository;
-        private ShoppingCart(AppDbContext appDbContext, ISession session, string cartId, IShoppingCartRepository shoppingCartRepository)
+        private readonly ICalendarRepository _calendarRepository;
+
+        private ShoppingCart(AppDbContext appDbContext, ICalendarRepository calendarRepository, ISession session, string cartId, IShoppingCartRepository shoppingCartRepository)
         {
             _appDbContext = appDbContext;
             _session = session;
             shoppingCartId = cartId;
             _shoppingCartRepository = shoppingCartRepository;
+            _calendarRepository = calendarRepository;
         }
 
         private string shoppingCartId;
@@ -63,7 +66,7 @@ namespace RepoWebShop.Models
                 {
                     ShoppingCartId = ShoppingCartId,
                     Comments = comments,
-                    Created = DateTime.Now
+                    Created = _calendarRepository.LocalTime()
                 }
             );
             _appDbContext.SaveChanges();
@@ -81,7 +84,7 @@ namespace RepoWebShop.Models
         public void ValidatePhone(string number)
         {
             var result = _appDbContext.ShoppingCartValidationNumbers.First(x => x.ShoppingCartId == shoppingCartId && x.ValidationNumber == number);
-            result.Validated = DateTime.Now;
+            result.Validated = _calendarRepository.LocalTime();
             _appDbContext.SaveChanges();
         }
 
@@ -92,7 +95,7 @@ namespace RepoWebShop.Models
                 {
                     ShoppingCartId = ShoppingCartId,
                     ValidationNumber = token,
-                    Created = DateTime.Now
+                    Created = _calendarRepository.LocalTime()
                 }
             );
             _appDbContext.SaveChanges();
@@ -104,11 +107,12 @@ namespace RepoWebShop.Models
 
             var context = services.GetService<AppDbContext>();
             var shoppingCartRepository = services.GetService<IShoppingCartRepository>();
+            var calendarRepository = services.GetService<ICalendarRepository>();
 
             string cartId = session.GetString("CartId") ?? GetRandomBookingId();
             session.SetString("CartId", cartId);
 
-            return new ShoppingCart(context, session, cartId, shoppingCartRepository);
+            return new ShoppingCart(context, calendarRepository, session, cartId, shoppingCartRepository);
         }
 
         private static string GetRandomBookingId()

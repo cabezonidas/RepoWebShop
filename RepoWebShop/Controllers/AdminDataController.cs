@@ -14,11 +14,11 @@ namespace RepoWebShop.Controllers
         private readonly IPieDetailRepository _pieDetailRepository;
         private readonly IPieRepository _pieRepository;
         private readonly ICategoryRepository _categoryRepository;
-        private readonly IPhotosGalleryRepository _galleryRepository;
-        private readonly IPhotosetAlbums _photosetAlbums;
+        private readonly IGalleryRepository _galleryRepository;
+        private readonly IFlickrRepository _photosetAlbums;
         private readonly AppDbContext _appDbContext;
 
-        public AdminDataController(AppDbContext appDbContext, IPhotosetAlbums photosetAlbums, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository, IPhotosGalleryRepository galleryRepository)
+        public AdminDataController(AppDbContext appDbContext, IFlickrRepository photosetAlbums, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository, IGalleryRepository galleryRepository)
         {
             _galleryRepository = galleryRepository;
             _pieDetailRepository = pieDetailRepository;

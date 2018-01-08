@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace RepoWebShop.Repositories
 {
-    public class PhotosGalleryRepository : IPhotosGalleryRepository
+    public class GalleryRepository : IGalleryRepository
     {
         private readonly AppDbContext _appDbContext;
-        private readonly IPhotosetAlbums _photosetAlbums;
+        private readonly IFlickrRepository _photosetAlbums;
 
-        public PhotosGalleryRepository(AppDbContext appDbContext, IPhotosetAlbums photosetAlbums)
+        public GalleryRepository(AppDbContext appDbContext, IFlickrRepository photosetAlbums)
         {
             _photosetAlbums = photosetAlbums;
             _appDbContext = appDbContext;
@@ -42,16 +42,17 @@ namespace RepoWebShop.Repositories
             return _appDbContext.GalleryFlickrAlbums.ToList();
         }
 
-        public IEnumerable<PhotosetPhotos> GetGalleryPictures()
+        public IEnumerable<AlbumPictures> GetGalleryPictures()
         {
             var albums = _appDbContext.GalleryFlickrAlbums.Where(x => x.InGallery).Select(x => x.FlickrSetId).ToList().AsEnumerable();
-            return _photosetAlbums.GetGalleryPictures(albums);
+            return _photosetAlbums.GetAlbumsPictures(albums);
         }
 
-        public IEnumerable<PhotosetPhotos> GetAllAlbums()
+        public IEnumerable<AlbumPictures> GetAllAlbums()
         {
             var albums = _appDbContext.GalleryFlickrAlbums.Select(x => x.FlickrSetId).ToList().AsEnumerable();
-            return _photosetAlbums.GetGalleryPictures(albums);
+            
+            return _photosetAlbums.GetAlbumsPictures(albums);
         }
 
         public void HideFlickrAlbum(string setId)

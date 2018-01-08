@@ -63,7 +63,7 @@
                 <p>Cerramos el @vac.StartDate.ToString("dd'/'MM'/'yyyy") hasta el @vac.EndDate.ToString("dd'/'MM'/'yyyy")</p>
                 if (DateTime.Now.Ticks >= vac.StartDate.Ticks && DateTime.Now.Ticks <= vac.EndDate.Ticks)
                 {
-                    <p>No te preocupes, faltan @(vac.EndDate.Subtract(DateTime.Now).Days) dias y se pasan volando!</p>
+                    <p>No te preocupes, faltan pocos dias y se pasan volando!</p>
                 }
                 else
                 {

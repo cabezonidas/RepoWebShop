@@ -15,13 +15,13 @@ namespace RepoWebShop.Controllers
     {
         private readonly IPieDetailRepository _pieDetailRepository;
         private readonly IPieRepository _pieRepository;
-        private readonly IPhotosetAlbums _photosetAlbums;
+        private readonly IFlickrRepository _flickrRepository;
 
-        public PieDetailDataController(IPieDetailRepository pieDetailRepository, IPieRepository pieRepository, IPhotosetAlbums photosetAlbums)
+        public PieDetailDataController(IPieDetailRepository pieDetailRepository, IPieRepository pieRepository, IFlickrRepository flickrRepository)
         {
             _pieDetailRepository = pieDetailRepository;
             _pieRepository = pieRepository;
-            _photosetAlbums = photosetAlbums;
+            _flickrRepository = flickrRepository;
         }
 
         [HttpGet]
@@ -31,7 +31,7 @@ namespace RepoWebShop.Controllers
             try
             {
                 var albumId = Int64.Parse(setId);
-                return Ok(_photosetAlbums.GetPieDetailFotos(albumId));
+                return Ok(_flickrRepository.GetAlbumPictures(albumId));
             }
             catch
             {
@@ -134,7 +134,7 @@ namespace RepoWebShop.Controllers
             return new PieDetailViewModel()
             {
                 IsMobile = this.Request.IsMobile(),
-                PrimaryPicture = _photosetAlbums.GetPrimaryPicture(dbPieDetail.FlickrAlbumId),
+                PrimaryPicture = _flickrRepository.GetAlbumPictures(dbPieDetail.FlickrAlbumId).PrimaryPicture,
                 PieDetail = dbPieDetail,
                 Pies = _pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == dbPieDetail.PieDetailId)
             };

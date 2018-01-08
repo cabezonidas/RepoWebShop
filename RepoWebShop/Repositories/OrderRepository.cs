@@ -11,12 +11,14 @@ namespace RepoWebShop.Models
         private readonly AppDbContext _appDbContext;
         private readonly ShoppingCart _shoppingCart;
         private readonly IShoppingCartRepository _shoppingCartRepository;
+        private readonly ICalendarRepository _calendarRepository;
 
-        public OrderRepository(AppDbContext appDbContext, ShoppingCart shoppingCart, IShoppingCartRepository shoppingCartRepository)
+        public OrderRepository(AppDbContext appDbContext, ICalendarRepository calendarRepository, ShoppingCart shoppingCart, IShoppingCartRepository shoppingCartRepository)
         {
             _appDbContext = appDbContext;
             _shoppingCart = shoppingCart;
             _shoppingCartRepository = shoppingCartRepository;
+            _calendarRepository = calendarRepository;
         }
 
 
@@ -90,7 +92,7 @@ namespace RepoWebShop.Models
 
         public void CreateOrder(Order order)
         {
-            order.OrderPlaced = DateTime.Now;
+            order.OrderPlaced = _calendarRepository.LocalTime();
             order.PickedUp = false;
 
             var shoppingCartItems = _shoppingCart.ShoppingCartItems;

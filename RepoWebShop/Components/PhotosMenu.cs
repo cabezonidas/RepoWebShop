@@ -9,15 +9,15 @@ namespace RepoWebShop.Components
 {
     public class PhotosMenu : ViewComponent
     {
-        private readonly IPhotosetAlbums _photosetAlbums;
-        public PhotosMenu(IPhotosetAlbums photosetAlbums)
+        private readonly IFlickrRepository _photosetAlbums;
+        public PhotosMenu(IFlickrRepository photosetAlbums)
         {
             _photosetAlbums = photosetAlbums;
         }
 
         public IViewComponentResult Invoke()
         {
-            return View(_photosetAlbums.Photosets);
+            return View(_photosetAlbums.Albums);
         }
     }
 }

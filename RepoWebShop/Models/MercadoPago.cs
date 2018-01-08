@@ -593,7 +593,7 @@ namespace RepoWebShop.Models
                 
                 return (preference["response"] as Hashtable)[init_point].ToString();
             }
-            catch(Exception ex)
+            catch
             {
 
                 return "#";

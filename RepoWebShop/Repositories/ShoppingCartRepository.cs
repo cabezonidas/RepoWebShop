@@ -72,7 +72,7 @@ namespace RepoWebShop.Repositories
             var order = _mapper.Map<PaymentNotice, Order>(paymentNotice);
 
             order.PickedUp = false;
-            order.OrderPlaced = DateTime.Now;
+            order.OrderPlaced = _calendarRepository.LocalTime();
 
             _appDbContext.Orders.Add(order);
             _appDbContext.SaveChanges();

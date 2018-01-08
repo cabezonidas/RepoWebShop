@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RepoWebShop.Extensions;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace RepoWebShop.ViewModels
@@ -29,7 +30,7 @@ namespace RepoWebShop.ViewModels
             {
                 return ArePairDatesValid(ProcessingHoursStartingAt, ProcessingHoursFinishingAt) &&
                     ArePairDatesValid(OpenHoursStartingAt, OpenHoursFinishingAt) &&
-                    Date != null && Date > DateTime.Now;
+                    Date != null && Date > DateTime.Now.Zoned("Argentina Standard Time");
             }
         }
 

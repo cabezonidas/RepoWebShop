@@ -16,18 +16,18 @@ namespace RepoWebShop.Controllers
         private readonly IPieDetailRepository _pieDetailRepository;
         private readonly IPieRepository _pieRepository;
         private readonly ICategoryRepository _categoryRepository;
-        private readonly IPhotosGalleryRepository _photosGalleryRepository;
+        private readonly IFlickrRepository _flickrRepository;
         private readonly AppDbContext _appDbContext;
         private readonly IMapper _mapper;
 
-        public PieDetailController(IMapper mapper, AppDbContext appDbContext, IPhotosGalleryRepository photosGalleryRepository, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
+        public PieDetailController(IMapper mapper, IFlickrRepository flickrRepository, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
         {
             _pieDetailRepository = pieDetailRepository;
             _categoryRepository = categoryRepository;
             _pieRepository = pieRepository;
             _appDbContext = appDbContext;
             _mapper = mapper;
-            _photosGalleryRepository = photosGalleryRepository;
+            _flickrRepository = flickrRepository;
         }
 
         public ViewResult List(string category)
@@ -99,7 +99,7 @@ namespace RepoWebShop.Controllers
         [HttpGet]
         public ViewResult Create()
         {
-            var albumes = _photosGalleryRepository.GetAllAlbums().Select(x => new SelectListItem() { Value = x.Photoset.Id.ToString(), Text = x.Photoset.Title });
+            var albumes = _flickrRepository.Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content });
             var categories = _appDbContext.Categories.Select(x => new SelectListItem() { Value = x.CategoryId.ToString(), Text = x.CategoryName });
             var pieDetailCreateViewModel = new PieDetailCreateViewModel()
             {

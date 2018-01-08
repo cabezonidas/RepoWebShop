@@ -1,4 +1,4 @@
-﻿    @model IEnumerable<PhotosetPhotos>
+﻿@model IEnumerable<AlbumPictures>
 
 <link href="~/Content/Photos/Index.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick.css" />
@@ -9,19 +9,19 @@
     <h1 id="toptitle" class="">Fotos</h1>
     <div class="" id="top-filters">
         <div id="photosfilter-mobile" class="photosfilter">
-        @{
-            foreach (var photosetPhotos in Model)
-            {
-                <div>
-                    <a href="#@photosetPhotos.Photoset.Id">@photosetPhotos.Photoset.Title</a>
-                </div>
+            @{
+                foreach (var photosetPhotos in Model)
+                {
+                    <div>
+                        <a href="#@photosetPhotos.Photoset.Id">@photosetPhotos.Photoset.Title</a>
+                    </div>
+                }
             }
-        }
         </div>
         <br />
 
     </div>
-    
+
     @Html.Partial("ArrowUp")
     <div class="row">
         <div class="" id="allAlbums">
