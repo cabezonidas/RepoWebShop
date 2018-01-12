@@ -18,5 +18,10 @@ namespace RepoWebShop.Extensions
             var userAgent = request.Headers["User-Agent"].ToString();
             return (b.IsMatch(userAgent) || v.IsMatch(userAgent.Substring(0, 4)));
         }
+
+        public static string AbsoluteUrl(this HttpRequest request)
+        {
+            return $"{request.Scheme}://{request.Host.Value}{request.Path.Value}";
+        }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using RepoWebShop.Interfaces;
+using RepoWebShop.Extensions;
 
 namespace RepoWebShop.Controllers
 {
@@ -76,6 +77,8 @@ namespace RepoWebShop.Controllers
                 return NotFound();
 
             var result = new PieDetailViewModel() { PieDetail = pieDetail, Pies = _pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == pieDetail.PieDetailId) };
+            result.PrimaryPicture = _flickrRepository.GetAlbumPictures(pieDetail.FlickrAlbumId).PrimaryPicture;
+            result.RequestAbsoluteUrl = Request.AbsoluteUrl();
 
             return View(result);
         }
