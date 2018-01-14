@@ -12,7 +12,7 @@ header img {
     padding-bottom: 50px;
     text-align: center;
     color: #f8f8f8;
-    background: url(../../Pictures/index.jpg) no-repeat center center;
+    /*background: url(../../Pictures/index.jpg) no-repeat center center;*/
     background-size: cover;
     margin-top: -50px;
 }
@@ -53,36 +53,33 @@ header img {
 
 /** <Pies of the week> **/
 #piesoftheweek {
-    background-color: lightgrey;
-    /*background: url(../../Pictures/kitchen-elements-3.png) no-repeat center center;*/
-    background-size: cover;
+    /*background-color: white;*/
+    /*background: url(../../Pictures/kitchen-elements-3.png) no-repeat center center;    background-size: cover;*/
 }
 
     #piesoftheweek h1 {
         text-align: center;
-        margin-top: -30px;
     }
 
         #piesoftheweek h1 a {
             text-decoration: none;
-            color: black;
+            color: white;
         }
 
-.services {
-    padding-top: -250px;
-    background-color: #d7b24540;
-}
-
-}
 /** </Pies of the week> **/
 
 /** <team> **/
 #team {
-    background-color: white;
+    /*background-color: white;*/
     /*background: url(../../Pictures/kitchen-elements-1.png) no-repeat center center;*/
     background-size: cover;
     padding-left: 30px;
     padding-right: 30px;
+}
+
+section {
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 
 .team-carousel {

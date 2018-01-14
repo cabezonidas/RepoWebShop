@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using RepoWebShop.Models;
+using RepoWebShop.ViewModels;
 
 namespace RepoWebShop.Interfaces
 {
@@ -18,5 +19,6 @@ namespace RepoWebShop.Interfaces
         bool InvertPickedUpStatus(int orderId);
         Order UpdateOrder(PaymentNotice paymentNotice);
         Order CreateOrderByPayment(PaymentNotice paymentNotice);
+        EmailNotificationViewModel GetEmailData(int id, string v);
     }
 }

@@ -19,9 +19,14 @@ namespace RepoWebShop.Extensions
             return (b.IsMatch(userAgent) || v.IsMatch(userAgent.Substring(0, 4)));
         }
 
+        public static string HostUrl(this HttpRequest request)
+        {
+            return $"{request.Scheme}://{request.Host.Value}";
+        }
+
         public static string AbsoluteUrl(this HttpRequest request)
         {
-            return $"{request.Scheme}://{request.Host.Value}{request.Path.Value}";
+            return $"{request.HostUrl()}{request.Path.Value}";
         }
     }
 }

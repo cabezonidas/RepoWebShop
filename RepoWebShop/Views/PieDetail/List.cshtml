@@ -5,7 +5,9 @@
 
 
 <div class="container" id="container">
-    <h2 id="category-title" />
+    <div class="title-container">
+        <h1 id="category-title" class="title-logo" />
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -31,7 +33,7 @@
     if(category)
         $('#category-title').append(category);
     else
-        $('#category-title').append("Todos los productos");
+        $('#category-title').append("Productos");
 
     $(document).ready(function () {
         LoadPies();

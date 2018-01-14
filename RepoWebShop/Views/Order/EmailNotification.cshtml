@@ -1,0 +1,82 @@
+﻿@model EmailNotificationViewModel
+@{Layout = string.Empty;}
+
+<body>
+    <div style="text-align:center; font-family: 'Arial', Georgia, Serif;">
+        <section style='padding: 20px; max-width:600px; min-width:400px;'>
+            <h2 style="font-family: 'Times New Roman'; font-style: italic;color: green; ">
+                <a href="@Model.AbsoluteUrl" target="_blank"
+                   style="  padding: 15px;
+                            color: white;
+                            text-decoration: none;
+                            border-radius: 50%;
+                            background: green;">
+                    <strong>De las Artes</strong>
+                </a>
+            </h2>
+            <br>
+            <h2><strong>¡Gracias @Model.CustomarAlias por tu reciente @Model.OrderType.ToLower()!</strong></h2>
+            <p>
+                Ya estamos trabajando para que puedas disfrutar de tu compra. Mientras tanto te mandamos los detalles.
+            </p>
+
+            <p style="font-size:10px;">Código de Reserva</p>
+
+            <div style="background-color: white; width: 150px; margin: auto; border-radius: 5px; border-style: solid; border-color: green;">
+                <a href="@Model.AbsoluteUrl/Order/Status/@Model.FriendlyBookingId" target="_blank" style="color: black; text-decoration: none;">
+                    <h1>@Model.FriendlyBookingId</h1>
+                </a>
+            </div>
+
+            @if (!String.IsNullOrEmpty(Model.MercadoPagoTransaction))
+            {
+                <p>Comprobante MercadoPago <strong>@Model.MercadoPagoTransaction</strong></p>
+            }
+
+            <p>Tiempo de Elaboración: <strong>@Model.PreparationTime hs</strong></p>
+
+            <p>Orden lista el <strong>@Model.OrderReady.Value.ToString("dd-MM-yyyy") </strong> a las <strong>@Model.OrderReady.Value.ToString("hh\\:mm")</strong></p>
+
+            @{var total = Model.OrderItems.Select(x => x.Amount * x.Price).Sum(); }
+            <p><strong>Total de Compra $@total</strong></p>
+
+            @if (!String.IsNullOrEmpty(Model.MercadoPagoTransaction))
+            {
+                <p><strong>Total Pagado a MercadoPago $@Model.OrderTotal</strong></p>
+            }
+
+            <table style="margin: auto; width: 100%; padding-left: 10px; padding-right: 10px; border-collapse:collapse;">
+                <tr>
+                    <th style='border-bottom: 1px solid #ddd;'>Cantidad</th>
+                    <th style="border-bottom: 1px solid #ddd; text-align:left;">Producto</th>
+                    <th style="border-bottom: 1px solid #ddd; text-align:right;">Precio&#8291;U.</th>
+                    <th style="border-bottom: 1px solid #ddd; text-align:right;">Subtotal</th>
+                </tr>
+                @foreach (var item in Model.OrderItems)
+                {
+                    <tr>
+                        <td style='padding:2px; text-align:center;'>@item.Amount</td>
+                        <td style='padding:2px; text-align:left;'>@item.Pie.PieDetail.Name @item.Pie.Name</td>
+                        <td style='padding:2px; text-align:right;'>@item.Price</td>
+                        @{var subtotal = item.Price * item.Amount;}
+                        <td style='padding:2px; text-align:right;'>@subtotal</td>
+                    </tr>
+                }
+            </table>
+            @if (!String.IsNullOrEmpty(Model.Comments))
+            {
+                <p><strong>Comentarios</strong></p><p>@Model.Comments</p>
+            }
+            <br/>
+            <p><strong>Importante</strong></p>
+            <p>Antes de pasar a buscar tu pedido, fijate nuestros <a href='@Model.AbsoluteUrl/Calendar/OpenHours' target="_blank" >horarios de atención</a>.</p>
+            <p>
+                Si querés retirar tu pedido en otro momento, ponete en contacto con nosotros y vamos a tratar de hacer lo posible por adaptarnos. Si estas muy apresurado, a veces podemos hacer las entregas antes del tiempo calculado, pero no siempre podremos.
+            </p>
+            <p>
+                Ante cualquier duda o alteración, no dudes en <a href='@Model.AbsoluteUrl/Contact' target="_blank">contactarnos</a>.
+            </p>
+        </section>
+
+    </div>
+</body>

@@ -3,18 +3,22 @@
 <link href="~/Content/Home/Index.css" rel="stylesheet" />
 
 <header class="intro-header" id="intro-header">
-    <img class="img-responsive animated bounceInLeft" alt="La Reposteria Shop'" src="~/Pictures/logo.png" />
-    <div class="container">
-        <div class="intro-message">     
-            <div class="row">
-                <hr class="intro-divider">
-                <h1 class="">Repostería Artesanal</h1>
+    <div class="parallax-window" data-parallax="scroll" data-image-src="/Pictures/index.jpg">
+        <br />
+        <img class="img-responsive animated bounceInLeft" alt="La Reposteria Shop'" src="~/Pictures/logo.png" />
+        <div class="container">
+            <div class="intro-message">
+                <div class="row">
+                    <hr class="intro-divider">
+                    <h1 class="">Repostería Artesanal</h1>
+                </div>
+                <br />
+                @Html.Partial("ArrowDown", "#services")
             </div>
-            <br />
-            @Html.Partial("ArrowDown", "#services")
         </div>
     </div>
 </header>
+
 
 
 @Html.Partial("~/Views/Services/Index.cshtml")
@@ -22,7 +26,9 @@
 
 <section class="bg-light" id="piesoftheweek">
     <div class="container">
-        <h1><a asp-action="List" asp-controller="PieDetail">Destacados</a></h1>
+        <div class="title-container">
+            <h1 class="title-logo"><a asp-action="List" asp-controller="PieDetail">Destacados</a></h1>
+        </div>
         <div class="row pie-of-week-carousel">
             @foreach (var pie in Model.PiesOfTheWeek)
             {
@@ -32,11 +38,22 @@
     </div>
 </section>
 
+<section id="location">
+    <div class="container">
+        <div class="title-container">
+            <h1 class="text-center title-logo">Dirección</h1>
+        </div>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d40509.165163836115!2d-58.42386838681868!3d-34.620141749222064!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x36138e4afdfc67e8!2sDe+las+Artes!5e0!3m2!1sen!2snz!4v1503363586219" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+    </div>
+</section>
+
 <section class="bg-light" id="team">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h1 class="section-heading">Nuestro equipo</h1>
+                <div class="title-container">
+                    <h1 class="section-heading title-logo">Equipo</h1>
+                </div>
                 <h2 class="section-subheading text-muted"></h2>
             </div>
         </div>
@@ -55,6 +72,7 @@
         </div>
     </div>
 </section>
+
 <section id="afip">
     <a href='http://qr.afip.gob.ar/?qr=-3Dafrs7S3zSZ4ok4IozMQ,,' target='_F960AFIPInfo'>
         <img src='http://www.afip.gob.ar/images/f960/DATAWEB.jpg' border='0'>
@@ -68,26 +86,6 @@
         });
     });
 
-    //$('.team-carousel').owlCarousel({
-    //    //center: true,
-    //    items: 1,
-    //    loop: true,
-    //    margin: 30,
-    //    autoplay: true,
-    //    autoplayTimeout: 3000, 
-    //    responsive: {
-    //        500: {
-    //            items: 2
-    //        },
-    //        1024: {
-    //            items: 4
-    //        },
-    //        1600: {
-    //            items: 6
-    //        }
-    //    }
-    //});
-
     $('.team-carousel').slick({
         arrows: true,
         dots: true,
@@ -100,4 +98,5 @@
         centerMode: true,
         variableWidth: true
     });
+    
 </script>

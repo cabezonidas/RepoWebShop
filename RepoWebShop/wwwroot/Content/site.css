@@ -8,8 +8,8 @@ body {
 }
 
 #body {
-    background-color: white;
-    padding-top: 25px;
+    /*background-color: white;*/
+    /*padding-top: 25px;*/
     width: 100%;
 }
 
@@ -33,6 +33,21 @@ h1 {
     font-family: 'Playball', cursive;
     font-size: 50px;
     margin-bottom: 20px;
+}
+
+div.title-container {
+    text-align: center;
+}
+
+h1.title-logo {
+    background-color: green;
+    border-color: #4ca056;
+    border-style: solid;
+    border-radius: 50%;
+    color: white;
+    padding: 20px;
+    margin: 30px auto;
+    display: inline-block
 }
 
 /*p {

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using RepoWebShop.Interfaces;
+using RepoWebShop.ViewModels;
 
 namespace RepoWebShop.Models
 {
@@ -123,5 +126,31 @@ namespace RepoWebShop.Models
             return _shoppingCartRepository.CreateOrderByPayment(paymentNotice);
         }
 
+        public EmailNotificationViewModel GetEmailData(int id, string absoluteUrl)
+        {
+            var orderDetails = GetOrderDetails(id);
+            var order = GetOrder(id);
+
+            var emailData = new EmailNotificationViewModel();
+
+            emailData.AbsoluteUrl = absoluteUrl;
+            emailData.Comments = order.CustomerComments;
+            emailData.MercadoPagoTransaction = order.MercadoPagoTransaction;
+            emailData.OrderItems = orderDetails;
+            emailData.OrderReady = order.PickUp;
+            emailData.OrderTotal = order.OrderTotal; //Without MP interests
+            emailData.OrderType = String.IsNullOrEmpty(order.MercadoPagoTransaction) ? "Reserva" : "Compra";
+            emailData.PreparationTime = order.PreparationTime;
+            emailData.FriendlyBookingId = order.FriendlyBookingId;
+            emailData.OrderId = order.OrderId.ToString();
+
+            emailData.CustomarAlias = order.Registration == null ? order.MercadoPagoName : order.Registration.FirstName;
+            emailData.CustomarAlias = Regex.Replace(emailData.CustomarAlias.ToLower(), @"(^\w)|(\s\w)", m => m.Value.ToUpper());
+
+            //TextInfo textInfo = new CultureInfo("es-AR", false).TextInfo;
+            //emailData.CustomarAlias = textInfo.ToTitleCase(emailData.CustomarAlias.ToLower());
+
+            return emailData;
+        }
     }
 }

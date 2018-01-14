@@ -8,6 +8,7 @@ using RepoWebShop.ViewModels;
 using AutoMapper;
 using RepoWebShop.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using RepoWebShop.Extensions;
 
 namespace RepoWebShop.Controllers
 {
@@ -30,6 +31,12 @@ namespace RepoWebShop.Controllers
             _emailRespository = emailRespository;
             _mp = mp;
             _calendarRepository = calendarRepository;
+        }
+
+        public IActionResult EmailNotification(int id)
+        {
+            var viewModel = _orderRepository.GetEmailData(id, Request.HostUrl());
+            return View(viewModel);
         }
 
         public IActionResult Status(string id)
