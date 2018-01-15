@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 using Google.Apis.Auth.OAuth2;
 using System.Threading;
+using System.IO;
 
 namespace RepoWebShop.Repositories
 {
@@ -34,6 +35,7 @@ namespace RepoWebShop.Repositories
         {
             var sender = _config.GetSection("EmailSender").Value;
             var serviceAccount = _config.GetSection("EmailServiceAccount").Value;
+            var serviceAccountPrivateKey = _config.GetSection("EmailPrivateKey").Value;
 
             if (order != null)
             {
@@ -74,14 +76,14 @@ namespace RepoWebShop.Repositories
                         {
                             Scopes = new[] { "https://mail.google.com/" },
                             User = sender
-                        }.FromCertificate(certificate));
+                        }.FromPrivateKey(serviceAccountPrivateKey));
 
                         credential.RequestAccessTokenAsync(CancellationToken.None).GetAwaiter().GetResult();
 
                         var oauth2 = new SaslMechanismOAuth2(sender, credential.Token.AccessToken);
 
                         client.Connect("smtp.gmail.com", 587);
-                        client.AuthenticateAsync(oauth2);
+                        client.Authenticate(oauth2);
                         client.Send(message);
                         client.Disconnect(true);
                     }
