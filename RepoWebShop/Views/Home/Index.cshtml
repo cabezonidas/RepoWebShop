@@ -3,9 +3,15 @@
 <link href="~/Content/Home/Index.css" rel="stylesheet" />
 
 <header class="intro-header" id="intro-header">
-    <div class="parallax-window" data-parallax="scroll" data-image-src="/Pictures/index.jpg">
+    <div class="parallax-window" data-parallax="scroll" data-image-src="https://farm5.staticflickr.com/4536/23986590027_0f15735eb1_o.jpg">
+        @*<div class="parallax-window" data-parallax="scroll" data-image-src="/Pictures/index.jpg">*@
         <br />
-        <img class="img-responsive animated bounceInLeft" alt="La Reposteria Shop'" src="~/Pictures/logo.png" />
+
+        <div class="animated bounceInLeft">
+            @Html.Partial("~/Views/Shared/Logo.cshtml")
+        </div>
+        
+        @*<img class="img-responsive animated bounceInLeft" alt="La Reposteria Shop'" src="~/Pictures/logo.png" />*@
         <div class="container">
             <div class="intro-message">
                 <div class="row">

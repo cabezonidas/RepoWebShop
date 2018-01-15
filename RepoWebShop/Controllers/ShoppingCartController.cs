@@ -4,6 +4,7 @@ using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
 using System;
 using RepoWebShop.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace RepoWebShop.Controllers
 {
@@ -14,12 +15,14 @@ namespace RepoWebShop.Controllers
         private readonly ShoppingCart _shoppingCart;
         private readonly IMercadoPago _mp;
         private readonly ICalendarRepository _calendarRepository;
+        private readonly IConfiguration _config;
         private readonly string _bookingId;
         private readonly string _friendlyBookingId;
 
 
-        public ShoppingCartController(ICalendarRepository calendarRepository, IOrderRepository orderRepository, IPieRepository pieRepository, ShoppingCart shoppingCart, IMercadoPago mp)
+        public ShoppingCartController(IConfiguration config, ICalendarRepository calendarRepository, IOrderRepository orderRepository, IPieRepository pieRepository, ShoppingCart shoppingCart, IMercadoPago mp)
         {
+            _config = config;
             _orderRepository = orderRepository;
             _pieRepository = pieRepository;
             _shoppingCart = shoppingCart;
@@ -44,8 +47,10 @@ namespace RepoWebShop.Controllers
                 ShoppingCartTotal = total,
                 Mercadolink = _mp.GetRepoPaymentLink(total, _bookingId, _friendlyBookingId, Request.Host.ToString(), "La Reposteria"),
                 PreparationTime = highestPrepTime,
-                FriendlyBookingId = _friendlyBookingId
-            };
+                FriendlyBookingId = _friendlyBookingId,
+                Comments = _shoppingCart.GetShoppingCartComments(),
+                MercadoPagoId = _config.GetSection("MercadoPagoClientId").Value
+        };
             
             return View(shoppingCartViewModel);
         }
@@ -69,6 +74,13 @@ namespace RepoWebShop.Controllers
             {
                 _shoppingCart.RemoveFromCart(selectedPie);
             }
+            return RedirectToAction("Index");
+        }
+
+        public RedirectToActionResult ClearFromShoppingCart(int pieId)
+        {
+            _shoppingCart.ClearFromCart(pieId);
+
             return RedirectToAction("Index");
         }
     }

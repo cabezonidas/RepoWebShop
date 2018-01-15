@@ -101,6 +101,17 @@ namespace RepoWebShop.Models
             _appDbContext.SaveChanges();
         }
 
+        internal void ClearFromCart(int pieId)
+        {
+            var shoppingCartItem =
+                _appDbContext.ShoppingCartItems.SingleOrDefault(
+                    s => s.Pie.PieId == pieId && s.ShoppingCartId == ShoppingCartId);
+
+            _appDbContext.ShoppingCartItems.Remove(shoppingCartItem);
+
+            _appDbContext.SaveChanges();
+        }
+
         public static ShoppingCart GetCart(IServiceProvider services)
         {
             ISession session = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;

@@ -2,15 +2,22 @@
 
 <link href="~/Content/ShoppingCart/Index.css" rel="stylesheet" />
 
-<div class="container  shopping-cart">
-    <h2>Tu carrito de compras</h2>
+@Model.MercadoPagoId
+
+<br />
+
+<div class="header" id="title">
+    <div class="title-container">
+        <h1 class="title-logo">Carrito</h1>
+    </div>
 </div>
+
 @if (Model.ShoppingCartTotal == 0)
 {
     <div class="container">
         <h3>Parece que tu carrito de compras está vacío. </h3>
-        <h3>¿Qué tal un paseo por nuestras productos? <a asp-controller="PieDetail" asp-action="List" >Ver productos</a></h3>
-</div>
+        <h3>¿Qué tal un paseo por nuestras productos? <a asp-controller="PieDetail" asp-action="List">Ver productos</a></h3>
+    </div>
 }
 else
 {
@@ -18,7 +25,7 @@ else
 
 
 
-        
+
         <table class="table table-striped table-condensed">
             <thead>
                 <tr>
@@ -34,13 +41,27 @@ else
                 {
                     <tr>
                         <td class="text-center">
-                            <a asp-controller="ShoppingCart" asp-action="RemoveFromShoppingCart"
+                            <a asp-controller="ShoppingCart" asp-action="ClearFromShoppingCart"
                                asp-route-pieId="@line.Pie.PieId">
                                 <span class="glyphicon glyphicon-remove remove-item"></span>
                             </a>
                         </td>
-                        <td class="text-center">@line.Amount</td>
-                        <td class="text-left">@line.Pie.PieDetail.Name [@line.Pie.Name] - @Model.PreparationTime hs</td>
+                        <td class="text-center quantity">
+                            <a asp-controller="ShoppingCart" asp-action="RemoveFromShoppingCart"
+                               asp-route-pieId="@line.Pie.PieId">
+                                <span class="fa fa-caret-left"></span>
+                            </a>
+                            @line.Amount
+                            <a asp-controller="ShoppingCart" asp-action="AddToShoppingCart"
+                               asp-route-pieId="@line.Pie.PieId">
+                                <span class="fa fa-caret-right"></span>
+                            </a>
+                        </td>
+                        <td class="text-left">
+                            <a href="/PieDetail/Details/@line.Pie.PieDetailId">
+                                @line.Pie.PieDetail.Name [@line.Pie.Name] - @Model.PreparationTime hs
+                            </a>
+                        </td>
                         <td class="text-right">@line.Pie.Price.ToString("c")</td>
                         <td class="text-right">
                             @((line.Amount * line.Pie.Price).ToString("c"))
@@ -63,7 +84,7 @@ else
                 </tr>
             </tfoot>
         </table>
-        <table class="form-group calendar-comments" >
+        <table class="form-group calendar-comments">
             <tbody>
                 <tr>
                     <td class="pickupdate-td" style="width:115px;" valign="top">
@@ -126,17 +147,17 @@ else
     </div>
     <div class="container" id="estimation-time">
         <h3>Orden lista</h3>
-        <div class="" >
+        <div class="">
             La fecha y hora te dice cuándo tu pedido va a estar listo para ser retirado.<br />
             La hora estimada es calculada teniendo en cuenta el tiempo de preparación, y nuestros horarios de producción y atención al público. <br />
             También tenemos en cuenta feriados, fechas especiales y vacaciones.<br />
             Así que quedate tranquilo, que la fecha que calculamos es 100% precisa.<br />
-            Todos nuestros productos son frescos, y así nos aseguramos que vas a recibir tu pedido en tiempo y forma.  
+            Todos nuestros productos son frescos, y así nos aseguramos que vas a recibir tu pedido en tiempo y forma.
         </div>
 
         <h3>¿Cuáles son los horarios de atención?</h3>
         <div class="">
-            Los horarios de atención están publicados <a href="/Calendar/OpenHours">aquí</a>. <br />            
+            Los horarios de atención están publicados <a href="/Calendar/OpenHours">aquí</a>. <br />
             Antes de pasar por nuestro local, asegurate de saber nuestros horarios de atención.
         </div>
 
@@ -178,7 +199,7 @@ else
 
     function getEstimate(){
         $.get('api/CalendarData/GetPickupDate/@Model.PreparationTime', function (data) {
-            
+
             $('#pickupDate').empty();
             $('#pickupDate').append(data);
         });

@@ -4,6 +4,6 @@ namespace RepoWebShop.Interfaces
 {
     public interface IPaymentNoticeRepository
     {
-        void CreatePayment(PaymentNotice paymentWebhook);
+        void CreatePayment(PaymentNotice paymentWebhook, string hostUrl);
     }
 }

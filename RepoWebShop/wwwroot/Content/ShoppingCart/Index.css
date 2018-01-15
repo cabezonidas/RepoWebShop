@@ -1,4 +1,16 @@
-﻿div.container.shopping-cart {
+﻿td.quantity a {
+    text-decoration: none;
+}
+
+span.fa-caret-right {
+    padding-left: 10px;
+}
+
+span.fa-caret-left {
+    padding-right: 10px;
+}
+
+div.container.shopping-cart {
     margin-top: -25px;
 }
 

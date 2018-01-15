@@ -1,0 +1,39 @@
+﻿div.ovalo {
+    background-color: white;
+    font-family: 'Playball';
+    text-align: center;
+    display: inline-block;
+    border-radius: 50%;
+    border-style: solid;
+    border-color: green;
+    border-width: 5px;
+    padding-left: 30px;
+    padding-right: 30px;
+    min-width: 360px;
+}
+
+    div.ovalo div.ovalo-inner {
+        color: green;
+        background-color: white;
+        margin: auto;
+        border-radius: 60%;
+        padding: 10px;
+        padding-top: 0px;
+    }
+
+        div.ovalo div.ovalo-inner p.brand-name {
+            font-size: 50px;
+            margin: 5px;
+            margin-top: 20px;
+            margin-bottom: 0px;
+            padding-bottom: 0px;
+            color: green;
+        }
+
+        div.ovalo div.ovalo-inner p.label {
+            font-size: 25px;
+            margin: 15px;
+            margin-top: 0px;
+            padding-top: 0px;
+            color: green;
+        }

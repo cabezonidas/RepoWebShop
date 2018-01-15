@@ -155,7 +155,7 @@ namespace RepoWebShop.Controllers
                 _shoppingCart.ClearCart();
 
 
-                _emailRespository.Send(order, null);
+                _emailRespository.Send(order, Request.HostUrl(), null);
 
                 return Redirect($"/Order/Status/{order.FriendlyBookingId}");
             }

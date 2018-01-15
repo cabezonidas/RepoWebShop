@@ -57,10 +57,14 @@
     padding-right: 10px;
 }
 
-    .media-icons a img {
-        max-width: 30px;
-        margin: 10px;
+    .media-icons a {
+        text-decoration: none;
     }
+
+        .media-icons a img {
+            max-width: 30px;
+            margin: 10px;
+        }
 
 @media screen and (max-width: 500px) {
     .media-icons {

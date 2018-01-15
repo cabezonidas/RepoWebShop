@@ -17,13 +17,13 @@ namespace RepoWebShop.Repositories
             _emailRespository = emailRespository;
             _shoppingCart = shoppingCart;
         }
-        public void CreatePayment(PaymentNotice paymentNotification)
+        public void CreatePayment(PaymentNotice paymentNotification, string hostUrl)
         {
             _appDbContext.PaymentNotices.Add(paymentNotification);
             _appDbContext.SaveChanges();
 
             Order order = _orderRespository.CreateOrderByPayment(paymentNotification);
-            _emailRespository.Send(order, paymentNotification);
+            _emailRespository.Send(order, hostUrl, paymentNotification);
         }
     }
 }

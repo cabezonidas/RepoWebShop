@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
@@ -26,7 +27,7 @@ namespace RepoWebShop.Controllers
             {
                 PaymentNotice paymentInfo = new PaymentNotice(((payment["response"] as Hashtable)["collection"] as Hashtable));
                 if (!String.IsNullOrWhiteSpace(paymentInfo.BookingId))
-                    _paymentNoticeRepository.CreatePayment(paymentInfo);
+                    _paymentNoticeRepository.CreatePayment(paymentInfo, Request.HostUrl());
             }
             return Ok();
         }
