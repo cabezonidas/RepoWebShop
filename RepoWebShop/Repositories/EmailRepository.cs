@@ -33,7 +33,7 @@ namespace RepoWebShop.Repositories
         public void Send(Order order, string hostUrl, PaymentNotice payment = null)
         {
             var sender = _config.GetSection("EmailSender").Value;
-            var pass = _config.GetSection("EmailSenderPass").Value;
+            var serviceAccount = _config.GetSection("EmailServiceAccount").Value;
 
             if (order != null)
             {
@@ -70,7 +70,7 @@ namespace RepoWebShop.Repositories
                     {
                         var certificate = new X509Certificate2(@"MailCertificate.p12", "notasecret", X509KeyStorageFlags.Exportable);
                         var credential = new ServiceAccountCredential(new ServiceAccountCredential
-                            .Initializer("mailsender@thinking-window-192204.iam.gserviceaccount.com")
+                            .Initializer(serviceAccount)
                         {
                             Scopes = new[] { "https://mail.google.com/" },
                             User = sender
