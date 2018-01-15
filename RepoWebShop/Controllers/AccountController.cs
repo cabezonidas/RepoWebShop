@@ -46,6 +46,13 @@ namespace RepoWebShop.Controllers
             return View();
         }
 
+
+        [AllowAnonymous]
+        public IActionResult PrivacyPolicy()
+        {
+            return View();
+        }
+
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)

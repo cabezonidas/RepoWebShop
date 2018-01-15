@@ -70,7 +70,6 @@ namespace RepoWebShop.Repositories
                 {
                     using (var client = new SmtpClient())
                     {
-                        var certificate = new X509Certificate2(@"MailCertificate.p12", "notasecret", X509KeyStorageFlags.Exportable);
                         var credential = new ServiceAccountCredential(new ServiceAccountCredential
                             .Initializer(serviceAccount)
                         {
