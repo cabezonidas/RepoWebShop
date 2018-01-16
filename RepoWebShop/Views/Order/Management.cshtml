@@ -7,12 +7,12 @@
             <thead>
                 <tr>
                     <th>Reserva</th>
-                    <th></th> @*status*@
+                    <th>Estado <br /></th> @*status*@
                     <th>Creado</th>
-                    <th>Acreditacion</th> @*date*@
-                    <th>Plazo (hs)</th>
+                    <th>Cliente</th>
+                    <th>Acreditacion</th> 
                     <th>Entrega</th> @*date*@
-                    <th>Retirado</th>
+                    <th>Retirado <br /></th>
                     <th>Monto</th>
                     <th>Comprobante MP</th>
                 </tr>
@@ -50,9 +50,9 @@
             });
             $('#orders-table').DataTable({
                 initComplete: function () {
-                    this.api().columns([1]).every(function () {
+                    this.api().columns([1,6]).every(function () {
                         var column = this;
-                        var select = $('<select><option value="">Estado (todos)</option></select>')
+                        var select = $('<select><option value="">Todos</option></select>')
                             .appendTo($(column.header()))
                             .on('change', function () {
                                 var val = $.fn.dataTable.util.escapeRegex(
@@ -68,7 +68,7 @@
                         });
                     });
                 },
-                "order": [[2, "desc"]],
+                "order": [[6, "asc"],[5, "asc"]],
                 "aoColumns": [
                     null,
                     {
@@ -78,7 +78,9 @@
                     null,
                     null,
                     null,
-                    null,
+                    {
+                        "bSortable": false
+                    },
                     null,
                     null
                 ]
@@ -94,8 +96,8 @@
             row.append('<td><a href="Detail/' + item.orderId + '">' + item.friendlyBookingId + '</a></td>');
             row.append('<td>' + statusCode2DisplayValue(item.status) + '</td>');
             row.append('<td>' + formatDate(item.orderPlaced) + '</td>');
+            row.append('<td>' + item.contactDataAsHtml + '</td>');
             row.append('<td>' + formatDate(item.payout) + '</td>');
-            row.append('<td>' + item.preparationTime + '</td>');
             row.append('<td>' + formatDate(item.pickUp) + '</td>');
             row.append('<td>' + (item.pickedUp ? 'Si' : 'No') + '</td>');
             row.append('<td>' + item.orderTotal + '</td>');

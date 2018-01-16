@@ -98,23 +98,23 @@
 
     @{
         var SocialMedia = new List<MediaViewModel>()
-{
-//new MediaViewModel() { Icon = "fa-twitter", Class = "social-twitter", Ref = "#" },
-//new MediaViewModel() { Icon = "fa-instagram", Class = "social-google-plus", Ref = "#" },
-new MediaViewModel() { Icon = "fa-facebook", Class = "social-facebook", Ref = "https://www.facebook.com/ReposteriaDeLasArtes/" },
-new MediaViewModel() { Icon = "fa-whatsapp", Class = "social-whatsapp", Ref = "https://api.whatsapp.com/send?phone=6421780906" }
-};
+        {
+        //new MediaViewModel() { Icon = "fa-twitter", Class = "social-twitter", Ref = "#" },
+        //new MediaViewModel() { Icon = "fa-instagram", Class = "social-google-plus", Ref = "#" },
+        new MediaViewModel() { Icon = "fa-facebook", Class = "social-facebook", Ref = "https://www.facebook.com/ReposteriaDeLasArtes/" },
+        new MediaViewModel() { Icon = "fa-whatsapp", Class = "social-whatsapp", Ref = "https://api.whatsapp.com/send?phone=6421780906" }
+        };
     }
     @*<media-footer media="@SocialMedia" ></media-footer>*@
 
     <div class="media-icons animated flipInX">
-        <a href="https://www.facebook.com/ReposteriaDeLasArtes/">
+        <a href="https://www.facebook.com/ReposteriaDeLasArtes/" target='_blank'>
             <img src="~/Pictures/MediaIcons/Facebook.png" />
         </a>
-        <a href="https://m.me/ReposteriaDeLasArtes/">
+        <a href="https://m.me/ReposteriaDeLasArtes/" target='_blank'>
             <img src="~/Pictures/MediaIcons/Messenger.png" />
         </a>
-        <a href="https://api.whatsapp.com/send?phone=642102790126">
+        <a href="https://api.whatsapp.com/send?phone=642102790126" target='_blank'>
             <img src="~/Pictures/MediaIcons/Whatsapp.png" />
         </a>
     </div>

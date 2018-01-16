@@ -90,7 +90,7 @@ namespace RepoWebShop.Models
 
         public IEnumerable<Order> GetAll()
         {
-            return _appDbContext.Orders.Where(o => o.Status != "draft").ToList();
+            return _appDbContext.Orders.Include(x => x.Registration).Where(o => o.Status != "draft").ToList();
         }
 
         public void CreateOrder(Order order)

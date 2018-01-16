@@ -11,7 +11,7 @@
         case "draft":
             return "Sin confirmar";
         case "reservation":
-            return "Reserva - Usuario registrado";
+            return "Reserva";
         default:
             return "No disponible";
     }

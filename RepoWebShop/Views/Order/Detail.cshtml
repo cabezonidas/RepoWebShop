@@ -43,7 +43,10 @@
             </tr>
             <tr>
                 <td><strong>Cliente</strong></td>
-                <td colspan="2" id="contactDetails"></td>
+                <td colspan="2" id="">
+                    @Html.Raw(Model.Order.ContactDataAsHtml)
+                    
+                </td>
             </tr>
             <tr>
                 <td><strong>Comentarios</strong></td>
@@ -97,8 +100,7 @@
                 <td><strong>Correo enviado</strong></td>
                 <td colspan="2">
                     <div>
-                        <p><strong>@Model.Order.Email.To</strong></p>
-                        <p>@Html.Raw(Model.Order.Email.Body)</p>
+                        <p><strong>@Model.Order.Email.To</strong> <a href="/Order/EmailNotification/@Model.Order.OrderId" target="_blank">Ver</a></p>
                     </div>
                 </td>
             </tr>
@@ -117,18 +119,6 @@
 $('.datepicker').datepicker();
 
 $('#orderStatus').append(statusCode2DisplayValue('@Model.Order.Status'));
-
-$('#contactDetails').append(getContactDetails());
-
-function getContactDetails() {
-    return '<p>@Model.Order.Registration?.LastName, @Model.Order.Registration?.FirstName <p/>' +
-    '<p><a href="mailto:@Model.Order.Registration?.NormalizedEmail">@Model.Order.Registration?.NormalizedEmail.ToLower()</a> </p>' +
-    '<p>@Model.Order.MercadoPagoName </p>' +
-    '<p>@Model.Order.MercadoPagoUsername </p>' +
-    '<p><a href="mailto:@Model.Order.MercadoPagoMail">@Model.Order.MercadoPagoMail</a></p>' +
-    '<p><a href="tel:@Model.Order.PhoneNumber">@Model.Order.PhoneNumber</a></p>';
-}
-
 
 $("#commentsSubmit").on('click', function () {
     $.ajax({

@@ -104,6 +104,8 @@ namespace RepoWebShop.Controllers
             {
                 var items = _orderRepository.GetOrderDetails(order.OrderId);
 
+
+
                 OrderDetailsViewModel orderDetails = new OrderDetailsViewModel(_userManager)
                 {
                     Order = order,

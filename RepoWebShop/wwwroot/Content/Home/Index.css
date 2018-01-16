@@ -68,6 +68,15 @@ header img {
 
 /** </Pies of the week> **/
 
+/** <Location> **/
+
+section#location {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+/** </Location> **/
+
 /** <team> **/
 #team {
     /*background-color: white;*/

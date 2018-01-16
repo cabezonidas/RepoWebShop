@@ -71,5 +71,21 @@ namespace RepoWebShop.Models
                 }
             }
         }
+        
+        [BindNever]
+        public string ContactDataAsHtml
+        {
+            get
+            {
+                var contactHtml = Registration != null ?
+                    $"<div>{Registration.LastName}, {Registration.FirstName}</div>" +
+                    $"<div><a href='mailto: {Registration?.NormalizedEmail}'>{Registration?.NormalizedEmail.ToLower()}</a></div>" :
+                    $"<div>{MercadoPagoName}, {MercadoPagoUsername}</div>" +
+                    $"<div><a href='mailto: {MercadoPagoMail}'>{MercadoPagoMail?.ToLower()}</a></div>";
+                contactHtml += $"<div><a href='tel:{PhoneNumber}'>{PhoneNumber}</a></div>";
+
+                return contactHtml;
+            }
+        }
     }
 }
