@@ -28,14 +28,6 @@ namespace RepoWebShop.ViewModels
         [Display(Name = "Album Flickr Id")]
         public string FlickrAlbumId { get; set; }
 
-        //[Required]
-        //[Display(Name = "Imagen calidad alta")]
-        //public string ImageUrl { get; set; }
-
-        //[Required]
-        //[Display(Name = "Imagen calidad media")]
-        //public string ImageThumbnailUrl { get; set; }
-
         [Required]
         [Display(Name = "Categoria")]
         public int CategoryId { get; set; }
@@ -44,10 +36,16 @@ namespace RepoWebShop.ViewModels
         [Display(Name = "Tiempo de preparacion (hs)")]
         public int PreparationTime { get; set; }
 
+
+        [Display(Name = "Destacado")]
+        public bool IsPieOfTheWeek { get; set; }
+
+
+        [Display(Name = "Activo")]
+        public bool IsActive { get; set; }
+
         public List<SelectListItem> Categories { set; get; }
 
         public List<SelectListItem> Albumes { set; get; } 
-
-        public bool IsActive { set; get; }
     }
 }

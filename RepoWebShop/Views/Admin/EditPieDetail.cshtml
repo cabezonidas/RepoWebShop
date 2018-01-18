@@ -11,104 +11,90 @@
             <a href="#" class="restorePieDetail" id='@Model.PieDetailId' onclick="restorePieDetail('@Model.PieDetailId');">Restaurar</a>
         }
     }
-    <form asp-controller="Admin" asp-action="EditPieDetail" method="post" class="form-horizontal" role="form">
-        <hr />
-        <div asp-validation-summary="All" class="text-danger"></div>
+            <form asp-controller="Admin" asp-action="EditPieDetail" method="post" class="form-horizontal" role="form">
+                <hr />
+                <div asp-validation-summary="All" class="text-danger"></div>
 
-        <div class="form-group" hidden="hidden">
-            <label asp-for="PieDetailId" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="PieDetailId" class="form-control" />
-                <span asp-validation-for="PieDetailId" class="text-danger"></span>
-            </div>
-        </div>
+                <div class="form-group" hidden="hidden">
+                    <label asp-for="PieDetailId" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="PieDetailId" class="form-control" />
+                        <span asp-validation-for="PieDetailId" class="text-danger"></span>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <label asp-for="Name" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="ShortDescription" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="ShortDescription" class="form-control" />
-                <span asp-validation-for="ShortDescription" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="PreparationTime" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="PreparationTime" class="form-control" />
-                <span asp-validation-for="PreparationTime" class="text-danger"></span>
-            </div>
-        </div>
+                <div class="form-group">
+                    <label asp-for="Name" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ShortDescription" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="ShortDescription" class="form-control" />
+                        <span asp-validation-for="ShortDescription" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PreparationTime" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="PreparationTime" class="form-control" />
+                        <span asp-validation-for="PreparationTime" class="text-danger"></span>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <label asp-for="LongDescription" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="LongDescription" class="form-control" />
-                <span asp-validation-for="LongDescription" class="text-danger"></span>
-            </div>
-        </div>
+                <div class="form-group">
+                    <label asp-for="LongDescription" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <textarea asp-for="LongDescription" class="form-control" style="height: 150px;" ></textarea>
+                        <span asp-validation-for="LongDescription" class="text-danger"></span>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <label asp-for="FlickrAlbumId" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="FlickrAlbumId" class="form-control" asp-items="@Model.Albumes"></select>
-                @*<select asp-for="CategoryId" class="form-control" asp-items="@Model.Categories"/>*@
-                <span asp-validation-for="FlickrAlbumId" class="text-danger"></span>
-            </div>
-        </div>
+                <div class="form-group">
+                    <label asp-for="FlickrAlbumId" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <select asp-for="FlickrAlbumId" class="form-control" asp-items="@Model.Albumes"></select>
+                        @*<select asp-for="CategoryId" class="form-control" asp-items="@Model.Categories"/>*@
+                        <span asp-validation-for="FlickrAlbumId" class="text-danger"></span>
+                    </div>
+                </div>
 
-        @*<div class="form-group">
-            <label asp-for="FlickrAlbumId" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="FlickrAlbumId" class="form-control" />
-                <span asp-validation-for="FlickrAlbumId" class="text-danger"></span>
-            </div>
-        </div>*@
 
-        @*<div class="form-group">
-            <label asp-for="ImageUrl" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="ImageUrl" class="form-control" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
-            </div>
-        </div>
 
-        <div class="form-group">
-            <label asp-for="ImageThumbnailUrl" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="ImageThumbnailUrl" class="form-control" />
-                <span asp-validation-for="ImageThumbnailUrl" class="text-danger"></span>
-            </div>
-        </div>*@
+                <div class="form-group">
+                    <label asp-for="CategoryId" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <select asp-for="CategoryId" class="form-control" asp-items="@Model.Categories"></select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <label asp-for="CategoryId" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="CategoryId" class="form-control" asp-items="@Model.Categories"></select>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
-            </div>
-        </div>
+                <div class="form-group">
+                    <label asp-for="IsActive" class="col-md-2 control-label"></label>
+                    <div class="col-md-1">
+                        <input asp-for="IsActive" class="form-control" type="checkbox" />
+                        <span asp-validation-for="IsActive" class="text-danger"></span>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" class="btn btn-primary" value="Guardar" />
-                <a class="btn btn-primary" id="delete-pieDetail" >Eliminar</a>
-            </div>
-        </div>
+                <div class="form-group">
+                    <label asp-for="IsPieOfTheWeek" class="col-md-2 control-label"></label>
+                    <div class="col-md-1">
+                        <input asp-for="IsPieOfTheWeek" class="form-control" type="checkbox" />
+                        <span asp-validation-for="IsPieOfTheWeek" class="text-danger"></span>
+                    </div>
+                </div>
 
-        <div class="form-group" style="display:none;">
-            <label asp-for="IsActive" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="IsActive" class="form-control" />
-                <span asp-validation-for="IsActive" class="text-danger"></span>
-            </div>
-        </div>
-    </form>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" class="btn btn-primary" value="Guardar" />
+                        <a class="btn btn-primary" id="delete-pieDetail">Eliminar</a>
+                    </div>
+                </div>
+            </form>
     <div>
         <div id="allPies-div">
             <table id="allPies" class="display nowrap dataTable dtr-inline collapsed" cellspacing="0" role="grid">

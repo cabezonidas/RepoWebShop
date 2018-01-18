@@ -33,8 +33,11 @@ namespace RepoWebShop.Models
         [Display(Name = "Album Id Flick")]
         public long FlickrAlbumId { get; set; }
 
+        [Display(Name = "Destacado")]
         public bool IsPieOfTheWeek { get; set; }
+
         public bool InStock { get; set; }
+
         public int CategoryId { get; set; }
         [Required]
         [Display(Name = "Horas de preparacion")]
@@ -42,6 +45,7 @@ namespace RepoWebShop.Models
         [Display(Name = "Categoria")]
         public virtual Category Category { get; set; }
 
+        [Display(Name = "Activo")]
         public bool IsActive { get; set; }
     }
 }

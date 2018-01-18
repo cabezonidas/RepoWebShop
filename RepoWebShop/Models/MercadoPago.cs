@@ -553,13 +553,15 @@ namespace RepoWebShop.Models
             {
                 String preferenceData =
                         "{\"items\":" +
-                            "[{" +
-                                $"\"title\":\"{title} - {friendlyBookingId}\"," +
-                                "\"quantity\":1," +
-                                $"\"id\":\"{bookingId}\"," +
-                                "\"currency_id\":\"ARS\"," +
-                                "\"unit_price\":" + total +
-                            "}]," +
+                            "["+
+                                "{" +
+                                    $"\"title\":\"{title} - {friendlyBookingId}\"," +
+                                    "\"quantity\":1," +
+                                    $"\"id\":\"{bookingId}\"," +
+                                    "\"currency_id\":\"ARS\"," +
+                                    "\"unit_price\":" + total +
+                                "}" +
+                            "]," +
                         "\"back_urls\":" +
                             "{" +
                                 $"\"success\":\"{host}/Order/Status/{friendlyBookingId}\"," +

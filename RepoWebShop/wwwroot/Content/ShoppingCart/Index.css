@@ -16,11 +16,12 @@ div.container.shopping-cart {
 
 #MP-Checkout-dialog {
     border: none !important;
-    max-height: 650px !important;
+    /*max-height: 650px !important;*/
 }
 
 #MP-Checkout-IFrame {
-    max-height: 650px !important;
+    /*max-height: 650px !important;
+    */
 }
 
 .remove-item {

@@ -84,7 +84,8 @@ namespace RepoWebShop.Controllers
             {
                 BookingId = id ?? string.Empty,
                 Status = status,
-                Description = description
+                Description = description,
+                Notification = statusCode == "approved" || statusCode == "reservation" ? _orderRepository.GetEmailData(order.OrderId, Request.HostUrl()) : null
             };
 
             return View(orderstatus);

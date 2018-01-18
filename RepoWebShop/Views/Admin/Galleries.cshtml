@@ -8,16 +8,10 @@
         <thead>
             <tr>
                 <th>
-                    Album Id
+                    Álbum
                 </th>
                 <th>
-                    Nombre
-                </th>
-                <th>
-                    En Flickr
-                </th>
-                <th>
-                    En Galleria
+                    En Galería de fotos
                 </th>
                 <th>
                 </th>
@@ -29,33 +23,12 @@
                 {
                     <tr>
                         <td>
-                            @item.FlickrSetId
-                        </td>
-                        <td>
-                            @item.FlickrSetTitle
-                        </td>
-                        <td>
-                            @{ 
-                                if (item.InFlickr)
-                                {
-                                    <div>Sí</div>
-                                }
-                                else
-                                {
-                                    <div>No</div>
-                                }
-                            }
-                        </td>
-                        <td>
-                            @{
-                                if (item.InGallery)
-                                {
-                                    <div>Sí</div>
-                                }
-                                else
-                                {
-                                    <div>No</div>
-                                }
+                            @item.FlickrSetTitle 
+                            @if(item.InGallery)
+                            {
+                                <div class="text-info">
+                                    [En galería]
+                                </div>
                             }
                         </td>
                         <td>

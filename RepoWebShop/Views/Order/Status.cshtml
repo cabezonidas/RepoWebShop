@@ -1,6 +1,20 @@
 ﻿@model OrderStatusViewModel
-<div class="container">
-    <h2>Reserva: @Model.BookingId</h2>
-    <h3>Estado: @Model.Status</h3>
-    <h3>@Model.Description</h3>
+<div class="container center-block">
+
+
+    @if (Model.Notification != null)
+    {
+        @Html.Partial("~/Views/Order/EmailNotificationBody.cshtml", Model.Notification)
+    }
+    else
+    {
+        <h2>Reserva: @Model.BookingId</h2>
+        <h3>Estado: @Model.Status</h3>
+        <h3>@Model.Description</h3>
+    }
+
 </div>
+
+<script>
+    $('section#body').css('margin', 'auto');
+</script>

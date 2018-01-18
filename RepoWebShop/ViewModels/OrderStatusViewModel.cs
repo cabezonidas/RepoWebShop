@@ -10,5 +10,6 @@ namespace RepoWebShop.ViewModels
         public string BookingId { get; set; }
         public string Status { get; set; }
         public string Description { get; set; }
+        public EmailNotificationViewModel Notification { get; internal set; }
     }
 }
