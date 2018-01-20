@@ -28,5 +28,6 @@ namespace RepoWebShop.Interfaces
         IEnumerable<Order> GetOrdersCancelled();
         IEnumerable<Order> GetOrdersCompleted();
         IEnumerable<Order> GetOrdersCompletedWithPendingPayment();
+        void PayOrder(int orderId);
     }
 }

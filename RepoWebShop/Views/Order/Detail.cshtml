@@ -40,21 +40,28 @@
 
         @if(Model.Order.Finished && !Model.Order.Cancelled)
         {
-            <a class="btn btn-success">Pedido retirado</a>
+            <a class="btn btn-success" onclick="invertPickedUpStatus()">Pedido retirado</a>
         }
-        @if(Model.Order.Status == "reservation" && Model.Order.PayedInStore)
-        {
-            var paymentStatus = !Model.Order.PayedInStore ? "Pagó en sucursal" : "Devolver dinero";
-            var btntype = !Model.Order.PayedInStore ? "btn-success" : "btn-warning";
-            <a class="btn @btntype" onclick="">@paymentStatus</a>
-        }
+
         @if(!Model.Order.PickedUp && !Model.Order.Cancelled)
         {
             <a class="btn btn-warning" href="/Order/Cancel/@Model.Order.OrderId">Cancelar pedido</a>
         }
-        @if(Model.Order.Cancelled && Model.Order.Payout.HasValue)
-        {
-            <a class="btn btn-danger">Devolver dinero</a>
+        
+    </div>
+    <div>
+        @{ 
+            var paymentState = Model.Order.OrderPaymentStatus.GetType();
+
+            if(paymentState == typeof(OrderReservationNotPaid))
+            {
+                <a class="btn btn-success" onclick="payOrder()">Pago recibido</a>
+            }
+
+            if(paymentState == typeof(OrderReservationPaid) || paymentState == typeof(OrderMercadoPagoPaid))
+            {
+                <a class="btn btn-danger" onclick="refundOrder()">Devolver dinero</a>
+            }
         }
     </div>
 
@@ -78,13 +85,13 @@
                 </td>
             </tr>
             @if (Model.Order.Status == "reservation")
-            {
-                <tr>
-                    <td><strong>Pago</strong></td>
-                    @{var paidInStore = Model.Order.PayedInStore ? "Pago en sucursal" : "Pago sin recibir"; }
-                    <td colspan="2">@paidInStore</td>
-                </tr>
-            }
+    {
+        <tr>
+            <td><strong>Pago</strong></td>
+            @{var paidInStore = Model.Order.PaymentReceived ? "Pago recibido en sucursal" : "Pago sin recibir"; }
+            <td colspan="2" onclick="paymentInStore()">@paidInStore</td>
+        </tr>
+}
 
             <tr>
                 <td><strong>Comentarios</strong></td>
@@ -103,6 +110,14 @@
                 <td colspan="2">
                     <div>
                         <p><strong>@Model.Order.Email?.To</strong> <a href="/Order/EmailNotification/@Model.Order.OrderId" target="_blank">Ver</a></p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Registro</strong></td>
+                <td colspan="2">
+                    <div>
+                        @Model.Order.OrderHistory
                     </div>
                 </td>
             </tr>
@@ -134,11 +149,25 @@ function addComments(comments) {
     });
 }
 
-function paymentInStore() {
+function payOrder() {
     $.ajax({
         type: 'POST',
         data: {},
-        url: '/api/OrderData/PaymentInStore/@Model.Order.OrderId',
+        url: '/api/OrderData/PayOrder/@Model.Order.OrderId',
+        success: function () {
+            window.location.reload();
+        },
+        error: function () {
+            handleError();
+        }
+    });
+}
+
+function refundOrder() {
+    $.ajax({
+        type: 'POST',
+        data: {'test':'123'},
+        url: '/api/OrderData/RefundOrder/@Model.Order.OrderId',
         success: function () {
             window.location.reload();
         },
@@ -153,12 +182,11 @@ function invertPickedUpStatus() {
         type: 'POST',
         data: {},
         url: '/api/OrderData/InvertPickedUpStatus/' + '@Model.Order.OrderId',
-        success: function (result) {
-            $('#pickedUpStatus').empty().append(result ? 'Si' : 'No');
-            handleSuccess('#pickedUpChanged');
+        success: function () {
+            window.location.reload();
         },
         error: function () {
-            handleError('#pickedUpChanged');
+            handleError();
         }
     });
 }

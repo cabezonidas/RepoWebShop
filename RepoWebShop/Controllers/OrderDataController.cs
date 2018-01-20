@@ -70,5 +70,23 @@ namespace RepoWebShop.Controllers
                 return BadRequest();
             }
         }
+
+        [Route("PayOrder/{orderId}")]
+        [HttpPost]
+        public IActionResult PayOrder(int orderId)
+        {
+            _orderRepository.PayOrder(orderId);
+            return Ok();
+        }
+
+        [Route("RefundOrder/{orderId}")]
+        [HttpPost]
+        public IActionResult RefundOrder(int orderId)
+        {
+            //this.Request.Body;
+            var reason = "This is a test.";
+            _orderRepository.RefundOrder(orderId, reason);
+            return Ok();
+        }
     }
 }

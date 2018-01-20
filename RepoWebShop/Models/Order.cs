@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using RepoWebShop.Interfaces;
+using RepoWebShop.States;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -38,7 +40,7 @@ namespace RepoWebShop.Models
 
         public bool PickedUp { get; set; }
 
-        public bool PayedInStore { get; set; }
+        public bool PaymentReceived { get; set; }
 
         public DateTime? PickUpTime { get; set; } 
         
@@ -121,6 +123,25 @@ namespace RepoWebShop.Models
                 contactHtml += $"<div><a href='tel:{PhoneNumber}'>{PhoneNumber}</a></div>";
 
                 return contactHtml;
+            }
+        }
+
+        [BindNever]
+        public IOrderPaymentStatus OrderPaymentStatus
+        {
+            get
+            {
+                if (Status == "reservation")
+                    if (PaymentReceived)
+                        return new OrderReservationPaid();
+                    else
+                        return new OrderReservationNotPaid();
+                if (Status == "approved")
+                    if (Refunded)
+                        return new OrderMercadoPagoNotPaid();
+                    else
+                        return new OrderMercadoPagoPaid();
+                return new OrderPaymentNotKnown();
             }
         }
     }

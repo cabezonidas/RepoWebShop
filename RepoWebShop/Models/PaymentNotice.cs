@@ -17,8 +17,9 @@ namespace RepoWebShop.Models
             Order_Id = paymentInfoResponse["order_id"]?.ToString();
             Reason = paymentInfoResponse["reason"]?.ToString();
             Date_Created = DateTime.Parse(paymentInfoResponse["date_created"]?.ToString());
-            Payout = DateTime.Parse(paymentInfoResponse["date_approved"]?.ToString());
+            Payout = DateTime.Parse(paymentInfoResponse["date_approved"]?.ToString());//Mapped
             Status = paymentInfoResponse["status"]?.ToString(); //Mapped
+            PaymentReceived = Status == "approved";
 
             Merchant_Order_Id = paymentInfoResponse["merchant_order_id"]?.ToString();
             Net_Received_Amount = Decimal.Parse(paymentInfoResponse["net_received_amount"]?.ToString());
@@ -67,6 +68,7 @@ namespace RepoWebShop.Models
         public string Status_Detail { get; set; }
         public string Site_Id { get; set; }
         public string Status { get; set; }
+        public bool PaymentReceived { get; set; }
         public string Currency_Id { get; set; }
         public int Installments { get; set; }
         public DateTime? Money_Release_Date { get; set; }

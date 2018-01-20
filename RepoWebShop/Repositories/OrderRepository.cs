@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
+using RepoWebShop.States;
 using RepoWebShop.ViewModels;
 
 namespace RepoWebShop.Models
@@ -114,7 +115,7 @@ namespace RepoWebShop.Models
 
         public IEnumerable<Order> GetOrdersCompletedWithPendingPayment()
         {
-            return GetAll().Where(x => x.PickedUp || (!x.PayedInStore || x.Payout == null));
+            return GetAll().Where(x => x.PickedUp || (!x.PaymentReceived || x.Payout == null));
         }
 
         public void CreateOrder(Order order)
@@ -213,11 +214,25 @@ namespace RepoWebShop.Models
         public void RefundOrder(int orderId, string reason)
         {
             var order = GetOrder(orderId);
-
-            if(order.Payout != null)
+            order.OrderPaymentStatus.Refund(() =>
             {
-                var test = _mp.RefundPayment(order.MercadoPagoTransaction);
-            }
+                order.OrderHistory += $"\n{_calendarRepository.LocalTimeAsString()} - Devolución del dinero. Motivo: {reason}";
+                order.Refunded = true;
+                order.PaymentReceived = false;
+                _appDbContext.SaveChanges();
+            }, () => _mp.RefundPayment(order.MercadoPagoTransaction));
+        }
+
+        public void PayOrder(int orderId)
+        {
+            var order = GetOrder(orderId);
+            order.OrderPaymentStatus.Pay(() =>
+            {
+                order.OrderHistory += $"\n{_calendarRepository.LocalTimeAsString()} - Dinero recibido.";
+                order.Refunded = false;
+                order.PaymentReceived = true;
+                _appDbContext.SaveChanges();
+            });
         }
     }
 }
