@@ -23,8 +23,8 @@ section {
     border-color: darkseagreen !important;
 }
 
-.btn {
-    background-color: forestgreen !important;
+.btn-repo {
+    background-color: #883636 !important;
     border-color: black !important;
     margin: 5px;
 }

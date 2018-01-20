@@ -19,6 +19,7 @@ namespace RepoWebShop.Controllers
         }
 
         [Route("AddComments/{orderId}/{comments}")]
+        [HttpPost]
         public IActionResult AddComments(int orderId, string comments)
         {
             _orderRepository.UpdateManagementComments(orderId, comments);
@@ -26,6 +27,7 @@ namespace RepoWebShop.Controllers
         }
 
         [Route("UpdatePickUpDate/{orderId}/{pickUp}")]
+        [HttpPost]
         public IActionResult UpdatePickUpDate(int orderId, DateTime pickUp)
         {
             _orderRepository.UpdatePickUpDate(orderId, pickUp);
@@ -33,9 +35,40 @@ namespace RepoWebShop.Controllers
         }
 
         [Route("InvertPickedUpStatus/{orderId}")]
+        [HttpPost]
         public IActionResult InvertPickedUpStatus(int orderId)
         {
             return Ok(_orderRepository.InvertPickedUpStatus(orderId));
+        }
+
+        [Route("FinishOrder/{orderId}")]
+        [HttpPost]
+        public IActionResult FinishOrder(int orderId)
+        {
+            try
+            {
+                _orderRepository.OrderFinished(orderId, true);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [Route("OrderPickedUp/{orderId}")]
+        [HttpPost]
+        public IActionResult OrderPickedUp(int orderId)
+        {
+            try
+            {
+                _orderRepository.OrderPickedUp(orderId, true);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
     }
 }

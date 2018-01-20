@@ -9,14 +9,28 @@ namespace RepoWebShop.ViewModels
 {
     public class OrderDetailsViewModel
     {
-        private UserManager<ApplicationUser> _userManager;
+        private Order _order;
+        private IEnumerable<OrderDetail> _items;
 
-        public OrderDetailsViewModel(UserManager<ApplicationUser> userManager)
+        public OrderDetailsViewModel(Order order, IEnumerable<OrderDetail> items)
         {
-            _userManager = userManager;
+            _order = order;
+            _items = items;
         }
 
-        public Order Order { get; set; }
-        public IEnumerable<OrderDetail> Items { get; set; }
+        public Order Order
+        {
+            get
+            {
+                return _order;
+            }
+        }
+        public IEnumerable<OrderDetail> Items
+        {
+            get
+            {
+                return _items;
+            }
+        }
     }
 }

@@ -17,6 +17,7 @@ namespace RepoWebShop.Models
             Order_Id = paymentInfoResponse["order_id"]?.ToString();
             Reason = paymentInfoResponse["reason"]?.ToString();
             Date_Created = DateTime.Parse(paymentInfoResponse["date_created"]?.ToString());
+            Payout = DateTime.Parse(paymentInfoResponse["date_approved"]?.ToString());
             Status = paymentInfoResponse["status"]?.ToString(); //Mapped
 
             Merchant_Order_Id = paymentInfoResponse["merchant_order_id"]?.ToString();
@@ -55,6 +56,7 @@ namespace RepoWebShop.Models
         public string BookingId { get; set; }
 
         public DateTime? Date_Created { get; set; }
+        public DateTime? Payout { get; set; }
         public DateTime? Date_Approved { get; set; }
         public Decimal Concept_Amount { get; set; }
         public Decimal Transaction_Amount { get; set; }

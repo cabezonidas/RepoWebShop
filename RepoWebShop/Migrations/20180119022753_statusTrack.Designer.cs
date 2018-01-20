@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180119022753_statusTrack")]
+    partial class statusTrack
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -296,8 +297,6 @@ namespace RepoWebShop.Migrations
 
                     b.Property<string>("MercadoPagoUsername");
 
-                    b.Property<string>("OrderHistory");
-
                     b.Property<DateTime>("OrderPlaced");
 
                     b.Property<decimal>("OrderTotal");
@@ -399,8 +398,6 @@ namespace RepoWebShop.Migrations
                     b.Property<string>("Payment_Id");
 
                     b.Property<string>("Payment_Type");
-
-                    b.Property<DateTime?>("Payout");
 
                     b.Property<string>("PhoneNumber");
 

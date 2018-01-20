@@ -92,6 +92,91 @@ namespace RepoWebShop.Controllers
         }
 
         [Authorize(Roles = "Administrator")]
+        [HttpGet]
+        public IActionResult Cancel(int id)
+        {
+            var order = _orderRepository.GetOrder(id);
+            var cancellation = new CancelOrderViewModel();
+
+            cancellation.Order = order;
+            cancellation.OrderId = id;
+
+            if (cancellation.Order.Cancelled || cancellation.Order.PickedUp)
+                return NotFound();
+
+            return View(cancellation);
+        }
+
+        [Authorize(Roles = "Administrator")]
+        [HttpGet]
+        public IActionResult Refund(int id)
+        {
+            var order = _orderRepository.GetOrder(id);
+            var refund = new RefundOrderViewModel();
+            refund.Order = order;
+            refund.OrderId = id;
+            if (refund.Order.Cancelled && refund.Order.Payout.HasValue && !refund.Order.Refunded)
+                return View(refund);
+            else
+                return NotFound();
+        }
+
+        [Authorize(Roles = "Administrator")]
+        [HttpPost]
+        public IActionResult Cancel(CancelOrderViewModel orderCancelled)
+        {
+            if (ModelState.IsValid)
+            {
+                _orderRepository.CancelOrder(orderCancelled.OrderId, true, orderCancelled.Reason);
+                // _emailRespository.SendCancellation(order, Request.HostUrl(), null);
+                return Redirect("/Order/Cancelled");
+            }
+
+            orderCancelled.Order = _orderRepository.GetOrder(orderCancelled.OrderId);
+            return View(orderCancelled);
+        }
+
+        [Authorize(Roles = "Administrator")]
+        [HttpPost]
+        public IActionResult Refund(RefundOrderViewModel orderRefunded)
+        {
+            if (ModelState.IsValid)
+            {
+                _orderRepository.RefundOrder(orderRefunded.OrderId, orderRefunded.Reason);
+                // _emailRespository.SendRefund(order, Request.HostUrl(), null);
+                return Redirect("/Order/Cancelled");
+            }
+
+            orderRefunded.Order = _orderRepository.GetOrder(orderRefunded.OrderId);
+
+            return View(orderRefunded);
+        }
+
+        [Authorize(Roles = "Administrator")]
+        public IActionResult InProgress()
+        {
+            return View(_orderRepository.GetOrdersInProgress());
+        }
+
+        [Authorize(Roles = "Administrator")]
+        public IActionResult Cancelled()
+        {
+            return View(_orderRepository.GetOrdersCancelled());
+        }
+
+        [Authorize(Roles = "Administrator")]
+        public IActionResult Completed()
+        {
+            return View(_orderRepository.GetOrdersCompleted());
+        }
+
+        [Authorize(Roles = "Administrator")]
+        public IActionResult NotYetPaid() 
+        {
+            return View(_orderRepository.GetOrdersCompletedWithPendingPayment());
+        }
+
+        [Authorize(Roles = "Administrator")]
         public IActionResult Management()
         {
             return View();
@@ -105,13 +190,7 @@ namespace RepoWebShop.Controllers
             {
                 var items = _orderRepository.GetOrderDetails(order.OrderId);
 
-
-
-                OrderDetailsViewModel orderDetails = new OrderDetailsViewModel(_userManager)
-                {
-                    Order = order,
-                    Items = items
-                };
+                var orderDetails = new OrderDetailsViewModel(order, items);
 
                 return View(orderDetails);
             }
@@ -152,7 +231,7 @@ namespace RepoWebShop.Controllers
                 order.CustomerComments = _shoppingCart.GetShoppingCartComments();
                 order.BookingId = _shoppingCart.ShoppingCartId;
                 order.Status = "reservation";
-                order.PickUp = _calendarRepository.GetPickupEstimate(_shoppingCart.GetShoppingCartPreparationTime());
+                order.PickUpTime = _calendarRepository.GetPickupEstimate(_shoppingCart.GetShoppingCartPreparationTime());
 
                 _orderRepository.CreateOrder(order);
                 _shoppingCart.ClearCart();

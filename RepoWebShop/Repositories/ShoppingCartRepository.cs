@@ -51,7 +51,7 @@ namespace RepoWebShop.Repositories
 
             order.PreparationTime = preparationTime;
 
-            order.PickUp = _calendarRepository.GetPickupEstimate(order.PreparationTime);
+            order.PickUpTime = _calendarRepository.GetPickupEstimate(order.PreparationTime);
 
             _appDbContext.ShoppingCartItems.RemoveRange(shoppingCartItems);
 

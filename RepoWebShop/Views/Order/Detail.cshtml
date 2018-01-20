@@ -3,7 +3,7 @@
 <link href="~/Content/Order/Detail.css" rel="stylesheet" />
 
 @{
-    var pickUp = Model.Order.PickUp?.ToString("dd'/'MM'/'yyyy") ?? string.Empty;
+    var pickUp = Model.Order.PickUpTime?.ToString("dd'/'MM'/'yyyy") ?? string.Empty;
 }
 
 <div class="container order-detail">
@@ -31,11 +31,40 @@
         </table>
     </div>
     <br />
+
+    <div>
+        @if(!Model.Order.Finished && !Model.Order.Cancelled)
+        {
+            <a class="btn btn-info">Pedido terminado</a>    
+        }
+
+        @if(Model.Order.Finished && !Model.Order.Cancelled)
+        {
+            <a class="btn btn-success">Pedido retirado</a>
+        }
+        @if(Model.Order.Status == "reservation" && Model.Order.PayedInStore)
+        {
+            var paymentStatus = !Model.Order.PayedInStore ? "Pagó en sucursal" : "Devolver dinero";
+            var btntype = !Model.Order.PayedInStore ? "btn-success" : "btn-warning";
+            <a class="btn @btntype" onclick="">@paymentStatus</a>
+        }
+        @if(!Model.Order.PickedUp && !Model.Order.Cancelled)
+        {
+            <a class="btn btn-warning" href="/Order/Cancel/@Model.Order.OrderId">Cancelar pedido</a>
+        }
+        @if(Model.Order.Cancelled && Model.Order.Payout.HasValue)
+        {
+            <a class="btn btn-danger">Devolver dinero</a>
+        }
+    </div>
+
+    <br />
     <table class="table table-user-information" >
         <tbody>
             <tr>
                 <td><strong>Estado</strong></td>
-                <td colspan="2" id="orderStatus"></td>
+                @{var cancelled = Model.Order.Cancelled ? "<div class='text-muted'>Pedido cancelado</div>" : "";}
+                <td colspan="2" id="">@Model.Order.StatusSpanish @Html.Raw(cancelled)</td>
             </tr>
             <tr>
                 <td><strong>Total</strong></td>
@@ -45,9 +74,18 @@
                 <td><strong>Cliente</strong></td>
                 <td colspan="2" id="">
                     @Html.Raw(Model.Order.ContactDataAsHtml)
-                    
+
                 </td>
             </tr>
+            @if (Model.Order.Status == "reservation")
+            {
+                <tr>
+                    <td><strong>Pago</strong></td>
+                    @{var paidInStore = Model.Order.PayedInStore ? "Pago en sucursal" : "Pago sin recibir"; }
+                    <td colspan="2">@paidInStore</td>
+                </tr>
+            }
+
             <tr>
                 <td><strong>Comentarios</strong></td>
                 <td colspan="2">@Model.Order.CustomerComments</td>
@@ -58,94 +96,72 @@
             </tr>
             <tr>
                 <td><strong>Plazo</strong></td>
-                <td colspan="2">@Model.Order.PreparationTime</td>
-            </tr>
-            <tr>
-                <td><strong>Entrega Pautada</strong></td>
-                <td>
-                    <label>@Model.Order.PickUp.ToString()</label>
-                    <div class="input-group date" data-provide="datepicker">
-                        <input id="pickUpDateSubmit" type="text" class="form-control" value="@pickUp">
-                        <div class="input-group-addon">
-                            <span class="glyphicon glyphicon-th"></span>
-                        </div>
-                    </div>
-                    <span style="display:none;" id="dateSaveMessage"></span>
-                </td>
-                <td>
-                    <input id="pickUpSubmit" type="submit" class="btn btn-primary" value="Guardar" />
-                </td>
-            </tr>
-            <tr>
-                <td><strong>Entregado</strong></td>
-                <td>
-                    <div id="pickedUpStatus">@(@Model.Order.PickedUp ? "Si" : "No")</div>
-                    <span style="display:none;" id="pickedUpChanged"></span>
-                </td>
-                <td>
-                    <input type="submit" class="btn btn-primary" value="Cambiar" id="pickedUp" />
-                </td>
-            </tr>
-            <tr>
-                <td><strong>Comentarios Agregados</strong></td>
-                <td>
-                    <textarea id="comments">@Model.Order.ManagementComments</textarea>
-                    <span style="display:none;" id="commentsChanged"></span>
-                </td>
-                <td>
-                    <input id="commentsSubmit" type="submit" class="btn btn-primary" value="Guardar" />
-                </td>
+                <td colspan="2">@Model.Order.PreparationTime hs.</td>
             </tr>
             <tr>
                 <td><strong>Correo enviado</strong></td>
                 <td colspan="2">
                     <div>
-                        <p><strong>@Model.Order.Email.To</strong> <a href="/Order/EmailNotification/@Model.Order.OrderId" target="_blank">Ver</a></p>
+                        <p><strong>@Model.Order.Email?.To</strong> <a href="/Order/EmailNotification/@Model.Order.OrderId" target="_blank">Ver</a></p>
                     </div>
                 </td>
             </tr>
         </tbody>
     </table>
 
-    <div class="alert alert-success" id="successMessage" style="display:none;">
+    <div class="alert alert-success" id="successMessage" style="">
         Cambio guardado satisfactoriamente!
     </div>
-    <div class="alert alert-danger" id="errorMessage" style="display:none;">
+    <div class="alert alert-danger" id="errorMessage" style="">
         Ocurrio un error al guardar. Intente mas tarde.
     </div>
 </div>
-<script type="text/javascript" >
-    $.fn.datepicker.defaults.format = "dd/mm/yyyy";
+<script type="text/javascript">
+$.fn.datepicker.defaults.format = "dd/mm/yyyy";
 $('.datepicker').datepicker();
 
-$('#orderStatus').append(statusCode2DisplayValue('@Model.Order.Status'));
-
-$("#commentsSubmit").on('click', function () {
+function addComments(comments) {
     $.ajax({
-        type: 'GET',
-        url: '/api/OrderData/AddComments/' + '@Model.Order.OrderId' + '/' + $("#comments").val(),
+        type: 'POST',
+        data: {},
+        url: '/api/OrderData/AddComments/' + '@Model.Order.OrderId' + '/' + comments,
         success: function () {
-            handleSuccess('#commentsChanged');
+            handleSuccess();
         },
         error: function () {
-            handleError('#commentsChanged');
+            handleError();
         }
     });
-});
+}
 
-$("#pickedUp").on('click', function () {
+function paymentInStore() {
     $.ajax({
-        type: 'GET',
+        type: 'POST',
+        data: {},
+        url: '/api/OrderData/PaymentInStore/@Model.Order.OrderId',
+        success: function () {
+            window.location.reload();
+        },
+        error: function () {
+            handleError();
+        }
+    });
+}
+
+function invertPickedUpStatus() {
+    $.ajax({
+        type: 'POST',
+        data: {},
         url: '/api/OrderData/InvertPickedUpStatus/' + '@Model.Order.OrderId',
-        success: function (data) {
-            $('#pickedUpStatus').empty().append(data ? 'Si' : 'No');
+        success: function (result) {
+            $('#pickedUpStatus').empty().append(result ? 'Si' : 'No');
             handleSuccess('#pickedUpChanged');
         },
         error: function () {
             handleError('#pickedUpChanged');
         }
     });
-});
+}
 
 
 $("#pickUpSubmit").on('click', function () {
@@ -153,22 +169,23 @@ $("#pickUpSubmit").on('click', function () {
     var date = new Date(parts[2], parts[1] - 1, parts[0]);
 
     $.ajax({
-        type: 'GET',
-        url: '/api/OrderData/UpdatePickUpDate/' + '@Model.Order.OrderId' + '/' + date.toUTCString(),
+        type: 'POST',
+        data: {},
+        url: '/api/OrderData/UpdatePickUpDate/@Model.Order.OrderId/' + date,
         success: function () {
-            handleSuccess('#dateSaveMessage');
+            handleSuccess();
         },
         error: function () {
-            handleError('#dateSaveMessage');
+            handleError();
         }
     });
-});
+})
 
-function handleSuccess(controller) {
-    $(controller).empty().append('Guardado!').css("display", "flex").fadeOut(1000);
+function handleSuccess() {
+    $('#successMessage').fadeIn(1000).fadeOut(2000);
 }
 function handleError() {
-    $(controller).empty().append('Ocurrio un error!').css("display", "flex");
+    $('#errorMessage').css("display", "flex");
 }
 </script>
 

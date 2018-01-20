@@ -1,0 +1,45 @@
+﻿@model CancelOrderViewModel
+
+<link href="~/Content/Order/Cancel.css" rel="stylesheet" />
+
+<div class="container">
+    <h2>Estás a punto de cancelar la reserva @Model.Order.FriendlyBookingId</h2>
+    <table class="table table-responsive">
+        <tbody>
+            <tr>
+                <td>
+                    <strong>Cliente</strong>
+                </td>
+                <td>@Html.Raw(Model.Order.ContactDataAsHtml)</td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Total</strong>
+                </td>
+                <td>@Model.Order.OrderTotal</td>
+            </tr>
+        </tbody>
+    </table>
+    <form asp-controller="Order" asp-action="Cancel" method="post" class="form-horizontal" role="form">
+        <hr />
+        <div class="form-group" hidden="hidden">
+            <label asp-for="OrderId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="OrderId" class="form-control" />
+                <span asp-validation-for="OrderId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Reason" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Reason" class="form-control" />
+                <span asp-validation-for="Reason" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-primary" value="Cancelar" />
+            </div>
+        </div>
+    </form>
+</div>

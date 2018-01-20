@@ -30,17 +30,27 @@ namespace RepoWebShop.Models
         [ScaffoldColumn(false)]
         public DateTime OrderPlaced { get; set; }
 
+        public bool Finished { get; set; }
+
+        public bool Cancelled { get; set; }
+
+        public bool Refunded { get; set; }
+
         public bool PickedUp { get; set; }
 
+        public bool PayedInStore { get; set; }
+
+        public DateTime? PickUpTime { get; set; } 
+        
         public DateTime? Payout { get; set; }
 
         public int PreparationTime { get; set; }
 
-        public DateTime? PickUp { get; set; }
-
         public virtual ApplicationUser Registration { get; set; }
 
         public string ManagementComments { get; set; }
+
+        public string OrderHistory { get; set; }
 
         public string BookingId { get; set; }
 
@@ -71,7 +81,33 @@ namespace RepoWebShop.Models
                 }
             }
         }
-        
+
+
+        [BindNever]
+        public string StatusSpanish
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case "approved":
+                        return "Aprobado";
+                    case "pending":
+                        return "Pendiente";
+                    case "in_process":
+                        return "En proceso";
+                    case "rejected":
+                        return "Rechazado";
+                    case "draft":
+                        return "Sin confirmar";
+                    case "reservation":
+                        return "Reserva";
+                    default:
+                        return "Inválido";
+                }
+            }
+        }
+
         [BindNever]
         public string ContactDataAsHtml
         {

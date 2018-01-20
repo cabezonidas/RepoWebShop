@@ -23,6 +23,11 @@ namespace RepoWebShop.Repositories
             return DateTime.Now.Zoned(_config.GetSection("LocalZone").Value);
         }
 
+        public string LocalTimeAsString()
+        {
+            return LocalTime().ToString("dd'/'MM'/'yyyy HH:mm:ss");
+        }
+
         public DateTime GetPickupEstimate(int hours)
         {
             return WorkingHours.GetPickUpDate(

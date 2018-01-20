@@ -9,3 +9,17 @@ textarea {
     resize: vertical;
     width: 100%
 }
+
+#successMessage {
+    display: none;
+    position: fixed;
+    top: 60px;
+    left: 40%;
+}
+
+#errorMessage {
+    display: none;
+    position: fixed;
+    top: 60px;
+    left: 40%;
+}
