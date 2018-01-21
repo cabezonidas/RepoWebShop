@@ -13,6 +13,9 @@ namespace RepoWebShop.Models
         public static void Seed(IServiceProvider serviceProvider)
         {
             //AppDbContext context = serviceProvider.GetService<AppDbContext>();
+
+            
+
             using (var context = new AppDbContext(serviceProvider.GetRequiredService<DbContextOptions<AppDbContext>>()))
             {
                 //context.Orders.Include(x => x.OrderLines)
@@ -21,7 +24,7 @@ namespace RepoWebShop.Models
 
                 //context.Pies.Include(x => x.PieDetail).Load();
 
-
+                //context.Database.Migrate();
 
                 if (!context.Holidays.Any())
                 {

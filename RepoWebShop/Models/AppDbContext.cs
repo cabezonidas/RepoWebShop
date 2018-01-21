@@ -8,7 +8,8 @@ namespace RepoWebShop.Models
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
+            Database.Migrate();
             
         }
 
