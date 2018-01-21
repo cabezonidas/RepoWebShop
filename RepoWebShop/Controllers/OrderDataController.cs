@@ -34,41 +34,20 @@ namespace RepoWebShop.Controllers
             return Ok();
         }
 
-        [Route("InvertPickedUpStatus/{orderId}")]
+        [Route("PickUpOrder/{orderId}")]
         [HttpPost]
-        public IActionResult InvertPickedUpStatus(int orderId)
+        public IActionResult PickUpOrder(int orderId)
         {
-            return Ok(_orderRepository.InvertPickedUpStatus(orderId));
+            _orderRepository.PickUpOrder(orderId);
+            return Ok();
         }
 
-        [Route("FinishOrder/{orderId}")]
+        [Route("CompleteOrder/{orderId}")]
         [HttpPost]
-        public IActionResult FinishOrder(int orderId)
+        public IActionResult CompleteOrder(int orderId)
         {
-            try
-            {
-                _orderRepository.OrderFinished(orderId, true);
-                return Ok();
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
-
-        [Route("OrderPickedUp/{orderId}")]
-        [HttpPost]
-        public IActionResult OrderPickedUp(int orderId)
-        {
-            try
-            {
-                _orderRepository.OrderPickedUp(orderId, true);
-                return Ok();
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            _orderRepository.CompleteOrder(orderId);
+            return Ok();
         }
 
         [Route("PayOrder/{orderId}")]
@@ -76,16 +55,6 @@ namespace RepoWebShop.Controllers
         public IActionResult PayOrder(int orderId)
         {
             _orderRepository.PayOrder(orderId);
-            return Ok();
-        }
-
-        [Route("RefundOrder/{orderId}")]
-        [HttpPost]
-        public IActionResult RefundOrder(int orderId)
-        {
-            //this.Request.Body;
-            var reason = "This is a test.";
-            _orderRepository.RefundOrder(orderId, reason);
             return Ok();
         }
     }

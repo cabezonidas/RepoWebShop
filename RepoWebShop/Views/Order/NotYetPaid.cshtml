@@ -3,5 +3,7 @@
 <link href="~/Content/Order/NotYetPaid.css" rel="stylesheet" />
 
 <div class="container">
-
+    <h2>Pedidos entregados que todavía no están pagos</h2>
 </div>
+
+@Html.Partial("~/Views/Order/OrdersTable.cshtml", Model)

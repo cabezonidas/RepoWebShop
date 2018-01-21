@@ -13,7 +13,7 @@ namespace RepoWebShop.Models
         public int OrderId { get; set; }
 
         //Puedo usar esto mismo en PieDetail, en vez de traer siempre un producto, y despues traer los relacionados
-        public List<OrderDetail> OrderLines { get; set; }
+        public ICollection<OrderDetail> OrderLines { get; set; }
 
         [Required(ErrorMessage = "Por favor complete el número de teléfono")]
         [StringLength(25)]
@@ -34,11 +34,13 @@ namespace RepoWebShop.Models
 
         public bool Finished { get; set; }
 
+        public bool Returned { get; set; }
+
         public bool Cancelled { get; set; }
 
-        public bool Refunded { get; set; }
-
         public bool PickedUp { get; set; }
+
+        public bool Refunded { get; set; }
 
         public bool PaymentReceived { get; set; }
 
@@ -142,6 +144,27 @@ namespace RepoWebShop.Models
                     else
                         return new OrderMercadoPagoPaid();
                 return new OrderPaymentNotKnown();
+            }
+        }
+
+        [BindNever]
+        public IOrderProgressState OrderProgressState
+        {
+            get
+            {
+                if (Returned)
+                    return new OrderReturned();
+
+                if (Cancelled)
+                    return new OrderCancelled();
+
+                if (PickedUp)
+                    return new OrderPickedUp();
+
+                if (Finished)
+                    return new OrderComplete();
+
+                return new OrderInProgress();
             }
         }
     }

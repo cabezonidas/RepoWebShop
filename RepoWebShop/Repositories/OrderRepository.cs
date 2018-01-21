@@ -95,27 +95,60 @@ namespace RepoWebShop.Models
 
         public IEnumerable<Order> GetAll()
         {
-            return _appDbContext.Orders.Include(x => x.Registration).Where(o => o.Status != "draft").ToList();
+            var orders = _appDbContext.Orders
+                .Include(x => x.Registration)
+                .Include(x => x.OrderLines)
+                .Where(o => o.Status != "draft").ToList();
+
+            foreach (var order in orders)
+            {
+                foreach (var orderLine in order.OrderLines)
+                {
+                    orderLine.Pie = _appDbContext.Pies.First(x => x.PieId == orderLine.PieId);
+                    orderLine.Pie.PieDetail = _appDbContext.PieDetails.First(x => x.PieDetailId == orderLine.Pie.PieDetailId);
+                }
+            }
+
+            return orders;
         }
 
         public IEnumerable<Order> GetOrdersInProgress()
         {
-            return GetAll().Where(x => !x.PickedUp);
+            return GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderInProgress)
+            || x.OrderProgressState.GetType() == typeof(OrderComplete));
         }
 
         public IEnumerable<Order> GetOrdersCancelled()
         {
-            return GetAll().Where(x => x.Cancelled);
+            return GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderCancelled));
         }
 
         public IEnumerable<Order> GetOrdersCompleted()
         {
-            return GetAll().Where(x => x.PickedUp);
+            return GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderComplete));
         }
 
-        public IEnumerable<Order> GetOrdersCompletedWithPendingPayment()
+        public IEnumerable<Order> GetOrdersPickedUp()
         {
-            return GetAll().Where(x => x.PickedUp || (!x.PaymentReceived || x.Payout == null));
+            return GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderPickedUp));
+        }
+
+        public IEnumerable<Order> GetOrdersReturned()
+        {
+            return GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderReturned));
+        }
+
+        public IEnumerable<Order> GetOrdersRefunded()
+        {
+            return GetAll().Where(x => x.Refunded);
+        }
+
+        public IEnumerable<Order> GetOrdersPickedUpWithPendingPayment()
+        {
+            return GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderPickedUp)
+                    && (x.OrderPaymentStatus.GetType() == typeof(OrderMercadoPagoNotPaid)
+                        || x.OrderPaymentStatus.GetType() == typeof(OrderReservationNotPaid))
+            );
         }
 
         public void CreateOrder(Order order)
@@ -144,7 +177,6 @@ namespace RepoWebShop.Models
             }
             _appDbContext.SaveChanges();
         }
-
 
         public Order CreateOrderByPayment(PaymentNotice paymentNotice)
         {
@@ -178,37 +210,56 @@ namespace RepoWebShop.Models
             return emailData;
         }
 
-        public void OrderFinished(int orderId, bool isReady)
+        public void CompleteOrder(int orderId)
         {
             var order = GetOrder(orderId);
-            order.Finished = isReady;
-            var eventDesc = $"Orden marcada como {(!isReady ? "no " : "")}finalizada.";
-            order.OrderHistory += $"\n{_calendarRepository.LocalTimeAsString()} - {eventDesc}";
-            _appDbContext.SaveChanges();
-        }
-
-        public void OrderPickedUp(int orderId, bool isPickedUp)
-        {
-            var order = GetOrder(orderId);
-            order.PickedUp = isPickedUp;
-            var eventDesc = $"Orden marcada como {(!isPickedUp ? "no " : "")}retirada.";
-            order.OrderHistory += $"\n{_calendarRepository.LocalTimeAsString()} - {eventDesc}";
-            _appDbContext.SaveChanges();
-        }
-
-        public void CancelOrder(int orderId, bool isCancelling, string reason)
-        {
-            var order = GetOrder(orderId);
-
-            if(order.PickedUp)
+            order.OrderProgressState.Complete(() =>
             {
-                throw new Exception("No se puede cancelar/reactivar una orden retirada.");
-            }
-            order.Cancelled = isCancelling;
-            var eventDesc = $"Orden marcada como {(!isCancelling ? "reactivada" : "cancelada")}.";
-            order.OrderHistory += $"\n{_calendarRepository.LocalTimeAsString()} - {eventDesc}";
-            order.OrderHistory += $"\nMotivo: {reason}";
-            _appDbContext.SaveChanges();
+                order.Finished = true;
+                var eventDesc = $"Orden lista.";
+                order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - {eventDesc}";
+                _appDbContext.SaveChanges();
+                //Send mail
+            });
+        }
+
+        public void PickUpOrder(int orderId)
+        {
+            var order = GetOrder(orderId);
+            order.OrderProgressState.PickUp(() =>
+            {
+                order.Finished = true;
+                order.PickedUp = true;
+                var eventDesc = $"Orden retirada.";
+                order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - {eventDesc}";
+                _appDbContext.SaveChanges();
+            });
+        }
+
+        public void CancelOrder(int orderId, string reason)
+        {
+            var order = GetOrder(orderId);
+            order.OrderProgressState.Cancel(() =>
+            {
+                order.Cancelled = true;
+                var eventDesc = $"Orden cancelada.";
+                order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - {eventDesc}. Motivo: {reason}";
+                _appDbContext.SaveChanges();
+                //Send mail or text
+            });
+        }
+
+        public void ReturnOrder(int orderId, string reason)
+        {
+            var order = GetOrder(orderId);
+            order.OrderProgressState.Return(() =>
+            {
+                order.Returned = true;
+                var eventDesc = $"Orden retornada.";
+                order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - {eventDesc}. Motivo: {reason}";
+                _appDbContext.SaveChanges();
+                //Send mail or text
+            });
         }
 
         public void RefundOrder(int orderId, string reason)
@@ -216,11 +267,16 @@ namespace RepoWebShop.Models
             var order = GetOrder(orderId);
             order.OrderPaymentStatus.Refund(() =>
             {
-                order.OrderHistory += $"\n{_calendarRepository.LocalTimeAsString()} - Devolución del dinero. Motivo: {reason}";
+                order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - Devolución del dinero. Motivo: {reason}";
                 order.Refunded = true;
                 order.PaymentReceived = false;
                 _appDbContext.SaveChanges();
-            }, () => _mp.RefundPayment(order.MercadoPagoTransaction));
+            }, 
+            () =>
+            {
+                _mp.RefundPayment(order.MercadoPagoTransaction);
+                //Send email
+            });
         }
 
         public void PayOrder(int orderId)
@@ -228,7 +284,7 @@ namespace RepoWebShop.Models
             var order = GetOrder(orderId);
             order.OrderPaymentStatus.Pay(() =>
             {
-                order.OrderHistory += $"\n{_calendarRepository.LocalTimeAsString()} - Dinero recibido.";
+                order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - Dinero recibido.";
                 order.Refunded = false;
                 order.PaymentReceived = true;
                 _appDbContext.SaveChanges();

@@ -15,6 +15,14 @@ namespace RepoWebShop.Models
             //AppDbContext context = serviceProvider.GetService<AppDbContext>();
             using (var context = new AppDbContext(serviceProvider.GetRequiredService<DbContextOptions<AppDbContext>>()))
             {
+                //context.Orders.Include(x => x.OrderLines)
+                //    .ThenInclude(orderline => orderline.Pie)
+                //    .ThenInclude(pie => pie.PieDetail).Load();
+
+                //context.Pies.Include(x => x.PieDetail).Load();
+
+
+
                 if (!context.Holidays.Any())
                 {
                     context.Holidays.Add(new PublicHoliday()

@@ -8,13 +8,15 @@ using System.Threading.Tasks;
 
 namespace RepoWebShop.ViewModels
 {
-    public class CancelOrderViewModel
+    public class UpdateOrderWithReasonViewModel
     {
         [Display(Name = "Motivo")]
         [Required]
         public string Reason { get; set; }
-        
+
         public int OrderId { get; set; }
+
+        public string Action { get; set; }
 
         public Order Order { get; set; }
     }

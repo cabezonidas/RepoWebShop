@@ -20,14 +20,18 @@ namespace RepoWebShop.Interfaces
         Order UpdateOrder(PaymentNotice paymentNotice);
         Order CreateOrderByPayment(PaymentNotice paymentNotice);
         EmailNotificationViewModel GetEmailData(int id, string v);
-        void OrderFinished(int orderId, bool isReady);
-        void OrderPickedUp(int orderId, bool isPickedUp);
-        void CancelOrder(int orderId, bool isCancelling, string reason);
+        void CompleteOrder(int orderId);
+        void PickUpOrder(int orderId);
+        void CancelOrder(int orderId, string reason);
         void RefundOrder(int orderId, string reason);
+        void ReturnOrder(int orderId, string reason);
         IEnumerable<Order> GetOrdersInProgress();
         IEnumerable<Order> GetOrdersCancelled();
         IEnumerable<Order> GetOrdersCompleted();
-        IEnumerable<Order> GetOrdersCompletedWithPendingPayment();
+        IEnumerable<Order> GetOrdersPickedUp();
+        IEnumerable<Order> GetOrdersReturned();
+        IEnumerable<Order> GetOrdersRefunded();
+        IEnumerable<Order> GetOrdersPickedUpWithPendingPayment();
         void PayOrder(int orderId);
     }
 }

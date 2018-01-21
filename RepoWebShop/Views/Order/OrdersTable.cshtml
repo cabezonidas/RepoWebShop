@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Order>
+<link href="~/Content/Order/OrdersTable.css" rel="stylesheet" />
+
+<div class="container">
+    <br />
+    <a asp-controller="Order" asp-action="InProgress" class="">En progreso</a> -
+    <a asp-controller="Order" asp-action="AllOrders" class="">Todos</a> -
+    <a asp-controller="Order" asp-action="Cancelled" class="">Cancelados</a> -
+    <a asp-controller="Order" asp-action="NotYetPaid" class="">Sin pagar</a> -
+    <a asp-controller="Order" asp-action="PickedUp" class="">Retirados</a> -
+    <a asp-controller="Order" asp-action="Returned" class="">Retornados</a> -
+    <a asp-controller="Order" asp-action="Refunded" class="">Dinero devuelto</a>
+    <br />
+    <br />
+
+    <table class="table table-condensed" id="orders">
+        <thead>
+            <tr>
+                <th>Reserva</th>
+                <th>Cliente</th>
+                <th>Orden Creada</th>
+                <th>Monto</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var order in Model)
+                {
+                    <tr>
+                        <td>
+                            <a asp-action="Detail" asp-controller="Order" asp-route-id="@order.OrderId">@order.FriendlyBookingId</a>
+                        </td>
+                        <td>@Html.Raw(order.ContactDataAsHtml)</td>
+                        <td>
+                            @if (order.PickUpTime.HasValue)
+                            {
+                                <div>@order.OrderPlaced.ToString("yyyy'/'MM'/'dd HH:mm")</div>
+                            }
+                        </td>
+                        <td>$@order.OrderTotal</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $('#orders').DataTable();
+</script>

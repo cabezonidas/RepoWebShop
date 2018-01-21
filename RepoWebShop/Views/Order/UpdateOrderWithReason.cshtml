@@ -1,0 +1,72 @@
+﻿@model UpdateOrderWithReasonViewModel
+
+<link href="~/Content/Order/UpdateOrderWithReason.css" rel="stylesheet" />
+
+<div class="container">
+
+    @{
+            var actionString = "";
+
+            switch (Model.Action)
+            {
+                case "Cancel":
+                    actionString = "CANCELAR";
+                    break;
+                case "Refund":
+                    actionString = "DEVOLVER EL DINERO de";
+                    break;
+                case "Return":
+                    actionString = "RETORNAR";
+                    break;
+                default:
+                break;
+            }
+    }
+
+    <h2>Estás a punto de @actionString la reserva <a asp-action="Detail" asp-controller="Order" asp-route-id="@Model.Order.OrderId">@Model.Order.FriendlyBookingId</a></h2>
+    <table class="table table-responsive">
+        <tbody>
+            <tr>
+                <td>
+                    <strong>Cliente</strong>
+                </td>
+                <td>@Html.Raw(Model.Order.ContactDataAsHtml)</td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Total</strong>
+                </td>
+                <td>@Model.Order.OrderTotal</td>
+            </tr>
+        </tbody>
+    </table>
+    <form asp-controller="Order" asp-action="@Model.Action" method="post" class="form-horizontal" role="form">
+        <hr />
+        <div class="form-group" hidden="hidden">
+            <label asp-for="OrderId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="OrderId" class="form-control" />
+                <span asp-validation-for="OrderId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group" hidden="hidden">
+            <label asp-for="Action" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Action" class="form-control" />
+                <span asp-validation-for="Action" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Reason" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Reason" class="form-control" />
+                <span asp-validation-for="Reason" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-primary" value="Confirmar" />
+            </div>
+        </div>
+    </form>
+</div>

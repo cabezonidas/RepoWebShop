@@ -4,10 +4,16 @@
 
 <div class="container">
     <h2>Pedidos en progreso</h2>
+    <br />
+    <a asp-controller="Order" asp-action="InProgress" class="">En progreso</a> -
+    <a asp-controller="Order" asp-action="AllOrders" class="">Todos</a> -
     <a asp-controller="Order" asp-action="Cancelled" class="">Cancelados</a> -
     <a asp-controller="Order" asp-action="NotYetPaid" class="">Sin pagar</a> -
-    <a asp-controller="Order" asp-action="Completed" class="">Completados</a>
-
+    <a asp-controller="Order" asp-action="PickedUp" class="">Retirados</a> -
+    <a asp-controller="Order" asp-action="Returned" class="">Retornados</a> -
+    <a asp-controller="Order" asp-action="Refunded" class="">Dinero devuelto</a>
+    <br />
+    <br />
     <table id="orders">
         <thead>
             <tr>
@@ -15,7 +21,7 @@
                 <th data-breakpoints="xs">Estado</th>
                 <th data-breakpoints="xs sm">Cliente</th>
                 <th data-breakpoints="xs sm">Entrega</th>
-                <th data-breakpoints="xs sm">Orden lista</th>
+                <th data-breakpoints="xs sm">Detalle</th>
                 <th data-breakpoints="xs sm">Monto</th>
                 <th data-breakpoints="xs sm"></th>
             </tr>
@@ -24,7 +30,7 @@
             @foreach (var order in Model)
             {
                 string background_color;
-                @if(order.Finished)
+                @if (order.Finished)
                 {
                     background_color = "#d7e9d7";
                 }
@@ -32,40 +38,43 @@
                 {
                     background_color = "#ffe2e2";
                 }
-            <tr style="background-color: @background_color">
-                <td><a asp-action="Detail" asp-controller="Order" asp-route-id="@order.OrderId">@order.FriendlyBookingId</a></td>
-                <td>@order.StatusSpanish</td>
-                <td>@Html.Raw(order.ContactDataAsHtml)</td>
-                <td>
-                    @if (order.PickUpTime.HasValue)
-                    {
-                        <div>@order.PickUpTime.Value.ToString("yyyy'/'MM'/'dd HH:mm")</div>
-                    }
-                </td>
-                <td>
-                    @if (order.Finished)
-                    {
-                        <div>Sí</div>
-                    }
-                    else
-                    {
-                        <div>No</div>
-                    }
-                </td>
-                <td>@order.OrderTotal</td>
-                
-                <td>
-                    @if(order.Finished)
-                    {
-                        <a class="btn btn-success" onclick="pickedUp(@order.OrderId);">¡Entregado!</a>
-                    }
-                    else
-                    {
-                        <a class="btn btn-success" onclick="orderCompleted(@order.OrderId);">¡Pedido Listo!</a>
-                    }
+                <tr style="background-color: @background_color">
+                    <td><a asp-action="Detail" asp-controller="Order" asp-route-id="@order.OrderId">@order.FriendlyBookingId</a></td>
+                    <td>@order.StatusSpanish</td>
+                    <td>@Html.Raw(order.ContactDataAsHtml)</td>
+                    <td>
+                        @if (order.PickUpTime.HasValue)
+                        {
+                            <div>@order.PickUpTime.Value.ToString("yyyy'/'MM'/'dd HH:mm")</div>
+                        }
+                    </td>
+                    <td>
+                        @{
+                            List<string> items = new List<string>();
+                        }
+                        @foreach(var ol in order.OrderLines)
+                        {
+                            var line = ol.Amount == 1 ? "" : ol.Amount + "x ";
+                            line += $"{ol.Pie.PieDetail.Name} {ol.Pie.Name}";
 
-                </td>
-            </tr>
+                            items.Add(line);
+                        }
+                        @Html.Raw(String.Join("<br/>", items.ToArray()))
+                    </td>
+                    <td>$@order.OrderTotal</td>
+
+                    <td>
+                        @if (order.Finished)
+                        {
+                            <a class="btn btn-success" onclick="pickedUp(@order.OrderId);">¡Entregado!</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-success" onclick="orderCompleted(@order.OrderId);">¡Pedido Listo!</a>
+                        }
+
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
@@ -78,7 +87,7 @@
     function pickedUp(id){
         $.ajax({
             type: 'POST',
-            url: '/api/OrderData/OrderPickedUp/' + id,
+            url: '/api/OrderData/PickUpOrder/' + id,
             data: {},
             success: function (data) {
                 window.location.reload();
@@ -95,7 +104,7 @@
     function orderCompleted(id) {
         $.ajax({
             type: 'POST',
-            url: '/api/OrderData/FinishOrder/' + id,
+            url: '/api/OrderData/CompleteOrder/' + id,
             data: {},
             success: function (data) {
                 window.location.reload();

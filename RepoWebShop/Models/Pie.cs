@@ -23,6 +23,6 @@ namespace RepoWebShop.Models
         public bool IsActive { get; set; }
         public int PieDetailId { get; set; }
 
-        public virtual PieDetail PieDetail { get; set; }
+        public PieDetail PieDetail { get; set; }
     }
 }

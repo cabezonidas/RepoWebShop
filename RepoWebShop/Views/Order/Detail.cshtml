@@ -33,34 +33,37 @@
     <br />
 
     <div>
-        @if(!Model.Order.Finished && !Model.Order.Cancelled)
-        {
-            <a class="btn btn-info">Pedido terminado</a>    
-        }
-
-        @if(Model.Order.Finished && !Model.Order.Cancelled)
-        {
-            <a class="btn btn-success" onclick="invertPickedUpStatus()">Pedido retirado</a>
-        }
-
-        @if(!Model.Order.PickedUp && !Model.Order.Cancelled)
-        {
-            <a class="btn btn-warning" href="/Order/Cancel/@Model.Order.OrderId">Cancelar pedido</a>
-        }
-        
-    </div>
-    <div>
         @{ 
             var paymentState = Model.Order.OrderPaymentStatus.GetType();
+            var progress = Model.Order.OrderProgressState.GetType();
 
-            if(paymentState == typeof(OrderReservationNotPaid))
+            
+            if (progress == typeof(OrderInProgress))
+            {
+                <a class="btn btn-info" onclick="completeOrder()">Orden Lista</a>
+                <a class="btn btn-warning" href="/Order/UpdateOrderWithReason/Cancel/@Model.Order.OrderId">Cancelar</a>
+            }
+
+            
+            if (progress == typeof(OrderComplete))
+            {
+                <a class="btn btn-success" onclick="pickUpOrder()">Orden Retirada</a>
+                <a class="btn btn-warning" href="/Order/UpdateOrderWithReason/Cancel/@Model.Order.OrderId">Cancelar</a>
+            }
+
+            if (progress == typeof(OrderPickedUp))
+            {
+                <a class="btn btn-warning" href="/Order/UpdateOrderWithReason/Return/@Model.Order.OrderId">Pedido retornado</a>
+            }
+
+            if (paymentState == typeof(OrderReservationNotPaid))
             {
                 <a class="btn btn-success" onclick="payOrder()">Pago recibido</a>
             }
 
             if(paymentState == typeof(OrderReservationPaid) || paymentState == typeof(OrderMercadoPagoPaid))
             {
-                <a class="btn btn-danger" onclick="refundOrder()">Devolver dinero</a>
+                <a class="btn btn-danger" href="/Order/UpdateOrderWithReason/Refund/@Model.Order.OrderId">Devolver dinero</a>
             }
         }
     </div>
@@ -84,15 +87,6 @@
 
                 </td>
             </tr>
-            @if (Model.Order.Status == "reservation")
-    {
-        <tr>
-            <td><strong>Pago</strong></td>
-            @{var paidInStore = Model.Order.PaymentReceived ? "Pago recibido en sucursal" : "Pago sin recibir"; }
-            <td colspan="2" onclick="paymentInStore()">@paidInStore</td>
-        </tr>
-}
-
             <tr>
                 <td><strong>Comentarios</strong></td>
                 <td colspan="2">@Model.Order.CustomerComments</td>
@@ -114,10 +108,67 @@
                 </td>
             </tr>
             <tr>
+                <td><strong>Orden Cancelada</strong></td>
+                <td colspan="2">
+                    <div>
+                        <p>@Model.Order.Cancelled</p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Orden Retirada</strong></td>
+                <td colspan="2">
+                    <div>
+                        <p>@Model.Order.PickedUp</p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Orden Lista</strong></td>
+                <td colspan="2">
+                    <div>
+                        <p>@Model.Order.Finished</p>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td><strong>Pago Recibido</strong></td>
+                <td colspan="2">
+                    <div>
+                        <p>@Model.Order.PaymentReceived</p>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td><strong>Orden Retornada</strong></td>
+                <td colspan="2">
+                    <div>
+                        <p>@Model.Order.Returned</p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Orden reembolsada</strong></td>
+                <td colspan="2">
+                    <div>
+                        <p>@Model.Order.Refunded</p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
                 <td><strong>Registro</strong></td>
                 <td colspan="2">
                     <div>
-                        @Model.Order.OrderHistory
+                        @{ 
+                            var history = Model.Order.OrderHistory?.Replace("\r\n", "<br/>").Replace("\n", "<br/>") ?? string.Empty;
+                            if (history.StartsWith("<br/>"))
+                            {
+                                history = history.Substring(5);
+                            }
+                        }
+                        @Html.Raw(history)
                     </div>
                 </td>
             </tr>
@@ -132,7 +183,67 @@
     </div>
 </div>
 <script type="text/javascript">
-$.fn.datepicker.defaults.format = "dd/mm/yyyy";
+    function payOrder() {
+        $.ajax({
+            type: 'POST',
+            data: {},
+            url: '/api/OrderData/PayOrder/@Model.Order.OrderId',
+            success: function () {
+                window.location.reload();
+            },
+            error: function () {
+                handleError();
+            }
+        });
+    }
+
+    function pickUpOrder() {
+        $.ajax({
+            type: 'POST',
+            data: {},
+            url: '/api/OrderData/PickUpOrder/' + '@Model.Order.OrderId',
+            success: function () {
+                window.location = "/Order/InProgress";
+            },
+            error: function () {
+                handleError();
+            }
+        });
+    }
+
+    function completeOrder() {
+        $.ajax({
+            type: 'POST',
+            data: {},
+            url: '/api/OrderData/CompleteOrder/' + '@Model.Order.OrderId',
+            success: function () {
+                window.location.reload();
+            },
+            error: function () {
+                handleError();
+            }
+        });
+    }
+
+
+    $("#pickUpSubmit").on('click', function () {
+        var parts = $("#pickUpDateSubmit").val().split("/");
+        var date = new Date(parts[2], parts[1] - 1, parts[0]);
+
+        $.ajax({
+            type: 'POST',
+            data: {},
+            url: '/api/OrderData/UpdatePickUpDate/@Model.Order.OrderId/' + date,
+            success: function () {
+                handleSuccess();
+            },
+            error: function () {
+                handleError();
+            }
+        });
+    });
+
+    $.fn.datepicker.defaults.format = "dd/mm/yyyy";
 $('.datepicker').datepicker();
 
 function addComments(comments) {
@@ -148,66 +259,6 @@ function addComments(comments) {
         }
     });
 }
-
-function payOrder() {
-    $.ajax({
-        type: 'POST',
-        data: {},
-        url: '/api/OrderData/PayOrder/@Model.Order.OrderId',
-        success: function () {
-            window.location.reload();
-        },
-        error: function () {
-            handleError();
-        }
-    });
-}
-
-function refundOrder() {
-    $.ajax({
-        type: 'POST',
-        data: {'test':'123'},
-        url: '/api/OrderData/RefundOrder/@Model.Order.OrderId',
-        success: function () {
-            window.location.reload();
-        },
-        error: function () {
-            handleError();
-        }
-    });
-}
-
-function invertPickedUpStatus() {
-    $.ajax({
-        type: 'POST',
-        data: {},
-        url: '/api/OrderData/InvertPickedUpStatus/' + '@Model.Order.OrderId',
-        success: function () {
-            window.location.reload();
-        },
-        error: function () {
-            handleError();
-        }
-    });
-}
-
-
-$("#pickUpSubmit").on('click', function () {
-    var parts = $("#pickUpDateSubmit").val().split("/");
-    var date = new Date(parts[2], parts[1] - 1, parts[0]);
-
-    $.ajax({
-        type: 'POST',
-        data: {},
-        url: '/api/OrderData/UpdatePickUpDate/@Model.Order.OrderId/' + date,
-        success: function () {
-            handleSuccess();
-        },
-        error: function () {
-            handleError();
-        }
-    });
-})
 
 function handleSuccess() {
     $('#successMessage').fadeIn(1000).fadeOut(2000);

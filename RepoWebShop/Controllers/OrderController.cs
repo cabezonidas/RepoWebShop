@@ -93,63 +93,56 @@ namespace RepoWebShop.Controllers
 
         [Authorize(Roles = "Administrator")]
         [HttpGet]
-        public IActionResult Cancel(int id)
+        [Route("[Controller]/UpdateOrderWithReason/{subaction}/{id}")]
+        public IActionResult UpdateOrderWithReason(string subaction, int id)
         {
             var order = _orderRepository.GetOrder(id);
-            var cancellation = new CancelOrderViewModel();
+            var orderViewModel = new UpdateOrderWithReasonViewModel();
 
-            cancellation.Order = order;
-            cancellation.OrderId = id;
+            orderViewModel.Order = order;
+            orderViewModel.OrderId = id;
+            orderViewModel.Action = subaction;
 
-            if (cancellation.Order.Cancelled || cancellation.Order.PickedUp)
-                return NotFound();
-
-            return View(cancellation);
-        }
-
-        [Authorize(Roles = "Administrator")]
-        [HttpGet]
-        public IActionResult Refund(int id)
-        {
-            var order = _orderRepository.GetOrder(id);
-            var refund = new RefundOrderViewModel();
-            refund.Order = order;
-            refund.OrderId = id;
-            if (refund.Order.Cancelled && refund.Order.Payout.HasValue && !refund.Order.Refunded)
-                return View(refund);
-            else
-                return NotFound();
+            return View(orderViewModel);
         }
 
         [Authorize(Roles = "Administrator")]
         [HttpPost]
-        public IActionResult Cancel(CancelOrderViewModel orderCancelled)
+        public IActionResult Cancel(UpdateOrderWithReasonViewModel orderCancelled)
         {
             if (ModelState.IsValid)
             {
-                _orderRepository.CancelOrder(orderCancelled.OrderId, true, orderCancelled.Reason);
-                // _emailRespository.SendCancellation(order, Request.HostUrl(), null);
+                _orderRepository.CancelOrder(orderCancelled.OrderId, orderCancelled.Reason);
                 return Redirect("/Order/Cancelled");
             }
-
             orderCancelled.Order = _orderRepository.GetOrder(orderCancelled.OrderId);
             return View(orderCancelled);
         }
 
         [Authorize(Roles = "Administrator")]
         [HttpPost]
-        public IActionResult Refund(RefundOrderViewModel orderRefunded)
+        public IActionResult Refund(UpdateOrderWithReasonViewModel orderRefunded)
         {
             if (ModelState.IsValid)
             {
                 _orderRepository.RefundOrder(orderRefunded.OrderId, orderRefunded.Reason);
-                // _emailRespository.SendRefund(order, Request.HostUrl(), null);
-                return Redirect("/Order/Cancelled");
+                return Redirect("/Order/Refunded");
             }
-
             orderRefunded.Order = _orderRepository.GetOrder(orderRefunded.OrderId);
-
             return View(orderRefunded);
+        }
+
+        [Authorize(Roles = "Administrator")]
+        [HttpPost]
+        public IActionResult Return(UpdateOrderWithReasonViewModel orderReturned)
+        {
+            if (ModelState.IsValid)
+            {
+                _orderRepository.ReturnOrder(orderReturned.OrderId, orderReturned.Reason);
+                return Redirect("/Order/Returned");
+            }
+            orderReturned.Order = _orderRepository.GetOrder(orderReturned.OrderId);
+            return View(orderReturned);
         }
 
         [Authorize(Roles = "Administrator")]
@@ -171,15 +164,33 @@ namespace RepoWebShop.Controllers
         }
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult NotYetPaid() 
+        public IActionResult PickedUp()
         {
-            return View(_orderRepository.GetOrdersCompletedWithPendingPayment());
+            return View(_orderRepository.GetOrdersPickedUp());
         }
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult Management()
+        public IActionResult Returned()
         {
-            return View();
+            return View(_orderRepository.GetOrdersReturned());
+        }
+
+        [Authorize(Roles = "Administrator")]
+        public IActionResult Refunded()
+        {
+            return View(_orderRepository.GetOrdersRefunded());
+        }
+
+        [Authorize(Roles = "Administrator")]
+        public IActionResult NotYetPaid() 
+        {
+            return View(_orderRepository.GetOrdersPickedUpWithPendingPayment());
+        }
+
+        [Authorize(Roles = "Administrator")]
+        public IActionResult AllOrders()
+        {
+            return View(_orderRepository.GetAll());
         }
 
         [Authorize(Roles = "Administrator")]
