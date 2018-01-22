@@ -8,6 +8,8 @@ namespace RepoWebShop.Models
 {
     public class PaymentNotice
     {
+        public PaymentNotice() { }
+
         public PaymentNotice(Hashtable paymentInfoResponse)
         {
             BookingId = paymentInfoResponse["external_reference"]?.ToString(); //Mapped
@@ -16,10 +18,15 @@ namespace RepoWebShop.Models
             OrderTotal = Decimal.Parse(paymentInfoResponse["total_paid_amount"]?.ToString()); //Mapped
             Order_Id = paymentInfoResponse["order_id"]?.ToString();
             Reason = paymentInfoResponse["reason"]?.ToString();
-            Date_Created = DateTime.Parse(paymentInfoResponse["date_created"]?.ToString());
-            Payout = DateTime.Parse(paymentInfoResponse["date_approved"]?.ToString());//Mapped
             Status = paymentInfoResponse["status"]?.ToString(); //Mapped
             PaymentReceived = Status == "approved";
+
+            var dateCreated = paymentInfoResponse["date_created"]?.ToString();
+            if (!String.IsNullOrEmpty(dateCreated))
+                Date_Created = DateTime.Parse(dateCreated);//Mapped
+            var dateApproved = paymentInfoResponse["date_approved"]?.ToString();
+            if (!String.IsNullOrEmpty(dateApproved))
+                Payout = DateTime.Parse(dateApproved);//Mapped
 
             Merchant_Order_Id = paymentInfoResponse["merchant_order_id"]?.ToString();
             Net_Received_Amount = Decimal.Parse(paymentInfoResponse["net_received_amount"]?.ToString());

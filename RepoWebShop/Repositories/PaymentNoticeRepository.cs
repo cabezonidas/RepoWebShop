@@ -1,5 +1,7 @@
 ﻿using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RepoWebShop.Repositories
 {
@@ -24,6 +26,16 @@ namespace RepoWebShop.Repositories
 
             Order order = _orderRespository.CreateOrderByPayment(paymentNotification);
             _emailRespository.Send(order, hostUrl, paymentNotification);
+        }
+
+        public IEnumerable<PaymentNotice> GetPayments()
+        {
+            return _appDbContext.PaymentNotices.OrderByDescending(x => x.Id).ToList();
+        }
+
+        public PaymentNotice GetPayment(int id)
+        {
+            return _appDbContext.PaymentNotices.First(x => x.Id == id);
         }
     }
 }

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<PaymentNotice>
+
+<link href="~/Content/Payment/Payments.css" rel="stylesheet" />
+
+<div class="container">
+    <h2>Historial de pagos</h2>
+    <table class="table table-responsive">
+        <tbody>
+            @foreach (var payment in Model)
+            {
+            <tr>
+                <td>
+                    @payment.Status
+                </td>
+                <td>
+                    @payment.Payment_Type
+                </td>
+                <td>
+                    @payment.Date_Created
+                </td>
+                <td>
+                    @payment.Net_Received_Amount
+                </td>
+                <td>
+                    @payment.OrderTotal
+                </td>
+                <td>
+                    @payment.Money_Release_Date
+                </td>
+                <td>
+                    @payment.BookingId
+                </td>
+            </tr>
+
+            }
+        </tbody>
+    </table>
+</div>
