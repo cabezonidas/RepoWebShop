@@ -18,7 +18,6 @@ namespace RepoWebShop.Interfaces
         void UpdatePickUpDate(int orderId, DateTime pickUp);
         bool InvertPickedUpStatus(int orderId);
         Order UpdateOrder(PaymentNotice paymentNotice);
-        Order CreateOrderByPayment(PaymentNotice paymentNotice);
         EmailNotificationViewModel GetEmailData(int id, string v);
         void CompleteOrder(int orderId);
         void PickUpOrder(int orderId);
@@ -33,5 +32,7 @@ namespace RepoWebShop.Interfaces
         IEnumerable<Order> GetOrdersRefunded();
         IEnumerable<Order> GetOrdersPickedUpWithPendingPayment();
         void PayOrder(int orderId);
+        Order OrderApproved(PaymentNotice paymentNotification);
+        Order OrderInProcess(PaymentNotice paymentNotification);
     }
 }

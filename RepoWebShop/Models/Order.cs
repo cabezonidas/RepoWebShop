@@ -106,6 +106,8 @@ namespace RepoWebShop.Models
                         return "Sin confirmar";
                     case "reservation":
                         return "Reserva";
+                    case "refunded":
+                        return "Reembolsado";
                     default:
                         return "Inválido";
                 }

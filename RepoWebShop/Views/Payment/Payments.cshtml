@@ -1,34 +1,84 @@
-﻿@model IEnumerable<PaymentNotice>
+﻿@model IEnumerable<PaymentViewModel>
 
 <link href="~/Content/Payment/Payments.css" rel="stylesheet" />
 
 <div class="container">
-    <h2>Historial de pagos</h2>
+    <h2>Historial de pagos con Mercado Pago</h2>
     <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>
+                    Estado
+                </th>
+                <th>
+                    Medio de pago
+                </th>
+                <th>
+                    Cuotas
+                </th>
+                <th>
+                    Valor de cuota
+                </th>
+                <th>
+                    Fecha
+                </th>
+                <th>
+                    Total Recibido
+                </th>
+                <th>
+                    Total
+                </th>
+                <th>
+                    Comisión MercadoPago
+                </th>
+                <th>
+                    Dinero disponible
+                </th>
+                <th>
+                    Cliente
+                </th>
+                <th>
+                    Reserva
+                </th>
+            </tr>
+        </thead>
         <tbody>
             @foreach (var payment in Model)
             {
             <tr>
                 <td>
-                    @payment.Status
+                    @payment.PaymentNotice.StatusSpanish
                 </td>
                 <td>
-                    @payment.Payment_Type
+                    @payment.PaymentNotice.Payment_Type
                 </td>
                 <td>
-                    @payment.Date_Created
+                    @payment.PaymentNotice.Installments
                 </td>
                 <td>
-                    @payment.Net_Received_Amount
+                    @payment.PaymentNotice.Installment_Amount
                 </td>
                 <td>
-                    @payment.OrderTotal
+                    @payment.PaymentNotice.Date_Created
                 </td>
                 <td>
-                    @payment.Money_Release_Date
+                    @payment.PaymentNotice.Net_Received_Amount
                 </td>
                 <td>
-                    @payment.BookingId
+                    @payment.PaymentNotice.OrderTotal
+                </td>
+                <td>
+                    @{ var com = ((1 - (payment.PaymentNotice.Net_Received_Amount / payment.PaymentNotice.OrderTotal)) * 100);  }
+                    @Decimal.Round(com, 2) %
+                </td>
+                <td>
+                    @payment.PaymentNotice.Money_Release_Date
+                </td>
+                <td>
+                    @Html.Raw(payment.PaymentNotice.PayerAsHtml)
+                </td>
+                <td>
+                    <a href="/Order/Detail/@payment.Order.OrderId">@payment.Order.FriendlyBookingId</a>
                 </td>
             </tr>
 

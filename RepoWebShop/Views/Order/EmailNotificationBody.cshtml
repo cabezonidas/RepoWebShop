@@ -33,7 +33,14 @@
 }
         <p>Tiempo de Elaboración: <strong>@Model.PreparationTime hs</strong></p>
 
-        <p>Orden lista el <strong>@Model.OrderReady.Value.ToString("dd-MM-yyyy") </strong> a las <strong>@Model.OrderReady.Value.ToString("hh\\:mm")</strong></p>
+        @{
+            if (Model.OrderReady.HasValue)
+            {
+                <p>Orden lista el <strong>@Model.OrderReady.Value.ToString("dd-MM-yyyy") </strong> a las <strong>@Model.OrderReady.Value.ToString("hh\\:mm")</strong></p>
+            }
+        }
+
+
 
         @{var total = Model.OrderItems.Select(x => x.Amount * x.Price).Sum(); }
         <p><strong>Total de Compra $@total</strong></p>

@@ -25,72 +25,34 @@ namespace RepoWebShop.Repositories
             return _appDbContext.ShoppingCartComments.FirstOrDefault(x => x.ShoppingCartId == bookingId);
         }
 
-        private IQueryable<ShoppingCartItem> GetShoppingCartItems(string bookingId)
+        public IQueryable<ShoppingCartItem> GetItems(string bookingId)
         {
             return _appDbContext.ShoppingCartItems.Where(x => x.ShoppingCartId == bookingId).Include(x => x.Pie).ThenInclude(x => x.PieDetail);
         }
 
-        private void AddShoppingItemsToOrder(Order order)
-        {
-            var shoppingCartItems = GetShoppingCartItems(order.BookingId);
-
-            var preparationTime = 0;
-
-            foreach (var shoppingCartItem in shoppingCartItems)
-            {
-                var orderDetail = new OrderDetail()
-                {
-                    Amount = shoppingCartItem.Amount,
-                    PieId = shoppingCartItem.Pie.PieId,
-                    OrderId = order.OrderId,
-                    Price = shoppingCartItem.Pie.Price
-                };
-                preparationTime = preparationTime > shoppingCartItem.Pie.PieDetail.PreparationTime ? preparationTime : shoppingCartItem.Pie.PieDetail.PreparationTime;
-                _appDbContext.OrderDetails.Add(orderDetail);
-            }
-
-            order.PreparationTime = preparationTime;
-
-            order.PickUpTime = _calendarRepository.GetPickupEstimate(order.PreparationTime);
-
-            _appDbContext.ShoppingCartItems.RemoveRange(shoppingCartItems);
-
-            _appDbContext.SaveChanges();
-        }
-
-        private void AddCommentsToOrder(Order order)
-        {
-            var customerComments = GetShoppingCartComments(order.BookingId);
-            order.CustomerComments = customerComments?.Comments ?? String.Empty;
-            if (customerComments != null)
-                _appDbContext.ShoppingCartComments.Remove(customerComments);
-            _appDbContext.SaveChanges();
-        }
-
-        public Order CreateOrderByPayment(PaymentNotice paymentNotice)
-        {
-            var order = _mapper.Map<PaymentNotice, Order>(paymentNotice);
-
-            order.PickedUp = false;
-            order.OrderPlaced = _calendarRepository.LocalTime();
-
-            _appDbContext.Orders.Add(order);
-            _appDbContext.SaveChanges();
-
-            AddShoppingItemsToOrder(order);
-            AddCommentsToOrder(order);
-
-            return order;
-        }
-
-        public string GetComments(string shoppingCartId)
+        public ShoppingCartComment GetComments(string shoppingCartId)
         {
             var shoppingCartComment = _appDbContext.ShoppingCartComments
                 .Where(c => c.ShoppingCartId == shoppingCartId)
                 .OrderByDescending(c => c.Created)
                 .FirstOrDefault();
 
-            return shoppingCartComment?.Comments;
+            return shoppingCartComment;
+        }
+
+        public string ClearComments(string bookingId)
+        {
+            var result = GetComments(bookingId);
+            if(result != null)
+                _appDbContext.ShoppingCartComments.RemoveRange(result);
+            return result?.Comments ?? String.Empty;
+        }
+
+        public IQueryable<ShoppingCartItem> EmptyItems(string bookingId)
+        {
+            var result = GetItems(bookingId);
+            _appDbContext.ShoppingCartItems.RemoveRange(result);
+            return result;
         }
     }
 }

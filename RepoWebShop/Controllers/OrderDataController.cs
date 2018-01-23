@@ -18,6 +18,18 @@ namespace RepoWebShop.Controllers
             _orderRepository = orderRepository;
         }
 
+        [Route("FindOrderApproved/{bookingId}")]
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult FindOrderApproved(string bookingId)
+        {
+            var order = _orderRepository.GetOrderByBookingId(bookingId);
+            if (order != null && order.Status == "approved")
+                return Ok();
+            else
+                return NotFound();
+        }
+
         [Route("AddComments/{orderId}/{comments}")]
         [HttpPost]
         public IActionResult AddComments(int orderId, string comments)

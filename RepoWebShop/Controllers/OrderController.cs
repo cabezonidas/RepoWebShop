@@ -91,6 +91,13 @@ namespace RepoWebShop.Controllers
             return View(orderstatus);
         }
 
+        [HttpGet]
+        [Route("[Controller]/Pending/{id}")]
+        public IActionResult Pending(string id)
+        {
+            return View("Pending", id);
+        }
+
         [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("[Controller]/UpdateOrderWithReason/{subaction}/{id}")]

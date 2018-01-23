@@ -565,8 +565,8 @@ namespace RepoWebShop.Models
                         "\"back_urls\":" +
                             "{" +
                                 $"\"success\":\"{host}/Order/Status/{friendlyBookingId}\"," +
-                                $"\"pending\":\"{host}/Order/Status/{friendlyBookingId}\"," +
-                                $"\"failure\":\"{host}/Order/Status/{friendlyBookingId}\"" +
+                                $"\"pending\":\"{host}/Order/Pending/{friendlyBookingId}\"," +
+                                $"\"failure\":\"{host}/ShoppingCart\"" +
                             "}," +
                         "\"payment_methods\":" +
                             "{" +
@@ -579,15 +579,19 @@ namespace RepoWebShop.Models
                                     "}," +
                                     "{" +
                                         "\"id\": \"atm\"" +
-                                    "}]" +
+                                    "}]," +
+                                "\"installments\":1" +
                             "}," +
+
 
                         "\"auto_return\":\"approved\"," +
                         $"\"external_reference\":\"{bookingId}\"," +
+
+                        //expires
+                        //expiration_date_from
+                        //expiration_date_to
+                        
                         $"\"additional_info\":\"{bookingId}\"" +
-
-
-
                 "}";
 
                 Hashtable preference = CreatePreference(preferenceData);

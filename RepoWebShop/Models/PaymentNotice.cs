@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using RepoWebShop.Extensions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,38 +12,42 @@ namespace RepoWebShop.Models
     {
         public PaymentNotice() { }
 
-        public PaymentNotice(Hashtable paymentInfoResponse)
+        public PaymentNotice(Hashtable paymentInfo)
         {
-            BookingId = paymentInfoResponse["external_reference"]?.ToString(); //Mapped
-            MercadoPagoTransaction = paymentInfoResponse["id"]?.ToString(); //Mapped
-            Payment_Type = paymentInfoResponse["payment_type"]?.ToString();
-            OrderTotal = Decimal.Parse(paymentInfoResponse["total_paid_amount"]?.ToString()); //Mapped
-            Order_Id = paymentInfoResponse["order_id"]?.ToString();
-            Reason = paymentInfoResponse["reason"]?.ToString();
-            Status = paymentInfoResponse["status"]?.ToString(); //Mapped
-            PaymentReceived = Status == "approved";
+            BookingId = paymentInfo.GetValue("external_reference", typeof(string)); //Mapped
+            MercadoPagoTransaction = paymentInfo.GetValue("id", typeof(string)); //Mapped
+            Payment_Type = paymentInfo.GetValue("payment_type", typeof(string));
+            Reason = paymentInfo.GetValue("reason", typeof(string));
+            Status = paymentInfo.GetValue("status", typeof(string)); //Mapped
+            Order_Id = paymentInfo.GetValue("order_id", typeof(string));
+            Merchant_Order_Id = paymentInfo.GetValue("merchant_order_id", typeof(string));
+            Currency_Id = paymentInfo.GetValue("currency_id", typeof(string));
+            Status_Detail = paymentInfo.GetValue("status_detail", typeof(string));
 
-            var dateCreated = paymentInfoResponse["date_created"]?.ToString();
-            if (!String.IsNullOrEmpty(dateCreated))
-                Date_Created = DateTime.Parse(dateCreated);//Mapped
-            var dateApproved = paymentInfoResponse["date_approved"]?.ToString();
-            if (!String.IsNullOrEmpty(dateApproved))
-                Payout = DateTime.Parse(dateApproved);//Mapped
+            OrderTotal = paymentInfo.GetValue("total_paid_amount", typeof(Decimal)); //Mapped
+            Net_Received_Amount = paymentInfo.GetValue("net_received_amount", typeof(Decimal));
+            Installment_Amount = paymentInfo.GetValue("installment_amount", typeof(Decimal));
+            
+            Date_Created = paymentInfo.GetValue("date_created", typeof(DateTime)); //Mapped
+            Date_Approved = paymentInfo.GetValue("date_approved", typeof(DateTime));
+            Money_Release_Date = paymentInfo.GetValue("money_release_date", typeof(DateTime));
+            
+            Installments = paymentInfo.GetValue("installments", typeof(int));
 
-            Merchant_Order_Id = paymentInfoResponse["merchant_order_id"]?.ToString();
-            Net_Received_Amount = Decimal.Parse(paymentInfoResponse["net_received_amount"]?.ToString());
-             
-            var payerInfoResponse = paymentInfoResponse["payer"] as Hashtable;
-            MercadoPagoName = payerInfoResponse["first_name"]?.ToString() + " " + payerInfoResponse["last_name"]?.ToString(); //Mapped
-            User_Id = payerInfoResponse["id"]?.ToString();
-            MercadoPagoMail = payerInfoResponse["email"]?.ToString(); //Mapped
-            MercadoPagoUsername = payerInfoResponse["nickname"]?.ToString(); //Mapped
+            var payerInfo = paymentInfo["payer"] as Hashtable;
+            MercadoPagoName = $"{payerInfo.GetValue("first_name", typeof(string))} {payerInfo.GetValue("last_name", typeof(string))}";
+            User_Id = payerInfo.GetValue("id", typeof(string));
+            MercadoPagoMail = payerInfo.GetValue("email", typeof(string)); //Mapped
+            MercadoPagoUsername = payerInfo.GetValue("nickname", typeof(string)); //Mapped
 
-            var payerPhoneInfoResponse = payerInfoResponse["phone"] as Hashtable;
-            Area_Code = payerPhoneInfoResponse["area_code"]?.ToString();
-            Extension = payerPhoneInfoResponse["extension"]?.ToString();
-            PhoneNumber = payerPhoneInfoResponse["number"]?.ToString(); //Mapped
-            PhoneNumber = String.IsNullOrEmpty(PhoneNumber) ? "-" : PhoneNumber;
+            var payerPhoneInfo = payerInfo["phone"] as Hashtable;
+            Area_Code = payerPhoneInfo.GetValue("area_code", typeof(string));
+            Extension = payerPhoneInfo.GetValue("extension", typeof(string));
+            PhoneNumber = payerPhoneInfo.GetValue("number", typeof(string)); //Mapped
+            PhoneNumber = string.IsNullOrEmpty(PhoneNumber) ? "-" : PhoneNumber;
+
+            PaymentReceived = Status == "approved" || Status_Detail == "accredited"; //Revisar con refunds // Puede ser 'acreditted' en status_detail
+            Payout = Date_Approved;
         }
             
         public string MercadoPagoName { get; set; }
@@ -82,5 +88,42 @@ namespace RepoWebShop.Models
         public string Operation_Type { get; set; }
         public decimal OrderTotal { get; private set; }
         public string MercadoPagoTransaction { get; private set; }
+
+        [BindNever]
+        public string PayerAsHtml
+        {
+            get
+            {
+                var payer = new List<string>() { MercadoPagoUsername, MercadoPagoName, MercadoPagoMail, PhoneNumber };
+                return string.Join("<br />", payer);
+            }
+        }
+
+            [BindNever]
+        public string StatusSpanish
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case "approved":
+                        return "Aprobado";
+                    case "pending":
+                        return "Pendiente";
+                    case "in_process":
+                        return "En proceso";
+                    case "rejected":
+                        return "Rechazado";
+                    case "draft":
+                        return "Sin confirmar";
+                    case "reservation":
+                        return "Reserva";
+                    case "refunded":
+                        return "Reembolsado";
+                    default:
+                        return "Inválido";
+                }
+            }
+        }
     }
 }

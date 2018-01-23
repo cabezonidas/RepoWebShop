@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using RepoWebShop.Extensions;
@@ -19,16 +20,17 @@ namespace RepoWebShop.Models
         private readonly IShoppingCartRepository _shoppingCartRepository;
         private readonly ICalendarRepository _calendarRepository;
         private readonly IMercadoPago _mp;
+        private readonly IMapper _mapper;
 
-        public OrderRepository(AppDbContext appDbContext, IMercadoPago mp, ICalendarRepository calendarRepository, ShoppingCart shoppingCart, IShoppingCartRepository shoppingCartRepository)
+        public OrderRepository(AppDbContext appDbContext, IMercadoPago mp, ICalendarRepository calendarRepository, ShoppingCart shoppingCart, IShoppingCartRepository shoppingCartRepository, IMapper mapper)
         {
+            _mapper = mapper;
             _mp = mp;
             _appDbContext = appDbContext;
             _shoppingCart = shoppingCart;
             _shoppingCartRepository = shoppingCartRepository;
             _calendarRepository = calendarRepository;
         }
-
 
         public Order UpdateOrder(PaymentNotice paymentNotice)
         {
@@ -178,11 +180,6 @@ namespace RepoWebShop.Models
             _appDbContext.SaveChanges();
         }
 
-        public Order CreateOrderByPayment(PaymentNotice paymentNotice)
-        {
-            return _shoppingCartRepository.CreateOrderByPayment(paymentNotice);
-        }
-
         public EmailNotificationViewModel GetEmailData(int id, string absoluteUrl)
         {
             var orderDetails = GetOrderDetails(id);
@@ -270,6 +267,7 @@ namespace RepoWebShop.Models
                 order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - Devolución del dinero. Motivo: {reason}";
                 order.Refunded = true;
                 order.PaymentReceived = false;
+                order.Cancelled = true;
                 _appDbContext.SaveChanges();
             }, 
             () =>
@@ -291,5 +289,53 @@ namespace RepoWebShop.Models
             });
         }
 
+        private Order CreateOrder(PaymentNotice payment)
+        {
+            Order order = this.GetOrderByBookingId(payment.BookingId);
+            if (order != null)
+                return order;
+            order = _mapper.Map<PaymentNotice, Order>(payment);
+            order.OrderPlaced = _calendarRepository.LocalTime();
+            order.CustomerComments = _shoppingCartRepository.ClearComments(payment.BookingId);
+            _appDbContext.Orders.Add(order);
+            _appDbContext.SaveChanges();
+
+            var shoppingItems = _shoppingCartRepository.EmptyItems(payment.BookingId);
+            _appDbContext.OrderDetails.AddRange(shoppingItems.Select(x => new OrderDetail()
+            {
+                Amount = x.Amount,
+                PieId = x.Pie.PieId,
+                OrderId = order.OrderId,
+                Price = x.Pie.Price
+            }));
+
+            _appDbContext.SaveChanges();
+            return order;
+        }
+
+        private int GetPreparationTime(int orderId)
+        {
+            int preparationTime = 0;
+            var piesIds = _appDbContext.OrderDetails.Where(x => x.OrderId == orderId).Select(x => x.PieId).Distinct();
+            var pieDetailIds = _appDbContext.Pies.Where(x => piesIds.Contains(x.PieId)).Select(x => x.PieDetailId).Distinct();
+            preparationTime = _appDbContext.PieDetails.Where(x => pieDetailIds.Contains(x.PieDetailId)).Select(x => x.PreparationTime).OrderByDescending(x => x).FirstOrDefault();
+
+            return preparationTime;
+        }
+
+        public Order OrderInProcess(PaymentNotice payment)
+        {
+            return CreateOrder(payment);
+        }
+
+        public Order OrderApproved(PaymentNotice payment)
+        {
+            Order order = OrderInProcess(payment);
+            order.Status = payment.Status;
+            order.PreparationTime = GetPreparationTime(order.OrderId);
+            order.PickUpTime = _calendarRepository.GetPickupEstimate(order.PreparationTime);
+            _appDbContext.SaveChanges();
+            return order;
+        }
     }
 }

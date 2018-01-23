@@ -10,8 +10,16 @@ namespace RepoWebShop.Models
         {
             //Database.EnsureCreated();
             Database.Migrate();
+
             
         }
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Order>()
+        //        .HasIndex(p => new { p.BookingId })
+        //        .IsUnique(true);
+        //}
 
         public DbSet<ProcessingHours> ProcessingHours { get; set; }
         public DbSet<OpenHours> OpenHours { get; set; }

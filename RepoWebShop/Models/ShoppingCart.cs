@@ -30,8 +30,8 @@ namespace RepoWebShop.Models
         {
             get
             {
-                Order order = _appDbContext.Orders.FirstOrDefault<Order>(x => x.BookingId == shoppingCartId);
-                if (order != null)
+                PaymentNotice payment = _appDbContext.PaymentNotices.FirstOrDefault<PaymentNotice>(x => x.BookingId == shoppingCartId);
+                if (payment != null)
                 {
                     var newBookingId = GetRandomBookingId();
                     _session.SetString("CartId", newBookingId);
@@ -50,7 +50,7 @@ namespace RepoWebShop.Models
 
         public string GetShoppingCartComments()
         {
-            return _shoppingCartRepository.GetComments(shoppingCartId);
+            return _shoppingCartRepository.GetComments(shoppingCartId)?.Comments;
         }
 
         public int GetShoppingCartPreparationTime()
