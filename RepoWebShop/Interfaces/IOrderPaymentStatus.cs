@@ -9,5 +9,6 @@ namespace RepoWebShop.Interfaces
     {
         IOrderPaymentStatus Refund(Action savePaymentChanges, Action mercadoPagoRefund);
         IOrderPaymentStatus Pay(Action savePaymentChanges);
+        IOrderPaymentStatus Cancel(Action savePaymentChanges, Action mercadoPagoCancel);
     }
 }

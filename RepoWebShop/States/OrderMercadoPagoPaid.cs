@@ -8,6 +8,8 @@ namespace RepoWebShop.States
 {
     public class OrderMercadoPagoPaid : IOrderPaymentStatus
     {
+        public IOrderPaymentStatus Cancel(Action savePaymentChanges, Action mercadoPagoCancel) => this;
+
         public IOrderPaymentStatus Pay(Action savePaymentChanges) => this;
 
         public IOrderPaymentStatus Refund(Action savePaymentChanges, Action mercadoPagoRefund)

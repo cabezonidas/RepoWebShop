@@ -277,6 +277,23 @@ namespace RepoWebShop.Models
             });
         }
 
+        public void CancelPaymentOrder(int orderId, string reason)
+        {
+            var order = GetOrder(orderId);
+            order.OrderPaymentStatus.Cancel(() =>
+            {
+                order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - Pago cancelado. Motivo: {reason}";
+                order.PaymentReceived = false;
+                order.Cancelled = true;
+                _appDbContext.SaveChanges();
+            },
+            () =>
+            {
+                _mp.CancelPayment(order.MercadoPagoTransaction);
+                //Send email
+            });
+        }
+
         public void PayOrder(int orderId)
         {
             var order = GetOrder(orderId);
@@ -308,7 +325,9 @@ namespace RepoWebShop.Models
                 OrderId = order.OrderId,
                 Price = x.Pie.Price
             }));
+            _appDbContext.SaveChanges();
 
+            order.PreparationTime = GetPreparationTime(order.OrderId);
             _appDbContext.SaveChanges();
             return order;
         }
@@ -332,7 +351,6 @@ namespace RepoWebShop.Models
         {
             Order order = OrderInProcess(payment);
             order.Status = payment.Status;
-            order.PreparationTime = GetPreparationTime(order.OrderId);
             order.PickUpTime = _calendarRepository.GetPickupEstimate(order.PreparationTime);
             _appDbContext.SaveChanges();
             return order;

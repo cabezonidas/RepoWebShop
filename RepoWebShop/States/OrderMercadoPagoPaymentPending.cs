@@ -6,14 +6,19 @@ using System.Threading.Tasks;
 
 namespace RepoWebShop.States
 {
-    public class OrderReservationNotPaid : IOrderPaymentStatus
+    public class OrderMercadoPagoPaymentPending : IOrderPaymentStatus
     {
-        public IOrderPaymentStatus Cancel(Action savePaymentChanges, Action mercadoPagoCancel) => this;
+        public IOrderPaymentStatus Cancel(Action savePaymentChanges, Action mercadoPagoCancel)
+        {
+            savePaymentChanges();
+            mercadoPagoCancel();
+            return new OrderMercadoPagoNotPaid();
+        }
 
         public IOrderPaymentStatus Pay(Action savePaymentChanges)
         {
             savePaymentChanges();
-            return new OrderReservationPaid();
+            return new OrderMercadoPagoPaid();
         }
 
         public IOrderPaymentStatus Refund(Action savePaymentChanges, Action mercadoPagoRefund) => this;

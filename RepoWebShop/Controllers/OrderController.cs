@@ -42,52 +42,27 @@ namespace RepoWebShop.Controllers
         public IActionResult Status(string id)
         {
             Order order = _orderRepository.GetOrderByBookingId(id);
-
-            string statusCode = order?.Status;
-
-            string status = string.Empty;
-            string description = string.Empty;
-
-            switch (statusCode)
+            OrderStatusViewModel orderstatus;
+            if (order == null)
             {
-                case "approved":
-                    status = "Aprobado";
-                    description = "Gracias! Tu compra ya fue aceptada y ya estamos trabajando para que disfrutes de nuestras mejores delicias. Pronto recibiras un mail con los detalles.";
-                    break;
-                case "pending":
-                    status = "Pendiente";
-                    description = "Tu compra todavía no fue aceptada. Está pendiente. Cuando se acredite el pago, te enviaremos un mail con todos los detalles.";
-                    break;
-                case "in_process":
-                    status = "En proceso";
-                    description = "La acreditacion aún está en proceso. Cuando se acredite el pago te mandaremos un mail con los detalles. Gracias!";
-                    break;
-                case "rejected":
-                    status = "Rechazado";
-                    description = "Lamentablemente la transacción fue rechazada. Podrías intentar con otros medios de pago.";
-                    break;
-                case "draft":
-                    status = "Sin confirmación";
-                    description = "Lamentablemente no hemos recibido detalles de pago de esta reserva.";
-                    break;
-                case "reservation":
-                    status = "Reserva confirmada";
-                    description = "La reserva se encuentra confirmada. Pronto recibiras un mail con los detalles.";
-                    break;
-                default:
-                    status = "No encontrado";
-                    description = "El código que buscas no se encuentra en nuestra base de datos.";
-                    break;
+                orderstatus = new OrderStatusViewModel()
+                {
+                    BookingId = id ?? string.Empty,
+                    Notification = null,
+                    Payment = null,
+                    Progress = null
+                };
             }
-
-            OrderStatusViewModel orderstatus = new OrderStatusViewModel()
-            {
-                BookingId = id ?? string.Empty,
-                Status = status,
-                Description = description,
-                Notification = statusCode == "approved" || statusCode == "reservation" ? _orderRepository.GetEmailData(order.OrderId, Request.HostUrl()) : null
-            };
-
+            else
+            { 
+                orderstatus = new OrderStatusViewModel()
+                {
+                    BookingId = id ?? string.Empty,
+                    Notification = _orderRepository.GetEmailData(order.OrderId, Request.HostUrl()),
+                    Payment = order.OrderPaymentStatus,
+                    Progress = order.OrderProgressState
+                };
+            }
             return View(orderstatus);
         }
 
@@ -124,6 +99,20 @@ namespace RepoWebShop.Controllers
             }
             orderCancelled.Order = _orderRepository.GetOrder(orderCancelled.OrderId);
             return View(orderCancelled);
+        }
+
+
+        [Authorize(Roles = "Administrator")]
+        [HttpPost]
+        public IActionResult CancelPayment(UpdateOrderWithReasonViewModel orderPaymentCancelled)
+        {
+            if (ModelState.IsValid)
+            {
+                _orderRepository.CancelPaymentOrder(orderPaymentCancelled.OrderId, orderPaymentCancelled.Reason);
+                return Redirect("/Order/Cancelled");
+            }
+            orderPaymentCancelled.Order = _orderRepository.GetOrder(orderPaymentCancelled.OrderId);
+            return View(orderPaymentCancelled);
         }
 
         [Authorize(Roles = "Administrator")]

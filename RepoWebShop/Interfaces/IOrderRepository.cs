@@ -34,5 +34,6 @@ namespace RepoWebShop.Interfaces
         void PayOrder(int orderId);
         Order OrderApproved(PaymentNotice paymentNotification);
         Order OrderInProcess(PaymentNotice paymentNotification);
+        void CancelPaymentOrder(int orderId, string reason);
     }
 }

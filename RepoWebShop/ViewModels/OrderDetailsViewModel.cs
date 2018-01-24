@@ -32,5 +32,33 @@ namespace RepoWebShop.ViewModels
                 return _items;
             }
         }
+
+        public IEnumerable<string> Estados
+        {
+            get
+            {
+                var result = new List<string>();
+                if(Order != null)
+                {
+                    if (!String.IsNullOrEmpty(Order.MercadoPagoTransaction))
+                        result.Add($"Transacción de MercadoPago {Order.MercadoPagoTransaction}");
+                    if (Order.Status == "in_process")
+                        result.Add("Esperando aprobación de pago");
+                    if (Order.PaymentReceived)
+                        result.Add("Pago recibido");
+                    if (Order.Finished)
+                        result.Add("Orden lista");
+                    if (Order.PickedUp)
+                        result.Add("Retirado");
+                    if (Order.Cancelled)
+                        result.Add("Cancelado");
+                    if (Order.Refunded)
+                        result.Add("Reembolsado");
+                    if (Order.Returned)
+                        result.Add("Retornado");
+                }
+                return result;
+            }
+        }
     }
 }

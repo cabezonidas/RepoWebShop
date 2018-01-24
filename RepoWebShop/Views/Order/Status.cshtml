@@ -1,20 +1,130 @@
 ﻿@model OrderStatusViewModel
-<div class="container center-block">
+<link href="~/Content/Order/Status.css" rel="stylesheet">
+@if (Model.Notification != null && Model.Payment != null && Model.Progress != null)
+{
 
-
-    @if (Model.Notification != null)
+    var danger = new List<string>();
+    var warning = new List<string>();
+    var info = new List<string>();
+    var success = new List<string>();
+    @if (Model.Payment.GetType() == typeof(OrderReservationNotPaid))
     {
+        info.Add("Esta orden se paga en sucursal.");
+    }
+    @if (Model.Payment.GetType() == typeof(OrderMercadoPagoNotPaid))
+    {
+        danger.Add("Pago sin recibir.");
+    }
+    @if (Model.Payment.GetType() == typeof(OrderMercadoPagoPaymentPending))
+    {
+        warning.Add("Pago pendiente de acreditación.");
+    }
+    @if (Model.Progress.GetType() == typeof(OrderReturned))
+    {
+        danger.Add("El pedido ha sido retornado por el cliente.");
+    }
+    @if (Model.Payment.GetType() == typeof(OrderMercadoPagoPaid)
+    || Model.Payment.GetType() == typeof(OrderReservationPaid))
+    {
+        success.Add("Pago recibido.");
+    }
+    @if (Model.Progress.GetType() == typeof(OrderComplete))
+    {
+        success.Add("Orden lista para ser retirada :-)");
+    }
+    @if (Model.Progress.GetType() == typeof(OrderCancelled))
+    {
+        danger.Add("Esta orden se encuentra cancelada.");
+    }
+    @if (Model.Progress.GetType() == typeof(OrderInProgress))
+    {
+        info.Add("El pedido está siendo procesado. Cuando lo terminamos te avisamos.");
+    }
+    @if (Model.Progress.GetType() == typeof(OrderPickedUp))
+    {
+        info.Add("Pedido ya fue terminado y retirado.");
+    }
+
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Información</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        @if (danger.Count() > 0)
+                        {
+                            <div class="alert alert-danger text-center">
+                                @Html.Raw(string.Join("<br/>", danger))
+                            </div>
+                        }
+                        @if (warning.Count() > 0)
+                        {
+                            <div class="alert alert-warning text-center">
+                                @Html.Raw(string.Join("<br/>", warning))
+                            </div>
+                        }
+                        @if (info.Count() > 0)
+                        {
+                            <div class="alert alert-info text-center">
+                                @Html.Raw(string.Join("<br/>", info))
+                            </div>
+                        }
+                        @if (success.Count() > 0)
+                        {
+                            <div class="alert alert-success text-center">
+                                @Html.Raw(string.Join("<br/>", success))
+                            </div>
+                        }
+                    </div>
+
+                    @*
+                        <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+                        </div>
+                    *@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container center-block">
         @Html.Partial("~/Views/Order/EmailNotificationBody.cshtml", Model.Notification)
-    }
-    else
-    {
-        <h2>Reserva: @Model.BookingId</h2>
-        <h3>Estado: @Model.Status</h3>
-        <h3>@Model.Description</h3>
-    }
+    </div>
 
-</div>
-
-<script>
+    <script type="text/javascript">
     $('section#body').css('margin', 'auto');
-</script>
+
+    @if (danger.Count() + info.Count() + warning.Count() + success.Count() > 0)
+    {
+        <text>
+            $(document).ready(function () {
+                $('#myModal').modal('show');
+            });
+        </text>
+    }
+    </script>
+}
+else
+{
+    <section class="container">
+        @Html.Partial("~/Views/Shared/LoadingBar.cshtml")
+    </section>
+    <script type="text/javascript">
+        setInterval(checkOrder, 3000);
+
+        function checkOrder() {
+            $.ajax({
+                type: 'GET',
+                url: '/api/OrderData/FindOrderApproved/' + '@Model.BookingId',
+                success: function () {
+                    window.location.reload();
+                }
+            });
+        }
+    </script>
+}

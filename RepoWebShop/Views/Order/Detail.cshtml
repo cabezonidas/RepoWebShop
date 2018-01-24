@@ -65,6 +65,11 @@
             {
                 <a class="btn btn-danger" href="/Order/UpdateOrderWithReason/Refund/@Model.Order.OrderId">Devolver dinero</a>
             }
+            
+            if(paymentState == typeof(OrderMercadoPagoPaymentPending))
+            {
+                <a class="btn btn-danger" href="/Order/UpdateOrderWithReason/CancelPayment/@Model.Order.OrderId">Cancelar pago</a>
+            }
         }
     </div>
 
@@ -103,57 +108,10 @@
                 <td><strong>Correo enviado</strong></td>
                 <td colspan="2">
                     <div>
-                        <p><strong>@Model.Order.Email?.To</strong> <a href="/Order/EmailNotification/@Model.Order.OrderId" target="_blank">Ver</a></p>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td><strong>Orden Cancelada</strong></td>
-                <td colspan="2">
-                    <div>
-                        <p>@Model.Order.Cancelled</p>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td><strong>Orden Retirada</strong></td>
-                <td colspan="2">
-                    <div>
-                        <p>@Model.Order.PickedUp</p>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td><strong>Orden Lista</strong></td>
-                <td colspan="2">
-                    <div>
-                        <p>@Model.Order.Finished</p>
-                    </div>
-                </td>
-            </tr>
-
-            <tr>
-                <td><strong>Pago Recibido</strong></td>
-                <td colspan="2">
-                    <div>
-                        <p>@Model.Order.PaymentReceived</p>
-                    </div>
-                </td>
-            </tr>
-
-            <tr>
-                <td><strong>Orden Retornada</strong></td>
-                <td colspan="2">
-                    <div>
-                        <p>@Model.Order.Returned</p>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td><strong>Orden reembolsada</strong></td>
-                <td colspan="2">
-                    <div>
-                        <p>@Model.Order.Refunded</p>
+                        @if (Model.Order.Email != null)
+                        {
+                            <p><strong>@Model.Order.Email?.To</strong> <a href="/Order/EmailNotification/@Model.Order.OrderId" target="_blank">Ver</a></p>
+                        }
                     </div>
                 </td>
             </tr>
@@ -161,14 +119,22 @@
                 <td><strong>Registro</strong></td>
                 <td colspan="2">
                     <div>
+                        <p>@Html.Raw(string.Join("<br/>",Model.Estados))</p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Cambios</strong></td>
+                <td colspan="2">
+                    <div>
                         @{ 
-                            var history = Model.Order.OrderHistory?.Replace("\r\n", "<br/>").Replace("\n", "<br/>") ?? string.Empty;
-                            if (history.StartsWith("<br/>"))
+                            var history = Model.Order.OrderHistory?.Split(new Char[] { ',', '\\', '\n', '\r' },
+                                 StringSplitOptions.RemoveEmptyEntries);
+                            if (history != null)
                             {
-                                history = history.Substring(5);
+                                <p>@Html.Raw(string.Join("<br/>", history))</p>
                             }
                         }
-                        @Html.Raw(history)
                     </div>
                 </td>
             </tr>

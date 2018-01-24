@@ -44,7 +44,11 @@ namespace RepoWebShop.Repositories
         {
             var result = GetComments(bookingId);
             if(result != null)
-                _appDbContext.ShoppingCartComments.RemoveRange(result);
+            {
+                var comments = _appDbContext.ShoppingCartComments.Where(x => x.ShoppingCartId == bookingId);
+                _appDbContext.ShoppingCartComments.RemoveRange(comments);
+            }
+                
             return result?.Comments ?? String.Empty;
         }
 

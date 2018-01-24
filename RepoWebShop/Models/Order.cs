@@ -99,7 +99,7 @@ namespace RepoWebShop.Models
                     case "pending":
                         return "Pendiente";
                     case "in_process":
-                        return "En proceso";
+                        return "Esperando Acreditación";
                     case "rejected":
                         return "Rechazado";
                     case "draft":
@@ -145,6 +145,9 @@ namespace RepoWebShop.Models
                         return new OrderMercadoPagoNotPaid();
                     else
                         return new OrderMercadoPagoPaid();
+                if (Status == "in_process")
+                    return new OrderMercadoPagoPaymentPending();
+
                 return new OrderPaymentNotKnown();
             }
         }
@@ -157,16 +160,19 @@ namespace RepoWebShop.Models
                 if (Returned)
                     return new OrderReturned();
 
-                if (Cancelled)
+                else if (Cancelled)
                     return new OrderCancelled();
 
-                if (PickedUp)
+                else if (PickedUp)
                     return new OrderPickedUp();
 
-                if (Finished)
+                else if (Finished)
                     return new OrderComplete();
 
-                return new OrderInProgress();
+                else if (Status == "reservation" || PaymentReceived)
+                    return new OrderInProgress();
+
+                return new OrderOnHold();
             }
         }
     }
