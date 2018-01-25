@@ -1,16 +1,27 @@
 ﻿@model HomeViewModel
 
 <link href="~/Content/Home/Index.css" rel="stylesheet" />
+@{ 
+    var background = "https://farm5.staticflickr.com/4536/23986590027_0f15735eb1_o.jpg";
+}
+
+@section metatags {
+    <meta property="og:url" content="@Model.HostUrl" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Repostería De las Artes" />
+    <meta property="og:description" content="Desde 1992" />
+    <meta property="og:image" content="@background" />
+}
 
 <header class="intro-header" id="intro-header">
-    <div class="parallax-window" data-parallax="scroll" data-image-src="https://farm5.staticflickr.com/4536/23986590027_0f15735eb1_o.jpg">
+    <div class="parallax-window" data-parallax="scroll" data-image-src="@background">
         @*<div class="parallax-window" data-parallax="scroll" data-image-src="/Pictures/index.jpg">*@
         <br />
 
         <div class="animated bounceInLeft">
             @Html.Partial("~/Views/Shared/Logo.cshtml")
         </div>
-        
+
         @*<img class="img-responsive animated bounceInLeft" alt="La Reposteria Shop'" src="~/Pictures/logo.png" />*@
         <div class="container">
             <div class="intro-message">
@@ -104,5 +115,5 @@
         centerMode: true,
         variableWidth: true
     });
-    
+
 </script>

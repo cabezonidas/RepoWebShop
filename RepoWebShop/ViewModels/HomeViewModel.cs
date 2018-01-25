@@ -9,5 +9,6 @@ namespace RepoWebShop.ViewModels
     public class HomeViewModel
     {
         public IEnumerable<PieDetailViewModel> PiesOfTheWeek { get; set; }
+        public string HostUrl { get; internal set; }
     }
 }

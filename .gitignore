@@ -290,3 +290,6 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+RepoWebShop/appsettings.development.json
+RepoWebShop/appsettings.staging.json
+RepoWebShop/appsettings.production.json

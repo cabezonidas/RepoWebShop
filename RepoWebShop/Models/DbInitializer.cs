@@ -93,9 +93,7 @@ namespace RepoWebShop.Models
                         new Pie { Name = "Estandar", Price = 200M, PieDetail = Piedetails["Linzer"], SizeDescription = "8 porciones" },
                         new Pie { Name = "Estandar", Price = 250M, PieDetail = Piedetails["Italiana"], SizeDescription = "8 porciones" },
                         new Pie { Name = "Chica", Price = 220M, PieDetail = Piedetails["Pasta frola"], SizeDescription = "8 porciones" },
-                        new Pie { Name = "250gr", Price = 120M, PieDetail = Piedetails["Masas"], SizeDescription = "4 personas" },
-                        new Pie { Name = "Estandar", Price = 580M, PieDetail = Piedetails["Desayuno"], SizeDescription = "Individual" },
-                        new Pie { Name = "Doble", Price = 580M, PieDetail = Piedetails["Desayuno"], SizeDescription = "2 personas" }
+                        new Pie { Name = "250gr", Price = 120M, PieDetail = Piedetails["Masas"], SizeDescription = "4 personas" }
                     );
                 }
                 context.SaveChanges();
