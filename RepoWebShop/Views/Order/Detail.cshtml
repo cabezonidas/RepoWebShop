@@ -7,7 +7,7 @@
 }
 
 <div class="container order-detail">
-    <h3>Detalles: @Model.Order.FriendlyBookingId</h3>
+    <h3>Detalles: @Model.Order.FriendlyBookingId - <a class="btn btn-info" href="/Order/InProgress">Pedidos</a></h3>
 
     <div class="container">
         <table class="table table-hover">
@@ -92,13 +92,41 @@
 
                 </td>
             </tr>
+            @{ 
+                if(!String.IsNullOrEmpty(Model.Order.CustomerComments))
+                {
+                    <tr>
+                        <td><strong>Comentarios del cliente</strong></td>
+                        <td colspan="2">@Model.Order.CustomerComments</td>
+                    </tr>
+                }
+            }
             <tr>
-                <td><strong>Comentarios</strong></td>
-                <td colspan="2">@Model.Order.CustomerComments</td>
+                <td><strong>Comentarios Administrativos</strong></td>
+                <td colspan="2">
+                    <div>
+                        <textarea id="mgmtcomments">@Model.Order.ManagementComments</textarea>
+                        <a href="#mgmtcomments" onclick="mgmtcomments()">Guardar</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Fecha Entrega</strong></td>
+                <td colspan="2">
+                    <div class="form-group">
+                        <div class='input-group date' id='pickupdate'>
+                            <input type='text' class="form-control" id="pickUpDate" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                        <a href="#pickUpDate" onclick="updatePickUpDate()">Guardar</a>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td><strong>Fecha Creacion</strong></td>
-                <td colspan="2">@Model.Order.OrderPlaced.ToShortDateString() @Model.Order.OrderPlaced.ToShortTimeString() </td>
+                <td colspan="2">@Model.Order.OrderPlaced.ToString("dd-MM-yyyy hh:mm:ss tt") </td>
             </tr>
             <tr>
                 <td><strong>Plazo</strong></td>
@@ -119,7 +147,7 @@
                 <td><strong>Registro</strong></td>
                 <td colspan="2">
                     <div>
-                        <p>@Html.Raw(string.Join("<br/>",Model.Estados))</p>
+                        <p>@Html.Raw(string.Join("<br/>", Model.Estados))</p>
                     </div>
                 </td>
             </tr>
@@ -127,13 +155,13 @@
                 <td><strong>Cambios</strong></td>
                 <td colspan="2">
                     <div>
-                        @{ 
-                            var history = Model.Order.OrderHistory?.Split(new Char[] { ',', '\\', '\n', '\r' },
-                                 StringSplitOptions.RemoveEmptyEntries);
-                            if (history != null)
-                            {
-                                <p>@Html.Raw(string.Join("<br/>", history))</p>
-                            }
+                        @{
+                    var history = Model.Order.OrderHistory?.Split(new Char[] { ',', '\\', '\n', '\r' },
+                         StringSplitOptions.RemoveEmptyEntries);
+                    if (history != null)
+                    {
+                        <p>@Html.Raw(string.Join("<br/>", history))</p>
+            }
                         }
                     </div>
                 </td>
@@ -149,6 +177,20 @@
     </div>
 </div>
 <script type="text/javascript">
+
+    @{
+        var defaultDate = Model.Order.PickUpTime.HasValue ? Model.Order.PickUpTime.Value.ToString("s") : "false";
+    }
+    var datetimepickertemp;
+    $(function () {
+        datetimepickertemp = $('#pickupdate').datetimepicker({
+            defaultDate: "@defaultDate",
+            locale: 'es',
+            daysOfWeekDisabled: [1]
+        });
+        console.log(datetimepickertemp)
+    });
+
     function payOrder() {
         $.ajax({
             type: 'POST',
@@ -192,9 +234,9 @@
     }
 
 
-    $("#pickUpSubmit").on('click', function () {
-        var parts = $("#pickUpDateSubmit").val().split("/");
-        var date = new Date(parts[2], parts[1] - 1, parts[0]);
+    function updatePickUpDate() {
+        var date = $("input#pickUpDate").val().replace(" ", "/").replace(":", "/");
+        
 
         $.ajax({
             type: 'POST',
@@ -207,16 +249,13 @@
                 handleError();
             }
         });
-    });
+    }
 
-    $.fn.datepicker.defaults.format = "dd/mm/yyyy";
-$('.datepicker').datepicker();
-
-function addComments(comments) {
+function mgmtcomments() {
     $.ajax({
         type: 'POST',
         data: {},
-        url: '/api/OrderData/AddComments/' + '@Model.Order.OrderId' + '/' + comments,
+        url: '/api/OrderData/AddComments/' + '@Model.Order.OrderId' + '/' + $('textarea#mgmtcomments').val(),
         success: function () {
             handleSuccess();
         },
@@ -230,7 +269,11 @@ function handleSuccess() {
     $('#successMessage').fadeIn(1000).fadeOut(2000);
 }
 function handleError() {
-    $('#errorMessage').css("display", "flex");
-}
+    $('#errorMessage').fadeIn(1000).fadeOut(2000);
+    }
+
+    $(document).on('click', 'a[href^="#"]', function (event) {
+        event.preventDefault();
+    });
 </script>
 

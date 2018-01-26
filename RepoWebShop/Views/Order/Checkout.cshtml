@@ -12,7 +12,9 @@
         <link rel="stylesheet" href="~/Content/Order/Checkout.css">
 
         <div class="container">
-            <h4>Estás a un paso de tus delicias.</h4>
+            <br />
+            <h3>Estás a un paso de tus delicias.</h3>
+            <h4>Por favor, verifica tu número de teléfono.</h4>
         </div>
 
         <div class="container">
@@ -23,9 +25,11 @@
                         <input class="form-control" type="tel" id="phone" />
                         <input asp-for="PhoneNumber" class="form-control" type="tel" id="phoneBinded" style="display:none;" />
                         <input id="save" type="button" class="btn btn-primary" value="Guardar" />
+                        <a id="retry" class="btn btn-default hidden" onclick="window.location.reload()">Reintentar</a>
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         <br />
                         <span class="text-danger" id="mobileError" style="display:none;">Por favor, ingrese un número válido.</span>
+
                     </div>
                 </div>
 
@@ -75,7 +79,6 @@
             }
 
             function verifyNumber() {
-                console.log('test');
                 $("input#save").prop('disabled', true);
                 $("input#phone").prop('disabled', true);
                 if ($("#phone").intlTelInput("getValidationError") == 0) {
@@ -91,12 +94,14 @@
                     $("input#save").prop('disabled', false);
                     $("input#phone").prop('disabled', false);
                 }
+                $("#retry").removeClass('hidden');
             }
 
             function validCode() {
                 $("#code").prop('disabled', true);
                 $("#verify").prop('disabled', true);
                 $("#codeError").hide();
+                $('#retry').hide();
 
                 $("#submitOrder").prop('disabled', false).show();
             }
@@ -115,7 +120,6 @@
             }
 
             $("input#save").on('click', verifyNumber);
-
             $("input#verify").on('click', verifyCode);
         </script>
 

@@ -30,6 +30,14 @@ namespace RepoWebShop.Controllers
                 return NotFound();
         }
 
+        [Route("AddComments/{orderId}")]
+        [HttpPost]
+        public IActionResult AddComments(int orderId)
+        {
+            _orderRepository.UpdateManagementComments(orderId, string.Empty);
+            return Ok();
+        }
+
         [Route("AddComments/{orderId}/{comments}")]
         [HttpPost]
         public IActionResult AddComments(int orderId, string comments)
@@ -38,12 +46,19 @@ namespace RepoWebShop.Controllers
             return Ok();
         }
 
-        [Route("UpdatePickUpDate/{orderId}/{pickUp}")]
+        [Route("UpdatePickUpDate/{orderId}/{dd}/{mm}/{yyyy}/{hh}/{min}")]
         [HttpPost]
-        public IActionResult UpdatePickUpDate(int orderId, DateTime pickUp)
+        public IActionResult UpdatePickUpDate(int orderId, int dd, int mm, int yyyy, int hh, int min)
         {
-            _orderRepository.UpdatePickUpDate(orderId, pickUp);
-            return Ok();
+            try
+            {
+                DateTime date = new DateTime(yyyy, mm, dd, hh, mm, 0);
+                _orderRepository.UpdatePickUpDate(orderId, date);
+                return Ok();
+            }catch
+            {
+                return BadRequest();
+            }
         }
 
         [Route("PickUpOrder/{orderId}")]
