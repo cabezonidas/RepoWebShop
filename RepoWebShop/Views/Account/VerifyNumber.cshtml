@@ -1,0 +1,114 @@
+﻿@model AppUserValidateViewModel
+
+@section styles {
+    <link rel="stylesheet" href="~/lib/intl-tel-input/build/css/intlTelInput.css">
+    <link rel="stylesheet" href="~/Content/Account/VerifyNumber.css">
+}
+
+
+    <div class="container dialog">
+        <br />
+        <h3 class="text-center">Por favor, verifica tu número de teléfono.</h3>
+        <h4 class="text-center">Esto lo hacemos una sola vez.</h4>
+        <div id="formbox">
+            <form role="form" id="msg">
+                <div class="">
+                    <h4>Validar número de celular</h4>
+                    <input asp-for="PhoneNumber" class="form-control" type="tel" id="phone" /> <br />
+                    <div class="text-danger hidden" id="errormsg">El número ingresado es inválido.</div>
+                    <a class="btn btn-primary" id="send" onclick="verifyNumber();">Enviar</a>
+                    <a class="btn btn-default hidden" id="retry" onclick="window.location.reload();">Reintentar</a>
+                </div>
+
+                <div class=" hidden" id="validationbox" style="">
+                    <h4>Escribir código recibido</h4>
+                    <input id="Token" class="form-control" style="width:228px;" />
+                    <div class="text-danger hidden" id="validerrormsg">El número ingresado no coincide con el generado.</div>
+                    <a id="validate" class="btn btn-primary" onclick="validate()">Validar</a>
+                </div>
+                <div class="form-group code">
+                </div>
+            </form>
+        </div>
+
+
+
+    </div>
+
+<script src="~/lib/intl-tel-input/build/js/intlTelInput.min.js"></script>
+
+<script type="text/javascript">
+    $("#phone").intlTelInput({
+        initialCountry: "ar",
+        geoIpLookup: function (callback) {
+            $.get("http://ipinfo.io", function () { }, "jsonp").always(function (resp) {
+                var countryCode = (resp && resp.country) ? resp.country : "";
+                callback(countryCode);
+            });
+        },
+        preferredCountries: ['ar', 'br', 'nz'],
+        separateDialCode: true,
+        utilsScript: "/lib/intl-tel-input/build/js/utils.js"
+    });
+
+    function msgSent() {
+        $('#validationbox').removeClass('hidden');
+        $('#retry').removeClass('hidden');
+        $("div#errormsg").addClass('hidden')
+    }
+    function msgNotSent() {
+        $("div#errormsg").removeClass('hidden');
+        $("div#retry").removeClass('hidden');
+    }
+
+    function verifyNumber() {
+        $("input#send").prop('disabled', true);
+        $("input#phone").prop('disabled', true);
+        if ($("#phone").intlTelInput("getValidationError") == 0) {
+            $("div#errormsg").addClass('hidden');
+            $("a#send").addClass('hidden', true);
+            $.ajax({
+                url: '/api/AccountData/SendValidationSms/' + $("#phone").intlTelInput("getNumber").replace('+', ''),
+                type: "POST",
+                success: msgSent,
+                error: msgNotSent
+            })
+        } else {
+            $("#errormsg").removeClass('hidden');
+            $("input#send").prop('disabled', false);
+            $("input#phone").prop('disabled', false);
+        }
+    }
+    function validate() {
+        $.ajax({
+            url: '/api/AccountData/VerifyNumber/' + $("#Token").val(),
+            type: "POST",
+            success: matchingCode,
+            error: noMatchingCod
+        });
+    }
+
+    function matchingCode() {
+        @if(!String.IsNullOrEmpty(Model.Controller) && !String.IsNullOrEmpty(Model.Action))
+        {
+            <text>
+                window.location = '/@Model.Controller/@Model.Action';
+            </text>
+        }
+        else
+        {
+            <text>
+                window.location = '/Account/Profile';
+            </text>
+        }
+
+
+    }
+    function noMatchingCod() {
+        $("div#validerrormsg").removeClass('hidden');
+    }
+</script>
+
+
+
+

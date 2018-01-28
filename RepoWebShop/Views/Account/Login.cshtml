@@ -1,40 +1,50 @@
 ﻿@model LoginViewModel
-<div class="container">
-    <h2>Por favor, inicia sesión para poder ordenar.</h2>
+<style>
+    td {
+        padding: 5px;
+    }
+    table {
+        margin: auto;
+    }
+</style>
 
+<div class="container" style="margin: auto; max-width: 600px;">
+    <form asp-controller="Account" asp-action="Login" method="post"  role="form">
+        <input type="hidden" asp-for="ReturnUrl" />
+        <div asp-validation-summary="All" class="text-danger"></div>
 
-    <div class="row">
-        <section>
-            <form asp-controller="Account" asp-action="Login" method="post" class="form-horizontal" role="form">
-                <h4>Ingresa tus detalles</h4>
-                <hr />
-                <input type="hidden" asp-for="ReturnUrl" />
-                <div asp-validation-summary="All" class="text-danger"></div>
-
-                <div class="form-group">
-                    <label asp-for="UserName" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
+        <table>
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <h4 class="text-center">Ingresa tus detalles</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label asp-for="UserName" class="control-label"></label>
+                    </td>
+                    <td>
                         <input asp-for="UserName" class="form-control" />
                         <span asp-validation-for="UserName" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="Password" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label asp-for="Password" class="control-label"></label>
+                    </td>
+                    <td>
                         <input asp-for="Password" class="form-control" />
                         <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
                         <input type="submit" class="btn btn-primary" value="Iniciar Sesión" />
                         <a id="registerLink" asp-controller="Account" asp-action="Register" class="btn btn-primary">Registrarse</a>
-                    </div>
-                </div>
-
-            </form>
-        </section>
-    </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
 </div>

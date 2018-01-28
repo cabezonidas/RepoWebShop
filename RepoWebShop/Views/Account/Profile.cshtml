@@ -1,0 +1,95 @@
+﻿@model ApplicationUser
+
+@section styles {
+    <link href="~/Content/Account/Profile.css" rel="stylesheet" />
+}
+<section class="container">
+    <table class="userdata">
+        <thead>
+            <tr>
+                <th colspan="3">
+                 <h2 class="text-center">Detalles de usuario</h2>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="1" valign="top"><label asp-for="FirstName"></label></td>
+                <td colspan="1" valign="top">@Model.FirstName</td>
+                <td colspan="1" rowspan="3" valign="top"><a asp-action="ProfileDetails" asp-controller="Account">Modificar</a></td>
+            </tr>
+            <tr>
+                <td colspan="1" valign="top"><label asp-for="LastName"></label></td>
+                <td colspan="1" valign="top">@Model.LastName</td>
+            </tr>
+            <tr>
+                <td colspan="1" valign="top"><label asp-for="AddressLine1"></label></td>
+                <td colspan="1" valign="top">@Model.AddressLine1</td>
+            </tr>
+            <tr>
+                <td colspan="1" valign="top"><label asp-for="Email"></label></td>
+
+                <td colspan="1" valign="top">
+                    @Model.Email
+
+                    @if (Model.EmailConfirmed)
+                    {
+                        <i class="fa fa-check" style="color: limegreen;" aria-hidden="true"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-times" style="color: red;" aria-hidden="true"></i>
+                    }
+                </td>
+                <td colspan="1" valign="top">
+                    @if (!Model.EmailConfirmed)
+    {
+                <a onclick="confirmEmail();">Confirmar</a>
+}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" valign="top"><label asp-for="PhoneNumber"></label></td>
+
+                <td colspan="1" valign="top">
+                    @Model.PhoneNumber
+
+                    @if (Model.PhoneNumberConfirmed)
+                    {
+                        <i class="fa fa-check" style="color: limegreen;" aria-hidden="true"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-times" style="color: red;" aria-hidden="true"></i>
+                    }
+                </td>
+                <td colspan="1" valign="top">
+                    @if (!Model.PhoneNumberConfirmed)
+    {
+                <a asp-action="VerifyNumber" asp-controller="Account">Confirmar</a>
+}
+else
+{
+                <a asp-action="VerifyNumber" asp-controller="Account">Cambiar</a>
+
+}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" valign="top"><label asp-for="Password"></label></td>
+                <td colspan="1" valign="top"><strong>******</strong></td>
+                <td colspan="1" valign="top"><a asp-action="ChangePassword" asp-controller="Account">Cambiar</a></td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+<script>
+    function confirmEmail() {
+        $.ajax({
+            url: '/api/AccountData/ValidateEmail/',
+            type: "POST"
+        })
+    }
+</script>

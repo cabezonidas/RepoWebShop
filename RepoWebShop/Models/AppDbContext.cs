@@ -30,7 +30,6 @@ namespace RepoWebShop.Models
         public DbSet<PieDetail> PieDetails { get; set; }
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
         public DbSet<ShoppingCartComment> ShoppingCartComments { get; set; }
-        public DbSet<ShoppingCartValidationNumber> ShoppingCartValidationNumbers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Email> Emails { get; set; }

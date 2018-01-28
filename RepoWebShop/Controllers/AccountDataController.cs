@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
@@ -22,38 +24,39 @@ namespace RepoWebShop.Controllers
     {
         private readonly ShoppingCart _shoppingCart;
         private readonly IOrderRepository _orderRepository;
+        private readonly IAccountRepository _accountRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailRepository _emailRepository;
         private readonly string _accountSid;
         private readonly string _authToken;
         private readonly string _sender;
-
-        public AccountDataController(ShoppingCart shoppingCart, IConfiguration config, IOrderRepository orderRepository)
+        private ApplicationUser _currentUser
         {
+            get
+            {
+                return _userManager.Users.FirstOrDefault(x => x.NormalizedUserName.ToLower() == HttpContext.User.Identity.Name.ToLower());
+            }
+        }
+        public AccountDataController(IEmailRepository emailRepository, UserManager<ApplicationUser> userManager, IAccountRepository accountRepository, ShoppingCart shoppingCart, IConfiguration config, IOrderRepository orderRepository)
+        {
+            _emailRepository = emailRepository;
+            _accountRepository = accountRepository;
             _orderRepository = orderRepository;
             _shoppingCart = shoppingCart;
             _accountSid = config.GetSection("TwilioAccoundSid").Value;
             _authToken = config.GetSection("TwilioAuthToken").Value;
             _sender = config.GetSection("TwilioSender").Value;
+            _userManager = userManager;
+                     
         }
-
         [Authorize]
-        [Route("SendText/{number}")]
+        [Route("ValidateEmail")]
         [HttpPost]
-        public IActionResult SendText(string number)
+        public IActionResult ValidateEmail()
         {
-            number = HttpUtility.HtmlDecode(number);
-            var ticks = DateTime.Now.Ticks.ToString();
-            var token = ticks.Substring(ticks.Length - 4, 4);
-
-            _shoppingCart.AddValidationNumber(token);
-
-            TwilioClient.Init(_accountSid, _authToken);
-
             try
             {
-                var result = MessageResource.Create(
-                    from: new PhoneNumber(_sender),
-                    to: new PhoneNumber("+" + number),
-                    body: "Tu código es " + token + ". Gracias por tu reserva. La reposteria.");
+                _emailRepository.SendEmailActivationAsync(_currentUser, Request.HostUrl());
                 return Ok();
             }
             catch
@@ -61,21 +64,33 @@ namespace RepoWebShop.Controllers
                 return BadRequest();
             }
         }
-        
+
         [Authorize]
-        [Route("VerifyCode/{number}")]
-        [HttpGet]
-        public IActionResult VerifyCode(string number)
+        [Route("SendValidationSms/{number}")]
+        [HttpPost]
+        public IActionResult SendValidationSms(string number)
         {
-            string generatedCode = _shoppingCart.GetValidationNumber();
-            if(number == generatedCode)
+            number = HttpUtility.HtmlDecode(number);
+            var token = _accountRepository.SendValidationCode(_currentUser, number);
+            if (String.IsNullOrEmpty(token))
+                return BadRequest();
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("VerifyNumber/{number}")]
+        public IActionResult VerifyNumber(string number)
+        {
+            if (number == _currentUser.ValidationPhoneToken)
             {
-                _shoppingCart.ValidatePhone(number);
+                _currentUser.PhoneNumberConfirmed = true;
+                _currentUser.PhoneNumber = _currentUser.PhoneNumberDeclared;
+                _userManager.UpdateAsync(_currentUser).Wait();
                 return Ok();
             }
             else
             {
-                return BadRequest();
+                return BadRequest("Número de activación no coincide.");
             }
         }
     }

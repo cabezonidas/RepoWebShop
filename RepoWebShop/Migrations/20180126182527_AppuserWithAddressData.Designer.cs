@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180126182527_AppuserWithAddressData")]
+    partial class AppuserWithAddressData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,12 +178,10 @@ namespace RepoWebShop.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
-                    b.Property<string>("PhoneNumberDeclared");
-
                     b.Property<string>("SecurityStamp");
 
                     b.Property<string>("State")
-                        .HasMaxLength(50);
+                        .HasMaxLength(10);
 
                     b.Property<string>("StreetName")
                         .IsRequired()
@@ -198,13 +197,9 @@ namespace RepoWebShop.Migrations
                         .IsRequired()
                         .HasMaxLength(256);
 
-                    b.Property<DateTime?>("ValidationMailToken");
-
-                    b.Property<string>("ValidationPhoneToken");
-
                     b.Property<string>("ZipCode")
                         .IsRequired()
-                        .HasMaxLength(50);
+                        .HasMaxLength(10);
 
                     b.HasKey("Id");
 
@@ -321,6 +316,7 @@ namespace RepoWebShop.Migrations
                     b.Property<DateTime?>("Payout");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasMaxLength(25);
 
                     b.Property<DateTime?>("PickUpTime");
@@ -573,6 +569,24 @@ namespace RepoWebShop.Migrations
                     b.HasIndex("PieId");
 
                     b.ToTable("ShoppingCartItems");
+                });
+
+            modelBuilder.Entity("RepoWebShop.Models.ShoppingCartValidationNumber", b =>
+                {
+                    b.Property<int>("ShoppingCartValidationNumberId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<string>("ShoppingCartId");
+
+                    b.Property<DateTime?>("Validated");
+
+                    b.Property<string>("ValidationNumber");
+
+                    b.HasKey("ShoppingCartValidationNumberId");
+
+                    b.ToTable("ShoppingCartValidationNumbers");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.Vacation", b =>

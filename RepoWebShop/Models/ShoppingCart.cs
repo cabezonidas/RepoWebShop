@@ -72,34 +72,7 @@ namespace RepoWebShop.Models
             _appDbContext.SaveChanges();
         }
 
-        public string GetValidationNumber()
-        {
-            var result = _appDbContext.ShoppingCartValidationNumbers.Where(x => x.ShoppingCartId == shoppingCartId).OrderByDescending(x => x.Created).FirstOrDefault();
-            if (result != null)
-                return result.ValidationNumber;
-            else
-                return string.Empty;
-        }
 
-        public void ValidatePhone(string number)
-        {
-            var result = _appDbContext.ShoppingCartValidationNumbers.First(x => x.ShoppingCartId == shoppingCartId && x.ValidationNumber == number);
-            result.Validated = _calendarRepository.LocalTime();
-            _appDbContext.SaveChanges();
-        }
-
-        public void AddValidationNumber(string token)
-        {
-            _appDbContext.ShoppingCartValidationNumbers.Add(
-                new ShoppingCartValidationNumber()
-                {
-                    ShoppingCartId = ShoppingCartId,
-                    ValidationNumber = token,
-                    Created = _calendarRepository.LocalTime()
-                }
-            );
-            _appDbContext.SaveChanges();
-        }
 
         internal void ClearFromCart(int pieId)
         {
@@ -181,10 +154,6 @@ namespace RepoWebShop.Models
             return localAmount;
         }
 
-        public bool IsPhoneValidated()
-        {
-            return _appDbContext.ShoppingCartValidationNumbers.Where(x => x.ShoppingCartId == shoppingCartId && x.Validated.HasValue).Count() > 0;
-        }
 
         public List<ShoppingCartItem> GetShoppingCartItems()
         {

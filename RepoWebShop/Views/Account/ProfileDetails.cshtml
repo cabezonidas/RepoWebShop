@@ -1,23 +1,17 @@
-﻿@model ApplicationUser
+﻿@model ApplicationUserViewModel
 
 <div class="container">
-    <h2>Registrate ahora en De las Artes</h2>
-    <form asp-controller="Account" asp-action="Register" method="post" class="form-horizontal" role="form">
-        <h4>Crea una cuenta y pide tu producto preferido ahora!</h4>
-        <div asp-validation-summary="All" class="text-danger"></div>
+    <h2>Modificar datos personales</h2>
+    <form asp-controller="Account" asp-action="ProfileDetails" method="post" class="form-horizontal" role="form">
         <hr />
+        <span class="text-danger">
+            @Model.ErrorMsg
+        </span>
         <div class="form-group">
             <label asp-for="UserName" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <input asp-for="UserName" class="form-control" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Password" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
         </div>
 
@@ -100,15 +94,22 @@
             </div>
         </div>
 
-
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" class="btn btn-primary" value="Registrarse" />
+                <input type="submit" class="btn btn-primary" value="Guardar" />
+                <a class="btn btn-default" asp-action="Profile" asp-controller="Account" >Cancelar</a>
             </div>
         </div>
     </form>
 </div>
 <script>
+    // This example displays an address form, using the autocomplete feature
+    // of the Google Places API to help users fill in the information.
+
+    // This example requires the Places library. Include the libraries=places
+    // parameter when you first load the API. For example:
+    // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
     var placeSearch, autocomplete;
     var componentForm = {
         street_number: 'short_name',

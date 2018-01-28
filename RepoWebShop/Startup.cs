@@ -69,6 +69,7 @@ namespace RepoWebShop
             services.AddTransient<IPaymentNoticeRepository, PaymentNoticeRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IEmailRepository, EmailRepository>();
+            services.AddTransient<IAccountRepository, AccountRepository>();
             services.AddTransient<IShoppingCartRepository, ShoppingCartRepository>();
             services.AddTransient<IGalleryRepository, GalleryRepository>();
             services.AddTransient<ICalendarRepository, CalendarRepository>();
@@ -81,6 +82,7 @@ namespace RepoWebShop
             services.AddReact();
 
             services.AddMvc();
+
             services.AddAutoMapper();
             services.AddMemoryCache();
             services.AddSession();

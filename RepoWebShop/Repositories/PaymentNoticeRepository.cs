@@ -39,7 +39,7 @@ namespace RepoWebShop.Repositories
             if (paymentNotification.Status == "approved")
             {
                 Order orderApproved = _orderRespository.OrderApproved(paymentNotification);
-                _emailRespository.Send(orderApproved, hostUrl, paymentNotification);
+                _emailRespository.SendOrderConfirmation(orderApproved, hostUrl, paymentNotification);
             }
 
             else if (paymentNotification.Status == "in_process")

@@ -14,20 +14,29 @@ namespace RepoWebShop.Controllers
 {
     public class OrderController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IOrderRepository _orderRepository;
         private readonly ShoppingCart _shoppingCart;
         private readonly IPieDetailRepository _pieDetailRepository;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IAccountRepository _accountRepository;
         private readonly IEmailRepository _emailRespository;
         private readonly IMapper _mp;
         private readonly ICalendarRepository _calendarRepository;
-
-        public OrderController(ICalendarRepository calendarRepository, IMapper mp, IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, ShoppingCart shoppingCart, UserManager<ApplicationUser> userManager)
+        private ApplicationUser _currentUser
         {
+            get
+            {
+                return _userManager.Users.FirstOrDefault(x => x.NormalizedUserName.ToLower() == HttpContext.User.Identity.Name.ToLower());
+            }
+        }
+
+        public OrderController(UserManager<ApplicationUser> userManager, ICalendarRepository calendarRepository, IMapper mp, IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, ShoppingCart shoppingCart, IAccountRepository accountRepository)
+        {
+            _userManager = userManager;
             _pieDetailRepository = pieDetailRepository;
             _orderRepository = orderRepository;
             _shoppingCart = shoppingCart;
-            _userManager = userManager;
+            _accountRepository = accountRepository;
             _emailRespository = emailRespository;
             _mp = mp;
             _calendarRepository = calendarRepository;
@@ -209,7 +218,10 @@ namespace RepoWebShop.Controllers
         public IActionResult Checkout()
         {
             if (_shoppingCart.GetShoppingCartItems().Count() > 0)
-                return View();
+                if(_currentUser.PhoneNumberConfirmed)
+                    return View(_currentUser);
+                else
+                    return Redirect($"/Account/VerifyNumber/Order/Checkout/");
             else
                 return RedirectToAction("Index", "Home");
         }
@@ -226,15 +238,16 @@ namespace RepoWebShop.Controllers
                 ModelState.AddModelError("", "Tu carrito no puede estar vacío, agrega algunos productos.");
             }
 
-            if(!_shoppingCart.IsPhoneValidated())
+            if(!_currentUser.PhoneNumberConfirmed)
             {
                 ModelState.AddModelError("", "El número de teléfono no esta verificado.");
+                Redirect($"/Account/VerifyNumber/Order/Checkout/");
             }
-
+            order.PhoneNumber = _currentUser.PhoneNumber;
             if (ModelState.IsValid)
             {
                 order.OrderTotal = _shoppingCart.ShoppingCartItems.Select(x => x.Amount * x.Pie.Price).Sum();
-                order.Registration = GetCurrentUser();
+                order.Registration = _currentUser;
                 order.CustomerComments = _shoppingCart.GetShoppingCartComments();
                 order.BookingId = _shoppingCart.ShoppingCartId;
                 order.Status = "reservation";
@@ -244,7 +257,7 @@ namespace RepoWebShop.Controllers
                 _shoppingCart.ClearCart();
 
 
-                _emailRespository.Send(order, Request.HostUrl(), null);
+                _emailRespository.SendOrderConfirmation(order, Request.HostUrl(), null);
 
                 return Redirect($"/Order/Status/{order.FriendlyBookingId}");
             }
@@ -254,15 +267,10 @@ namespace RepoWebShop.Controllers
         [Authorize]
         public IActionResult CheckoutComplete()
         {
-            var firstName = GetCurrentUser()?.FirstName ?? "Estimado/a";
+            var firstName = _currentUser?.FirstName ?? "Estimado/a";
             ViewBag.CheckoutCompleteMessage = firstName + ", gracias por tu reserva. Falta poco para que disfrutes de nuestras delicias!";
 
             return View();
-        }
-
-        private ApplicationUser GetCurrentUser()
-        {
-            return _userManager.Users.FirstOrDefault(x => x.NormalizedUserName.ToLower() == HttpContext.User.Identity.Name.ToLower());
         }
     }
 }

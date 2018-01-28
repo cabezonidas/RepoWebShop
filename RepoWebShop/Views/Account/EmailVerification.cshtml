@@ -1,0 +1,15 @@
+﻿@model EmailValidationViewModel
+<div class="container">
+    <br />
+    <div style="max-width: 600px; margin: auto;">    
+        @if(Model.EmailConfirmed)
+        {
+            <div class="alert alert-success text-center">¡Felicitaciones tu cuenta ya está activada!</div>
+        }
+        else
+        {
+            <div class="alert alert-danger text-center">No pudimos activar tu cuenta. Por favor, inicia sesión, e intentalo desde tu perfil.</div>
+        }
+        @Html.Partial("~/Views/Account/Login.cshtml", new LoginViewModel())
+    </div>
+</div>

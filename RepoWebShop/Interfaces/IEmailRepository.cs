@@ -4,6 +4,7 @@ namespace RepoWebShop.Interfaces
 {
     public interface IEmailRepository
     {
-        void Send(Order order, string hostUrl, PaymentNotice payment);
+        void SendOrderConfirmation(Order order, string hostUrl, PaymentNotice payment);
+        void SendEmailActivationAsync(ApplicationUser appUser, string hostUrl);
     }
 }

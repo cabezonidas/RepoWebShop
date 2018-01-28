@@ -10,6 +10,7 @@ namespace RepoWebShop.Models
         public MappingProfile()
         {
             CreateMap<PieDetailCreateViewModel, PieDetail>();
+            CreateMap<ApplicationUser, EmailValidationViewModel>();
             CreateMap<PieDetail, PieDetailCreateViewModel>();
             CreateMap<PieDetail, PieDetail>().ForMember(x => x.PieDetailId, opt => opt.Ignore());
             CreateMap<Order, OrderStatusViewModel>();
@@ -17,6 +18,8 @@ namespace RepoWebShop.Models
             CreateMap<IdentityUser, ApplicationUser>();
             CreateMap<WorkingHours, OpenHours>();
             CreateMap<WorkingHours, ProcessingHours>();
+            CreateMap<ApplicationUser, ApplicationUserViewModel>();
+            CreateMap<ApplicationUserViewModel, ApplicationUser>();
             CreateMap<AddSpecialDateViewModel, PublicHoliday>()
                 .ForMember(x => x.OpenHours,
                     opt => opt.MapFrom(src => src.OpenHoursStartingAt.HasValue && src.OpenHoursFinishingAt.HasValue  ? 

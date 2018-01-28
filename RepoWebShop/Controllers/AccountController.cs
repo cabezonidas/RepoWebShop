@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
@@ -10,6 +11,9 @@ using Microsoft.AspNetCore.Authorization;
 using RepoWebShop.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
+using RepoWebShop.Interfaces;
+using System.Security.Cryptography;
+using RepoWebShop.Extensions;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,13 +24,25 @@ namespace RepoWebShop.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IAccountRepository _accountRepository;
+        private readonly IEmailRepository _emailRepository;
         private readonly IMapper _mapper;
-
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
+        private ApplicationUser _currentUser
         {
+            get
+            {
+                return _userManager.Users.FirstOrDefault(x => x.NormalizedUserName.ToLower() == HttpContext.User.Identity.Name.ToLower());
+            }
+        }
+            
+
+        public AccountController(IEmailRepository emailRepository, IAccountRepository accountRepository, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
+        {
+            _emailRepository = emailRepository;
             _userManager = userManager;
             _signInManager = signInManager;
             _mapper = mapper;
+            _accountRepository = accountRepository;
         }
 
         [AllowAnonymous]
@@ -38,6 +54,39 @@ namespace RepoWebShop.Controllers
                 ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList(),
                 ReturnUrl = returnUrl
             });
+        }
+
+        [AllowAnonymous]
+        [Route("[Controller]/EmailVerification/{user}/{hash}")]
+        public IActionResult EmailVerification(string user, string hash)
+        {
+            ApplicationUser appUser = _userManager.Users.FirstOrDefault(x => x.UserName.ToLower() == user.ToLower());
+            if(appUser == null)
+            {
+                return NotFound();
+            }
+
+            string savedHash = SHA256.Create().FromString(appUser.ValidationMailToken.ToString());
+
+            if (savedHash == hash)
+            {
+                appUser.EmailConfirmed = true;
+                _userManager.UpdateAsync(appUser);
+            }
+            var result = _mapper.Map<ApplicationUser, EmailValidationViewModel>(appUser);
+
+            return View(result);
+        }
+        
+        [AllowAnonymous]
+        [Route("[Controller]/EmailVerificationBodyEmail/{user}/{hash}")]
+        public IActionResult EmailVerificationBodyEmail(string user, string hash)
+        {
+            ApplicationUser appUser = _userManager.Users.FirstOrDefault(x => x.UserName.ToLower() == user.ToLower());
+            var result = _mapper.Map<ApplicationUser, EmailValidationViewModel>(appUser);
+            result.HostUrl = Request.HostUrl();
+            result.Hash = hash;
+            return View(result);
         }
 
         [AllowAnonymous]
@@ -80,7 +129,7 @@ namespace RepoWebShop.Controllers
                         return Redirect(loginViewModel.ReturnUrl);
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     ModelState.AddModelError("", ex.Message);
                     return View(loginViewModel);
@@ -109,10 +158,82 @@ namespace RepoWebShop.Controllers
 
                 if (result.Succeeded)
                 {
+                    _emailRepository.SendEmailActivationAsync(registration, Request.HostUrl());
                     return RedirectToAction("Index", "Home");
                 }
             }
             return View(registration);
+        }
+
+        [Authorize]
+        public IActionResult ChangePassword()
+        {
+            return View(new PasswordChangeViewModel());
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(PasswordChangeViewModel passwordChange)
+        {
+            if (ModelState.IsValid)
+            {
+                if(passwordChange.New != passwordChange.NewRepeated)
+                {
+                    passwordChange.ErrorMsg = "La contraseña nueva no coincide";
+                    return View(passwordChange);
+                }
+
+                var result = await _userManager.ChangePasswordAsync(_currentUser, passwordChange.Current, passwordChange.New);
+                
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Profile", "Account");
+                }
+                else
+                {
+                    passwordChange.ErrorMsg = result.Errors.FirstOrDefault()?.Description ?? string.Empty;
+                }
+            }
+            return View(passwordChange);
+        }
+
+        [Authorize]
+        public IActionResult Profile()
+        {
+            
+            return View(_currentUser);
+        }
+
+        [Authorize]
+        public IActionResult ProfileDetails()
+        {
+            var result = _mapper.Map<ApplicationUser, ApplicationUserViewModel>(_currentUser);
+
+            return View(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ProfileDetails(ApplicationUserViewModel appUserViewModel)
+        {
+            var currentUser = _currentUser;
+
+            currentUser = _mapper.Map(appUserViewModel, currentUser);
+
+            if (ModelState.IsValid)
+            {
+                var result = await _userManager.UpdateAsync(currentUser);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Profile", "Account");
+                }
+                else
+                {
+                    appUserViewModel.ErrorMsg = result.Errors.FirstOrDefault()?.Description ?? string.Empty;
+                }
+            }
+            return View(appUserViewModel);
         }
 
         [HttpPost]
@@ -120,6 +241,24 @@ namespace RepoWebShop.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        [Route("[Controller]/VerifyNumber/{controllerName}/{actionName}/")]
+        public IActionResult VerifyNumber(string controllerName, string actionName)
+        {
+            var result = new AppUserValidateViewModel()
+            {
+                Controller = controllerName,
+                Action = actionName
+            };
+            return View(result);
+        }
+
+        [HttpGet]
+        public IActionResult VerifyNumber()
+        {
+            return View(new AppUserValidateViewModel());
         }
     }
 }
