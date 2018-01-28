@@ -11,10 +11,6 @@ namespace RepoWebShop.Models
         [Display(Name = "Nombre de usuario")]
         public override string UserName { get; set; }
 
-        [Required(ErrorMessage = "Por favor ingrese una contraseña")]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
-
         [Required(ErrorMessage = "Por favor ingrese su nombre")]
         [Display(Name = "Nombre")]
         [StringLength(50)]

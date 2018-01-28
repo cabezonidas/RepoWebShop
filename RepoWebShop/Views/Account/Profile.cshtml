@@ -43,9 +43,12 @@
                 </td>
                 <td colspan="1" valign="top">
                     @if (!Model.EmailConfirmed)
-    {
-                <a onclick="confirmEmail();">Confirmar</a>
-}
+                    {
+                    <div id="emailConfirmBox">
+                        <a href="#" id="confirmEmail" onclick="confirmEmail();">Confirmar</a>
+
+                    </div>
+                    }
                 </td>
             </tr>
             <tr>
@@ -76,7 +79,7 @@ else
                 </td>
             </tr>
             <tr>
-                <td colspan="1" valign="top"><label asp-for="Password"></label></td>
+                <td colspan="1" valign="top"><label>Password</label></td>
                 <td colspan="1" valign="top"><strong>******</strong></td>
                 <td colspan="1" valign="top"><a asp-action="ChangePassword" asp-controller="Account">Cambiar</a></td>
             </tr>
@@ -89,7 +92,11 @@ else
     function confirmEmail() {
         $.ajax({
             url: '/api/AccountData/ValidateEmail/',
-            type: "POST"
+            type: "POST",
+            success: function success() {
+                $('#emailConfirmBox').empty();
+                $('#emailConfirmBox').append('Revisar email');
+            }
         })
     }
 </script>

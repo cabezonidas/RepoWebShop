@@ -10,6 +10,7 @@ namespace RepoWebShop.Models
         public MappingProfile()
         {
             CreateMap<PieDetailCreateViewModel, PieDetail>();
+            CreateMap<RegisterViewModel, ApplicationUser>();
             CreateMap<ApplicationUser, EmailValidationViewModel>();
             CreateMap<PieDetail, PieDetailCreateViewModel>();
             CreateMap<PieDetail, PieDetail>().ForMember(x => x.PieDetailId, opt => opt.Ignore());

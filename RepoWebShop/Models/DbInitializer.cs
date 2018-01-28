@@ -137,8 +137,7 @@ namespace RepoWebShop.Models
                     ZipCode="6022",
                     AddressLine1="7B What st",
                     LastName="Cabeza",
-                    FirstName="Sebastian",
-                    Password = password
+                    FirstName="Sebastian"
                 };
                 Task<IdentityResult> newUser = userManager.CreateAsync(administrator, password);
                 newUser.Wait();

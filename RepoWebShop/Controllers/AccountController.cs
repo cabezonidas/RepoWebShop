@@ -150,15 +150,16 @@ namespace RepoWebShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
-        public async Task<IActionResult> Register(ApplicationUser registration)
+        public async Task<IActionResult> Register(RegisterViewModel registration)
         {
+            var user = _mapper.Map<RegisterViewModel, ApplicationUser>(registration);
             if (ModelState.IsValid)
             {
-                var result = await _userManager.CreateAsync(registration, registration.Password);
+                var result = await _userManager.CreateAsync(user, registration.Password);
 
                 if (result.Succeeded)
                 {
-                    _emailRepository.SendEmailActivationAsync(registration, Request.HostUrl());
+                    _emailRepository.SendEmailActivationAsync(user, Request.HostUrl());
                     return RedirectToAction("Index", "Home");
                 }
             }
@@ -230,6 +231,11 @@ namespace RepoWebShop.Controllers
                 }
                 else
                 {
+                    var error = result.Errors.FirstOrDefault();
+                    if(error != null)
+                    {
+                        ModelState.AddModelError(error.Code, error.Description);
+                    }
                     appUserViewModel.ErrorMsg = result.Errors.FirstOrDefault()?.Description ?? string.Empty;
                 }
             }

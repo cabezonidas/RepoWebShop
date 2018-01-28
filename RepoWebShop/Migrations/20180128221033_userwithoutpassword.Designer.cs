@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180128221033_userwithoutpassword")]
+    partial class userwithoutpassword
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,6 +166,9 @@ namespace RepoWebShop.Migrations
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256);
+
+                    b.Property<string>("Password")
+                        .IsRequired();
 
                     b.Property<string>("PasswordHash");
 
