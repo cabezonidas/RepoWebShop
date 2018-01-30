@@ -20,6 +20,8 @@ namespace RepoWebShop.ViewModels
 
         public string ReturnUrl { get; set; }
 
+        public List<string> Errors { get; set; }
+
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
     }
 }

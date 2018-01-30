@@ -68,10 +68,10 @@ namespace RepoWebShop.Controllers
         [Authorize]
         [Route("SendValidationSms/{number}")]
         [HttpPost]
-        public IActionResult SendValidationSms(string number)
+        public async Task<IActionResult> SendValidationSms(string number)
         {
             number = HttpUtility.HtmlDecode(number);
-            var token = _accountRepository.SendValidationCode(_currentUser, number);
+            var token = await _accountRepository.SendValidationCode(_currentUser, number);
             if (String.IsNullOrEmpty(token))
                 return BadRequest();
             return Ok();
@@ -79,13 +79,13 @@ namespace RepoWebShop.Controllers
 
         [HttpPost]
         [Route("VerifyNumber/{number}")]
-        public IActionResult VerifyNumber(string number)
+        public async Task<IActionResult> VerifyNumber(string number)
         {
             if (number == _currentUser.ValidationPhoneToken)
             {
                 _currentUser.PhoneNumberConfirmed = true;
                 _currentUser.PhoneNumber = _currentUser.PhoneNumberDeclared;
-                _userManager.UpdateAsync(_currentUser).Wait();
+                await _userManager.UpdateAsync(_currentUser);
                 return Ok();
             }
             else

@@ -1,14 +1,20 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Identity.EntityFrameworkCore
 
-@inject SignInManager<ApplicationUser> SignInManager
 
-@if (SignInManager.IsSignedIn(User))
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var user = await UserManager.GetUserAsync(SignInManager.Context.User);
+}
+
+@if (SignInManager.IsSignedIn(User) && user != null)
 {
     <form asp-area="" asp-controller="Account" asp-action="Logout" id="logoutForm"
           method="post" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="/Account/Profile">Hola @User.Identity.Name</a></li>
+            <li><a href="/Account/Profile">Hola @user.FirstName</a></li>
             <li><a href="javascript:document.getElementById('logoutForm').submit()">Salir</a></li>
         </ul>
     </form>

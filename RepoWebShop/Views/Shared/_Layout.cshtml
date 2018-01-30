@@ -34,6 +34,16 @@
     <script type="text/javascript" src="~/lib/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 </head>
 <body>
+    <div id="fb-root"></div>
+    <script>
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v2.11&appId=744831982380043&autoLogAppEvents=1';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -102,12 +112,12 @@
 
     @{
         var SocialMedia = new List<MediaViewModel>()
-        {
-        //new MediaViewModel() { Icon = "fa-twitter", Class = "social-twitter", Ref = "#" },
-        //new MediaViewModel() { Icon = "fa-instagram", Class = "social-google-plus", Ref = "#" },
-        new MediaViewModel() { Icon = "fa-facebook", Class = "social-facebook", Ref = "https://www.facebook.com/ReposteriaDeLasArtes/" },
-        new MediaViewModel() { Icon = "fa-whatsapp", Class = "social-whatsapp", Ref = "https://api.whatsapp.com/send?phone=6421780906" }
-        };
+    {
+    //new MediaViewModel() { Icon = "fa-twitter", Class = "social-twitter", Ref = "#" },
+    //new MediaViewModel() { Icon = "fa-instagram", Class = "social-google-plus", Ref = "#" },
+    new MediaViewModel() { Icon = "fa-facebook", Class = "social-facebook", Ref = "https://www.facebook.com/ReposteriaDeLasArtes/" },
+    new MediaViewModel() { Icon = "fa-whatsapp", Class = "social-whatsapp", Ref = "https://api.whatsapp.com/send?phone=6421780906" }
+    };
     }
     @*<media-footer media="@SocialMedia" ></media-footer>*@
 

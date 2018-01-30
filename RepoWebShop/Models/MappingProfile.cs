@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using Newtonsoft.Json.Linq;
+using RepoWebShop.Extensions;
 using RepoWebShop.ViewModels;
+using System;
+using System.Security.Claims;
 
 namespace RepoWebShop.Models
 {
@@ -9,6 +11,41 @@ namespace RepoWebShop.Models
     {
         public MappingProfile()
         {
+            CreateMap<ExternalLoginInfo, ApplicationUser>()
+                .ForMember(x => x.UserName, opt =>
+                {
+                    opt.PreCondition(w => !string.IsNullOrEmpty(w.Principal.GetClaimValue(ClaimTypes.Email)));
+                    opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.Email));
+                })
+                .ForMember(x => x.Email, opt =>
+                {
+                    opt.PreCondition(w => !string.IsNullOrEmpty(w.Principal.GetClaimValue(ClaimTypes.Email)));
+                    opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.Email));
+                })
+                .ForMember(x => x.NameIdentifier, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.NameIdentifier)))
+                .ForMember(x => x.EmailConfirmed, opt => opt.MapFrom(y => !string.IsNullOrEmpty(y.Principal.GetClaimValue(ClaimTypes.Email))))
+                .ForMember(x => x.FirstName, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.GivenName)))
+                .ForMember(x => x.LastName, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.Surname)))
+                .ForMember(x => x.AddressLine1, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.StreetAddress)))
+                .ForMember(x => x.State, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.StateOrProvince)))
+                .ForMember(x => x.ZipCode, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.PostalCode)))
+                .ForMember(x => x.Country, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.Country)))
+                .ForMember(x => x.Gender, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.Gender)))
+                .ForMember(x => x.PhoneNumber, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.MobilePhone)))
+                .ForMember(x => x.DateOfBirth, opt =>
+                {
+                    opt.PreCondition(w =>
+                    {
+                        var date = w.Principal.GetClaimValue(ClaimTypes.DateOfBirth);
+                        DateTime result;
+                        return DateTime.TryParse(date, out result);
+                    });
+                    opt.MapFrom(z => DateTime.Parse(z.Principal.GetClaimValue(ClaimTypes.DateOfBirth)));
+                });
+
+            CreateMap<ApplicationUser, RegisterProviderWithMailViewModel>();
+            CreateMap<RegisterProviderWithMailViewModel, ApplicationUser>()
+                .ForMember(x => x.UserName, opt => opt.MapFrom(y => y.Email));
             CreateMap<PieDetailCreateViewModel, PieDetail>();
             CreateMap<RegisterViewModel, ApplicationUser>();
             CreateMap<ApplicationUser, EmailValidationViewModel>();

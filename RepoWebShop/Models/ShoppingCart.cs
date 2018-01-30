@@ -26,24 +26,23 @@ namespace RepoWebShop.Models
 
         private string shoppingCartId;
 
-        public string ShoppingCartId
+        public string GetShoppingCartId()
         {
-            get
+            var payments = _appDbContext.PaymentNotices.Where(x => x.BookingId == shoppingCartId).ToList();
+            
+            if (payments.Count() > 0)
             {
-                PaymentNotice payment = _appDbContext.PaymentNotices.FirstOrDefault<PaymentNotice>(x => x.BookingId == shoppingCartId);
-                if (payment != null)
-                {
-                    var newBookingId = GetRandomBookingId();
-                    _session.SetString("CartId", newBookingId);
-                    ShoppingCartId = newBookingId;
-                }
+                var newBookingId = GetRandomBookingId();
+                _session.SetString("CartId", newBookingId);
+                SetShoppingCartId(newBookingId);
+            }
 
-                return shoppingCartId;
-            }
-            set
-            {
-                shoppingCartId = value;
-            }
+            return shoppingCartId;
+        }
+
+        public void SetShoppingCartId(string value)
+        {
+            shoppingCartId = value;
         }
 
         public List<ShoppingCartItem> ShoppingCartItems { get; set; }
@@ -64,7 +63,7 @@ namespace RepoWebShop.Models
             _appDbContext.ShoppingCartComments.Add(
                 new ShoppingCartComment()
                 {
-                    ShoppingCartId = ShoppingCartId,
+                    ShoppingCartId = GetShoppingCartId(),
                     Comments = comments,
                     Created = _calendarRepository.LocalTime()
                 }
@@ -78,7 +77,7 @@ namespace RepoWebShop.Models
         {
             var shoppingCartItem =
                 _appDbContext.ShoppingCartItems.SingleOrDefault(
-                    s => s.Pie.PieId == pieId && s.ShoppingCartId == ShoppingCartId);
+                    s => s.Pie.PieId == pieId && s.ShoppingCartId == GetShoppingCartId());
 
             _appDbContext.ShoppingCartItems.Remove(shoppingCartItem);
 
@@ -108,13 +107,13 @@ namespace RepoWebShop.Models
         {
             var shoppingCartItem =
                     _appDbContext.ShoppingCartItems.SingleOrDefault(
-                        s => s.Pie.PieId == pie.PieId && s.ShoppingCartId == ShoppingCartId);
+                        s => s.Pie.PieId == pie.PieId && s.ShoppingCartId == GetShoppingCartId());
 
             if (shoppingCartItem == null)
             {
                 shoppingCartItem = new ShoppingCartItem
                 {
-                    ShoppingCartId = ShoppingCartId,
+                    ShoppingCartId = GetShoppingCartId(),
                     Pie = pie,
                     Amount = 1
                 };
@@ -132,7 +131,7 @@ namespace RepoWebShop.Models
         {
             var shoppingCartItem =
                     _appDbContext.ShoppingCartItems.SingleOrDefault(
-                        s => s.Pie.PieId == pie.PieId && s.ShoppingCartId == ShoppingCartId);
+                        s => s.Pie.PieId == pie.PieId && s.ShoppingCartId == GetShoppingCartId());
 
             var localAmount = 0;
 
@@ -159,7 +158,7 @@ namespace RepoWebShop.Models
         {
             return ShoppingCartItems ??
                    (ShoppingCartItems =
-                       _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == ShoppingCartId)
+                       _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == GetShoppingCartId())
                            .Include(s => s.Pie)
                            .Include(s => s.Pie.PieDetail)
                            .ToList());
@@ -169,12 +168,12 @@ namespace RepoWebShop.Models
         {
             var cartItems = _appDbContext
                 .ShoppingCartItems
-                .Where(cart => cart.ShoppingCartId == ShoppingCartId);
+                .Where(cart => cart.ShoppingCartId == GetShoppingCartId());
             _appDbContext.ShoppingCartItems.RemoveRange(cartItems);
 
             var cartComments = _appDbContext
                 .ShoppingCartComments
-                .Where(cart => cart.ShoppingCartId == ShoppingCartId);
+                .Where(cart => cart.ShoppingCartId == GetShoppingCartId());
             _appDbContext.ShoppingCartComments.RemoveRange(cartComments);
 
             _appDbContext.SaveChanges();
@@ -184,7 +183,7 @@ namespace RepoWebShop.Models
 
         public decimal GetShoppingCartTotal()
         {
-            var total = _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == ShoppingCartId)
+            var total = _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == GetShoppingCartId())
                 .Select(c => c.Pie.Price * c.Amount).Sum();
             return total;
         }

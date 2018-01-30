@@ -26,7 +26,7 @@ namespace RepoWebShop.Controllers
             _orderRepository = orderRepository;
             _pieRepository = pieRepository;
             _shoppingCart = shoppingCart;
-            _bookingId = shoppingCart.ShoppingCartId;
+            _bookingId = shoppingCart.GetShoppingCartId();
             _friendlyBookingId = _bookingId.Length >= 6 ? _bookingId?.Substring(_bookingId.Length - 6, 6) ?? string.Empty : String.Empty;
             _calendarRepository = calendarRepository;
             _mp = mp;

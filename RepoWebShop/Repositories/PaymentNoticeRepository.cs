@@ -10,14 +10,12 @@ namespace RepoWebShop.Repositories
         private readonly AppDbContext _appDbContext;
         private readonly IOrderRepository _orderRespository;
         private readonly IEmailRepository _emailRespository;
-        private readonly ShoppingCart _shoppingCart;
 
-        public PaymentNoticeRepository(AppDbContext appDbContext, IOrderRepository orderRepository, IEmailRepository emailRespository, ShoppingCart shoppingCart)
+        public PaymentNoticeRepository(AppDbContext appDbContext, IOrderRepository orderRepository, IEmailRepository emailRespository)
         {
             _appDbContext = appDbContext;
             _orderRespository = orderRepository;
             _emailRespository = emailRespository;
-            _shoppingCart = shoppingCart;
         }
         public void CreatePayment(PaymentNotice paymentNotification, string hostUrl)
         {

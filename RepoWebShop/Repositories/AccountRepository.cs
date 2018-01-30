@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
@@ -19,12 +22,14 @@ namespace RepoWebShop.Repositories
         private readonly IConfiguration _config;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IMapper _mapper;
         private readonly string _accountSid;
         private readonly string _authToken;
-        private readonly string _sender;
+        private readonly string _sender;        
 
-        public AccountRepository(AppDbContext appDbContext, IConfiguration config, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountRepository(IMapper mapper, AppDbContext appDbContext, IConfiguration config, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
+            _mapper = mapper;
             _appDbContext = appDbContext;
             _config = config;
             _userManager = userManager;
@@ -34,9 +39,42 @@ namespace RepoWebShop.Repositories
             _sender = config.GetSection("TwilioSender").Value;
         }
 
+        public async Task<IdentityResult> EnsureUserHasLoginAsync(ExternalLoginInfo info)
+        {
+            var nameIdentifier = info.Principal.GetClaimValue(ClaimTypes.NameIdentifier);
+            var email = info.Principal.GetClaimValue(ClaimTypes.Email);
+            var user = _userManager.Users.FirstOrDefault(x => x.NameIdentifier == nameIdentifier || x.Email == email);
 
+            if (user == null)
+            {
+                user = _mapper.Map<ExternalLoginInfo, ApplicationUser>(info);
+                var userCreated = await _userManager.CreateAsync(user);
 
-        public string SendValidationCode(ApplicationUser user, string phone)
+                if (!userCreated.Succeeded)
+                {
+                    //Log error
+                    return userCreated;
+                }
+            }
+
+            var logins = await _userManager.GetLoginsAsync(user);
+
+            var haslogin = logins.Count(x => x.LoginProvider == info.LoginProvider) > 0;
+
+            if(!haslogin)
+            { 
+                var newLogin = await _userManager.AddLoginAsync(user, info);
+                if(!newLogin.Succeeded)
+                {
+                    //Log error
+                    return newLogin;
+                }
+            }
+
+            return IdentityResult.Success;
+        }
+
+        public async Task<string> SendValidationCode(ApplicationUser user, string phone)
         {
             var token = String.Concat(DateTime.Now.Ticks.ToString().ToArray().TakeLast(4));
 
@@ -51,7 +89,7 @@ namespace RepoWebShop.Repositories
                 user.ValidationPhoneToken = token;
                 user.PhoneNumberDeclared = phone;
 
-                _userManager.UpdateAsync(user).Wait();
+                await _userManager.UpdateAsync(user);
 
                 return token;
             }

@@ -2,13 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using RepoWebShop.ViewModels;
 using AutoMapper;
 using RepoWebShop.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using RepoWebShop.Extensions;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Controllers
 {
@@ -22,16 +21,11 @@ namespace RepoWebShop.Controllers
         private readonly IEmailRepository _emailRespository;
         private readonly IMapper _mp;
         private readonly ICalendarRepository _calendarRepository;
-        private ApplicationUser _currentUser
-        {
-            get
-            {
-                return _userManager.Users.FirstOrDefault(x => x.NormalizedUserName.ToLower() == HttpContext.User.Identity.Name.ToLower());
-            }
-        }
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public OrderController(UserManager<ApplicationUser> userManager, ICalendarRepository calendarRepository, IMapper mp, IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, ShoppingCart shoppingCart, IAccountRepository accountRepository)
+        public OrderController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ICalendarRepository calendarRepository, IMapper mp, IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, ShoppingCart shoppingCart, IAccountRepository accountRepository)
         {
+            _signInManager = signInManager;
             _userManager = userManager;
             _pieDetailRepository = pieDetailRepository;
             _orderRepository = orderRepository;
@@ -215,11 +209,12 @@ namespace RepoWebShop.Controllers
         }
 
         [Authorize]
-        public IActionResult Checkout()
+        public async Task<IActionResult> Checkout()
         {
-            if (_shoppingCart.GetShoppingCartItems().Count() > 0)
-                if(_currentUser.PhoneNumberConfirmed)
-                    return View(_currentUser);
+            var user = await _userManager.GetUser(_signInManager);
+            if ((_shoppingCart.GetShoppingCartItems()).Count() > 0)
+                if(user.PhoneNumberConfirmed)
+                    return View(user);
                 else
                     return Redirect($"/Account/VerifyNumber/Order/Checkout/");
             else
@@ -228,7 +223,7 @@ namespace RepoWebShop.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult Checkout(Order order)
+        public async Task<IActionResult> Checkout(Order order)
         {
             var items = _shoppingCart.GetShoppingCartItems();
             _shoppingCart.ShoppingCartItems = items;
@@ -237,7 +232,7 @@ namespace RepoWebShop.Controllers
             {
                 ModelState.AddModelError("", "Tu carrito no puede estar vacío, agrega algunos productos.");
             }
-
+            var _currentUser = await _userManager.GetUser(_signInManager);
             if(!_currentUser.PhoneNumberConfirmed)
             {
                 ModelState.AddModelError("", "El número de teléfono no esta verificado.");
@@ -249,7 +244,7 @@ namespace RepoWebShop.Controllers
                 order.OrderTotal = _shoppingCart.ShoppingCartItems.Select(x => x.Amount * x.Pie.Price).Sum();
                 order.Registration = _currentUser;
                 order.CustomerComments = _shoppingCart.GetShoppingCartComments();
-                order.BookingId = _shoppingCart.ShoppingCartId;
+                order.BookingId = _shoppingCart.GetShoppingCartId();
                 order.Status = "reservation";
                 order.PickUpTime = _calendarRepository.GetPickupEstimate(_shoppingCart.GetShoppingCartPreparationTime());
 
@@ -265,8 +260,9 @@ namespace RepoWebShop.Controllers
         }
         
         [Authorize]
-        public IActionResult CheckoutComplete()
+        public async Task<IActionResult> CheckoutComplete()
         {
+            var _currentUser = await _userManager.GetUser(_signInManager);
             var firstName = _currentUser?.FirstName ?? "Estimado/a";
             ViewBag.CheckoutCompleteMessage = firstName + ", gracias por tu reserva. Falta poco para que disfrutes de nuestras delicias!";
 

@@ -14,9 +14,13 @@
         </thead>
         <tbody>
             <tr>
+                <td colspan="1" valign="top"><label asp-for="UserName"></label></td>
+                <td colspan="1" valign="top">@Model.UserName</td>
+                <td colspan="1" rowspan="3" valign="top"><a asp-action="ProfileDetails" asp-controller="Account">Modificar</a></td>
+            </tr>
+            <tr>
                 <td colspan="1" valign="top"><label asp-for="FirstName"></label></td>
                 <td colspan="1" valign="top">@Model.FirstName</td>
-                <td colspan="1" rowspan="3" valign="top"><a asp-action="ProfileDetails" asp-controller="Account">Modificar</a></td>
             </tr>
             <tr>
                 <td colspan="1" valign="top"><label asp-for="LastName"></label></td>
@@ -33,22 +37,22 @@
                     @Model.Email
 
                     @if (Model.EmailConfirmed)
-                    {
-                        <i class="fa fa-check" style="color: limegreen;" aria-hidden="true"></i>
-                    }
-                    else
-                    {
-                        <i class="fa fa-times" style="color: red;" aria-hidden="true"></i>
-                    }
+            {
+                <i class="fa fa-check" style="color: limegreen;" aria-hidden="true"></i>
+    }
+    else
+    {
+        <i class="fa fa-times" style="color: red;" aria-hidden="true"></i>
+}
                 </td>
                 <td colspan="1" valign="top">
                     @if (!Model.EmailConfirmed)
-                    {
-                    <div id="emailConfirmBox">
-                        <a href="#" id="confirmEmail" onclick="confirmEmail();">Confirmar</a>
+            {
+                <div id="emailConfirmBox">
+                    <a href="#" id="confirmEmail" onclick="confirmEmail();">Confirmar</a>
 
-                    </div>
-                    }
+                </div>
+    }
                 </td>
             </tr>
             <tr>
@@ -58,22 +62,22 @@
                     @Model.PhoneNumber
 
                     @if (Model.PhoneNumberConfirmed)
-                    {
-                        <i class="fa fa-check" style="color: limegreen;" aria-hidden="true"></i>
-                    }
-                    else
-                    {
-                        <i class="fa fa-times" style="color: red;" aria-hidden="true"></i>
-                    }
+            {
+                <i class="fa fa-check" style="color: limegreen;" aria-hidden="true"></i>
+    }
+    else
+    {
+        <i class="fa fa-times" style="color: red;" aria-hidden="true"></i>
+}
                 </td>
                 <td colspan="1" valign="top">
                     @if (!Model.PhoneNumberConfirmed)
-    {
+            {
                 <a asp-action="VerifyNumber" asp-controller="Account">Confirmar</a>
-}
-else
-{
-                <a asp-action="VerifyNumber" asp-controller="Account">Cambiar</a>
+    }
+    else
+    {
+        <a asp-action="VerifyNumber" asp-controller="Account">Cambiar</a>
 
 }
                 </td>

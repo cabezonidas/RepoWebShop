@@ -1,4 +1,5 @@
-﻿using RepoWebShop.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using RepoWebShop.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ namespace RepoWebShop.Interfaces
 {
     public interface IAccountRepository
     {
-        string SendValidationCode(ApplicationUser user, string phone);
+        Task<string> SendValidationCode(ApplicationUser user, string phone);
+        Task<IdentityResult> EnsureUserHasLoginAsync(ExternalLoginInfo info);
     }
 }

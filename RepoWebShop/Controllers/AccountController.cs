@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using RepoWebShop.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using RepoWebShop.Models;
@@ -27,17 +25,12 @@ namespace RepoWebShop.Controllers
         private readonly IAccountRepository _accountRepository;
         private readonly IEmailRepository _emailRepository;
         private readonly IMapper _mapper;
-        private ApplicationUser _currentUser
-        {
-            get
-            {
-                return _userManager.Users.FirstOrDefault(x => x.NormalizedUserName.ToLower() == HttpContext.User.Identity.Name.ToLower());
-            }
-        }
-            
+        //private readonly ILogger _logger;
+
 
         public AccountController(IEmailRepository emailRepository, IAccountRepository accountRepository, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
         {
+            //_logger = logger;
             _emailRepository = emailRepository;
             _userManager = userManager;
             _signInManager = signInManager;
@@ -95,11 +88,57 @@ namespace RepoWebShop.Controllers
             return View();
         }
 
-
         [AllowAnonymous]
         public IActionResult PrivacyPolicy()
         {
             return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult RegisterProviderWithMail(ApplicationUser appuser)
+        {
+            var register = _mapper.Map<ApplicationUser, RegisterProviderWithMailViewModel>(appuser);
+
+            return View(register);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public async Task<IActionResult> RegisterProviderWithMail(RegisterProviderWithMailViewModel infoVm)
+        {
+            infoVm.Errors = new List<string>();
+
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(infoVm);
+            //}
+
+            var user = _mapper.Map<RegisterProviderWithMailViewModel, ApplicationUser>(infoVm);
+
+            var result = await _userManager.CreateAsync(user);
+            if(!result.Succeeded)
+            {
+                infoVm.Errors.AddRange(result.Errors.Select(x => x.Description));
+                return View(infoVm);
+            }
+            else
+            {
+                _emailRepository.SendEmailActivationAsync(user, Request.HostUrl());
+                var info = await _signInManager.GetExternalLoginInfoAsync();
+                if(info == null)
+                    return RedirectToAction("Login");
+
+                var hasLogin = await _userManager.AddLoginAsync(user, info);
+                if(hasLogin.Succeeded)
+                {
+                    var loggedIn = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+                    if (loggedIn.Succeeded)
+                        return RedirectToAction("List", "PieDetail");
+                }
+                return RedirectToAction("Register", "Account");
+            }
         }
 
         [HttpPost]
@@ -140,7 +179,6 @@ namespace RepoWebShop.Controllers
             return View(loginViewModel);
         }
 
-
         [AllowAnonymous]
         public IActionResult Register()
         {
@@ -160,6 +198,7 @@ namespace RepoWebShop.Controllers
                 if (result.Succeeded)
                 {
                     _emailRepository.SendEmailActivationAsync(user, Request.HostUrl());
+                    await _signInManager.PasswordSignInAsync(user, registration.Password, false, false);
                     return RedirectToAction("Index", "Home");
                 }
             }
@@ -172,7 +211,6 @@ namespace RepoWebShop.Controllers
             return View(new PasswordChangeViewModel());
         }
 
-
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> ChangePassword(PasswordChangeViewModel passwordChange)
@@ -184,8 +222,12 @@ namespace RepoWebShop.Controllers
                     passwordChange.ErrorMsg = "La contraseña nueva no coincide";
                     return View(passwordChange);
                 }
-
-                var result = await _userManager.ChangePasswordAsync(_currentUser, passwordChange.Current, passwordChange.New);
+                IdentityResult result;
+                var currentUser = await _userManager.GetUser(_signInManager);
+                if (!await _userManager.HasPasswordAsync(currentUser))
+                    result = await _userManager.AddPasswordAsync(currentUser, passwordChange.New);
+                else
+                    result = await _userManager.ChangePasswordAsync(currentUser, passwordChange.Current, passwordChange.New);
                 
                 if (result.Succeeded)
                 {
@@ -200,16 +242,18 @@ namespace RepoWebShop.Controllers
         }
 
         [Authorize]
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
         {
             
-            return View(_currentUser);
+            return View(await _userManager.GetUser(_signInManager));
         }
 
         [Authorize]
-        public IActionResult ProfileDetails()
+        public async Task<IActionResult> ProfileDetails()
         {
-            var result = _mapper.Map<ApplicationUser, ApplicationUserViewModel>(_currentUser);
+            var currentUser = await _userManager.GetUser(_signInManager);
+
+            var result = _mapper.Map<ApplicationUser, ApplicationUserViewModel>(currentUser);
 
             return View(result);
         }
@@ -217,7 +261,7 @@ namespace RepoWebShop.Controllers
         [HttpPost]
         public async Task<IActionResult> ProfileDetails(ApplicationUserViewModel appUserViewModel)
         {
-            var currentUser = _currentUser;
+            var currentUser = await _userManager.GetUser(_signInManager);
 
             currentUser = _mapper.Map(appUserViewModel, currentUser);
 
@@ -265,6 +309,65 @@ namespace RepoWebShop.Controllers
         public IActionResult VerifyNumber()
         {
             return View(new AppUserValidateViewModel());
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public IActionResult ExternalLogin(string provider, string returnUrl = null)
+        {
+            // Request a redirect to the external login provider.
+            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            var result = Challenge(properties, provider);
+            return result;
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        {
+            var loginViewModel = new LoginViewModel { Errors = new List<string>() };
+            if (remoteError != null)
+            {
+                loginViewModel.Errors.Add(remoteError);
+                return RedirectToAction(nameof(Login), loginViewModel);
+            }
+
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                loginViewModel.Errors.Add("No pudimos recibir los datos de autenticación. Por favor, intentá de nuevo.");
+                return RedirectToAction(nameof(Login), loginViewModel);
+            }
+
+            var result = await _accountRepository.EnsureUserHasLoginAsync(info);
+            if (result.Succeeded)
+            {
+                var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+                if(signInResult.Succeeded)
+                    return RedirectToAction(nameof(PieDetailController.List), "PieDetail");
+                else
+                {
+                    loginViewModel.Errors.Add("Tu usario no pudo iniciar sesión. Por favor, prueba otro medio.");
+                    return RedirectToAction(nameof(Login), loginViewModel);
+                }
+            }
+            else
+            {
+                var missingEmailError = result.Errors.Select(x => x.Code).Count(y => y == "InvalidEmail" || y == "InvalidUserName") == result.Errors.Count();
+
+                if(missingEmailError)
+                {
+                    var appuser = _mapper.Map<ExternalLoginInfo, ApplicationUser>(info);
+                    return RedirectToAction(nameof(AccountController.RegisterProviderWithMail), appuser);
+                }
+                else
+                {
+                    loginViewModel.Errors.AddRange(result.Errors.Select(x => x.Description));
+                    return RedirectToAction(nameof(Login), loginViewModel);
+                }
+            }
         }
     }
 }

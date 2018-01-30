@@ -18,7 +18,7 @@ namespace RepoWebShop.ViewModels
         [DataType(DataType.Password)]
         public string NewRepeated { get; set; }
 
-        [Required(ErrorMessage = "Por favor ingrese su contraseña nueva")]
+        //[Required(ErrorMessage = "Por favor ingrese su contraseña nueva")]
         [Display(Name = "Contraseña actual")]
         [DataType(DataType.Password)]
         public string Current { get; set; }

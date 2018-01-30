@@ -1,0 +1,46 @@
+﻿@model RegisterProviderWithMailViewModel
+
+<style>
+    div#emailbox{
+        max-width: 400px;
+        margin: 100px auto;
+        text-align: center;
+    }
+</style>
+<div id="emailbox">
+    <h3>Por favor, confirmanos una dirección de email para que puedas registrarte.</h3>
+    <form asp-controller="Account" asp-action="RegisterProviderWithMail" method="post" role="form">
+        <input asp-for="UserName" hidden="hidden" />
+        <input asp-for="NameIdentifier" hidden="hidden" />
+        <input asp-for="FirstName" hidden="hidden" />
+        <input asp-for="LastName" hidden="hidden" />
+        <input asp-for="AddressLine1" hidden="hidden" />
+        <input asp-for="State" hidden="hidden" />
+        <input asp-for="ZipCode" hidden="hidden" />
+        <input asp-for="Country" hidden="hidden" />
+        <input asp-for="Gender" hidden="hidden" />
+        <input asp-for="PhoneNumber" hidden="hidden" />
+        <input asp-for="DateOfBirth" hidden="hidden" />
+        <div class=" form-group">
+            <div class="">
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+                @*<div asp-validation-summary="All" class="text-danger"></div>*@
+                @{
+                if (Model.Errors != null)
+                {
+                    <div class="text-danger">
+                        @Html.Raw(String.Join("<br/>", Model.Errors))
+                    </div>
+            }
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            <br />
+            <div class="">
+                <input type="submit" class="btn btn-primary" value="Registrarse" />
+            </div>
+        </div>
+    </form>
+</div>
