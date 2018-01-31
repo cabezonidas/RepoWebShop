@@ -26,6 +26,7 @@ namespace RepoWebShop.Controllers
         private readonly IOrderRepository _orderRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailRepository _emailRepository;
         private readonly string _accountSid;
         private readonly string _authToken;
@@ -37,8 +38,9 @@ namespace RepoWebShop.Controllers
                 return _userManager.Users.FirstOrDefault(x => x.NormalizedUserName.ToLower() == HttpContext.User.Identity.Name.ToLower());
             }
         }
-        public AccountDataController(IEmailRepository emailRepository, UserManager<ApplicationUser> userManager, IAccountRepository accountRepository, ShoppingCart shoppingCart, IConfiguration config, IOrderRepository orderRepository)
+        public AccountDataController(SignInManager<ApplicationUser> signInManager, IEmailRepository emailRepository, UserManager<ApplicationUser> userManager, IAccountRepository accountRepository, ShoppingCart shoppingCart, IConfiguration config, IOrderRepository orderRepository)
         {
+            _signInManager = signInManager;
             _emailRepository = emailRepository;
             _accountRepository = accountRepository;
             _orderRepository = orderRepository;
@@ -92,6 +94,14 @@ namespace RepoWebShop.Controllers
             {
                 return BadRequest("Número de activación no coincide.");
             }
+        }
+
+        [Authorize]
+        [Route("GetUserName")]
+        public async Task<IActionResult> GetUserName()
+        {
+            var user = await _userManager.GetUser(_signInManager);
+            return Ok(new { name = user.FirstName});
         }
     }
 }

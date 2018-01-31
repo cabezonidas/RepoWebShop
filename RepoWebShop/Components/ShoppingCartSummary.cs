@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
 
@@ -6,9 +7,9 @@ namespace RepoWebShop.Components
 {
     public class ShoppingCartSummary : ViewComponent
     {
-        private readonly ShoppingCart _shoppingCart;
+        private readonly IShoppingCartRepository _shoppingCart;
 
-        public ShoppingCartSummary(ShoppingCart shoppingCart)
+        public ShoppingCartSummary(IShoppingCartRepository shoppingCart)
         {
             _shoppingCart = shoppingCart;
         }
@@ -16,11 +17,12 @@ namespace RepoWebShop.Components
         public IViewComponentResult Invoke()
         {
             var items = _shoppingCart.GetShoppingCartItems();
-            _shoppingCart.ShoppingCartItems = items;
+            //_shoppingCart.ShoppingCartItems = items;
 
             var shoppingCartViewModel = new ShoppingCartViewModel
             {
-                ShoppingCart = _shoppingCart,
+                //ShoppingCart = _shoppingCart,
+                Items = _shoppingCart.GetShoppingCartItems(),
                 ShoppingCartTotal = _shoppingCart.GetShoppingCartTotal()
             };
             return View(shoppingCartViewModel);

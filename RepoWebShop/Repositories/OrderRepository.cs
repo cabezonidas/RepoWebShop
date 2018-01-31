@@ -16,18 +16,16 @@ namespace RepoWebShop.Models
     public class OrderRepository : IOrderRepository
     {
         private readonly AppDbContext _appDbContext;
-        private readonly ShoppingCart _shoppingCart;
         private readonly IShoppingCartRepository _shoppingCartRepository;
         private readonly ICalendarRepository _calendarRepository;
         private readonly IMercadoPago _mp;
         private readonly IMapper _mapper;
 
-        public OrderRepository(AppDbContext appDbContext, IMercadoPago mp, ICalendarRepository calendarRepository, ShoppingCart shoppingCart, IShoppingCartRepository shoppingCartRepository, IMapper mapper)
+        public OrderRepository(AppDbContext appDbContext, IMercadoPago mp, ICalendarRepository calendarRepository, IShoppingCartRepository shoppingCartRepository, IMapper mapper)
         {
             _mapper = mapper;
             _mp = mp;
             _appDbContext = appDbContext;
-            _shoppingCart = shoppingCart;
             _shoppingCartRepository = shoppingCartRepository;
             _calendarRepository = calendarRepository;
         }
@@ -158,9 +156,9 @@ namespace RepoWebShop.Models
             order.OrderPlaced = _calendarRepository.LocalTime();
             order.PickedUp = false;
 
-            var shoppingCartItems = _shoppingCart.ShoppingCartItems;
+            var shoppingCartItems = _shoppingCartRepository.GetShoppingCartItems();
 
-            order.PreparationTime = _shoppingCart.GetShoppingCartPreparationTime();
+            order.PreparationTime = _shoppingCartRepository.GetShoppingCartPreparationTime();
 
             _appDbContext.Orders.Add(order);
             _appDbContext.SaveChanges();

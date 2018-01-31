@@ -10,7 +10,7 @@ namespace RepoWebShop.ViewModels
 {
     public class ShoppingCartViewModel
     {
-        public ShoppingCart ShoppingCart { get; set; }
+        public List<ShoppingCartItem> Items { get; set; }
         public decimal ShoppingCartTotal { get; set; }
         public string Mercadolink { get; set; }
         public int PreparationTime { get; set; }

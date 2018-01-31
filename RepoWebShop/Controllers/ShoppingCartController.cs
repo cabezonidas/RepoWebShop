@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
 using System;
 using RepoWebShop.Interfaces;
@@ -12,7 +11,7 @@ namespace RepoWebShop.Controllers
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IPieRepository _pieRepository;
-        private readonly ShoppingCart _shoppingCart;
+        private readonly IShoppingCartRepository _shoppingCart;
         private readonly IMercadoPago _mp;
         private readonly ICalendarRepository _calendarRepository;
         private readonly IConfiguration _config;
@@ -20,7 +19,7 @@ namespace RepoWebShop.Controllers
         private readonly string _friendlyBookingId;
 
 
-        public ShoppingCartController(IConfiguration config, ICalendarRepository calendarRepository, IOrderRepository orderRepository, IPieRepository pieRepository, ShoppingCart shoppingCart, IMercadoPago mp)
+        public ShoppingCartController(IConfiguration config, ICalendarRepository calendarRepository, IOrderRepository orderRepository, IPieRepository pieRepository, IShoppingCartRepository shoppingCart, IMercadoPago mp)
         {
             _config = config;
             _orderRepository = orderRepository;
@@ -32,17 +31,27 @@ namespace RepoWebShop.Controllers
             _mp = mp;
         }
 
+        public IActionResult TrolleyIcon()
+        {
+            var result = new ShoppingCartViewModel
+            {
+                Items = _shoppingCart.GetShoppingCartItems()
+            };
+            return View(result);
+        }
+
         public ViewResult Index()
         {
             var items = _shoppingCart.GetShoppingCartItems();
-            _shoppingCart.ShoppingCartItems = items;
+            //_shoppingCart.ShoppingCartItems = items;
             var total = _shoppingCart.GetShoppingCartTotal();
             var highestPrepTime = _shoppingCart.GetShoppingCartPreparationTime();
 
 
             var shoppingCartViewModel = new ShoppingCartViewModel
             {
-                ShoppingCart = _shoppingCart,
+                //ShoppingCart = _shoppingCart,
+                Items = _shoppingCart.GetShoppingCartItems(),
                 PickupDate = _calendarRepository.GetPickupEstimate(highestPrepTime),
                 ShoppingCartTotal = total,
                 Mercadolink = _mp.GetRepoPaymentLink(total, _bookingId, _friendlyBookingId, Request.Host.ToString(), "La Reposteria"),

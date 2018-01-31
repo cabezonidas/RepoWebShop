@@ -15,7 +15,7 @@ namespace RepoWebShop.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IOrderRepository _orderRepository;
-        private readonly ShoppingCart _shoppingCart;
+        private readonly IShoppingCartRepository _shoppingCart;
         private readonly IPieDetailRepository _pieDetailRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IEmailRepository _emailRespository;
@@ -23,7 +23,7 @@ namespace RepoWebShop.Controllers
         private readonly ICalendarRepository _calendarRepository;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public OrderController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ICalendarRepository calendarRepository, IMapper mp, IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, ShoppingCart shoppingCart, IAccountRepository accountRepository)
+        public OrderController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ICalendarRepository calendarRepository, IMapper mp, IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, IShoppingCartRepository shoppingCart, IAccountRepository accountRepository)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -226,9 +226,9 @@ namespace RepoWebShop.Controllers
         public async Task<IActionResult> Checkout(Order order)
         {
             var items = _shoppingCart.GetShoppingCartItems();
-            _shoppingCart.ShoppingCartItems = items;
+            //_shoppingCart.ShoppingCartItems = items;
 
-            if (_shoppingCart.ShoppingCartItems.Count == 0)
+            if (items.Count == 0)
             {
                 ModelState.AddModelError("", "Tu carrito no puede estar vacío, agrega algunos productos.");
             }
@@ -241,7 +241,7 @@ namespace RepoWebShop.Controllers
             order.PhoneNumber = _currentUser.PhoneNumber;
             if (ModelState.IsValid)
             {
-                order.OrderTotal = _shoppingCart.ShoppingCartItems.Select(x => x.Amount * x.Pie.Price).Sum();
+                order.OrderTotal = _shoppingCart.GetShoppingCartItems().Select(x => x.Amount * x.Pie.Price).Sum();
                 order.Registration = _currentUser;
                 order.CustomerComments = _shoppingCart.GetShoppingCartComments();
                 order.BookingId = _shoppingCart.GetShoppingCartId();

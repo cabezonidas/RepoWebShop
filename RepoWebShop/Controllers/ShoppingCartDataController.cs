@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 
 namespace RepoWebShop.Controllers
@@ -6,9 +7,9 @@ namespace RepoWebShop.Controllers
     [Route("api/[controller]")]
     public class ShoppingCartDataController : Controller
     {
-        private readonly ShoppingCart _shoppingCart;
+        private readonly IShoppingCartRepository _shoppingCart;
 
-        public ShoppingCartDataController(ShoppingCart shoppingCart)
+        public ShoppingCartDataController(IShoppingCartRepository shoppingCart)
         {
             _shoppingCart = shoppingCart;
         }
@@ -34,6 +35,13 @@ namespace RepoWebShop.Controllers
         public IActionResult GetComments()
         {
             return Ok(new { comments = _shoppingCart.GetShoppingCartComments() });
+        }
+
+        [HttpGet]
+        [Route("GetItemsCount")]
+        public IActionResult GetItemsCount()
+        {
+            return Ok(new { items = _shoppingCart.GetShoppingCartItems().Count });
         }
     }
 }

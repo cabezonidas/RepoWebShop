@@ -66,12 +66,13 @@
                             <a asp-controller="Home" asp-action="Index">De las Artes</a>
                         </li>
                         <li>
-                            @await Component.InvokeAsync("ShoppingCartSummary")
+                            @* await Component.InvokeAsync("ShoppingCartSummary") *@
+                            @* Este await choto rompe todo cuando hay muchos requests simultaneos*@
+                            @Html.Partial("~/Views/ShoppingCart/TrolleyIcon.cshtml")
                         </li>
 
                     </ul>
                 </div>
-
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
@@ -87,7 +88,7 @@
                         <li><a asp-controller="Admin" asp-action="Index">Admin</a></li>
                     }
                 </ul>
-                @await Html.PartialAsync("LoginPartial")
+                @Html.Partial("LoginPartial")
             </div>
         </div>
     </nav>

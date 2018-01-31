@@ -1,0 +1,16 @@
+﻿<a asp-controller="ShoppingCart" asp-action="Index" id="trolley" class="hidden">
+    <span class="glyphicon glyphicon-shopping-cart"></span>
+    <span id="cart-status">
+
+    </span>
+</a>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.get('/api/ShoppingCartData/GetItemsCount', function (data) {
+            if (data.items > 0) {
+                $('span#cart-status').append(data.items);
+                $('a#trolley').removeClass('hidden');
+            }
+        });
+    });
+</script>
