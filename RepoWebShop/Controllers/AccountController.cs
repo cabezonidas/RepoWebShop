@@ -327,7 +327,7 @@ namespace RepoWebShop.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
         {
-            var loginViewModel = new LoginViewModel { Errors = new List<string>() };
+            var loginViewModel = new LoginViewModel { Errors = new List<string>(), ReturnUrl = returnUrl };
             if (remoteError != null)
             {
                 loginViewModel.Errors.Add(remoteError);
@@ -345,8 +345,13 @@ namespace RepoWebShop.Controllers
             if (result.Succeeded)
             {
                 var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
-                if(signInResult.Succeeded)
-                    return RedirectToAction(nameof(PieDetailController.List), "PieDetail");
+                if (signInResult.Succeeded)
+                {
+                    if(!string.IsNullOrEmpty(loginViewModel.ReturnUrl))
+                        return Redirect(loginViewModel.ReturnUrl);
+                    else
+                        return RedirectToAction(nameof(PieDetailController.List), "PieDetail");
+                }
                 else
                 {
                     loginViewModel.Errors.Add("Tu usario no pudo iniciar sesión. Por favor, prueba otro medio.");

@@ -3,6 +3,7 @@ using RepoWebShop.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace RepoWebShop.Extensions
@@ -12,6 +13,11 @@ namespace RepoWebShop.Extensions
         public static async Task<ApplicationUser> GetUser(this UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser>  _signInManager)
         {
             return await userManager.GetUserAsync(_signInManager.Context.User);
+        }
+        public static ApplicationUser GetUserByExternalLogin(this UserManager<ApplicationUser> userManager, ExternalLoginInfo _info)
+        {
+            var email = _info.Principal.GetClaimValue(ClaimTypes.Email);
+            return userManager.Users.FirstOrDefault(x => x.Email.ToLower() == email.ToLower());
         }
     }
 }

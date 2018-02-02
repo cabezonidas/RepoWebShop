@@ -59,7 +59,6 @@ namespace RepoWebShop.Repositories
         {
             var result = GetItems(bookingId);
             _appDbContext.ShoppingCartItems.RemoveRange(result);
-            _shoppingCart.RenewId();
             return result;
         }
 
@@ -171,7 +170,6 @@ namespace RepoWebShop.Repositories
             _appDbContext.ShoppingCartComments.RemoveRange(cartComments);
 
             _appDbContext.SaveChanges();
-            _shoppingCart.RenewId();
         }
 
         public decimal GetShoppingCartTotal()

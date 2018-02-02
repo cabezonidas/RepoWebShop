@@ -1,8 +1,9 @@
 ﻿@model EmailValidationViewModel
+@inject SignInManager<ApplicationUser> SignInManager
 <div class="container">
     <br />
-    <div style="max-width: 600px; margin: auto;">    
-        @if(Model.EmailConfirmed)
+    <div style="max-width: 600px; margin: auto;">
+        @if (Model.EmailConfirmed)
         {
             <div class="alert alert-success text-center">¡Felicitaciones tu cuenta ya está activada!</div>
         }
@@ -10,6 +11,9 @@
         {
             <div class="alert alert-danger text-center">No pudimos activar tu cuenta. Por favor, inicia sesión, e intentalo desde tu perfil.</div>
         }
-        @Html.Partial("~/Views/Account/Login.cshtml", new LoginViewModel())
+        @if (!SignInManager.IsSignedIn(User))
+        {
+            @Html.Partial("~/Views/Account/Login.cshtml", new LoginViewModel())
+        }
     </div>
 </div>

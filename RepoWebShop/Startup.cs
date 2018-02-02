@@ -42,6 +42,7 @@ namespace RepoWebShop
             {
                 facebookOptions.AppId = _configurationRoot["FacebookAppId"];
                 facebookOptions.AppSecret = _configurationRoot["FacebookAppSecret"];
+                //facebookOptions.Scope.Add("user_birthday");
             });
 
             services.Configure<IdentityOptions>(options =>

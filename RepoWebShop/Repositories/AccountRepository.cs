@@ -39,7 +39,7 @@ namespace RepoWebShop.Repositories
             _sender = config.GetSection("TwilioSender").Value;
         }
 
-        public async Task<IdentityResult> EnsureUserHasLoginAsync(ExternalLoginInfo info)
+        public async Task<IdentityResult> CreateOrUpdateUserAsync(ExternalLoginInfo info)
         {
             var nameIdentifier = info.Principal.GetClaimValue(ClaimTypes.NameIdentifier);
             var email = info.Principal.GetClaimValue(ClaimTypes.Email);
@@ -48,30 +48,28 @@ namespace RepoWebShop.Repositories
             if (user == null)
             {
                 user = _mapper.Map<ExternalLoginInfo, ApplicationUser>(info);
-                var userCreated = await _userManager.CreateAsync(user);
-
-                if (!userCreated.Succeeded)
-                {
-                    //Log error
-                    return userCreated;
-                }
+                return await _userManager.CreateAsync(user);
             }
-
-            var logins = await _userManager.GetLoginsAsync(user);
-
-            var haslogin = logins.Count(x => x.LoginProvider == info.LoginProvider) > 0;
-
-            if(!haslogin)
-            { 
-                var newLogin = await _userManager.AddLoginAsync(user, info);
-                if(!newLogin.Succeeded)
-                {
-                    //Log error
-                    return newLogin;
-                }
+            else
+            {
+                user = _mapper.Map(info, user);
+                return await _userManager.UpdateAsync(user);
             }
+        }
 
-            return IdentityResult.Success;
+        public async Task<IdentityResult> EnsureUserHasLoginAsync(ExternalLoginInfo info)
+        {
+            var userExists = await CreateOrUpdateUserAsync(info);
+            if (userExists.Succeeded)
+            {
+                var user = _userManager.GetUserByExternalLogin(info);
+                var logins = await _userManager.GetLoginsAsync(user);
+                if (logins.Count(x => x.LoginProvider == info.LoginProvider) == 0)
+                    return await _userManager.AddLoginAsync(user, info);
+                else
+                    return IdentityResult.Success;
+            }
+            return userExists;
         }
 
         public async Task<string> SendValidationCode(ApplicationUser user, string phone)

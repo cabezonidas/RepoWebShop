@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -7,30 +8,45 @@ namespace RepoWebShop.Models
     public class ShoppingCart
     {
         private readonly IServiceProvider _services;
-        private ShoppingCart(string cartId, IServiceProvider services)
+        private readonly AppDbContext _appDbContext;
+        private readonly ISession _session;
+        private string _shoppingCartId;
+
+        private ShoppingCart(IServiceProvider services)
         {
-            ShoppingCartId = cartId;
             _services = services;
+            _session = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
+            _appDbContext = services.GetRequiredService<AppDbContext>();
+            InitializeId();
         }
 
-        public static ShoppingCart GetCart(IServiceProvider services)
-        {
-            ISession session = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
-            
-            string cartId = session.GetString("CartId") ?? Guid.NewGuid().ToString("D").ToUpper();
-            session.SetString("CartId", cartId);
+        public static ShoppingCart GetCart(IServiceProvider services) => new ShoppingCart(services);
 
-            return new ShoppingCart(cartId, services);
+        public string ShoppingCartId
+        {
+            get
+            {
+                var isIdObsolete = _appDbContext.Orders.Count(x => x.BookingId == _shoppingCartId) > 0;
+                if (isIdObsolete)
+                    RenewId();
+                return _shoppingCartId;
+            }
+            private set
+            {
+                _shoppingCartId = value;
+            }
         }
 
-        public string ShoppingCartId { get; private set; }
-
-        public void RenewId()
+        private void RenewId()
         {
-            ISession session = _services.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
-            string cartId = Guid.NewGuid().ToString("D").ToUpper();
-            session.SetString("CartId", cartId);
-            ShoppingCartId = cartId;
+            _shoppingCartId = Guid.NewGuid().ToString("D").ToUpper();
+            _session.SetString("CartId", _shoppingCartId);
+        }
+
+        private void InitializeId()
+        {
+            _shoppingCartId = _session.GetString("CartId") ?? Guid.NewGuid().ToString("D").ToUpper();
+            _session.SetString("CartId", _shoppingCartId);
         }
     }
 }
