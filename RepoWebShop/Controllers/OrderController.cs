@@ -76,6 +76,20 @@ namespace RepoWebShop.Controllers
             return View("Pending", id);
         }
 
+        [HttpGet]
+        [Route("[Controller]/OrderComplete/{id}")]
+        public IActionResult OrderComplete(int id)
+        {
+            Order order = _orderRepository.GetOrder(id);
+            if (order == null)
+                return NotFound();
+            else
+            {
+                EmailNotificationViewModel viewModel = _orderRepository.ToEmailNotification(order, Request.HostUrl());
+                return View(viewModel);
+            }
+        }
+
         [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("[Controller]/UpdateOrderWithReason/{subaction}/{id}")]

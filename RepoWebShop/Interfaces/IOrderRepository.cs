@@ -7,6 +7,7 @@ namespace RepoWebShop.Interfaces
 {
     public interface IOrderRepository
     {
+        EmailNotificationViewModel ToEmailNotification(Order order, string absoluteUrl);
         void CreateOrder(Order order);
         void UpdateOrderStatus(int orderId, string status);
         Order GetDraftOrderByBookingId(string bookingId);
@@ -19,7 +20,7 @@ namespace RepoWebShop.Interfaces
         bool InvertPickedUpStatus(int orderId);
         Order UpdateOrder(PaymentNotice paymentNotice);
         EmailNotificationViewModel GetEmailData(int id, string v);
-        void CompleteOrder(int orderId);
+        void CompleteOrder(int orderId, string hostUrl);
         void PickUpOrder(int orderId);
         void CancelOrder(int orderId, string reason);
         void RefundOrder(int orderId, string reason);

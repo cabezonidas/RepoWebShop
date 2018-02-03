@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using RepoWebShop.Interfaces;
+using RepoWebShop.Extensions;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -73,7 +74,7 @@ namespace RepoWebShop.Controllers
         [HttpPost]
         public IActionResult CompleteOrder(int orderId)
         {
-            _orderRepository.CompleteOrder(orderId);
+            _orderRepository.CompleteOrder(orderId, Request.HostUrl());
             return Ok();
         }
 

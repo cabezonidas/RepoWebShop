@@ -12,6 +12,7 @@ namespace RepoWebShop.Models
         public MappingProfile()
         {
             CreateMap<ExternalLoginInfo, ApplicationUser>()
+                .ForMember(x => x.ValidationMailToken, opt => opt.MapFrom(y => DateTime.Now))
                 .ForMember(x => x.UserName, opt =>
                 {
                     if (opt.DestinationMember != null)
@@ -28,15 +29,10 @@ namespace RepoWebShop.Models
                     opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.Email));
                 })
                 .ForMember(x => x.NameIdentifier, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.NameIdentifier)))
-                .ForMember(x => x.EmailConfirmed, opt => opt.MapFrom(y => !string.IsNullOrEmpty(y.Principal.GetClaimValue(ClaimTypes.Email))))
+                .ForMember(x => x.EmailConfirmed, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.Email).Length > 0))
                 .ForMember(x => x.FirstName, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.GivenName)))
                 .ForMember(x => x.LastName, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.Surname)))
                 .ForMember(x => x.AddressLine1, opt => opt.UseDestinationValue())
-                //.ForMember(x => x.StreetName, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.StreetAddress)))
-                //.ForMember(x => x.State, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.StateOrProvince)))
-                //.ForMember(x => x.ZipCode, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.PostalCode)))
-                //.ForMember(x => x.Country, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.Country)))
-                //.ForMember(x => x.PhoneNumber, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.MobilePhone)))
                 .ForMember(x => x.Gender, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.Gender)))
                 .ForMember(x => x.DateOfBirth, opt =>
                 {
@@ -48,22 +44,25 @@ namespace RepoWebShop.Models
                     });
                     opt.MapFrom(z => DateTime.Parse(z.Principal.GetClaimValue(ClaimTypes.DateOfBirth)));
                 });
-
-            CreateMap<ApplicationUser, RegisterProviderWithMailViewModel>();
             CreateMap<RegisterProviderWithMailViewModel, ApplicationUser>()
+                .ForMember(x => x.ValidationMailToken, opt => opt.MapFrom(y => DateTime.Now))
                 .ForMember(x => x.UserName, opt => opt.MapFrom(y => y.Email));
-            CreateMap<PieDetailCreateViewModel, PieDetail>();
-            CreateMap<RegisterViewModel, ApplicationUser>();
+            CreateMap<RegisterViewModel, ApplicationUser>()
+                .ForMember(x => x.ValidationMailToken, opt => opt.MapFrom(y => DateTime.Now));
+            CreateMap<IdentityUser, ApplicationUser>();
+            CreateMap<ApplicationUserViewModel, ApplicationUser>();
+
             CreateMap<ApplicationUser, EmailValidationViewModel>();
+            CreateMap<ApplicationUser, RegisterProviderWithMailViewModel>();
+
+            CreateMap<PieDetailCreateViewModel, PieDetail>();
             CreateMap<PieDetail, PieDetailCreateViewModel>();
             CreateMap<PieDetail, PieDetail>().ForMember(x => x.PieDetailId, opt => opt.Ignore());
             CreateMap<Order, OrderStatusViewModel>();
             CreateMap<PaymentNotice, Order>();
-            CreateMap<IdentityUser, ApplicationUser>();
             CreateMap<WorkingHours, OpenHours>();
             CreateMap<WorkingHours, ProcessingHours>();
             CreateMap<ApplicationUser, ApplicationUserViewModel>();
-            CreateMap<ApplicationUserViewModel, ApplicationUser>();
             CreateMap<AddSpecialDateViewModel, PublicHoliday>()
                 .ForMember(x => x.OpenHours,
                     opt => opt.MapFrom(src => src.OpenHoursStartingAt.HasValue && src.OpenHoursFinishingAt.HasValue  ? 

@@ -4,12 +4,15 @@ using RepoWebShop.ViewModels;
 using System;
 using RepoWebShop.Interfaces;
 using Microsoft.Extensions.Configuration;
+using RepoWebShop.Models;
+using Microsoft.AspNetCore.Identity;
+using RepoWebShop.Extensions;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Controllers
 {
     public class ShoppingCartController : Controller
     {
-        private readonly IOrderRepository _orderRepository;
         private readonly IPieRepository _pieRepository;
         private readonly IShoppingCartRepository _shoppingCart;
         private readonly IMercadoPago _mp;
@@ -17,12 +20,15 @@ namespace RepoWebShop.Controllers
         private readonly IConfiguration _config;
         private readonly string _bookingId;
         private readonly string _friendlyBookingId;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
 
-        public ShoppingCartController(IConfiguration config, ICalendarRepository calendarRepository, IOrderRepository orderRepository, IPieRepository pieRepository, IShoppingCartRepository shoppingCart, IMercadoPago mp)
+        public ShoppingCartController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration config, ICalendarRepository calendarRepository, IPieRepository pieRepository, IShoppingCartRepository shoppingCart, IMercadoPago mp)
         {
+            _userManager = userManager;
+            _signInManager = signInManager;
             _config = config;
-            _orderRepository = orderRepository;
             _pieRepository = pieRepository;
             _shoppingCart = shoppingCart;
             _bookingId = shoppingCart.GetShoppingCartId();
@@ -40,13 +46,14 @@ namespace RepoWebShop.Controllers
             return View(result);
         }
 
-        public ViewResult Index()
+        public async Task<ViewResult> Index()
         {
             var items = _shoppingCart.GetShoppingCartItems();
             //_shoppingCart.ShoppingCartItems = items;
             var total = _shoppingCart.GetShoppingCartTotal();
             var highestPrepTime = _shoppingCart.GetShoppingCartPreparationTime();
 
+            var user = await _userManager.GetUser(_signInManager);
 
             var shoppingCartViewModel = new ShoppingCartViewModel
             {
@@ -54,7 +61,7 @@ namespace RepoWebShop.Controllers
                 Items = _shoppingCart.GetShoppingCartItems(),
                 PickupDate = _calendarRepository.GetPickupEstimate(highestPrepTime),
                 ShoppingCartTotal = total,
-                Mercadolink = _mp.GetRepoPaymentLink(total, _bookingId, _friendlyBookingId, Request.Host.ToString(), "La Reposteria"),
+                Mercadolink = _mp.GetRepoPaymentLink(total, _bookingId, _friendlyBookingId, Request.Host.ToString(), "La Reposteria", user?.Id),
                 PreparationTime = highestPrepTime,
                 FriendlyBookingId = _friendlyBookingId,
                 Comments = _shoppingCart.GetShoppingCartComments(),

@@ -17,26 +17,24 @@ using Microsoft.Extensions.Options;
 using System.Security.Cryptography;
 using RepoWebShop.Extensions;
 using Microsoft.AspNetCore.Identity;
+using System.Linq;
 
 namespace RepoWebShop.Repositories
 {
     public class EmailRepository : IEmailRepository
     {
         private readonly AppDbContext _appDbContext;
-        private readonly IOrderRepository _orderRepository;
+        //private readonly IOrderRepository _orderRepository; MAKES CIRCULAR DEPENDENCY
         private readonly IHostingEnvironment _env;
         private readonly IConfiguration _config;
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly string _sender;
         private readonly string _serviceAccount;
         private readonly string _serviceAccountPrivateKey;
         private readonly string _zone;
 
-        public EmailRepository(UserManager<ApplicationUser> userManager, AppDbContext appDbContext, IOrderRepository orderRepository, IHostingEnvironment env, IConfiguration config)
+        public EmailRepository(AppDbContext appDbContext, IHostingEnvironment env, IConfiguration config)
         {
-            _userManager = userManager;
             _appDbContext = appDbContext;
-            _orderRepository = orderRepository;
             _env = env;
             _config = config;
 
@@ -48,9 +46,6 @@ namespace RepoWebShop.Repositories
 
         public void SendEmailActivationAsync(ApplicationUser appUser, string hostUrl)
         {
-            appUser.ValidationMailToken = DateTime.Now.Zoned(_zone);
-            _userManager.UpdateAsync(appUser);
-
             string hash = SHA256.Create().FromString(appUser.ValidationMailToken.ToString());
             
             var apicall = $"{hostUrl}/Account/EmailVerificationBodyEmail/{appUser.UserName}/{hash}";
@@ -76,11 +71,47 @@ namespace RepoWebShop.Repositories
             }
         }
 
+        public void NotifyOrderComplete(Order order, string hostUrl)
+        {
+            string userEmail = order.Registration?.Email;
+            string orderEmail = order.Email?.To;
+
+            string principalEmail;
+            string secondaryEmail;
+
+            if (orderEmail == null && userEmail == null)
+                return;
+
+            principalEmail = userEmail ?? orderEmail;
+            secondaryEmail = principalEmail == userEmail ? orderEmail : null;
+
+            var apicall = $"{hostUrl}/Order/OrderComplete/{order.OrderId}/";
+            Task<HttpResponseMessage> responseTask = new HttpClient().GetAsync(apicall);
+            responseTask.Wait();
+
+            Email email = new Email()
+            {
+                To = principalEmail,
+                //Bcc = _sender,
+                Subject = $"De las Artes - ¡Pedido {order.FriendlyBookingId} listo!",
+                Body = responseTask.Result.Content.ReadAsStringAsync().Result
+            };
+
+            try
+            {
+                SendMail(GetMimeMessage(email, secondaryEmail));
+            }
+            finally
+            {
+                var emailsaved = _appDbContext.Emails.Add(email);
+                _appDbContext.SaveChanges();
+            }
+        }
+
         public void SendOrderConfirmation(Order order, string hostUrl, PaymentNotice payment = null)
         {
             if (order != null)
             {
-                var orderdetails = _orderRepository.GetOrderDetails(order.OrderId);
                 var comments = order.CustomerComments;
 
                 var mercadopagomail = !_env.IsProduction() ? _config.GetSection("MercadoPagoTestEmail").Value : order.MercadoPagoMail;
@@ -111,17 +142,20 @@ namespace RepoWebShop.Repositories
             }
         }
 
-        private MimeMessage GetMimeMessage(Email email)
+        private MimeMessage GetMimeMessage(Email email, string secondaryEmail = null)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("De las Artes", _sender));
             message.To.Add(new MailboxAddress(email.To));
-            message.Bcc.Add(new MailboxAddress(email.Bcc));
+            if(!String.IsNullOrEmpty(secondaryEmail))
+                message.To.Add(new MailboxAddress(secondaryEmail));
+            if (!String.IsNullOrEmpty(email.Bcc))
+                message.Bcc.Add(new MailboxAddress(email.Bcc));
             message.Subject = email.Subject;
             message.Body = (new BodyBuilder() { HtmlBody = email.Body }).ToMessageBody();
             return message;
         }
-        
+
         private void SendMail(MimeMessage message)
         {
             using (var client = new SmtpClient())

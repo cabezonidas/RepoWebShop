@@ -26,6 +26,9 @@ namespace RepoWebShop.Controllers
             if (payment["status"]?.ToString() == "200")
             {
                 PaymentNotice paymentInfo = new PaymentNotice(((payment["response"] as Hashtable)["collection"] as Hashtable));
+                var merchantOrder = _mp.GetMerchantOrder(paymentInfo.Merchant_Order_Id);
+                if(merchantOrder["status"]?.ToString() == "200")
+                    paymentInfo.User_Id = (merchantOrder["response"] as Hashtable)["additional_info"]?.ToString();
                 if (!String.IsNullOrWhiteSpace(paymentInfo.BookingId))
                     _paymentNoticeRepository.CreatePayment(paymentInfo, Request.HostUrl());
             }

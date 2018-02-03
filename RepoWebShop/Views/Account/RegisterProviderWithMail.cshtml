@@ -7,11 +7,12 @@
         text-align: center;
     }
 </style>
-<div id="emailbox">
+<div id="emailbox" class="hidden">
     <h3>Por favor, confirmanos una dirección de email para que puedas registrarte.</h3>
-    <form asp-controller="Account" asp-action="RegisterProviderWithMail" method="post" role="form">
+    <form asp-controller="Account" asp-action="RegisterProviderWithMail" method="post" role="form" id="registrationForm">
         <input asp-for="UserName" hidden="hidden" />
         <input asp-for="NameIdentifier" hidden="hidden" />
+        <input asp-for="EmailConfirmed" hidden="hidden" />
         <input asp-for="FirstName" hidden="hidden" />
         <input asp-for="LastName" hidden="hidden" />
         <input asp-for="AddressLine1" hidden="hidden" />
@@ -23,7 +24,7 @@
         <input asp-for="DateOfBirth" hidden="hidden" />
         <div class=" form-group">
             <div class="">
-                <input asp-for="Email" class="form-control" />
+                <input asp-for="Email" class="form-control" id="email" />
                 <span asp-validation-for="Email" class="text-danger"></span>
                 @*<div asp-validation-summary="All" class="text-danger"></div>*@
                 @{
@@ -44,3 +45,14 @@
         </div>
     </form>
 </div>
+<script>
+    $(document).ready(function (){
+        if (!$('input#email').val()) {
+            $('div#emailbox').removeClass('hidden');
+        }
+        else {
+            document.getElementById("registrationForm").submit();
+        }
+    });
+
+</script>

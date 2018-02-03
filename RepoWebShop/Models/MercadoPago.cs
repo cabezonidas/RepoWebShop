@@ -547,7 +547,7 @@ namespace RepoWebShop.Models
 
         /******************************************** Extensions *********************************************/
         
-        public string GetRepoPaymentLink(decimal total, string bookingId, string friendlyBookingId, string host, string title)
+        public string GetRepoPaymentLink(decimal total, string bookingId, string friendlyBookingId, string host, string title, string userId = null)
         {
             try
             {
@@ -586,12 +586,7 @@ namespace RepoWebShop.Models
 
                         "\"auto_return\":\"approved\"," +
                         $"\"external_reference\":\"{bookingId}\"," +
-
-                        //expires
-                        //expiration_date_from
-                        //expiration_date_to
-                        
-                        $"\"additional_info\":\"{bookingId}\"" +
+                        $"\"additional_info\":\"{userId}\"" +
                 "}";
 
                 Hashtable preference = CreatePreference(preferenceData);

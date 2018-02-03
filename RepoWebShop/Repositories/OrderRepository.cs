@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using RepoWebShop.Extensions;
@@ -18,11 +19,17 @@ namespace RepoWebShop.Models
         private readonly AppDbContext _appDbContext;
         private readonly IShoppingCartRepository _shoppingCartRepository;
         private readonly ICalendarRepository _calendarRepository;
+        private readonly IEmailRepository _emailRepository;
+        private readonly ISmsRepository _smsRepository;
         private readonly IMercadoPago _mp;
         private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public OrderRepository(AppDbContext appDbContext, IMercadoPago mp, ICalendarRepository calendarRepository, IShoppingCartRepository shoppingCartRepository, IMapper mapper)
+        public OrderRepository(UserManager<ApplicationUser> userManager, IEmailRepository emailRepository, ISmsRepository smsRepository, AppDbContext appDbContext, IMercadoPago mp, ICalendarRepository calendarRepository, IShoppingCartRepository shoppingCartRepository, IMapper mapper)
         {
+            _userManager = userManager;
+            _emailRepository = emailRepository;
+            _smsRepository = smsRepository;
             _mapper = mapper;
             _mp = mp;
             _appDbContext = appDbContext;
@@ -83,7 +90,7 @@ namespace RepoWebShop.Models
 
         public Order GetOrder(int id)
         {
-            return _appDbContext.Orders.Include(x => x.Registration).FirstOrDefault(x => x.OrderId == id);
+            return _appDbContext.Orders.Include(x => x.Registration).Include(x => x.Email).FirstOrDefault(x => x.OrderId == id);
         }
 
 
@@ -178,14 +185,18 @@ namespace RepoWebShop.Models
             _appDbContext.SaveChanges();
         }
 
-        public EmailNotificationViewModel GetEmailData(int id, string absoluteUrl)
+        public EmailNotificationViewModel GetEmailData(int id, string hostUrl)
         {
-            var orderDetails = GetOrderDetails(id);
             var order = GetOrder(id);
+            EmailNotificationViewModel emailData = ToEmailNotification(order, hostUrl);
+            return emailData;
+        }
 
+        public EmailNotificationViewModel ToEmailNotification(Order order, string absolutUrl)
+        {
+            var orderDetails = GetOrderDetails(order.OrderId);
             var emailData = new EmailNotificationViewModel();
-
-            emailData.AbsoluteUrl = absoluteUrl;
+            emailData.AbsoluteUrl = absolutUrl;
             emailData.Comments = order.CustomerComments;
             emailData.MercadoPagoTransaction = order.MercadoPagoTransaction;
             emailData.OrderItems = orderDetails;
@@ -199,13 +210,10 @@ namespace RepoWebShop.Models
             emailData.CustomarAlias = order.Registration == null ? order.MercadoPagoName : order.Registration.FirstName;
             emailData.CustomarAlias = Regex.Replace(emailData.CustomarAlias.ToLower(), @"(^\w)|(\s\w)", m => m.Value.ToUpper());
 
-            //TextInfo textInfo = new CultureInfo("es-AR", false).TextInfo;
-            //emailData.CustomarAlias = textInfo.ToTitleCase(emailData.CustomarAlias.ToLower());
-
             return emailData;
         }
 
-        public void CompleteOrder(int orderId)
+        public void CompleteOrder(int orderId, string absoluteUrl)
         {
             var order = GetOrder(orderId);
             order.OrderProgressState.Complete(() =>
@@ -215,6 +223,15 @@ namespace RepoWebShop.Models
                 order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - {eventDesc}";
                 _appDbContext.SaveChanges();
                 //Send mail
+            },
+            () => {
+                if (order.Registration != null && order.Registration.PhoneNumberConfirmed)
+                {
+                    var user = order.Registration;
+                    _smsRepository.SendSms(user.PhoneNumber,
+                        $"{user.FirstName}, tu pedido {order.FriendlyBookingId} ya está listo para ser retirado. Recordá traer DNI. De las Artes.");
+                }
+                _emailRepository.NotifyOrderComplete(order, absoluteUrl);
             });
         }
 
@@ -309,7 +326,16 @@ namespace RepoWebShop.Models
             Order order = this.GetOrderByBookingId(payment.BookingId);
             if (order != null)
                 return order;
+
             order = _mapper.Map<PaymentNotice, Order>(payment);
+            if(!String.IsNullOrEmpty(payment.User_Id))
+            {
+                var user = _userManager.FindByIdAsync(payment.User_Id);
+                user.Wait();
+                if (user.IsCompletedSuccessfully && user.Result != null)
+                    order.Registration = user.Result;
+            }
+
             order.OrderPlaced = _calendarRepository.LocalTime();
             order.CustomerComments = _shoppingCartRepository.ClearComments(payment.BookingId);
             _appDbContext.Orders.Add(order);

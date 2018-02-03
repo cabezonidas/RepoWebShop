@@ -125,7 +125,8 @@ namespace RepoWebShop.Controllers
             }
             else
             {
-                _emailRepository.SendEmailActivationAsync(user, Request.HostUrl());
+                if(!user.EmailConfirmed)
+                    _emailRepository.SendEmailActivationAsync(user, Request.HostUrl());
                 var info = await _signInManager.GetExternalLoginInfoAsync();
                 if(info == null)
                     return RedirectToAction("Login");
