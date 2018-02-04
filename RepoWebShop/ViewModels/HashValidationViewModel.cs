@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RepoWebShop.ViewModels
 {
-    public class EmailValidationViewModel : ApplicationUser
+    public class HashValidationViewModel : ApplicationUser
     {
         public string HostUrl { get; set; }
         public string Hash { get; set; }

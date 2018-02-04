@@ -177,5 +177,31 @@ namespace RepoWebShop.Repositories
                 client.Disconnect(true);
             }
         }
+
+        public void SendEmailResetPassword(ApplicationUser foundUser, string hostUrl)
+        {
+            string hash = SHA256.Create().FromString(foundUser.Id.ToString());
+
+            var apicall = $"{hostUrl}/Account/ResetPasswordBodyEmail/{foundUser.Id}/{hash}";
+            Task<HttpResponseMessage> responseTask = new HttpClient().GetAsync(apicall);
+            responseTask.Wait();
+
+            Email email = new Email()
+            {
+                To = foundUser.Email,
+                Subject = "De las Artes - Reestablecer contraseña",
+                Body = responseTask.Result.Content.ReadAsStringAsync().Result
+            };
+
+            try
+            {
+                SendMail(GetMimeMessage(email));
+            }
+            finally
+            {
+                var emailsaved = _appDbContext.Emails.Add(email);
+                _appDbContext.SaveChanges();
+            }
+        }
     }
 }

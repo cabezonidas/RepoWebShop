@@ -65,7 +65,7 @@ namespace RepoWebShop.Models
             CreateMap<IdentityUser, ApplicationUser>();
             CreateMap<ApplicationUserViewModel, ApplicationUser>();
 
-            CreateMap<ApplicationUser, EmailValidationViewModel>();
+            CreateMap<ApplicationUser, HashValidationViewModel>();
             CreateMap<ApplicationUser, RegisterProviderWithMailViewModel>();
 
             CreateMap<PieDetailCreateViewModel, PieDetail>();

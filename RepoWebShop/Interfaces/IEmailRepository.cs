@@ -8,5 +8,6 @@ namespace RepoWebShop.Interfaces
         void SendOrderConfirmation(Order order, string hostUrl, PaymentNotice payment);
         void SendEmailActivationAsync(ApplicationUser appUser, string hostUrl);
         void NotifyOrderComplete(Order order, string hostUrl);
+        void SendEmailResetPassword(ApplicationUser foundUser, string hostUrl);
     }
 }

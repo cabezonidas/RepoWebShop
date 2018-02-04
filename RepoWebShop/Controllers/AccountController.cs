@@ -67,17 +67,83 @@ namespace RepoWebShop.Controllers
                 appUser.EmailConfirmed = true;
                 _userManager.UpdateAsync(appUser);
             }
-            var result = _mapper.Map<ApplicationUser, EmailValidationViewModel>(appUser);
+            var result = _mapper.Map<ApplicationUser, HashValidationViewModel>(appUser);
 
             return View(result);
         }
-        
+
+        [AllowAnonymous]
+        [Route("[Controller]/ResetNewPassword/{userId}/{hash}")]
+        [HttpGet]
+        public IActionResult ResetNewPassword(string userId, string hash)
+        {
+            ApplicationUser appUser = _userManager.Users.FirstOrDefault(x => x.Id == userId);
+            if (appUser == null)
+            {
+                return NotFound();
+            }
+
+            string savedHash = SHA256.Create().FromString(appUser.Id.ToString());
+
+            if (savedHash == hash)
+            {
+                var vm = new ResetPasswordNewPasswordViewModel
+                {
+                    Hash = hash,
+                    UserId = userId
+                };
+                return View(vm);
+            }
+            else
+                return NotFound();
+        }
+
+        [AllowAnonymous]
+        [Route("[Controller]/ResetNewPassword/{userId}/{hash}")]
+        [HttpPost]
+        public async Task<IActionResult> ResetNewPassword(ResetPasswordNewPasswordViewModel vm)
+        {
+            if(ModelState.IsValid)
+            {
+                if(vm.Password1 != vm.Password2)
+                {
+                    ModelState.AddModelError("PasswordNotMatch", "Las contraseñas no coinciden");
+                    return View(vm);
+                }
+                var user = _userManager.Users.FirstOrDefault(s => s.Id == vm.UserId);
+
+                if(user == null)
+                {
+                    ModelState.AddModelError("UserNotValid", "La operación no fue autorizada");
+                    return View(vm);
+                }
+                else
+                {
+                    await _userManager.RemovePasswordAsync(user);
+                    await _userManager.AddPasswordAsync(user, vm.Password1);
+                    return RedirectToAction("Login");
+                }
+            }
+            return View(vm);
+        }
+
         [AllowAnonymous]
         [Route("[Controller]/EmailVerificationBodyEmail/{user}/{hash}")]
         public IActionResult EmailVerificationBodyEmail(string user, string hash)
         {
             ApplicationUser appUser = _userManager.Users.FirstOrDefault(x => x.UserName.ToLower() == user.ToLower());
-            var result = _mapper.Map<ApplicationUser, EmailValidationViewModel>(appUser);
+            var result = _mapper.Map<ApplicationUser, HashValidationViewModel>(appUser);
+            result.HostUrl = Request.HostUrl();
+            result.Hash = hash;
+            return View(result);
+        }
+
+        [AllowAnonymous]
+        [Route("[Controller]/ResetPasswordBodyEmail/{userId}/{hash}")]
+        public IActionResult ResetPasswordBodyEmail(string userId, string hash)
+        {
+            ApplicationUser appUser = _userManager.Users.FirstOrDefault(x => x.Id == userId);
+            var result = _mapper.Map<ApplicationUser, HashValidationViewModel>(appUser);
             result.HostUrl = Request.HostUrl();
             result.Hash = hash;
             return View(result);
@@ -313,6 +379,37 @@ namespace RepoWebShop.Controllers
             var result = Challenge(properties, provider);
             return result;
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword() => View(new ResetPasswordViewModel());
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(ResetPasswordViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                var email = vm.Email.TrimEnd().TrimStart().ToLower();
+                var foundUser = _userManager.Users.FirstOrDefault(x => x.NormalizedEmail.ToLower() == email && x.EmailConfirmed);
+                if(foundUser == null)
+                {
+                    ModelState.AddModelError("ValidUserNotFound", "No se encontró el usuario, o el email no corresponde a un usuario que haya validado su dirección de email.");
+                    ModelState.AddModelError("LoginHint", "Revisa que el email esté correcto. De ser así, busca en tu correo el link de activación, sino trata de iniciar con algún medio social.");
+                    return View(vm);
+                }
+                else
+                {
+                    _emailRepository.SendEmailResetPassword(foundUser, Request.HostUrl());
+                    return RedirectToAction(nameof(PieDetailController.List), "PieDetail");
+                }
+            }
+            else
+            {
+                return View(vm);
+            }
+        }
+
 
         [HttpGet]
         [AllowAnonymous]
