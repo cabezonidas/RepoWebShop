@@ -13,11 +13,11 @@
     .loginBtn {
         box-sizing: border-box;
         position: relative;
-        /* width: 13em;  - apply for fixed size */
-        margin: 0.2em;
+        width: 100%; /* - apply for fixed size*/
+        margin: 0em;
         padding: 0 15px 0 46px;
         border: none;
-        text-align: left;
+        text-align: center;
         line-height: 34px;
         white-space: nowrap;
         border-radius: 0.2em;
@@ -131,6 +131,11 @@
         <input type="hidden" asp-for="ReturnUrl" />
         <table>
             <tbody>
+                <tr>
+                    <td>
+                        <hr>
+                    </td>
+                </tr>
                 @foreach (var provider in loginProviders)
                 {   
                 <tr>
