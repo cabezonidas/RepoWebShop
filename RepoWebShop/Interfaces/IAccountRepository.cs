@@ -10,6 +10,7 @@ namespace RepoWebShop.Interfaces
     public interface IAccountRepository
     {
         Task<string> SendValidationCode(ApplicationUser user, string phone);
-        Task<IdentityResult> EnsureUserHasLoginAsync(ExternalLoginInfo info);
+        Task<IdentityResult> CreateOrUpdateUserAsync(ExternalLoginInfo info, string email, string hostUrl);
+        Task<IdentityResult> EnsureUserHasLoginAsync(ExternalLoginInfo info, string email);
     }
 }

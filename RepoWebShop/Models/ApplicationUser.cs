@@ -68,6 +68,7 @@ namespace RepoWebShop.Models
         public string ValidationPhoneToken { get; set; }
         public DateTime? ValidationMailToken { get; set; }
         public string PhoneNumberDeclared { get; set; }
-        public string NameIdentifier { get; set; }
+        public string FacebookNameIdentifier { get; set; }
+        public string GoogleNameIdentifier { get; set; } 
     }
 }

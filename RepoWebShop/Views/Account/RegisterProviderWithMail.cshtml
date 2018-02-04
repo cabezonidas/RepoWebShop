@@ -11,8 +11,9 @@
     <h3>Por favor, confirmanos una dirección de email para que puedas registrarte.</h3>
     <form asp-controller="Account" asp-action="RegisterProviderWithMail" method="post" role="form" id="registrationForm">
         <input asp-for="UserName" hidden="hidden" />
-        <input asp-for="NameIdentifier" hidden="hidden" />
-        <input asp-for="EmailConfirmed" hidden="hidden" />
+        <input asp-for="FacebookNameIdentifier" hidden="hidden" id="facebookId"/>
+        <input asp-for="GoogleNameIdentifier" hidden="hidden" id="googleId"/>
+        <input asp-for="EmailConfirmed" hidden="hidden" id="emailconfirmed" />
         <input asp-for="FirstName" hidden="hidden" />
         <input asp-for="LastName" hidden="hidden" />
         <input asp-for="AddressLine1" hidden="hidden" />
@@ -25,8 +26,8 @@
         <div class=" form-group">
             <div class="">
                 <input asp-for="Email" class="form-control" id="email" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-                @*<div asp-validation-summary="All" class="text-danger"></div>*@
+                <span asp-validation-for="Email" class="text-danger hidden"></span>
+                <div asp-validation-summary="All" class="text-danger hidden" id="allErrors"></div>
                 @{
                 if (Model.Errors != null)
                 {
@@ -46,8 +47,19 @@
     </form>
 </div>
 <script>
-    $(document).ready(function (){
-        if (!$('input#email').val()) {
+    $(document).ready(function () {
+        var errors = false;
+        var nameIdentifier = $('input#facebookId').val() || $('input#googleId').val() ;
+        @{
+            if(Model.Errors != null && Model.Errors.Count > 0)
+            {
+                <text>
+                    errors = true;
+                </text>
+            }
+        }
+
+        if ($('div#allErrors').val() || errors || (!nameIdentifier && !$('input#email').val())) {
             $('div#emailbox').removeClass('hidden');
         }
         else {

@@ -17,7 +17,8 @@ namespace RepoWebShop.Extensions
         public static ApplicationUser GetUserByExternalLogin(this UserManager<ApplicationUser> userManager, ExternalLoginInfo _info)
         {
             var email = _info.Principal.GetClaimValue(ClaimTypes.Email);
-            return userManager.Users.FirstOrDefault(x => x.Email.ToLower() == email.ToLower());
+            var nameId = _info.Principal.GetClaimValue(ClaimTypes.NameIdentifier);
+            return userManager.Users.FirstOrDefault(x => x.Email.ToLower() == email.ToLower() || x.FacebookNameIdentifier == nameId || x.GoogleNameIdentifier == nameId);
         }
     }
 }

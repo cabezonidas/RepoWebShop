@@ -28,8 +28,21 @@ namespace RepoWebShop.Models
                     opt.PreCondition(w => !string.IsNullOrEmpty(w.Principal.GetClaimValue(ClaimTypes.Email)));
                     opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.Email));
                 })
-                .ForMember(x => x.NameIdentifier, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.NameIdentifier)))
-                .ForMember(x => x.EmailConfirmed, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.Email).Length > 0))
+                .ForMember(x => x.FacebookNameIdentifier, opt =>
+                {
+                    opt.PreCondition(w => w.LoginProvider == "Facebook");
+                    opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.NameIdentifier));
+                })
+                .ForMember(x => x.GoogleNameIdentifier, opt =>
+                {
+                    opt.PreCondition(w => w.LoginProvider == "Google");
+                    opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.NameIdentifier));
+                })
+                .ForMember(x => x.EmailConfirmed, opt =>
+                {
+                    opt.PreCondition(w => w.Principal.GetClaimValue(ClaimTypes.Email).Length > 0);
+                    opt.MapFrom(y => true);
+                })
                 .ForMember(x => x.FirstName, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.GivenName)))
                 .ForMember(x => x.LastName, opt => opt.MapFrom(y => y.Principal.GetClaimValue(ClaimTypes.Surname)))
                 .ForMember(x => x.AddressLine1, opt => opt.UseDestinationValue())

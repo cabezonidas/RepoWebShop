@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication;
 using RepoWebShop.Interfaces;
 using System.Security.Cryptography;
 using RepoWebShop.Extensions;
+using System.Security.Claims;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -108,38 +109,27 @@ namespace RepoWebShop.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> RegisterProviderWithMail(RegisterProviderWithMailViewModel infoVm)
         {
-            infoVm.Errors = new List<string>();
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+                return RedirectToAction("Login");
 
-            //if (!ModelState.IsValid)
-            //{
-            //    return View(infoVm);
-            //}
-
-            var user = _mapper.Map<RegisterProviderWithMailViewModel, ApplicationUser>(infoVm);
-
-            var result = await _userManager.CreateAsync(user);
-            if(!result.Succeeded)
+            var userExists = await _accountRepository.CreateOrUpdateUserAsync(info, infoVm.Email, Request.HostUrl());
+            if(!userExists.Succeeded)
             {
-                infoVm.Errors.AddRange(result.Errors.Select(x => x.Description));
+                var user = _mapper.Map<RegisterProviderWithMailViewModel, ApplicationUser>(infoVm);
+                infoVm.Errors = new List<string>();
+                infoVm.Errors.AddRange(userExists.Errors.Select(x => x.Description));
                 return View(infoVm);
             }
-            else
-            {
-                if(!user.EmailConfirmed)
-                    _emailRepository.SendEmailActivationAsync(user, Request.HostUrl());
-                var info = await _signInManager.GetExternalLoginInfoAsync();
-                if(info == null)
-                    return RedirectToAction("Login");
 
-                var hasLogin = await _userManager.AddLoginAsync(user, info);
-                if(hasLogin.Succeeded)
-                {
-                    var loggedIn = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
-                    if (loggedIn.Succeeded)
-                        return RedirectToAction("List", "PieDetail");
-                }
-                return RedirectToAction("Register", "Account");
+            var hasLogin = await _accountRepository.EnsureUserHasLoginAsync(info, infoVm.Email);
+            if (hasLogin.Succeeded)
+            {
+                var loggedIn = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+                if (loggedIn.Succeeded)
+                    return RedirectToAction("List", "PieDetail");
             }
+            return RedirectToAction("Register", "Account");
         }
 
         [HttpPost]
@@ -342,7 +332,24 @@ namespace RepoWebShop.Controllers
                 return RedirectToAction(nameof(Login), loginViewModel);
             }
 
-            var result = await _accountRepository.EnsureUserHasLoginAsync(info);
+            var userExists = await _accountRepository.CreateOrUpdateUserAsync(info, null, Request.HostUrl());
+            if(!userExists.Succeeded)
+            {
+                var missingEmailError = userExists.Errors.Select(x => x.Code).Count(y => y == "InvalidEmail" || y == "InvalidUserName") == userExists.Errors.Count();
+
+                if (missingEmailError)
+                {
+                    var appuser = _mapper.Map<ExternalLoginInfo, ApplicationUser>(info);
+                    return RedirectToAction(nameof(AccountController.RegisterProviderWithMail), appuser);
+                }
+                else
+                {
+                    loginViewModel.Errors.AddRange(userExists.Errors.Select(x => x.Description));
+                    return RedirectToAction(nameof(Login), loginViewModel);
+                }
+            }
+
+            var result = await _accountRepository.EnsureUserHasLoginAsync(info, null);
             if (result.Succeeded)
             {
                 var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
@@ -361,18 +368,8 @@ namespace RepoWebShop.Controllers
             }
             else
             {
-                var missingEmailError = result.Errors.Select(x => x.Code).Count(y => y == "InvalidEmail" || y == "InvalidUserName") == result.Errors.Count();
-
-                if(missingEmailError)
-                {
-                    var appuser = _mapper.Map<ExternalLoginInfo, ApplicationUser>(info);
-                    return RedirectToAction(nameof(AccountController.RegisterProviderWithMail), appuser);
-                }
-                else
-                {
-                    loginViewModel.Errors.AddRange(result.Errors.Select(x => x.Description));
-                    return RedirectToAction(nameof(Login), loginViewModel);
-                }
+                loginViewModel.Errors.Add("No pudimos crear el inicio de sesión. Por favor, intentá otro medio.");
+                return RedirectToAction(nameof(Login), loginViewModel);
             }
         }
     }

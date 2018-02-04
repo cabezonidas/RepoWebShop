@@ -45,6 +45,13 @@ namespace RepoWebShop
                 //facebookOptions.Scope.Add("user_birthday");
             });
 
+            services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = _configurationRoot["GoogleAppId"];
+                googleOptions.ClientSecret = _configurationRoot["GoogleAppSecret"];
+                //facebookOptions.Scope.Add("user_birthday");
+            });
+
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings
