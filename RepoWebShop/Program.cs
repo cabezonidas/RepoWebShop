@@ -14,7 +14,7 @@ namespace RepoWebShop
 
             using (var scope = host.Services.CreateScope())
             {
-                DbInitializer.Seed(scope.ServiceProvider);
+                DbInitializer.Seed(scope.ServiceProvider).Wait();
             }
 
             host.Run();

@@ -10,24 +10,24 @@ namespace RepoWebShop.Models
 {
     public static class DbInitializer
     {
-        public static void Seed(IServiceProvider serviceProvider)
+        public static async Task Seed(IServiceProvider serviceProvider)
         {
-            CreateUserWithRoleAsync(serviceProvider, "Administrator", "sebastian.scd@gmail.com", "Sebastián", "Cabeza");
-            CreateUserWithRoleAsync(serviceProvider, "Administrator", "fiorelcd@gmail.com", "Fiorella", "Cabeza");
-            CreateUserWithRoleAsync(serviceProvider, "Administrator", "marcelardec@gmail.com", "Marcela", "Declich");
-            CreateUserWithRoleAsync(serviceProvider, "Administrator", "cabeza1961@gmail.com", "Claudio", "Cabeza");
-            CreateUserWithRoleAsync(serviceProvider, "Administrator", "luciebenve@gmail.com", "Lucía", "Benvenuto");
+            await CreateUserWithRoleAsync(serviceProvider, "Administrator", "sebastian.scd@gmail.com", "Sebastián", "Cabeza");
+            await CreateUserWithRoleAsync(serviceProvider, "Administrator", "fiorelcd@gmail.com", "Fiorella", "Cabeza");
+            await CreateUserWithRoleAsync(serviceProvider, "Administrator", "marcelardec@gmail.com", "Marcela", "Declich");
+            await CreateUserWithRoleAsync(serviceProvider, "Administrator", "cabeza1961@gmail.com", "Claudio", "Cabeza");
+            await CreateUserWithRoleAsync(serviceProvider, "Administrator", "luciebenve@gmail.com", "Lucía", "Benvenuto");
         }
 
-        private static void CreateUserWithRoleAsync(IServiceProvider serviceProvider, string role, string email, string name, string lastname)
+        private static async Task CreateUserWithRoleAsync(IServiceProvider serviceProvider, string role, string email, string name, string lastname)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            if (!roleManager.RoleExistsAsync(role).GetAwaiter().GetResult())
-                 roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
+            if (!await roleManager.RoleExistsAsync(role))
+                 await roleManager.CreateAsync(new IdentityRole(role));
 
-            ApplicationUser user = userManager.FindByNameAsync(email).GetAwaiter().GetResult();
+            ApplicationUser user = await userManager.FindByEmailAsync(email);
             if (user == null)
             { 
                 user = new ApplicationUser
@@ -37,11 +37,11 @@ namespace RepoWebShop.Models
                     LastName = lastname,
                     FirstName = name
                 };
-                userManager.CreateAsync(user).Wait();
+                await userManager.CreateAsync(user);
             }
 
-            if (!userManager.IsInRoleAsync(user, role).GetAwaiter().GetResult())
-                userManager.AddToRoleAsync(user, role).Wait();
+            if (!await userManager.IsInRoleAsync(user, role))
+                await userManager.AddToRoleAsync(user, role);
         }
     }
 }
