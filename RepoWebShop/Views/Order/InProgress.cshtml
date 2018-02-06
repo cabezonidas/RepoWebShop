@@ -1,6 +1,10 @@
 ﻿@model IEnumerable<Order>
 
-<link href="~/Content/Order/InProgress.css" rel="stylesheet" />
+<style>
+    div.container {
+        font-family: Arial;
+    }
+</style>
 
 <div class="container">
     <h2>Pedidos en progreso</h2>
@@ -66,11 +70,11 @@
                     <td>
                         @if (order.Finished)
                         {
-                            <a class="btn btn-success" onclick="pickedUp(@order.OrderId);">¡Entregado!</a>
+                            <a class="btn btn-success" onclick="pickedUp(@order.OrderId);" id="@order.OrderId" >¡Entregado!</a>
                         }
                         else
                         {
-                            <a class="btn btn-success" onclick="orderCompleted(@order.OrderId);">¡Pedido Listo!</a>
+                            <a class="btn btn-success" onclick="orderCompleted(@order.OrderId);" id="@order.OrderId" >¡Pedido Listo!</a>
                         }
 
                     </td>
@@ -84,7 +88,8 @@
 <script type="text/javascript">
     $('#orders').DataTable();
 
-    function pickedUp(id){
+    function pickedUp(id) {
+        $('a#' + id).hide();
         $.ajax({
             type: 'POST',
             url: '/api/OrderData/PickUpOrder/' + id,
@@ -96,12 +101,12 @@
                 console.log(xhr.statusText);
                 console.log(textStatus);
                 console.log(error);
-                alert('Hubo un error y no se puede hacer el cambio.');
             }
         });
     }
 
     function orderCompleted(id) {
+        $('a#' + id).hide();
         $.ajax({
             type: 'POST',
             url: '/api/OrderData/CompleteOrder/' + id,
@@ -113,8 +118,13 @@
                 console.log(xhr.statusText);
                 console.log(textStatus);
                 console.log(error);
-                alert('Hubo un error y no se puede hacer el cambio.');
             }
         });
     }
+
+    $(document).ready(function () {
+        setTimeout(function () {
+            window.location.reload();
+        }, 60000);
+    });
 </script>

@@ -2,38 +2,48 @@
 
 @section styles {
     <link rel="stylesheet" href="~/lib/intl-tel-input/build/css/intlTelInput.css">
-    <link rel="stylesheet" href="~/Content/Account/VerifyNumber.css">
+}
+<style>
+form {
+    max-width: 260px;
+    margin: auto;
 }
 
+.btn {
+    margin-left: 10px;
+    margin-top: 10px;
+}
 
-    <div class="container dialog">
-        <br />
-        <h3 class="text-center">Por favor, verifica tu número de teléfono.</h3>
-        <h4 class="text-center">Esto lo hacemos una sola vez.</h4>
-        <div id="formbox">
-            <form role="form" id="msg">
-                <div class="">
-                    <h4>Validar número de celular</h4>
-                    <input asp-for="PhoneNumber" class="form-control" type="tel" id="phone" /> <br />
-                    <div class="text-danger hidden" id="errormsg">El número ingresado es inválido.</div>
-                    <a class="btn btn-primary" id="send" onclick="verifyNumber();">Enviar</a>
-                    <a class="btn btn-default hidden" id="retry" onclick="window.location.reload();">Reintentar</a>
-                </div>
+</style>
 
-                <div class=" hidden" id="validationbox" style="">
-                    <h4>Escribir código recibido</h4>
-                    <input id="Token" class="form-control" style="width:228px;" />
-                    <div class="text-danger hidden" id="validerrormsg">El número ingresado no coincide con el generado.</div>
-                    <a id="validate" class="btn btn-primary" onclick="validate()">Validar</a>
-                </div>
-                <div class="form-group code">
-                </div>
-            </form>
-        </div>
+<div class="container dialog">
+    <br />
+    <h3 class="text-center">Por favor, verifica tu número de teléfono.</h3>
+    <h4 class="text-center">Esto lo hacemos una sola vez.</h4>
+    <div id="formbox">
+        <form role="form" id="msg">
+            <div class="">
+                <h4>Validar número de celular</h4>
+                <input asp-for="PhoneNumber" class="form-control" type="tel" id="phone" /> <br />
+                <div class="text-danger hidden" id="errormsg">El número ingresado es inválido.</div>
+                <a class="btn btn-primary" id="send" onclick="verifyNumber();">Enviar</a>
+                <a class="btn btn-default hidden" id="retry" onclick="window.location.reload();">Reintentar</a>
+            </div>
 
-
-
+            <div class=" hidden" id="validationbox" style="">
+                <h4>Escribir código recibido</h4>
+                <input id="Token" class="form-control" style="width:228px;" />
+                <div class="text-danger hidden" id="validerrormsg">El número ingresado no coincide con el generado.</div>
+                <a id="validate" class="btn btn-primary" onclick="validate()">Validar</a>
+            </div>
+            <div class="form-group code">
+            </div>
+        </form>
     </div>
+
+
+
+</div>
 
 <script src="~/lib/intl-tel-input/build/js/intlTelInput.min.js"></script>
 

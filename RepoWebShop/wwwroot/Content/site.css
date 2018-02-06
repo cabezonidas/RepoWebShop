@@ -18,9 +18,14 @@ section {
     margin-top: 200px 0;
 }
 
+.btn-primary {
+    background-color: #a0644e !important;
+    border-color: maroon !important;
+}
+
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
-    background-color: cadetblue !important;
-    border-color: darkseagreen !important;
+    background-color: firebrick !important;
+    border-color: maroon !important;
 }
 
 .btn-repo {

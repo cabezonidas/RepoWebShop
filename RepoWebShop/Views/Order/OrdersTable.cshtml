@@ -1,6 +1,9 @@
 ﻿@model IEnumerable<Order>
-<link href="~/Content/Order/OrdersTable.css" rel="stylesheet" />
-
+<style>
+    div.container {
+        font-family: Arial;
+    }
+</style>
 <div class="container">
     <br />
     <a asp-controller="Order" asp-action="InProgress" class="">En progreso</a> -

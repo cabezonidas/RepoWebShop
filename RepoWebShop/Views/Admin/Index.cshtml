@@ -1,10 +1,13 @@
-﻿<link href="~/Content/Admin/Index.css" rel="stylesheet" />
+﻿<style>
+    .admin-index {
+        font-family: Arial;
+    }
+</style>
 
 <div class="container admin-index">
     <h2>Tareas administrativas</h2>
     <a asp-controller="Order" asp-action="InProgress" class="btn btn-primary">Pedidos</a>
-    <a asp-controller="PieDetail" asp-action="Create" class="btn btn-primary">Crear producto</a>
-    <a asp-controller="Admin" asp-action="AllProducts" class="btn btn-primary">Ver productos</a>
+    <a asp-controller="Admin" asp-action="AllProducts" class="btn btn-primary">Productos</a>
     <a asp-controller="Admin" asp-action="Prices" class="btn btn-primary">Precios</a>
     <a asp-controller="Admin" asp-action="Galleries" class="btn btn-primary">Fotos</a>
     <a asp-controller="Calendar" asp-action="Index" class="btn btn-primary">Horarios</a>

@@ -71,8 +71,8 @@ header img {
 /** <Location> **/
 
 section#location {
-    padding-left: 30px;
-    padding-right: 30px;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 /** </Location> **/
@@ -81,7 +81,7 @@ section#location {
 #team {
     /*background-color: white;*/
     /*background: url(../../Pictures/kitchen-elements-1.png) no-repeat center center;*/
-    background-size: cover;
+    /*background-size: cover;*/
     padding-left: 30px;
     padding-right: 30px;
 }

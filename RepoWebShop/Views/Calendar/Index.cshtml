@@ -1,6 +1,28 @@
 ﻿@model CalendarViewModel
 
-<link href="~/Content/Calendar/Index.css" rel="stylesheet" />
+<style>
+    .calendar-index {
+        font-family: Arial;
+    }
+
+        .calendar-index table {
+            margin: auto;
+        }
+
+        .calendar-index div.timepicker {
+            margin: 5px;
+            width: 100px;
+        }
+
+        .calendar-index table.timeframestable {
+            vertical-align: top;
+        }
+
+        .calendar-index .input-group-addon {
+            max-width: 38px;
+        }
+
+</style>
 
 <div class="container calendar-index">
     @{

@@ -5,12 +5,10 @@
     </span>
 </a>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $.get('/api/ShoppingCartData/GetItemsCount', function (data) {
-            if (data.items > 0) {
-                $('span#cart-status').append(data.items);
-                $('a#trolley').removeClass('hidden');
-            }
-        });
+    $.get('/api/ShoppingCartData/GetItemsCount', function (data) {
+        if (data.items > 0) {
+            $('span#cart-status').append(data.items);
+            $('a#trolley').removeClass('hidden');
+        }
     });
 </script>

@@ -1,13 +1,23 @@
-﻿<link href="~/Content/Admin/AllProducts.css" rel="stylesheet" />
+﻿<style>
+    .all-products {
+        font-family: Arial;
+    }
+
+        .all-products table {
+            width: 100%;
+        }
+</style>
 
 <div class="container all-products">
-    <h2>Todos los productos</h2>
+    <h2>
+        Todos los productos
+        <a asp-controller="PieDetail" asp-action="Create" class="btn btn-primary">Crear producto</a>
+    </h2>
     <div id="allProducts-div">
         <table id="allProducts" class="display nowrap dataTable dtr-inline collapsed" cellspacing="0" role="grid">
             <thead>
                 <tr>
                     <th>Nombre</th>
-                    <th>Destacado</th>
                     <th>Descripcion</th>
                     <th>Categoria</th>
                 </tr>
@@ -39,7 +49,8 @@
             $('#allProducts-tbody').append(getRow(item));
         });
         $('#allProducts').DataTable({
-            "order": [[0, "asc"]]
+            "order": [[0, "asc"]],
+            "pageLength": 50
         });
         $('#allProducts-div').parent().css('overflow', 'auto');
         $('#allProducts-div').css('width', '100%');
@@ -52,30 +63,9 @@
         if (!item.isActive)
             state = '<div class="text-muted"> Inactivo</div>';
         row.append('<td><a href="/Admin/EditPieDetail/' + item.pieDetailId + '">' + item.name + '</a>' + state + '</td>');
-
-        if (item.isPieOfTheWeek)
-            row.append('<td><input type="button" value="Quitar" onclick="removeHighlight(' + item.pieDetailId + ');" /></td>');
-        else
-            row.append('<td><input type="button" value="Agregar" onclick="addHighlight(' + item.pieDetailId + ');" /></td>');
         row.append('<td>' + item.shortDescription + '</td>');
         row.append('<td>' + item.category.categoryName + '</td>');
         console.log(item);
         return row;
     }
-
-    function removeHighlight(pieDetailId) {
-        $.post("/api/PieDetailData/RemovePieOfTheWeek/" + pieDetailId, function (data) {
-            window.location.reload();
-        }).fail(function () {
-            alert('No se pudo hacer el cambio.');
-        });
-    }
-
-    function addHighlight(pieDetailId) {
-        $.post("/api/PieDetailData/AddPieOfTheWeek/" + pieDetailId, function (data) {
-            window.location.reload();
-        }).fail(function () {
-            alert('No se pudo hacer el cambio.');
-        });
-    };
 </script>

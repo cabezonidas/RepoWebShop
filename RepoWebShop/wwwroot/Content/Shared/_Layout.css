@@ -50,8 +50,8 @@
     position: fixed;
     left: 15px;
     bottom: 15px;
-    z-index: 9999999;
-    background-color: #88363647;
+    z-index: 20;
+    background-color: #883636d9;
     border-radius: 30px;
     padding-left: 10px;
     padding-right: 10px;
@@ -68,9 +68,11 @@
 
 @media screen and (max-width: 500px) {
     .media-icons {
+        position: fixed;
         left: -10px;
         bottom: -10px;
-        background-color: #88363694;
+        background-color: #883636d9;
+        z-index: 20;
         border-radius: 5px;
         padding-left: 10px;
         padding-bottom: 10px;

@@ -1,9 +1,17 @@
 ﻿@model Pie
 
-<link href="~/Content/Admin/EditPieDetail.css" rel="stylesheet" />
+<style>
+    .edit-pie-detail {
+        font-family: Arial;
+    }
 
+        .edit-pie-detail table {
+            width: 100%;
+        }
+
+</style>
 <div class="container edit-pie-detail">
-    <h2>Editar @Model.PieDetail.Name @Model.Name</h2>
+    <h2>Editar <a href="/Admin/EditPieDetail/@Model.PieDetailId">@Model.PieDetail.Name @Model.Name</a></h2>
 
     <form asp-controller="Admin" asp-action="EditPie" method="post" class="form-horizontal" role="form">
         <hr />

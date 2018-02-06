@@ -1,8 +1,22 @@
 ﻿@model ApplicationUser
 
-@section styles {
-    <link href="~/Content/Account/Profile.css" rel="stylesheet" />
-}
+<style>
+    table.userdata {
+        width: 98%;
+        margin: 10px auto;
+        border-radius: 5px;
+        background-color: white;
+    }
+
+        table.userdata h2 {
+            text-decoration: underline
+        }
+
+        table.userdata td, th {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+</style>
 <section class="container">
     <table class="userdata">
         <thead>

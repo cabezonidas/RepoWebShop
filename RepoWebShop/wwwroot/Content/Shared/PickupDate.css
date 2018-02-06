@@ -1,9 +1,10 @@
 ﻿.full-date {
-    margin: 1px;
+    margin: 1px auto;
     width: 110px;
     font-family: Arial;
     text-align: center;
     padding: 5px;
+    z-index: 1;
 }
 
     .full-date .calendar {

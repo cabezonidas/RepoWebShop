@@ -1,6 +1,33 @@
 ﻿@model OrderDetailsViewModel
 
-<link href="~/Content/Order/Detail.css" rel="stylesheet" />
+<style>
+    .order-detail {
+        font-family: Arial;
+    }
+
+    .table-user-information {
+        max-width: 600px;
+    }
+
+    textarea {
+        resize: vertical;
+        width: 100%
+    }
+
+    #successMessage {
+        display: none;
+        position: fixed;
+        top: 60px;
+        left: 40%;
+    }
+
+    #errorMessage {
+        display: none;
+        position: fixed;
+        top: 60px;
+        left: 40%;
+    }
+</style>
 
 @{
     var pickUp = Model.Order.PickUpTime?.ToString("dd'/'MM'/'yyyy") ?? string.Empty;

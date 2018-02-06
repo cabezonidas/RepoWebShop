@@ -92,8 +92,8 @@ namespace RepoWebShop.Controllers
             if (ModelState.IsValid)
             {
                 await _pieRepository.Update(pie);
-
-                return RedirectToAction("AllProducts");
+                
+                return RedirectToAction(nameof(EditPieDetail), "Admin", new { id = pie.PieDetailId });
             }
             return View();
         }
@@ -142,7 +142,7 @@ namespace RepoWebShop.Controllers
             {
                 await _pieDetailRepository.Update(_mapper.Map<PieDetailCreateViewModel, PieDetail>(pieDetailCreateViewModel));
 
-                return RedirectToAction("AllProducts");
+                return View(pieDetailCreateViewModel);
             }
 
             pieDetailCreateViewModel.Categories = _categories;

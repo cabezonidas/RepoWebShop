@@ -52,6 +52,7 @@
     .arrow-down .fa-stack {
         -webkit-animation: bounce 2s infinite;
         animation: bounce 2s infinite;
+        color: white;
     }
 
 

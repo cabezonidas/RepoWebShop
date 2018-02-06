@@ -258,6 +258,8 @@ namespace RepoWebShop.Controllers
                     await _signInManager.PasswordSignInAsync(user, registration.Password, false, false);
                     return RedirectToAction("Index", "Home");
                 }
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError(error.Code, error.Description);
             }
             return View(registration);
         }

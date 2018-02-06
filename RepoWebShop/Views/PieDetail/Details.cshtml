@@ -1,6 +1,107 @@
 ﻿@model PieDetailViewModel
 
-<link href="~/Content/PieDetail/PieDetails.css" rel="stylesheet" />
+<style>
+        .static-prices {
+        margin: 5px;
+    }
+
+    .table thead tr th {
+        text-align: center;
+    }
+
+
+    .header h1 {
+        text-align: center;
+        margin-bottom: -20px;
+        margin-top: -20px;
+    }
+
+
+    .thumbnailDetail {
+        padding: 10px;
+        max-width: 900px;
+        margin: 10px auto;
+        border-radius: 20px;
+    }
+
+        .thumbnailDetail h1 {
+        }
+
+    #pictures {
+        background-color: #dbe9d8;
+        border-radius: 3px;
+        border-style: solid;
+        border-color: grey;
+        border-width: 2px;
+    }
+
+        #pictures h2 {
+            padding: 5px;
+            background-color: white;
+            border-radius: 3px;
+            border-style: solid;
+            border-width: 1px;
+            border-color: green;
+        }
+
+    .longdesc {
+        font-size: larger;
+    }
+
+    .short-Desc {
+        padding: 20px;
+        max-width: 900px;
+        margin: 30px auto;
+        text-align: center;
+    }
+
+    h2 {
+        font-family: 'Playball'
+    }
+
+
+
+    img.main {
+        width: 100%;
+    }
+
+    @@media screen and (max-width: 400px) {
+        img.nav {
+            /*width: 40px;*/
+            padding: 5px;
+        }
+    }
+
+    @@media screen and (max-width: 600px) {
+        img.nav {
+            /*width: 60px;*/
+            padding: 5px;
+        }
+    }
+
+    @@media screen and (min-width: 600px) {
+        img.nav {
+            /*width: 80px;*/
+            padding: 10px;
+        }
+    }
+
+    div.row p {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    .thumbnailDetail .caption-full {
+        padding: 9px;
+        color: #333;
+    }
+
+        #description h4 {
+            text-align: center;
+        }
+    /***************************************/
+
+</style>
 
 @section metatags {
     <meta property="og:url" content="@Model.RequestAbsoluteUrl" />
@@ -36,7 +137,7 @@
             </div>
         </div>
 
-        <div class="row short-Desc">
+        <div class="short-Desc">
             <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" id="pictures">
                 <div id="photos"></div>
                 <img alt="@Model.PieDetail.Name" src="~/Pictures/imgnotfound.png" id="defaultPicture" style="display:none; width: 100%;">
@@ -59,7 +160,6 @@
                             <th scope="col">Descripción</th>
                             <th scope="col">Tamaño</th>
                             <th scope="col">Precio</th>
-                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,8 +169,8 @@
                                 <tr class="static-price">
                                     <td class="unit-name">@pie.Name</td>
                                     <td class="unit-description">@pie.SizeDescription</td>
-                                    <td class="unit-price">$@pie.Price</td>
-                                    <td class='button'>
+                                    <td class="unit-price">
+                                        $@pie.Price
                                         <a asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@pie.PieId'>
                                             Comprar
                                         </a>

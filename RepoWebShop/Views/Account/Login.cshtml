@@ -84,7 +84,6 @@
 <div class="container" style="margin: auto; max-width: 600px;">
     <form asp-controller="Account" asp-action="Login" method="post" role="form">
         <input type="hidden" asp-for="ReturnUrl" />
-        <div asp-validation-summary="All" class="text-danger"></div>
         @if(Model.Errors != null)
         { 
         <div class="text-danger">@Html.Raw(String.Join("<br/>",Model.Errors))</div>
@@ -112,6 +111,11 @@
                     <td>
                         <input asp-for="Password" class="form-control" />
                         <span asp-validation-for="Password" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div asp-validation-summary="All" class="text-danger"></div>
                     </td>
                 </tr>
                 <tr>

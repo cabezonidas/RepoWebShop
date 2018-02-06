@@ -73,17 +73,8 @@ namespace RepoWebShop.Repositories
 
         public void NotifyOrderComplete(Order order, string hostUrl)
         {
-            string userEmail = order.Registration?.Email;
-            string orderEmail = order.Email?.To;
-
-            string principalEmail;
-            string secondaryEmail;
-
-            if (orderEmail == null && userEmail == null)
-                return;
-
-            principalEmail = userEmail ?? orderEmail;
-            secondaryEmail = principalEmail == userEmail ? orderEmail : null;
+            string principalEmail, secondaryEmail;
+            GetOrderEmails(order, out principalEmail, out secondaryEmail);
 
             var apicall = $"{hostUrl}/Order/OrderComplete/{order.OrderId}/";
             Task<HttpResponseMessage> responseTask = new HttpClient().GetAsync(apicall);
@@ -108,13 +99,20 @@ namespace RepoWebShop.Repositories
             }
         }
 
+        private void GetOrderEmails(Order order, out string principalEmail, out string secondaryEmail)
+        {
+            principalEmail = order.Registration?.Email ?? order.MercadoPagoMail;
+            secondaryEmail = principalEmail == order.MercadoPagoMail ? null : order.MercadoPagoMail;
+        }
+
         public void SendOrderConfirmation(Order order, string hostUrl, PaymentNotice payment = null)
         {
             if (order != null)
             {
                 var comments = order.CustomerComments;
 
-                var mercadopagomail = !_env.IsProduction() ? _config.GetSection("MercadoPagoTestEmail").Value : order.MercadoPagoMail;
+                string principalEmail, secondaryEmail;
+                GetOrderEmails(order, out principalEmail, out secondaryEmail);
 
                 var apicall = $"{hostUrl}/Order/EmailNotification/{order.OrderId}";
                 Task<HttpResponseMessage> responseTask = new HttpClient().GetAsync(apicall);
@@ -122,7 +120,7 @@ namespace RepoWebShop.Repositories
                 
                 Email email = new Email()
                 {
-                    To = payment == null ? order.Registration.NormalizedEmail.ToLower() : mercadopagomail,
+                    To = principalEmail,
                     Bcc = _sender,
                     Subject = "De las Artes - Confirmación de " + (payment == null ? "reserva" : "compra"),
                     Body = responseTask.Result.Content.ReadAsStringAsync().Result
@@ -130,7 +128,7 @@ namespace RepoWebShop.Repositories
                 
                 try
                 {
-                    SendMail(GetMimeMessage(email));
+                    SendMail(GetMimeMessage(email, secondaryEmail));
                 }
                 finally
                 {

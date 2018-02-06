@@ -1,6 +1,8 @@
 ﻿@model ShoppingCartViewModel
 
-<link href="~/Content/ShoppingCart/Index.css" rel="stylesheet" />
+@section styles {
+    <link href="~/Content/ShoppingCart/Index.css" rel="stylesheet" />
+}
 
 <br />
 
@@ -32,36 +34,36 @@ else
             </thead>
             <tbody>
                 @foreach (var line in Model.Items)
-                {
-                    <tr>
-                        <td class="text-center">
-                            <a asp-controller="ShoppingCart" asp-action="ClearFromShoppingCart"
-                               asp-route-pieId="@line.Pie.PieId">
-                                <span class="glyphicon glyphicon-remove remove-item"></span>
-                            </a>
-                        </td>
-                        <td class="text-center quantity">
-                            <a asp-controller="ShoppingCart" asp-action="RemoveFromShoppingCart"
-                               asp-route-pieId="@line.Pie.PieId">
-                                <span class="fa fa-caret-left"></span>
-                            </a>
-                            @line.Amount
-                            <a asp-controller="ShoppingCart" asp-action="AddToShoppingCart"
-                               asp-route-pieId="@line.Pie.PieId">
-                                <span class="fa fa-caret-right"></span>
-                            </a>
-                        </td>
-                        <td class="text-left">
-                            <a href="/PieDetail/Details/@line.Pie.PieDetailId">
-                                @line.Pie.PieDetail.Name [@line.Pie.Name] - @Model.PreparationTime hs
-                            </a>
-                        </td>
-                        <td class="text-right">@line.Pie.Price.ToString("c")</td>
-                        <td class="text-right">
-                            @((line.Amount * line.Pie.Price).ToString("c"))
-                        </td>
-                    </tr>
-                }
+            {
+                <tr>
+                    <td class="text-center">
+                        <a asp-controller="ShoppingCart" asp-action="ClearFromShoppingCart"
+                           asp-route-pieId="@line.Pie.PieId">
+                            <span class="glyphicon glyphicon-remove remove-item"></span>
+                        </a>
+                    </td>
+                    <td class="text-center quantity">
+                        <a asp-controller="ShoppingCart" asp-action="RemoveFromShoppingCart"
+                           asp-route-pieId="@line.Pie.PieId">
+                            <span class="fa fa-caret-left"></span>
+                        </a>
+                        @line.Amount
+                        <a asp-controller="ShoppingCart" asp-action="AddToShoppingCart"
+                           asp-route-pieId="@line.Pie.PieId">
+                            <span class="fa fa-caret-right"></span>
+                        </a>
+                    </td>
+                    <td class="text-left">
+                        <a href="/PieDetail/Details/@line.Pie.PieDetailId">
+                            @line.Pie.PieDetail.Name [@line.Pie.Name] - @Model.PreparationTime hs
+                        </a>
+                    </td>
+                    <td class="text-right">@line.Pie.Price.ToString("c")</td>
+                    <td class="text-right">
+                        @((line.Amount * line.Pie.Price).ToString("c"))
+                    </td>
+                </tr>
+        }
             </tbody>
             <tfoot>
                 <tr>
@@ -78,23 +80,27 @@ else
                 </tr>
             </tfoot>
         </table>
-        <table class="form-group calendar-comments">
-            <tbody>
-                <tr>
-                    <td class="pickupdate-td" style="width:115px;" valign="top">
-                        <label class="control-label ">Orden lista</label>
-                        <div id="pickupDate">
-                            @Html.Partial("~/Views/Shared/PickupDate.cshtml", Model.PickupDate)
-                        </div>
-                        <label class="control-label ">¿Por qué? <a id="moreinfo" href="#estimation-time"><span class="fa fa-question-circle"></span></a></label>
-                    </td>
-                    <td valign="top">
-                        <label class="control-label">Comentarios</label>
-                        <textarea maxlength="250" id="comments" placeholder="Quisiera agregar 'Feliz Cumple Mati!', gracias :)" class="form-control" rows="4"></textarea>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+
+        <div class="col-md-2 col-lg-2 col-sm-3">
+            
+            <div class="text-center">
+                <label class="" style="">Orden lista</label>
+                <div id="pickupDate" class="text-center">
+                    @Html.Partial("~/Views/Shared/PickupDate.cshtml", Model.PickupDate)
+                </div>
+                <label class="control-label ">¿Por qué? <a id="moreinfo" href="#estimation-time"><span class="fa fa-question-circle"></span></a></label>
+            </div>
+            
+        </div>
+
+        <div class="col-md-10 col-lg-10 col-sm-9">
+            <div style="margin-left: 7px;margin-right: 7px;">
+                <label class="control-label">Comentarios</label>
+                <textarea maxlength="250" id="comments" placeholder="Quisiera agregar 'Feliz Cumple Mati!', gracias :)" class="form-control" rows="4"></textarea>
+            </div>
+        </div>
+        <br />
+
     </div>
 
     <div class="container center-block">

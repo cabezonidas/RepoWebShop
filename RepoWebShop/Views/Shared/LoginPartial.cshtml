@@ -1,6 +1,4 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@using Microsoft.AspNetCore.Identity.EntityFrameworkCore
-
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -15,18 +13,15 @@
         </ul>
     </form>
     <script type="text/javascript">
-        $(document).ready(function () {
-            $.get('/api/AccountData/GetUserName', function (data) {
-                $('a#username').append(data.name);
-                $('li#user').removeClass('hidden');
-            });
+        $.get('/api/AccountData/GetUserName', function (data) {
+            $('a#username').append(data.name);
+            $('li#user').removeClass('hidden');
         });
     </script>
 }
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        @*<li><a id="registerLink" asp-controller="Account" asp-action="Register">Registrarse</a></li>*@
         <li><a id="loginLink" asp-controller="Account" asp-action="Login">Ingresar</a></li>
     </ul>
 }

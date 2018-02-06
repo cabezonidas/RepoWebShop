@@ -1,5 +1,12 @@
 ﻿@model OrderStatusViewModel
-<link href="~/Content/Order/Status.css" rel="stylesheet">
+<style>
+    div.orderinfo {
+        max-width: 300px;
+        text-align: center;
+        margin-top: 0px;
+    }
+
+</style>
 @if (Model.Notification != null && Model.Payment != null && Model.Progress != null)
 {
 
