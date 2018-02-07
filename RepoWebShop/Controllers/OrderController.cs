@@ -8,6 +8,7 @@ using AutoMapper;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Extensions;
 using System.Threading.Tasks;
+using RepoWebShop.States;
 
 namespace RepoWebShop.Controllers
 {
@@ -244,18 +245,32 @@ namespace RepoWebShop.Controllers
 
             if (items.Count == 0)
             {
-                ModelState.AddModelError("", "Tu carrito no puede estar vacío, agrega algunos productos.");
+                ModelState.AddModelError("EmptyTrolley", "Tu carrito no puede estar vacío, agrega algunos productos.");
             }
             var _currentUser = await _userManager.GetUser(_signInManager);
             if(!_currentUser.PhoneNumberConfirmed)
             {
-                ModelState.AddModelError("", "El número de teléfono no esta verificado.");
+                ModelState.AddModelError("InvalidPhone", "El número de teléfono no esta verificado.");
                 Redirect($"/Account/VerifyNumber/Order/Checkout/");
             }
+
             order.PhoneNumber = _currentUser.PhoneNumber;
+            order.OrderTotal = _shoppingCart.GetShoppingCartTotal();
+
+            if(order.OrderTotal > 500)
+            {
+                ModelState.AddModelError("MaxValueReached", "El monto de la reserva supera el límite admitido. Deberás usar Mercado Pago.");
+            }
+
+            Order anotherReservationInProgress = _orderRepository.LatestReservationInProgress(_currentUser);
+            if (anotherReservationInProgress != null)
+            {
+                var link = $"<a target='_blank' href='{Request.HostUrl()}/Order/Status/{anotherReservationInProgress.FriendlyBookingId}'>{anotherReservationInProgress.FriendlyBookingId}</a>";
+                ModelState.AddModelError("ReservationInProgress", $"Deberás retirar el pedido {link} para poder reservar otra vez. Alternativamente, podés comprar con Mercado Pago.");
+            }
+
             if (ModelState.IsValid)
             {
-                order.OrderTotal = _shoppingCart.GetShoppingCartItems().Select(x => x.Amount * x.Pie.Price).Sum();
                 order.Registration = _currentUser;
                 order.CustomerComments = _shoppingCart.GetShoppingCartComments();
                 order.BookingId = _shoppingCart.GetShoppingCartId();
@@ -264,13 +279,10 @@ namespace RepoWebShop.Controllers
 
                 _orderRepository.CreateOrder(order);
                 _shoppingCart.ClearCart();
-
-
                 _emailRespository.SendOrderConfirmation(order, Request.HostUrl(), null);
-
                 return Redirect($"/Order/Status/{order.FriendlyBookingId}");
             }
-            return View(order);
+            return View(_currentUser);
         }
         
         [Authorize]

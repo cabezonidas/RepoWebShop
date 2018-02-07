@@ -379,5 +379,13 @@ namespace RepoWebShop.Models
             _appDbContext.SaveChanges();
             return order;
         }
+
+        public Order LatestReservationInProgress(ApplicationUser currentUser)
+        {
+            return _appDbContext.Orders.Include(x => x.Registration).FirstOrDefault(x => 
+                    x.Registration == currentUser 
+                    && x.OrderProgressState.GetType() == typeof(OrderInProgress)
+                    && x.OrderPaymentStatus.GetType() == typeof(OrderReservationNotPaid));
+        }
     }
 }

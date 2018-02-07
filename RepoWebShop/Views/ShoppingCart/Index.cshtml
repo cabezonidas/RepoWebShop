@@ -102,24 +102,49 @@ else
         <br />
 
     </div>
-
+    <br />
     <div class="container center-block">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="reserva payment-section animated flipInX">
                 <table id="second-payment">
                     <tbody>
                         <tr>
-                            <td class="image-td-payment">
-                                <img src="https://imgmp.mlstatic.com/org-img/banners/ar/medios/online/125X125.jpg" title="MercadoPago - Medios de pago" alt="MercadoPago - Medios de pago" width="125" height="125" />
-                            </td>
-                            <td class="desc-td-payment">
+                            <td class="desc-td-payment1">
                                 <p class="">No es necesario que tengas un usuario con nosotros.</p>
                                 <p class="">Elegí el medio de pago que más te convenga.</p>
                                 <p class="">Te mandamos un email cuando la orden está lista.</p>
+                            </td>
+                            <td class="image-td-payment1">
+                                <img src="https://imgmp.mlstatic.com/org-img/banners/ar/medios/online/125X125.jpg" title="MercadoPago - Medios de pago" alt="MercadoPago - Medios de pago" width="125" height="125" />
                                 <a id="mercadolink" href="@Model.Mercadolink" name="MP-Checkout" mp-mode="redirect"
-                                   class="blue-S-Sq-Ar">
-                                    Comprar
+                                   class="blue-L-Rn-Ar">
+                                    Pagar
                                 </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                @if (Model.User == null)
+                                {
+                                    <div class="alert alert-info" style="margin-left: 30px; margin-right: 30px;">
+                                        <p>¿Querés recibir un SMS cuando la orden esté lista? <a asp-action="Login" asp-controller="Account" asp-route-returnUrl="/ShoppingCart">Click aquí</a></p>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-success" style="margin-left: 30px; margin-right: 30px;">
+                                    @if (!Model.User.PhoneNumberConfirmed)
+                                    {
+                                        <p>@Model.User.FirstName, ¿Querés recibir SMS cuando terminemos? </p>
+                                        <a asp-action="VerifyNumber" asp-controller="Account" asp-route-actionName="Index" asp-route-controllerName="ShoppingCart">Agregar celular</a>
+                                    }
+                                    else
+                                    {
+                                        <p>@Model.User.FirstName, te vamos a avisar cuando la orden está lista al siguiente número +@Model.User.PhoneNumber</p>
+                                        <a asp-action="VerifyNumber" asp-controller="Account" asp-route-actionName="Index" asp-route-controllerName="ShoppingCart">Cambiar</a>
+                                    }
+                                    </div>
+                                }
                             </td>
                         </tr>
                     </tbody>
@@ -132,14 +157,15 @@ else
                 <table id="first-payment">
                     <tbody>
                         <tr>
-                            <td class="image-td-payment">
+                            <td class="image-td-payment2">
 
                                 <img class="" src="~/Pictures/logo.png" width="125">
                             </td>
-                            <td class="desc-td-payment">
+                            <td class="desc-td-payment2">
                                 <p class="">Pagalo cuando lo retirás.</p>
                                 <p class="">Deberás disponer de una cuenta con nosotros.</p>
                                 <p class="">Te mandamos un SMS cuando la orden está lista.</p>
+                                <p class="">Válido solamente para compras de hasta $500.</p>
                                 <a class="btn btn-primary submit-btn" asp-controller="Order" asp-action="Checkout">Reservar</a>
                             </td>
                         </tr>
@@ -148,7 +174,7 @@ else
             </div>
         </div>
     </div>
-    <div class="container" id="estimation-time">
+    <div class="container" id="estimation-time" style="font-size: larger;">
         <h3>Orden lista</h3>
         <div class="">
             La fecha y hora te dice cuándo tu pedido va a estar listo para ser retirado.<br />

@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Controllers
 {
@@ -8,9 +12,15 @@ namespace RepoWebShop.Controllers
     public class ShoppingCartDataController : Controller
     {
         private readonly IShoppingCartRepository _shoppingCart;
+        private readonly IMercadoPago _mp;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public ShoppingCartDataController(IShoppingCartRepository shoppingCart)
+        public ShoppingCartDataController(IShoppingCartRepository shoppingCart, IMercadoPago mp, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
+            _mp = mp;
+            _userManager = userManager;
+            _signInManager = signInManager;
             _shoppingCart = shoppingCart;
         }
 
@@ -42,6 +52,18 @@ namespace RepoWebShop.Controllers
         public IActionResult GetItemsCount()
         {
             return Ok(new { items = _shoppingCart.GetShoppingCartItems().Count });
+        }
+
+        [HttpGet]
+        [Route("GetMercadoPagoLink")]
+        public async Task<IActionResult> GetMercadoPagoLink()
+        {
+            var _total = _shoppingCart.GetShoppingCartTotal();
+            var _bookingId = _shoppingCart.GetShoppingCartId();
+            var _friendlyBookingId = _bookingId.Length >= 6 ? _bookingId?.Substring(_bookingId.Length - 6, 6) ?? String.Empty : String.Empty;
+            var _user = await _userManager.GetUser(_signInManager);
+
+            return Ok(new { link = _mp.GetRepoPaymentLink(_total, _bookingId, _friendlyBookingId, Request.Host.ToString(), "La Reposteria", _user?.Id) });
         }
     }
 }

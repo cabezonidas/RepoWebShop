@@ -7,31 +7,90 @@
     }
 
     div.complete {
-        width: 145px;
+        /*max-width: 600px;*/
         margin: 10px auto;
+        text-align: center;
     }
 
     .alert-success {
         display: inline-block;
     }
+    .validation-errors ul {
+        list-style-type: none;
+    }
 </style>
-
+<br />
 <div class="container">
-    <div class="warning">
-        <h1 class="alert alert-warning">Importante</h1>
-        <h2>Estás a nada de disfrutar nuestros productos.</h2>
-        <h4>Antes de continuar, por favor estate seguro que al confirmar esta reserva estás asumiendo el compromiso de compra.</h4>
+    @if (ViewContext.ModelState.ErrorCount == 0)
+    {
+        <div class="warning">
+            <h1 class="alert alert-warning" style="max-width:400px; margin: auto;">Importante</h1>
+            <h2>Estás a nada de disfrutar nuestros productos.</h2>
+            <h4>Antes de continuar, por favor estate seguro que al confirmar esta reserva estás asumiendo el compromiso de compra.</h4>
 
-        <h4>Nos vamos a contactar con vos para avisarte cuando el pedido está listo al siguiente número:</h4>
-        <div>
-            <h2 class="alert alert-success">+@Model.PhoneNumber</h2>
+            <h4>Nos vamos a contactar con vos para avisarte cuando el pedido está listo al siguiente número:</h4>
+            <div>
+                <h2 class="alert alert-success">+@Model.PhoneNumber</h2>
+            </div>
+            <p>Si este número no es correcto, podés cambiarlo <a asp-action="Profile" asp-controller="Account">aquí</a></p>
         </div>
-        <p>Si este número no es correcto, podés cambiarlo <a asp-action="Profile" asp-controller="Account">aquí</a></p>
-    </div>
+    }
 
     <form asp-action="Checkout" method="post" role="form" class="center-block">
         <div class="complete ">
-            <input id="submitOrder" type="submit" class="btn btn-primary animated shake" value="¡Completar Reserva!" />
+            <br />
+            <div style="margin: 20px;">
+                @if (ViewContext.ModelState.ErrorCount > 0)
+                {
+                    <div class="col-lg-8 col-md-8 col-sm-7 col-xs-12">
+                        <h2 class="text-danger">Pedido sin completar</h2>
+                        <div class="alert alert-warning">
+                            @foreach (var modelState in ViewData.ModelState.Values)
+                            {
+                                foreach (var error in modelState.Errors)
+                                {
+                                    <h4 class="text-danger text-center">@Html.Raw(error.ErrorMessage)</h4>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12" style="display:none;" id="mp_option">
+                        <h2 class="text-center">Comprar</h2>
+                        <div class="alert alert-success">
+                            @*<img src="https://imgmp.mlstatic.com/org-img/banners/ar/medios/online/125X125.jpg" title="MercadoPago - Medios de pago" alt="MercadoPago - Medios de pago" width="125" height="125" />*@
+                            <img src="~/Pictures/MercadoPagoLogo.png" title="MercadoPago - Medios de pago" alt="MercadoPago - Medios de pago" width="75" />
+                            <div style="padding-left: 10px;padding-right: 10px;">
+                                <a id="mercadolink" href="#" name="MP-Checkout" mp-mode="redirect"
+                                   class="blue-S-Sq-Ar">
+                                    Pagar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align:left;">
+                        <a asp-action="Index" asp-controller="ShoppingCart" class="btn btn-primary" value="Volver">
+                            <span class="glyphicon glyphicon-arrow-left" >
+
+                            </span>
+                            Volver
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <input id="submitOrder" type="submit" class="btn btn-primary animated shake" value="¡Completar Reserva!" />
+                }
+            </div>
+            <br />
         </div>
     </form>
 </div>
+<script>
+    $.get('/api/ShoppingCartData/GetMercadoPagoLink/', function (data) {
+        $('a#mercadolink').attr('href', data.link);
+        $.getScript("https://www.mercadopago.com/org-img/jsapi/mptools/buttons/render.js", function () {
+            $('#mp_option').fadeIn();
+        })
+    });
+</script>
+<script type="text/javascript" src=""></script>

@@ -65,8 +65,9 @@ namespace RepoWebShop.Controllers
                 PreparationTime = highestPrepTime,
                 FriendlyBookingId = _friendlyBookingId,
                 Comments = _shoppingCart.GetShoppingCartComments(),
-                MercadoPagoId = _config.GetSection("MercadoPagoClientId").Value
-        };
+                MercadoPagoId = _config.GetSection("MercadoPagoClientId").Value,
+                User = user
+            };
             
             return View(shoppingCartViewModel);
         }

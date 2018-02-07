@@ -18,5 +18,6 @@ namespace RepoWebShop.ViewModels
         public string Comments { get; set; }
         public DateTime PickupDate { get; set; }
         public string MercadoPagoId { get; set; }
+        public ApplicationUser User { get; set; }
     }
 }

@@ -36,5 +36,6 @@ namespace RepoWebShop.Interfaces
         Order OrderApproved(PaymentNotice paymentNotification);
         Order OrderInProcess(PaymentNotice paymentNotification);
         void CancelPaymentOrder(int orderId, string reason);
+        Order LatestReservationInProgress(ApplicationUser currentUser);
     }
 }
