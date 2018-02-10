@@ -1,11 +1,12 @@
 ﻿using RepoWebShop.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Interfaces
 {
     public interface IPaymentNoticeRepository
     {
-        void CreatePayment(PaymentNotice paymentWebhook, string hostUrl);
+        Task CreatePayment(PaymentNotice paymentWebhook, string hostUrl);
         IEnumerable<PaymentNotice> GetPayments();
         PaymentNotice GetPayment(int id);
     }

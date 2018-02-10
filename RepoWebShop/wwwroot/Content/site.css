@@ -1,4 +1,9 @@
-﻿html,
+﻿@font-face {
+    font-family: Corsiva;
+    src: url(Fonts/Corsiva.woff);
+}
+
+html,
 body {
     width: 100%;
     min-width: 320px;
@@ -55,7 +60,8 @@ h1.title-logo {
     display: inline-block
 }
 
-/*p {
-    font-family: 'Kalam', cursive;
-    font-size: large;
-}*/
+.slick-dots li button:before {
+    border-radius: 0 !important;
+    font-size: 10px !important;
+    color: #9a2f2f !important;
+}

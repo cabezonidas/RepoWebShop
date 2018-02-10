@@ -5,19 +5,13 @@ using MimeKit;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
-using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Security.Cryptography.X509Certificates;
 using Google.Apis.Auth.OAuth2;
 using System.Threading;
-using System.IO;
-using Microsoft.Extensions.Options;
 using System.Security.Cryptography;
 using RepoWebShop.Extensions;
-using Microsoft.AspNetCore.Identity;
-using System.Linq;
 
 namespace RepoWebShop.Repositories
 {
@@ -44,25 +38,24 @@ namespace RepoWebShop.Repositories
             _zone = _config.GetSection("LocalZone").Value;
         }
 
-        public void SendEmailActivationAsync(ApplicationUser appUser, string hostUrl)
+        public async Task SendEmailActivationAsync(ApplicationUser appUser, string hostUrl)
         {
             string hash = SHA256.Create().FromString(appUser.ValidationMailToken.ToString());
             
             var apicall = $"{hostUrl}/Account/EmailVerificationBodyEmail/{appUser.UserName}/{hash}";
-            Task<HttpResponseMessage> responseTask = new HttpClient().GetAsync(apicall);
-            responseTask.Wait();
+            HttpResponseMessage responseTask = await new HttpClient().GetAsync(apicall);
 
             Email email = new Email()
             {
                 To = appUser.Email,
                 Bcc = _sender,
                 Subject = "De las Artes - Confirmación de cuenta",
-                Body = responseTask.Result.Content.ReadAsStringAsync().Result
+                Body = await responseTask.Content.ReadAsStringAsync()
             };
 
             try
             {
-                SendMail(GetMimeMessage(email));
+                await SendMailAsync(GetMimeMessage(email));
             }
             finally
             {
@@ -71,26 +64,24 @@ namespace RepoWebShop.Repositories
             }
         }
 
-        public void NotifyOrderComplete(Order order, string hostUrl)
+        public async Task NotifyOrderCompleteAsync(Order order, string hostUrl)
         {
             string principalEmail, secondaryEmail;
             GetOrderEmails(order, out principalEmail, out secondaryEmail);
 
             var apicall = $"{hostUrl}/Order/OrderComplete/{order.OrderId}/";
-            Task<HttpResponseMessage> responseTask = new HttpClient().GetAsync(apicall);
-            responseTask.Wait();
+            HttpResponseMessage responseTask = await new HttpClient().GetAsync(apicall);
 
             Email email = new Email()
             {
                 To = principalEmail,
-                //Bcc = _sender,
                 Subject = $"De las Artes - ¡Pedido {order.FriendlyBookingId} listo!",
-                Body = responseTask.Result.Content.ReadAsStringAsync().Result
+                Body = await responseTask.Content.ReadAsStringAsync()
             };
 
             try
             {
-                SendMail(GetMimeMessage(email, secondaryEmail));
+                await SendMailAsync(GetMimeMessage(email, secondaryEmail));
             }
             finally
             {
@@ -98,14 +89,8 @@ namespace RepoWebShop.Repositories
                 _appDbContext.SaveChanges();
             }
         }
-
-        private void GetOrderEmails(Order order, out string principalEmail, out string secondaryEmail)
-        {
-            principalEmail = order.Registration?.Email ?? order.MercadoPagoMail;
-            secondaryEmail = principalEmail == order.MercadoPagoMail ? null : order.MercadoPagoMail;
-        }
-
-        public void SendOrderConfirmation(Order order, string hostUrl, PaymentNotice payment = null)
+        
+        public async Task SendOrderConfirmationAsync(Order order, string hostUrl, PaymentNotice payment = null)
         {
             if (order != null)
             {
@@ -115,20 +100,19 @@ namespace RepoWebShop.Repositories
                 GetOrderEmails(order, out principalEmail, out secondaryEmail);
 
                 var apicall = $"{hostUrl}/Order/EmailNotification/{order.OrderId}";
-                Task<HttpResponseMessage> responseTask = new HttpClient().GetAsync(apicall);
-                responseTask.Wait();
+                HttpResponseMessage responseTask = await new HttpClient().GetAsync(apicall);
                 
                 Email email = new Email()
                 {
                     To = principalEmail,
                     Bcc = _sender,
                     Subject = "De las Artes - Confirmación de " + (payment == null ? "reserva" : "compra"),
-                    Body = responseTask.Result.Content.ReadAsStringAsync().Result
+                    Body = await responseTask.Content.ReadAsStringAsync()
                 };
                 
                 try
                 {
-                    SendMail(GetMimeMessage(email, secondaryEmail));
+                    await SendMailAsync(GetMimeMessage(email, secondaryEmail));
                 }
                 finally
                 {
@@ -139,7 +123,58 @@ namespace RepoWebShop.Repositories
 
             }
         }
+        
+        public async Task SendEmailResetPasswordAsync(ApplicationUser foundUser, string hostUrl)
+        {
+            string hash = SHA256.Create().FromString(foundUser.Id.ToString());
 
+            var apicall = $"{hostUrl}/Account/ResetPasswordBodyEmail/{foundUser.Id}/{hash}";
+            HttpResponseMessage responseTask = await new HttpClient().GetAsync(apicall);
+
+            Email email = new Email()
+            {
+                To = foundUser.Email,
+                Subject = "De las Artes - Reestablecer contraseña",
+                Body = await responseTask.Content.ReadAsStringAsync()
+            };
+
+            try
+            {
+                await SendMailAsync(GetMimeMessage(email));
+            }
+            finally
+            {
+                var emailsaved = _appDbContext.Emails.Add(email);
+                _appDbContext.SaveChanges();
+            }
+        }
+
+        private async Task SendMailAsync(MimeMessage message)
+        {
+            using (var client = new SmtpClient())
+            {
+                var credential = new ServiceAccountCredential(new ServiceAccountCredential
+                    .Initializer(_serviceAccount)
+                {
+                    Scopes = new[] { "https://mail.google.com/" },
+                    User = _sender
+                }.FromPrivateKey(_serviceAccountPrivateKey));
+
+                await credential.RequestAccessTokenAsync(CancellationToken.None);
+
+                var oauth2 = new SaslMechanismOAuth2(_sender, credential.Token.AccessToken);
+
+                await client.ConnectAsync("smtp.gmail.com", 587);
+                await client.AuthenticateAsync(oauth2);
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+            }
+        }
+        private void GetOrderEmails(Order order, out string principalEmail, out string secondaryEmail)
+        {
+            principalEmail = order.Registration?.Email ?? order.MercadoPagoMail;
+            secondaryEmail = principalEmail == order.MercadoPagoMail ? null : order.MercadoPagoMail;
+        }
         private MimeMessage GetMimeMessage(Email email, string secondaryEmail = null)
         {
             var message = new MimeMessage();
@@ -154,52 +189,5 @@ namespace RepoWebShop.Repositories
             return message;
         }
 
-        private void SendMail(MimeMessage message)
-        {
-            using (var client = new SmtpClient())
-            {
-                var credential = new ServiceAccountCredential(new ServiceAccountCredential
-                    .Initializer(_serviceAccount)
-                {
-                    Scopes = new[] { "https://mail.google.com/" },
-                    User = _sender
-                }.FromPrivateKey(_serviceAccountPrivateKey));
-
-                credential.RequestAccessTokenAsync(CancellationToken.None).GetAwaiter().GetResult();
-
-                var oauth2 = new SaslMechanismOAuth2(_sender, credential.Token.AccessToken);
-
-                client.Connect("smtp.gmail.com", 587);
-                client.Authenticate(oauth2);
-                client.Send(message);
-                client.Disconnect(true);
-            }
-        }
-
-        public void SendEmailResetPassword(ApplicationUser foundUser, string hostUrl)
-        {
-            string hash = SHA256.Create().FromString(foundUser.Id.ToString());
-
-            var apicall = $"{hostUrl}/Account/ResetPasswordBodyEmail/{foundUser.Id}/{hash}";
-            Task<HttpResponseMessage> responseTask = new HttpClient().GetAsync(apicall);
-            responseTask.Wait();
-
-            Email email = new Email()
-            {
-                To = foundUser.Email,
-                Subject = "De las Artes - Reestablecer contraseña",
-                Body = responseTask.Result.Content.ReadAsStringAsync().Result
-            };
-
-            try
-            {
-                SendMail(GetMimeMessage(email));
-            }
-            finally
-            {
-                var emailsaved = _appDbContext.Emails.Add(email);
-                _appDbContext.SaveChanges();
-            }
-        }
     }
 }

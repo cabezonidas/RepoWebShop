@@ -1,6 +1,6 @@
 ﻿div.ovalo {
     background-color: white;
-    font-family: 'Playball';
+    font-family: 'Corsiva';
     text-align: center;
     display: inline-block;
     border-radius: 50%;
@@ -22,9 +22,9 @@
     }
 
         div.ovalo div.ovalo-inner p.brand-name {
-            font-size: 50px;
+            font-size: 60px;
             margin: 5px;
-            margin-top: 20px;
+            margin-top: 10px;
             margin-bottom: 0px;
             padding-bottom: 0px;
             color: green;

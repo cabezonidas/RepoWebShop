@@ -27,10 +27,10 @@ namespace RepoWebShop.Controllers
             var topic = ((JValue)Notification["topic"])?.Value.ToString();
             var notificationId = ((JValue)Notification["resource"])?.Value.ToString().Split('/').LastOrDefault();
 
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 var apicall = $"http://{Request.Host.ToString()}/api/WebhooksData/OnPaymentNotified/{notificationId}";
-                new HttpClient().GetAsync(apicall);
+                await new HttpClient().GetAsync(apicall);
             });
 
             return Ok();

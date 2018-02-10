@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -17,6 +18,13 @@ namespace RepoWebShop.Models
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "marcelardec@gmail.com", "Marcela", "Declich");
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "cabeza1961@gmail.com", "Claudio", "Cabeza");
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "luciebenve@gmail.com", "Lucía", "Benvenuto");
+
+            var hostEnvironment = serviceProvider.GetRequiredService<IHostingEnvironment>();
+            if (!hostEnvironment.IsProduction())
+            {
+                await CreateUserWithRoleAsync(serviceProvider, "Administrator", "santiag0.l0pez@hotmail.com", "Santiago", "Lopez");
+                await CreateUserWithRoleAsync(serviceProvider, "Administrator", "j_dalmasso@outlook.com", "Juan", "Dalmasso");
+            }
         }
 
         private static async Task CreateUserWithRoleAsync(IServiceProvider serviceProvider, string role, string email, string name, string lastname)
@@ -29,12 +37,13 @@ namespace RepoWebShop.Models
 
             ApplicationUser user = await userManager.FindByEmailAsync(email);
             if (user == null)
-            { 
+            {
                 user = new ApplicationUser
                 {
                     UserName = email,
-                    Email = email,
                     LastName = lastname,
+                    Email = email,
+                    EmailConfirmed = true,
                     FirstName = name
                 };
                 await userManager.CreateAsync(user);

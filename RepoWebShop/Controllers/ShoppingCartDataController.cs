@@ -63,7 +63,7 @@ namespace RepoWebShop.Controllers
             var _friendlyBookingId = _bookingId.Length >= 6 ? _bookingId?.Substring(_bookingId.Length - 6, 6) ?? String.Empty : String.Empty;
             var _user = await _userManager.GetUser(_signInManager);
 
-            return Ok(new { link = _mp.GetRepoPaymentLink(_total, _bookingId, _friendlyBookingId, Request.Host.ToString(), "La Reposteria", _user?.Id) });
+            return Ok(new { link = _mp.GetRepoPaymentLinkAsync(_total, _bookingId, _friendlyBookingId, Request.Host.ToString(), "La Reposteria", _user?.Id) });
         }
     }
 }

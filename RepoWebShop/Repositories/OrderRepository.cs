@@ -231,7 +231,7 @@ namespace RepoWebShop.Models
                     _smsRepository.SendSms(user.PhoneNumber,
                         $"{user.FirstName}, tu pedido {order.FriendlyBookingId} ya está listo para ser retirado. Recordá traer DNI. De las Artes.");
                 }
-                _emailRepository.NotifyOrderComplete(order, absoluteUrl);
+                _emailRepository.NotifyOrderCompleteAsync(order, absoluteUrl);
             });
         }
 
@@ -287,7 +287,7 @@ namespace RepoWebShop.Models
             }, 
             () =>
             {
-                _mp.RefundPayment(order.MercadoPagoTransaction);
+                _mp.RefundPaymentAsync(order.MercadoPagoTransaction);
                 //Send email
             });
         }
@@ -302,9 +302,9 @@ namespace RepoWebShop.Models
                 order.Cancelled = true;
                 _appDbContext.SaveChanges();
             },
-            () =>
+            async () =>
             {
-                _mp.CancelPayment(order.MercadoPagoTransaction);
+                await _mp.CancelPaymentAsync(order.MercadoPagoTransaction);
                 //Send email
             });
         }

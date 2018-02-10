@@ -9,6 +9,7 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using RepoWebShop.Interfaces;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Models
 {
@@ -36,10 +37,7 @@ namespace RepoWebShop.Models
             //sandbox = !env.IsProduction();
         }
 
-        public bool SandboxMode()
-        {
-            return this.sandbox;
-        }
+        public bool SandboxMode() => this.sandbox;
 
         public bool SandboxMode(bool enable)
         {
@@ -48,10 +46,7 @@ namespace RepoWebShop.Models
             return this.sandbox;
         }
 
-        /**
-		 * Get Access Token for API use
-		 */
-        public String GetAccessToken()
+        public async Task<String> GetAccessTokenAsync()
         {
             if (this.ll_access_token != null)
             {
@@ -67,7 +62,7 @@ namespace RepoWebShop.Models
 
             String appClientValuesQuery = this.BuildQuery(appClientValues);
 
-            Hashtable access_data = RestClient.Post("/oauth/token", appClientValuesQuery, RestClient.MIME_FORM);
+            Hashtable access_data = await RestClient.PostAsync("/oauth/token", appClientValuesQuery, RestClient.MIME_FORM);
 
             if (((int)access_data["status"]) == 200)
             {
@@ -80,17 +75,12 @@ namespace RepoWebShop.Models
             }
         }
 
-        /**
-		 * Get information for specific payment
-		 * @param id
-		 * @return
-		 */
-        public Hashtable GetPayment(String id)
+        public async Task<Hashtable> GetPaymentAsync(String id)
         {
             String accessToken;
             try
             {
-                accessToken = this.GetAccessToken();
+                accessToken = await this.GetAccessTokenAsync();
             }
             catch (Exception e)
             {
@@ -99,49 +89,36 @@ namespace RepoWebShop.Models
 
             String uriPrefix = this.sandbox ? "/sandbox" : "";
 
-            Hashtable paymentInfo = RestClient.Get(uriPrefix + "/collections/notifications/" + id + "?access_token=" + accessToken);
+            Hashtable paymentInfo = await RestClient.GetAsync(uriPrefix + "/collections/notifications/" + id + "?access_token=" + accessToken);
 
             return paymentInfo;
         }
 
-        public Hashtable GetPaymentInfo(String id)
-        {
-            return this.GetPayment(id);
-        }
+        public async Task<Hashtable> GetPaymentInfoAsync(String id) => await this.GetPaymentAsync(id);
 
-        /**
-		 * Get information for specific authorized payment
-		 * @param id
-		 * @return
-		 */
-        public Hashtable GetAuthorizedPayment(String id)
+        public async Task<Hashtable> GetAuthorizedPaymentAsync(String id)
         {
             String accessToken;
             try
             {
-                accessToken = this.GetAccessToken();
+                accessToken = await this.GetAccessTokenAsync();
             }
             catch (Exception e)
             {
                 return (Hashtable)JSON.JsonDecode(e.Message);
             }
 
-            Hashtable authorizedPaymentInfo = RestClient.Get("/authorized_payments/" + id + "?access_token=" + accessToken);
+            Hashtable authorizedPaymentInfo = await RestClient.GetAsync("/authorized_payments/" + id + "?access_token=" + accessToken);
 
             return authorizedPaymentInfo;
         }
 
-        /**
-		 * Refund accredited payment
-		 * @param id
-		 * @return
-		 */
-        public Hashtable RefundPayment(String id)
+        public async Task<Hashtable> RefundPaymentAsync(String id)
         {
             String accessToken;
             try
             {
-                accessToken = this.GetAccessToken();
+                accessToken = await this.GetAccessTokenAsync();
             }
             catch (Exception e)
             {
@@ -153,22 +130,17 @@ namespace RepoWebShop.Models
                 ["status"] = "refunded"
             };
 
-            Hashtable response = RestClient.Put("/collections/" + id + "?access_token=" + accessToken, refundStatus);
+            Hashtable response = await RestClient.PutAsync("/collections/" + id + "?access_token=" + accessToken, refundStatus);
 
             return response;
         }
 
-        /**
-		 * Cancel pending payment
-		 * @param id
-		 * @return
-		 */
-        public Hashtable CancelPayment(String id)
+        public async Task<Hashtable> CancelPaymentAsync(String id)
         {
             String accessToken;
             try
             {
-                accessToken = this.GetAccessToken();
+                accessToken = await this.GetAccessTokenAsync();
             }
             catch (Exception e)
             {
@@ -180,22 +152,17 @@ namespace RepoWebShop.Models
                 ["status"] = "cancelled"
             };
 
-            Hashtable response = RestClient.Put("/collections/" + id + "?access_token=" + accessToken, cancelStatus);
+            Hashtable response = await RestClient.PutAsync("/collections/" + id + "?access_token=" + accessToken, cancelStatus);
 
             return response;
         }
 
-        /**
-		 * Cancel preapproval payment
-		 * @param id
-		 * @return
-		 */
-        public Hashtable CancelPreapprovalPayment(String id)
+        public async Task<Hashtable> CancelPreapprovalPaymentAsync(String id)
         {
             String accessToken;
             try
             {
-                accessToken = this.GetAccessToken();
+                accessToken = await this.GetAccessTokenAsync();
             }
             catch (Exception e)
             {
@@ -207,24 +174,17 @@ namespace RepoWebShop.Models
                 ["status"] = "cancelled"
             };
 
-            Hashtable response = RestClient.Put("/preapproval/" + id + "?access_token=" + accessToken, cancelStatus);
+            Hashtable response = await RestClient.PutAsync("/preapproval/" + id + "?access_token=" + accessToken, cancelStatus);
 
             return response;
         }
 
-        /**
-		 * Search payments according to filters, with pagination
-		 * @param filters
-		 * @param offset
-		 * @param limit
-		 * @return
-		 */
-        public Hashtable SearchPayment(Dictionary<String, String> filters, long offset = 0, long limit = 0)
+        public async Task<Hashtable> SearchPaymentAsync(Dictionary<String, String> filters, long offset = 0, long limit = 0)
         {
             String accessToken;
             try
             {
-                accessToken = this.GetAccessToken();
+                accessToken = await this.GetAccessTokenAsync();
             }
             catch (Exception e)
             {
@@ -238,139 +198,97 @@ namespace RepoWebShop.Models
 
             String uriPrefix = this.sandbox ? "/sandbox" : "";
 
-            Hashtable collectionResult = RestClient.Get(uriPrefix + "/collections/search?" + filtersQuery + "&access_token=" + accessToken);
+            Hashtable collectionResult = await RestClient.GetAsync(uriPrefix + "/collections/search?" + filtersQuery + "&access_token=" + accessToken);
             return collectionResult;
         }
 
-        /**
-		 * Create a checkout preference
-		 * @param preference
-		 * @return
-		 */
-        public Hashtable CreatePreference(String preference)
-        {
-            Hashtable preferenceJSON = (Hashtable)JSON.JsonDecode(preference);
-            return this.CreatePreference(preferenceJSON);
-        }
-        public Hashtable CreatePreference(Hashtable preference)
+        public async Task<Hashtable> CreatePreferenceAsync(String preference) => await this.CreatePreferenceAsync((Hashtable)JSON.JsonDecode(preference));
+        
+        public async Task<Hashtable> CreatePreferenceAsync(Hashtable preference)
         {
             String accessToken;
             try
             {
-                accessToken = this.GetAccessToken();
+                accessToken = await this.GetAccessTokenAsync();
             }
             catch (Exception e)
             {
                 return (Hashtable)JSON.JsonDecode(e.Message);
             }
 
-            Hashtable preferenceResult = RestClient.Post("/checkout/preferences?access_token=" + accessToken, preference);
+            Hashtable preferenceResult = await RestClient.PostAsync("/checkout/preferences?access_token=" + accessToken, preference);
             return preferenceResult;
         }
 
-        /**
-		 * Update a checkout preference
-		 * @param string $id
-		 * @param array $preference
-		 * @return
-		 */
-        public Hashtable UpdatePreference(String id, String preference)
-        {
-            Hashtable preferenceJSON = (Hashtable)JSON.JsonDecode(preference);
-            return this.UpdatePreference(id, preferenceJSON);
-        }
-        public Hashtable UpdatePreference(String id, Hashtable preference)
+        public async Task<Hashtable> UpdatePreferenceAsync(String id, String preference) => await this.UpdatePreferenceAsync(id, (Hashtable)JSON.JsonDecode(preference));
+        
+        public async Task<Hashtable> UpdatePreferenceAsync(String id, Hashtable preference)
         {
             String accessToken;
             try
             {
-                accessToken = this.GetAccessToken();
+                accessToken = await this.GetAccessTokenAsync();
             }
             catch (Exception e)
             {
                 return (Hashtable)JSON.JsonDecode(e.Message);
             }
 
-            Hashtable preferenceResult = RestClient.Put("/checkout/preferences/" + id + "?access_token=" + accessToken, preference);
+            Hashtable preferenceResult = await RestClient.PutAsync("/checkout/preferences/" + id + "?access_token=" + accessToken, preference);
             return preferenceResult;
         }
 
-        /**
-		 * Get a checkout preference
-		 * @param id
-		 * @return
-		 */
-        public Hashtable GetPreference(String id)
+        public async Task<Hashtable> GetPreferenceAsync(String id)
         {
             String accessToken;
             try
             {
-                accessToken = this.GetAccessToken();
+                accessToken = await this.GetAccessTokenAsync();
             }
             catch (Exception e)
             {
                 return (Hashtable)JSON.JsonDecode(e.Message);
             }
 
-            Hashtable preferenceResult = RestClient.Get("/checkout/preferences/" + id + "?access_token=" + accessToken);
+            Hashtable preferenceResult = await RestClient.GetAsync("/checkout/preferences/" + id + "?access_token=" + accessToken);
             return preferenceResult;
         }
 
-        /**
-		 * Create a preapproval payment
-		 * @param preference
-		 * @return
-		 */
-        public Hashtable CreatePreapprovalPayment(String preapprovalPayment)
-        {
-            Hashtable preapprovalPaymentJSON = (Hashtable)JSON.JsonDecode(preapprovalPayment);
-            return this.CreatePreapprovalPayment(preapprovalPaymentJSON);
-        }
-        public Hashtable CreatePreapprovalPayment(Hashtable preapprovalPayment)
+        public async Task<Hashtable> CreatePreapprovalPaymentAsync(String preapprovalPayment) => await this.CreatePreapprovalPaymentAsync((Hashtable)JSON.JsonDecode(preapprovalPayment));
+
+        public async Task<Hashtable> CreatePreapprovalPaymentAsync(Hashtable preapprovalPayment)
         {
             String accessToken;
             try
             {
-                accessToken = this.GetAccessToken();
+                accessToken = await this.GetAccessTokenAsync();
             }
             catch (Exception e)
             {
                 return (Hashtable)JSON.JsonDecode(e.Message);
             }
 
-            Hashtable preapprovalPaymentResult = RestClient.Post("/preapproval?access_token=" + accessToken, preapprovalPayment);
+            Hashtable preapprovalPaymentResult = await RestClient.PostAsync("/preapproval?access_token=" + accessToken, preapprovalPayment);
             return preapprovalPaymentResult;
         }
 
-        /**
-		 * Get a preapproval payment
-		 * @param id
-		 * @return
-		 */
-        public Hashtable GetPreapprovalPayment(String id)
+        public async Task<Hashtable> GetPreapprovalPaymentAsync(String id)
         {
             String accessToken;
             try
             {
-                accessToken = this.GetAccessToken();
+                accessToken = await this.GetAccessTokenAsync();
             }
             catch (Exception e)
             {
                 return (Hashtable)JSON.JsonDecode(e.Message);
             }
 
-            Hashtable preapprovalPaymentResult = RestClient.Get("/preapproval/" + id + "?access_token=" + accessToken);
+            Hashtable preapprovalPaymentResult = await RestClient.GetAsync("/preapproval/" + id + "?access_token=" + accessToken);
             return preapprovalPaymentResult;
         }
 
-        /**
-		 * Generic resource get
-		 * @param uri
-		 * @param parameters
-		 * @param authenticate
-		 * @return
-		 */
-        public Hashtable Get(String uri, Dictionary<String, String> parameters, bool authenticate)
+        public async Task<Hashtable> GetAsync(String uri, Dictionary<String, String> parameters, bool authenticate)
         {
             if (parameters == null)
             {
@@ -381,7 +299,7 @@ namespace RepoWebShop.Models
                 String accessToken;
                 try
                 {
-                    accessToken = this.GetAccessToken();
+                    accessToken = await this.GetAccessTokenAsync();
                 }
                 catch (Exception e)
                 {
@@ -396,52 +314,21 @@ namespace RepoWebShop.Models
                 uri += (uri.Contains("?") ? "&" : "?") + this.BuildQuery(parameters);
             }
 
-            Hashtable result = RestClient.Get(uri);
+            Hashtable result = await RestClient.GetAsync(uri);
             return result;
         }
 
-        /**
-		 * Generic resource get
-		 * @param uri
-		 * @param authenticate
-		 * @return
-		 */
-        public Hashtable Get(String uri, bool authenticate)
-        {
-            return this.Get(uri, null, authenticate);
-        }
+        public async Task<Hashtable> GetAsync(String uri, bool authenticate) => await GetAsync(uri, null, authenticate);
 
-        /**
-		 * Generic resource get
-		 * @param uri
-		 * @param parameters
-		 * @return
-		 */
-        public Hashtable Get(String uri, Dictionary<String, String> parameters)
-        {
-            return this.Get(uri, parameters, true);
-        }
+        public async Task<Hashtable> GetAsync(String uri, Dictionary<String, String> parameters) => await GetAsync(uri, parameters, true);
 
-        /**
-		 * Generic resource post
-		 * @param uri
-		 * @param data
-		 * @return
-		 */
-        public Hashtable Post(String uri, String data)
-        {
-            return this.Post(uri, data, null);
-        }
-        public Hashtable Post(String uri, String data, Dictionary<String, String> parameters)
-        {
-            Hashtable dataJSON = (Hashtable)JSON.JsonDecode(data);
-            return this.Post(uri, dataJSON, parameters);
-        }
-        public Hashtable Post(String uri, Hashtable data)
-        {
-            return this.Post(uri, data, null);
-        }
-        public Hashtable Post(String uri, Hashtable data, Dictionary<String, String> parameters)
+        public async Task<Hashtable> PostAsync(String uri, String data) => await PostAsync(uri, data, null);
+
+        public async Task<Hashtable> PostAsync(String uri, String data, Dictionary<String, String> parameters) => 
+            await PostAsync(uri, (Hashtable)JSON.JsonDecode(data), parameters);
+
+        public async Task<Hashtable> PostAsync(String uri, Hashtable data) => await PostAsync(uri, data, null);
+        public async Task<Hashtable> PostAsync(String uri, Hashtable data, Dictionary<String, String> parameters)
         {
             if (parameters == null)
             {
@@ -451,7 +338,7 @@ namespace RepoWebShop.Models
             String accessToken;
             try
             {
-                accessToken = this.GetAccessToken();
+                accessToken = await this.GetAccessTokenAsync();
             }
             catch (Exception e)
             {
@@ -462,30 +349,18 @@ namespace RepoWebShop.Models
 
             uri += (uri.Contains("?") ? "&" : "?") + this.BuildQuery(parameters);
 
-            Hashtable result = RestClient.Post(uri, data);
+            Hashtable result = await RestClient.PostAsync(uri, data);
             return result;
         }
 
-        /**
-		 * Generic resource put
-		 * @param uri
-		 * @param data
-		 * @return
-		 */
-        public Hashtable Put(String uri, String data)
-        {
-            return this.Put(uri, data, null);
-        }
-        public Hashtable Put(String uri, String data, Dictionary<String, String> parameters)
-        {
-            Hashtable dataJSON = (Hashtable)JSON.JsonDecode(data);
-            return this.Put(uri, dataJSON, parameters);
-        }
-        public Hashtable Put(String uri, Hashtable data)
-        {
-            return this.Put(uri, data, null);
-        }
-        public Hashtable Put(String uri, Hashtable data, Dictionary<String, String> parameters)
+        public async Task<Hashtable> PutAsync(String uri, String data) => await PutAsync(uri, data, null);
+
+        public async Task<Hashtable> PutAsync(String uri, String data, Dictionary<String, String> parameters) =>
+            await this.PutAsync(uri, (Hashtable)JSON.JsonDecode(data), parameters);
+
+        public async Task<Hashtable> PutAsync(String uri, Hashtable data) => await this.PutAsync(uri, data, null);
+
+        public async Task<Hashtable> PutAsync(String uri, Hashtable data, Dictionary<String, String> parameters)
         {
             if (parameters == null)
             {
@@ -495,7 +370,7 @@ namespace RepoWebShop.Models
             String accessToken;
             try
             {
-                accessToken = this.GetAccessToken();
+                accessToken = await this.GetAccessTokenAsync();
             }
             catch (Exception e)
             {
@@ -506,21 +381,13 @@ namespace RepoWebShop.Models
 
             uri += (uri.Contains("?") ? "&" : "?") + this.BuildQuery(parameters);
 
-            Hashtable result = RestClient.Put(uri, data);
+            Hashtable result = await RestClient.PutAsync(uri, data);
             return result;
         }
 
-        /**
-		 * Generic resource delete
-		 * @param uri
-		 * @param parameters
-		 * @return
-		 */
-        public Hashtable Delete(String uri)
-        {
-            return this.Delete(uri, null);
-        }
-        public Hashtable Delete(String uri, Dictionary<String, String> parameters)
+        public async Task<Hashtable> DeleteAsync(String uri) => await this.DeleteAsync(uri, null);
+
+        public async Task<Hashtable> DeleteAsync(String uri, Dictionary<String, String> parameters)
         {
             if (parameters == null)
             {
@@ -530,7 +397,7 @@ namespace RepoWebShop.Models
             String accessToken;
             try
             {
-                accessToken = this.GetAccessToken();
+                accessToken = await this.GetAccessTokenAsync();
             }
             catch (Exception e)
             {
@@ -541,13 +408,13 @@ namespace RepoWebShop.Models
 
             uri += (uri.Contains("?") ? "&" : "?") + this.BuildQuery(parameters);
 
-            Hashtable result = RestClient.Delete(uri);
+            Hashtable result = await RestClient.DeleteAsync(uri);
             return result;
         }
 
         /******************************************** Extensions *********************************************/
         
-        public string GetRepoPaymentLink(decimal total, string bookingId, string friendlyBookingId, string host, string title, string userId = null)
+        public async Task<string> GetRepoPaymentLinkAsync(decimal total, string bookingId, string friendlyBookingId, string host, string title, string userId = null)
         {
             try
             {
@@ -589,7 +456,7 @@ namespace RepoWebShop.Models
                         $"\"additional_info\":\"{userId}\"" +
                 "}";
 
-                Hashtable preference = CreatePreference(preferenceData);
+                Hashtable preference = await CreatePreferenceAsync(preferenceData);
                 string init_point = (!sandbox ? "" : "sandbox_") + "init_point";
                 
                 return (preference["response"] as Hashtable)[init_point].ToString();
@@ -601,12 +468,12 @@ namespace RepoWebShop.Models
             }
         }
 
-        public Hashtable GetMerchantOrder(string merchantOrederId)
+        public async Task<Hashtable> GetMerchantOrderAsync(string merchantOrederId)
         {
             String accessToken;
             try
             {
-                accessToken = this.GetAccessToken();
+                accessToken = await this.GetAccessTokenAsync();
             }
             catch (Exception e)
             {
@@ -615,7 +482,7 @@ namespace RepoWebShop.Models
 
             String uriPrefix = this.sandbox ? "/sandbox" : "";
 
-            Hashtable merchantOrderInfo = RestClient.Get(uriPrefix + "/merchant_orders/" + merchantOrederId + "?access_token=" + accessToken);
+            Hashtable merchantOrderInfo = await RestClient.GetAsync(uriPrefix + "/merchant_orders/" + merchantOrederId + "?access_token=" + accessToken);
 
             return merchantOrderInfo;
         }
@@ -636,13 +503,9 @@ namespace RepoWebShop.Models
             return String.Join("&", query);
         }
 
-
         private static class Util
         {
-            public static T Get<K, T>(Dictionary<K, T> dict, K key, T def)
-            {
-                return dict.ContainsKey(key) ? dict[key] : def;
-            }
+            public static T Get<K, T>(Dictionary<K, T> dict, K key, T def) => dict.ContainsKey(key) ? dict[key] : def;
         }
 
         private static class RestClient
@@ -651,7 +514,7 @@ namespace RepoWebShop.Models
             public const String MIME_JSON = "application/json";
             public const String MIME_FORM = "application/x-www-form-urlencoded";
 
-            private static Hashtable Exec(String method, String uri, Object data, String contentType)
+            private static async Task<Hashtable> ExecAsync(String method, String uri, Object data, String contentType)
             {
                 Hashtable response;
 
@@ -663,14 +526,14 @@ namespace RepoWebShop.Models
                 request.Accept = MIME_JSON;
                 request.Method = method;
                 request.ContentType = contentType;
-                SetData(request, data, contentType);
+                await SetDataAsync(request, data, contentType);
 
                 String responseBody = null;
                 try
                 {
-                    HttpWebResponse apiResult = (HttpWebResponse)request.GetResponse();
+                    HttpWebResponse apiResult = (HttpWebResponse)await request.GetResponseAsync();
 
-                    responseBody = new StreamReader(apiResult.GetResponseStream()).ReadToEnd();
+                    responseBody = await new StreamReader(apiResult.GetResponseStream()).ReadToEndAsync();
 
                     response = new Hashtable
                     {
@@ -681,7 +544,7 @@ namespace RepoWebShop.Models
                 catch (WebException e)
                 {
                     Console.WriteLine(e.Message);
-                    responseBody = new StreamReader(e.Response.GetResponseStream()).ReadToEnd();
+                    responseBody = await new StreamReader(e.Response.GetResponseStream()).ReadToEndAsync();
                     try
                     {
                         response = new Hashtable
@@ -703,7 +566,7 @@ namespace RepoWebShop.Models
                 return response;
             }
 
-            private static void SetData(HttpWebRequest request, Object data, String contentType)
+            private static async Task SetDataAsync(HttpWebRequest request, Object data, String contentType)
             {
                 if (data != null)
                 {
@@ -714,7 +577,7 @@ namespace RepoWebShop.Models
                         dataString = data.ToString();
                     if (dataString.Length > 0)
                     {
-                        using (Stream requestStream = request.GetRequestStream())
+                        using (Stream requestStream = await request.GetRequestStreamAsync())
                         {
                             using (StreamWriter writer = new StreamWriter(requestStream))
                             {
@@ -725,25 +588,17 @@ namespace RepoWebShop.Models
                 }
             }
 
-            public static Hashtable Get(String uri, String contentType = MIME_JSON)
-            {
-                return Exec("GET", uri, null, contentType);
-            }
+            public static async Task<Hashtable> GetAsync(String uri, String contentType = MIME_JSON) => 
+                await ExecAsync("GET", uri, null, contentType);
 
-            public static Hashtable Post(String uri, Object data, String contentType = MIME_JSON)
-            {
-                return Exec("POST", uri, data, contentType);
-            }
+            public static async Task<Hashtable> PostAsync(String uri, Object data, String contentType = MIME_JSON) =>
+                await ExecAsync("POST", uri, data, contentType);
 
-            public static Hashtable Put(String uri, Object data, String contentType = MIME_JSON)
-            {
-                return Exec("PUT", uri, data, contentType);
-            }
+            public static async Task<Hashtable> PutAsync(String uri, Object data, String contentType = MIME_JSON) =>
+                await ExecAsync("PUT", uri, data, contentType);
 
-            public static Hashtable Delete(String uri, String contentType = MIME_JSON)
-            {
-                return Exec("DELETE", uri, null, contentType);
-            }
+            public static async Task<Hashtable> DeleteAsync(String uri, String contentType = MIME_JSON) =>
+                await ExecAsync("DELETE", uri, null, contentType);
         }
     }
 
@@ -1067,24 +922,16 @@ namespace RepoWebShop.Models
             int lastIndex;
 
             for (lastIndex = index; lastIndex < json.Length; lastIndex++)
-            {
                 if ("0123456789+-.eE".IndexOf(json[lastIndex]) == -1)
-                {
                     break;
-                }
-            }
             return lastIndex - 1;
         }
 
         protected static void EatWhitespace(char[] json, ref int index)
         {
             for (; index < json.Length; index++)
-            {
                 if (" \t\n\r".IndexOf(json[index]) == -1)
-                {
                     break;
-                }
-            }
         }
 
         protected static int LookAhead(char[] json, int index)

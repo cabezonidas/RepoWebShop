@@ -2,6 +2,7 @@
 using RepoWebShop.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Repositories
 {
@@ -17,7 +18,7 @@ namespace RepoWebShop.Repositories
             _orderRespository = orderRepository;
             _emailRespository = emailRespository;
         }
-        public void CreatePayment(PaymentNotice paymentNotification, string hostUrl)
+        public async Task CreatePayment(PaymentNotice paymentNotification, string hostUrl)
         {
             _appDbContext.PaymentNotices.Add(paymentNotification);
             _appDbContext.SaveChanges();
@@ -37,7 +38,7 @@ namespace RepoWebShop.Repositories
             if (paymentNotification.Status == "approved")
             {
                 Order orderApproved = _orderRespository.OrderApproved(paymentNotification);
-                _emailRespository.SendOrderConfirmation(orderApproved, hostUrl, paymentNotification);
+                await _emailRespository.SendOrderConfirmationAsync(orderApproved, hostUrl, paymentNotification);
             }
 
             else if (paymentNotification.Status == "in_process")
@@ -46,10 +47,7 @@ namespace RepoWebShop.Repositories
             }
 
             else
-            {
                 _orderRespository.UpdateOrder(paymentNotification);
-            }
-
         }
 
         public IEnumerable<PaymentNotice> GetPayments()

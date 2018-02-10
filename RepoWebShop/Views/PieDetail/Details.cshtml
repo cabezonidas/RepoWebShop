@@ -1,7 +1,7 @@
 ﻿@model PieDetailViewModel
 
 <style>
-        .static-prices {
+    .static-prices {
         margin: 5px;
     }
 
@@ -160,6 +160,7 @@
                             <th scope="col">Descripción</th>
                             <th scope="col">Tamaño</th>
                             <th scope="col">Precio</th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -171,8 +172,11 @@
                                     <td class="unit-description">@pie.SizeDescription</td>
                                     <td class="unit-price">
                                         $@pie.Price
-                                        <a asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@pie.PieId'>
-                                            Comprar
+                                    </td>
+                                    <td>
+                                        <a title="Comprar" asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@pie.PieId'>
+                                            <span class="fa fa-shopping-cart">
+                                            </span>
                                         </a>
                                     </td>
                                 </tr>

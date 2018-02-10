@@ -1,4 +1,4 @@
-﻿section.container {
+﻿section#card.container {
     padding: 10px;
     max-width: 900px;
     margin: 10px auto;
@@ -20,7 +20,7 @@
 }
 
 @media screen and (min-width: 800px) {
-    section.container {
+    section#card.container {
         background-color: #dbe9d8;
     }
 

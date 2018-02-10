@@ -1,3 +1,56 @@
-﻿<div class="container">
-    <h1>Catering</h1>
+﻿@model string
+<div class="container">
+    <div class="title-container">
+        <h1 class="title-logo">Catering</h1>
+    </div>
+
+    <div class="text-center">
+        <h2>Sobre nuestros caterings</h2>
+        <h4>Echale un vistazo a nuestros deliciosos bocaditos que podemos preparar para tu servico.</h4>
+        <h4>Normalmente nosotros recomendamos entre 10 y 12 bocados por adulto.</h4>
+        <h4>Acercate a nuestra sucursal, o llamanos para que te podamos asesorar con un catering súper rico y novedoso.</h4>
+    </div>
+
+    <div class="container">
+        <table class="hidden" id="table">
+            <thead>
+                <tr>
+                    <th>
+                        Producto
+                    </th>
+                    <th>
+                        Cantidad mínima (múltiplos)
+                    </th>
+                    <th>
+                        Precio U.
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+    </div>
 </div>
+<script>
+    $.ajax({
+        url: "https://lareposteria.sharepoint.com/_api/Web/Lists(guid'b10fac5f-d656-49ca-bb9a-589b9362bb94')/items?$select=Title,Precio,CantidadMinima&$filter=Categoria eq 'Lunch'&$orderby=Title asc",
+        headers: { "Authorization": "Bearer " + '@Model', "Accept": "application/json;odata=verbose"}
+    }).done(function (data) {
+
+        for (var i = 0, len = data.d.results.length; i < len; i++) {
+            $('#tbody').append('<tr>' +
+                '<td>' + data.d.results[i].Title + '</td>' +
+                '<td>' + data.d.results[i].CantidadMinima + '</td>' +
+                '<td>' + data.d.results[i].Precio + '</td>' +
+                '</tr>');
+        }
+        $('#table').DataTable({
+            pageLength: 50,
+            searching: false,
+            "bPaginate": false,
+            "bLengthChange": false,
+            "bFilter": true,
+            "bInfo": false,
+        });
+        $('#table').removeClass('hidden');
+    });
+</script>

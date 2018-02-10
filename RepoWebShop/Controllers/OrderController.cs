@@ -241,7 +241,6 @@ namespace RepoWebShop.Controllers
         public async Task<IActionResult> Checkout(Order order)
         {
             var items = _shoppingCart.GetShoppingCartItems();
-            //_shoppingCart.ShoppingCartItems = items;
 
             if (items.Count == 0)
             {
@@ -279,7 +278,7 @@ namespace RepoWebShop.Controllers
 
                 _orderRepository.CreateOrder(order);
                 _shoppingCart.ClearCart();
-                _emailRespository.SendOrderConfirmation(order, Request.HostUrl(), null);
+                await _emailRespository.SendOrderConfirmationAsync(order, Request.HostUrl(), null);
                 return Redirect($"/Order/Status/{order.FriendlyBookingId}");
             }
             return View(_currentUser);

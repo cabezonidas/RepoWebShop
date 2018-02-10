@@ -11,7 +11,7 @@ namespace RepoWebShop.ViewModels
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Nombre de usuario")]
+        [Display(Name = "Usuario")]
         public string UserName { get; set; }
 
         [Required]

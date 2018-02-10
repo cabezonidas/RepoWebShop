@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Interfaces
 {
@@ -8,36 +9,36 @@ namespace RepoWebShop.Interfaces
     {
         bool SandboxMode();
         bool SandboxMode(bool enable);
-        String GetAccessToken();
-        Hashtable GetPayment(String id);
-        Hashtable GetPaymentInfo(String id);
-        Hashtable GetAuthorizedPayment(String id);
-        Hashtable RefundPayment(String id);
-        Hashtable CancelPayment(String id);
-        Hashtable CancelPreapprovalPayment(String id);
-        Hashtable SearchPayment(Dictionary<String, String> filters, long offset = 0, long limit = 0);
-        Hashtable CreatePreference(String preference);
-        Hashtable CreatePreference(Hashtable preference);
-        Hashtable UpdatePreference(String id, String preference);
-        Hashtable UpdatePreference(String id, Hashtable preference);
-        Hashtable GetPreference(String id);
-        Hashtable CreatePreapprovalPayment(String preapprovalPayment);
-        Hashtable CreatePreapprovalPayment(Hashtable preapprovalPayment);
-        Hashtable GetPreapprovalPayment(String id);
-        Hashtable Get(String uri, Dictionary<String, String> parameters, bool authenticate);
-        Hashtable Get(String uri, bool authenticate);
-        Hashtable Get(String uri, Dictionary<String, String> parameters);
-        Hashtable Post(String uri, String data);
-        Hashtable Post(String uri, String data, Dictionary<String, String> parameters);
-        Hashtable Post(String uri, Hashtable data);
-        Hashtable Post(String uri, Hashtable data, Dictionary<String, String> parameters);
-        Hashtable Put(String uri, String data);
-        Hashtable Put(String uri, String data, Dictionary<String, String> parameters);
-        Hashtable Put(String uri, Hashtable data);
-        Hashtable Put(String uri, Hashtable data, Dictionary<String, String> parameters);
-        Hashtable Delete(String uri);
-        Hashtable Delete(String uri, Dictionary<String, String> parameters);
-        string GetRepoPaymentLink(decimal total, string bookingId, string friendlyBookingId, string host, string title, string userId);
-        Hashtable GetMerchantOrder(String merchantOrderId);
+        Task<String> GetAccessTokenAsync();
+        Task<Hashtable> GetPaymentAsync(String id);
+        Task<Hashtable> GetPaymentInfoAsync(String id);
+        Task<Hashtable> GetAuthorizedPaymentAsync(String id);
+        Task<Hashtable> RefundPaymentAsync(String id);
+        Task<Hashtable> CancelPaymentAsync(String id);
+        Task<Hashtable> CancelPreapprovalPaymentAsync(String id);
+        Task<Hashtable> SearchPaymentAsync(Dictionary<String, String> filters, long offset = 0, long limit = 0);
+        Task<Hashtable> CreatePreferenceAsync(String preference);
+        Task<Hashtable> CreatePreferenceAsync(Hashtable preference);
+        Task<Hashtable> UpdatePreferenceAsync(String id, String preference);
+        Task<Hashtable> UpdatePreferenceAsync(String id, Hashtable preference);
+        Task<Hashtable> GetPreferenceAsync(String id);
+        Task<Hashtable> CreatePreapprovalPaymentAsync(String preapprovalPayment);
+        Task<Hashtable> CreatePreapprovalPaymentAsync(Hashtable preapprovalPayment);
+        Task<Hashtable> GetPreapprovalPaymentAsync(String id);
+        Task<Hashtable> GetAsync(String uri, Dictionary<String, String> parameters, bool authenticate);
+        Task<Hashtable> GetAsync(String uri, bool authenticate);
+        Task<Hashtable> GetAsync(String uri, Dictionary<String, String> parameters);
+        Task<Hashtable> PostAsync(String uri, String data);
+        Task<Hashtable> PostAsync(String uri, String data, Dictionary<String, String> parameters);
+        Task<Hashtable> PostAsync(String uri, Hashtable data);
+        Task<Hashtable> PostAsync(String uri, Hashtable data, Dictionary<String, String> parameters);
+        Task<Hashtable> PutAsync(String uri, String data);
+        Task<Hashtable> PutAsync(String uri, String data, Dictionary<String, String> parameters);
+        Task<Hashtable> PutAsync(String uri, Hashtable data);
+        Task<Hashtable> PutAsync(String uri, Hashtable data, Dictionary<String, String> parameters);
+        Task<Hashtable> DeleteAsync(String uri);
+        Task<Hashtable> DeleteAsync(String uri, Dictionary<String, String> parameters);
+        Task<Hashtable> GetMerchantOrderAsync(String merchantOrderId);
+        Task<string> GetRepoPaymentLinkAsync(decimal total, string bookingId, string friendlyBookingId, string host, string title, string userId);
     }
 }

@@ -4,6 +4,7 @@ using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
 using System.Collections;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Controllers
 {
@@ -20,17 +21,17 @@ namespace RepoWebShop.Controllers
         }
 
         [Route("OnPaymentNotified/{notificationId}")]
-        public IActionResult OnPaymentNotified(string notificationId)
+        public async Task<IActionResult> OnPaymentNotified(string notificationId)
         {
-            var payment = _mp.GetPayment(notificationId);
+            var payment = await _mp.GetPaymentAsync(notificationId);
             if (payment["status"]?.ToString() == "200")
             {
                 PaymentNotice paymentInfo = new PaymentNotice(((payment["response"] as Hashtable)["collection"] as Hashtable));
-                var merchantOrder = _mp.GetMerchantOrder(paymentInfo.Merchant_Order_Id);
+                var merchantOrder = await _mp.GetMerchantOrderAsync(paymentInfo.Merchant_Order_Id);
                 if(merchantOrder["status"]?.ToString() == "200")
                     paymentInfo.User_Id = (merchantOrder["response"] as Hashtable)["additional_info"]?.ToString();
                 if (!String.IsNullOrWhiteSpace(paymentInfo.BookingId))
-                    _paymentNoticeRepository.CreatePayment(paymentInfo, Request.HostUrl());
+                    await _paymentNoticeRepository.CreatePayment(paymentInfo, Request.HostUrl());
             }
             return Ok();
         }

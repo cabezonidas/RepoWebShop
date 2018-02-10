@@ -3,16 +3,16 @@
         <h1 class="text-center title-logo">Servicios</h1>
     </div>
     <div class="section-heading text-center">
-        <h2 class="text-muted">Mira todo lo que tenemos para ofrecerte!</h2>
+        <h2 class="text-muted">¡Mira todo lo que tenemos para ofrecerte!</h2>
     </div>
     <div class="container center-block">
         @Html.Partial("~/Views/Services/Service.cshtml", new ServiceViewModel("List", "PieDetail", "fa-shopping-cart", "Comprar", "Compra nuestros productos a través de esta web.", "/Pictures/Services/Portada.jpeg"))
         @Html.Partial("~/Views/Services/Service.cshtml", new ServiceViewModel("SpecialCakes", "Services", "fa-birthday-cake", "Cumples", "Encarganos tu torta de cumpleaños, con los sabores que quieras.", "/Pictures/Services/Cumple.jpg"))
         @Html.Partial("~/Views/Services/Service.cshtml", new ServiceViewModel("SpecialCakes", "Services", "fa-users", "Fiestas", "Pedinos la torta de tus sueños!", "/Pictures/Services/Eventos.jpg"))
+        @Html.Partial("~/Views/Services/Service.cshtml", new ServiceViewModel("Catering", "Services", "fa-cutlery", "Catering", "Hacemos el catering para tu evento. Super novedoso y exquisito. Mira!", "/Pictures/Services/Catering.jpg"))
 
-        @Html.Partial("~/Views/Services/Service.cshtml", new ServiceViewModel("List", "PieDetail", "fa-gift", "Desayunos", "Sorprendé a ese ser querido con un desayuno continental sorpresa!", "/Pictures/Services/Desayuno.jpg"))
-        @Html.Partial("~/Views/Services/Service.cshtml", new ServiceViewModel("List", "PieDetail", "fa-cutlery", "Catering", "Hacemos el catering para tu evento. Super novedoso y exquisito. Mira!", "/Pictures/Services/Catering.jpg"))
-        @Html.Partial("~/Views/Services/Service.cshtml", new ServiceViewModel("List", "PieDetail", "fa-coffee", "Mesa dulce", "Prepara una mesa dulce para terminar de enloquecer a tus invitados.", "/Pictures/Services/MesaDulce.jpg"))
+        @*@Html.Partial("~/Views/Services/Service.cshtml", new ServiceViewModel("List", "PieDetail", "fa-gift", "Desayunos", "Sorprendé a ese ser querido con un desayuno continental sorpresa!", "/Pictures/Services/Desayuno.jpg"))
+        @Html.Partial("~/Views/Services/Service.cshtml", new ServiceViewModel("List", "PieDetail", "fa-coffee", "Mesa dulce", "Prepara una mesa dulce para terminar de enloquecer a tus invitados.", "/Pictures/Services/MesaDulce.jpg"))*@
     </div>
 </section>
 
