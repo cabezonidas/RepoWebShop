@@ -1,23 +1,19 @@
 ﻿@model DeliveryAddress
 
-<div class="container">
-    <form asp-controller="Delivery" asp-action="Index" method="post" class="form-horizontal" role="form">
-        <h4>Escribe la dirección de envío</h4>
-        <div asp-validation-summary="All" class="text-danger"></div>
+<section class="container" style="max-width:600px;">
+    <form asp-controller="Delivery" asp-action="Index" method="post" role="form">
         <div class="form-group" id="locationField">
+            <h3 class="text-center">Escribe la dirección de envío</h3>
             <label asp-for="AddressLine1" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <input asp-for="AddressLine1" id="autocomplete" class="form-control"
                        placeholder="Ingresa tu dirección"
                        onFocus="geolocate()" autocomplete="off" />
-                <span asp-validation-for="AddressLine1" class="text-danger"></span>
-                <span asp-validation-for="StreetNumber" class="text-danger"></span>
-                <span asp-validation-for="StreetName" class="text-danger"></span>
-                <span asp-validation-for="State" class="text-danger"></span>
-                <span asp-validation-for="ZipCode" class="text-danger"></span>
+            <div asp-validation-summary="All" class="text-danger"></div>
+                
             </div>
         </div>
-        <div class="form-group hidden">
+        <div class="form-group ">
             <div class="col-md-2 control-label"></div>
             <div class="col-md-10">
                 <table id="address">
@@ -44,7 +40,17 @@
                     </tr>
                     <tr>
                         <td>
-                            <input id="country" disabled="disabled" />
+                            <input id="country" asp-for="Country" disabled="disabled" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="locality" asp-for="State" disabled="disabled" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="distance" asp-for="Distance" type="number" disabled="disabled" />
                         </td>
                     </tr>
                 </table>
@@ -52,18 +58,16 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" class="btn btn-primary" value="Guardar" />
+                <input type="submit" class="btn btn-primary"  value="Guardar" />
             </div>
         </div>
     </form>
-</div>
+</section>
 <script>
     function getDistance() {
         var location = $('#autocomplete').val();
         $.get("api/DeliveryData/GetDistance/" + location, function (data) {
-            console.log(data);
-        }).fail(function () {
-            console.log('error');
+            document.getElementById('distance').value = data.distance;
         });
     }
 </script>
