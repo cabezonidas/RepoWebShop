@@ -21,5 +21,6 @@ namespace RepoWebShop.Interfaces
         void ClearCart();
         decimal GetShoppingCartTotal();
         string GetShoppingCartId();
+        DeliveryAddress GetShoppingCartDeliveryAddress();
     }
 }

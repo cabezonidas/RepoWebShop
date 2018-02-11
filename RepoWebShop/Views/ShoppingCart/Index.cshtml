@@ -64,6 +64,29 @@ else
                     </td>
                 </tr>
             }
+            @if (Model.ShoppingCartTotal >= 500 && Model.DeliveryAddress != null)
+            {
+                <tr>
+                    <td class="text-center">
+                        <a asp-controller="ShoppingCart" asp-action="ClearFromShoppingCart"
+                           asp-route-pieId="1">
+                            <span class="glyphicon glyphicon-remove remove-item"></span>
+                        </a>
+                    </td>
+                    <td class="text-center quantity">
+
+                    </td>
+                    <td class="text-left">
+                        <a href="/PieDetail/Details/1">
+                            Delivery: @Model.DeliveryAddress.AddressLine1
+                        </a>
+                    </td>
+                    <td class="text-right"></td>
+                    <td class="text-right">
+                        $ @Model.DeliveryAddress.DeliveryCost
+                    </td>
+                </tr>
+            }
             </tbody>
             <tfoot>
                 <tr>
@@ -74,13 +97,40 @@ else
                     </td>
                     <td class="text-right">
                         <strong>
-                            @Model.ShoppingCartTotal.ToString("c")
+                            @{var total = (Model.ShoppingCartTotal + Model.DeliveryAddress?.DeliveryCost ?? 0).ToString("c");}
+                            @total
                         </strong>
                     </td>
-                </tr>
             </tfoot>
         </table>
 
+        @if(Model.DeliveryAddress == null && Model.ShoppingCartTotal < 500)
+        {
+        <div class="animated bounceInUp text-center" >
+            <p style="font-size: 20px;" class="text-muted">Si tu orden es de $500 o más, podés agregar delivery.</p>
+            @if(Model.ShoppingCartTotal >= 500)
+            {
+                <h2>
+                    <a asp-action="Index" asp-controller="DeliveryAddress">Agregar</a>
+                </h2>
+            }
+        </div>
+        }
+        
+        @if(Model.DeliveryAddress == null && Model.ShoppingCartTotal >= 500)
+        {
+        <div class="animated bounceInUp text-center">
+            @if(Model.ShoppingCartTotal >= 500)
+            {
+                <h2>
+                    <a class="btn btn-primary" asp-action="Index" asp-controller="Delivery">Agregar envío</a>
+                </h2>
+            }
+            <p style="font-size: 15px;">Si estás dentro de los 3 kms, podemos enviarte el pedido por $60.</p>
+        </div>
+        }
+
+        <br />
         <div class="col-md-2 col-lg-2 col-sm-3">
             
             <div class="text-center">

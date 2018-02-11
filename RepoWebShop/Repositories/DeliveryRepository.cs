@@ -12,9 +12,16 @@ namespace RepoWebShop.Repositories
 {
     public class DeliveryRepository : IDeliveryRepository
     {
-        public DeliveryRepository()
+        private readonly AppDbContext _appDbContext;
+        public DeliveryRepository(AppDbContext appDbContext)
         {
+            _appDbContext = appDbContext;
+        }
 
+        public void AddDelivery(DeliveryAddress deliveryAddress)
+        {
+            _appDbContext.DeliveryAddresses.Add(deliveryAddress);
+            _appDbContext.SaveChanges();
         }
 
         public async Task<int> GetDistanceAsync(string addressLine1)

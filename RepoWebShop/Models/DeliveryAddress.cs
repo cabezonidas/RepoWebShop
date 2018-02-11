@@ -54,5 +54,7 @@ namespace RepoWebShop.Models
 
         [Required]
         public virtual DateTime Created { get; set; }
+
+        public ApplicationUser User { get; set; }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace RepoWebShop.Models
@@ -70,5 +72,7 @@ namespace RepoWebShop.Models
         public string PhoneNumberDeclared { get; set; }
         public string FacebookNameIdentifier { get; set; }
         public string GoogleNameIdentifier { get; set; } 
+
+        public IEnumerable<DeliveryAddress> DeliveryAddresses { get; set; }
     }
 }

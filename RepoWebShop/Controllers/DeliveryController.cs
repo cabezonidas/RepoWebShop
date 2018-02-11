@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RepoWebShop.Extensions;
@@ -15,10 +17,18 @@ namespace RepoWebShop.Controllers
     public class DeliveryController : Controller
     {
         private readonly IDeliveryRepository _deliveryRepository;
+        private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ShoppingCart _shoppingCart;
 
-        public DeliveryController(IDeliveryRepository deliveryRepository)
+        public DeliveryController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IDeliveryRepository deliveryRepository, IMapper mapper, ShoppingCart shoppingCart)
         {
             _deliveryRepository = deliveryRepository;
+            _mapper = mapper;
+            _shoppingCart = shoppingCart;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public IActionResult Index() => View();
@@ -27,9 +37,7 @@ namespace RepoWebShop.Controllers
         public async Task<IActionResult> Index(DeliveryAddressViewModel deliveryAddres)
         {
             if(!ModelState.IsValid)
-            {
                 return View(deliveryAddres);
-            }
 
             var distance = await _deliveryRepository.GetDistanceAsync(deliveryAddres.AddressLine1);
             if(distance > 3000)
@@ -42,10 +50,26 @@ namespace RepoWebShop.Controllers
                 return View(deliveryAddres);
             }
 
-            
+            var delivery = _mapper.Map<DeliveryAddressViewModel, DeliveryAddress>(deliveryAddres);
+            delivery.ShoppingCartId = _shoppingCart.ShoppingCartId;
+            delivery.DeliveryCost = 60;
+            delivery.Distance = distance;
 
+            var user = await _userManager.GetUser(_signInManager);
+            if (user != null)
+                delivery.User = user;
 
-            return View();
+            try
+            {
+                _deliveryRepository.AddDelivery(delivery);
+            }
+            catch(Exception ex)
+            {
+                ModelState.AddModelError(ex.InnerException.Message, ex.Message);
+                return View(deliveryAddres);
+            }
+
+            return RedirectToAction("Index", "ShoppingCart", null);
         }
     }
 }

@@ -183,5 +183,10 @@ namespace RepoWebShop.Repositories
         {
             return _shoppingCart.ShoppingCartId;
         }
+
+        public DeliveryAddress GetShoppingCartDeliveryAddress()
+        {
+            return _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.ShoppingCartId == _shoppingCart.ShoppingCartId);
+        }
     }
 }
