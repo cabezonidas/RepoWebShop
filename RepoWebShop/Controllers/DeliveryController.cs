@@ -2,7 +2,9 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RepoWebShop.Extensions;
+using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
+using RepoWebShop.ViewModels;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -12,23 +14,35 @@ namespace RepoWebShop.Controllers
 {
     public class DeliveryController : Controller
     {
+        private readonly IDeliveryRepository _deliveryRepository;
+
+        public DeliveryController(IDeliveryRepository deliveryRepository)
+        {
+            _deliveryRepository = deliveryRepository;
+        }
+
         public IActionResult Index() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Index(DeliveryAddress deliveryAddres)
+        public async Task<IActionResult> Index(DeliveryAddressViewModel deliveryAddres)
         {
             if(!ModelState.IsValid)
             {
                 return View(deliveryAddres);
             }
 
-            var apicall = $"{Request.HostUrl()}/api/DeliveryData/GetDistance/{deliveryAddres.AddressLine1}";
-            var result = await new HttpClient().GetAsync(apicall);
+            var distance = await _deliveryRepository.GetDistanceAsync(deliveryAddres.AddressLine1);
+            if(distance > 3000)
+            {
+                if(distance > 0)
+                    ModelState.AddModelError("DistanceNotCovered", $"La distancia debe ser menor a 3k. Tu ubicación está a {(distance / 1000.0).ToString("#.##")} kms.");
+                else
+                    ModelState.AddModelError("DistanceError", "No pudimos calcular la distancia.");
 
-            var body = await result.Content.ReadAsStreamAsync();
-            var DistanceObject = ((JToken)new JsonSerializer().Deserialize<Object>(new JsonTextReader(new StreamReader(body)))).Root;
-            var distance = ((JProperty)((JContainer)DistanceObject.Root).First).Value;
+                return View(deliveryAddres);
+            }
 
+            
 
 
             return View();

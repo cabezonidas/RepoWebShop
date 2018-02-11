@@ -68,6 +68,8 @@ namespace RepoWebShop.Models
             CreateMap<ApplicationUser, HashValidationViewModel>();
             CreateMap<ApplicationUser, RegisterProviderWithMailViewModel>();
 
+            CreateMap<DeliveryAddress, DeliveryAddressViewModel>();
+            CreateMap<DeliveryAddressViewModel, DeliveryAddress>();
             CreateMap<PieDetailCreateViewModel, PieDetail>();
             CreateMap<PieDetail, PieDetailCreateViewModel>();
             CreateMap<PieDetail, PieDetail>().ForMember(x => x.PieDetailId, opt => opt.Ignore());

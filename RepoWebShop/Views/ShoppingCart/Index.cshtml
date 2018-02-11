@@ -33,7 +33,7 @@ else
                 </tr>
             </thead>
             <tbody>
-                @foreach (var line in Model.Items)
+            @foreach (var line in Model.Items)
             {
                 <tr>
                     <td class="text-center">
@@ -63,7 +63,7 @@ else
                         @((line.Amount * line.Pie.Price).ToString("c"))
                     </td>
                 </tr>
-        }
+            }
             </tbody>
             <tfoot>
                 <tr>

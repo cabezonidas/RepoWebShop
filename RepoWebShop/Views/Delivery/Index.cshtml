@@ -1,19 +1,69 @@
-﻿@model DeliveryAddress
+﻿@model DeliveryAddressViewModel
 
-<section class="container" style="max-width:600px;">
-    <form asp-controller="Delivery" asp-action="Index" method="post" role="form">
+@section metatags {
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+}
+<style>
+    #map {
+        height: 100%;
+    }
+
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    div.form-group {
+        padding: 5px;
+    }
+
+</style>
+<br />
+
+<div class="container" style="max-width:600px;">
+    <br />
+    <form asp-controller="Delivery" asp-action="Index" class="form-horizontal" method="post" role="form">
         <div class="form-group" id="locationField">
-            <h3 class="text-center">Escribe la dirección de envío</h3>
+            <div class="title-container">
+                <h1 class="title-logo">Delivery</h1>
+            </div>
             <label asp-for="AddressLine1" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <input asp-for="AddressLine1" id="autocomplete" class="form-control"
                        placeholder="Ingresa tu dirección"
                        onFocus="geolocate()" autocomplete="off" />
-            <div asp-validation-summary="All" class="text-danger"></div>
-                
+                <div style="margin-top: 5px;">
+                    <div class="text-center alert-danger hidden" id="addressNotSupported">
+                        <span class="fa fa-times" style="color: red;">
+
+                        </span>
+                        La dirección está fuera de nuestro radio de delivery
+                    </div>
+                    <div class="text-center alert-success hidden" id="addressSupported">
+                        <span class="fa fa-check" style="color: limegreen;">
+
+                        </span>
+                        La dirección está dentro de nuestro radio de delivery
+                    </div>
+                </div>
+                <div asp-validation-summary="All" class="text-danger"></div>
             </div>
         </div>
-        <div class="form-group ">
+        <div class="form-group">
+            <label asp-for="DeliveryInstructions" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <textarea maxlength="250" asp-for="DeliveryInstructions" placeholder="Ingresa instrucciones de envío" class="form-control" rows="4"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+
+            </div>
+        </div>
+
+        <div class="form-group hidden">
             <div class="col-md-2 control-label"></div>
             <div class="col-md-10">
                 <table id="address">
@@ -58,17 +108,36 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" class="btn btn-primary"  value="Guardar" />
+                <a asp-action="Index" asp-controller="ShoppingCart" class="btn btn-primary" value="Volver">
+                    <span class="glyphicon glyphicon-arrow-left">
+
+                    </span>
+                    Volver
+                </a>
+                <input type="submit" class="btn btn-primary" value="Guardar" />
             </div>
         </div>
     </form>
-</section>
+</div>
+<div id="map" ></div>
 <script>
     function getDistance() {
         var location = $('#autocomplete').val();
         $.get("api/DeliveryData/GetDistance/" + location, function (data) {
             document.getElementById('distance').value = data.distance;
+            if (data.distance > 3000 || data.distance < 1) {
+                $('#addressNotSupported').removeClass('hidden');
+                $('#addressSupported').addClass('hidden');
+            }
+            else {
+                $('#addressNotSupported').addClass('hidden');
+                $('#addressSupported').removeClass('hidden');
+            }
         });
+    }
+    function initGoogle() {
+        initAutocomplete();
+        //initMap();
     }
 </script>
 <script>
@@ -138,5 +207,5 @@
         }
     }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAR5nmTSuiZsjA5Yhgx3w9EDEyF-C8zIwU&libraries=places&callback=initAutocomplete"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAR5nmTSuiZsjA5Yhgx3w9EDEyF-C8zIwU&libraries=places&callback=initGoogle"
         async defer></script>

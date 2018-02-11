@@ -19,5 +19,6 @@ namespace RepoWebShop.ViewModels
         public DateTime PickupDate { get; set; }
         public string MercadoPagoId { get; set; }
         public ApplicationUser User { get; set; }
+        public DeliveryAddress DeliveryAddress { get; set; }
     }
 }

@@ -38,6 +38,21 @@ namespace RepoWebShop.Models
 
         [Display(Name = "Distancia")]
         [Range(1, 3000, ErrorMessage = "Nuestra zona de cobertura son 3kms.")]
-        public int Distance { get; set; }
+        public virtual int Distance { get; set; }
+
+        [Display(Name = "Instrucciones de envío")]
+        [StringLength(256)]
+        public string DeliveryInstructions { get; set; }
+
+        [Display(Name = "Costo de envío")]
+        [Required]
+        public virtual decimal DeliveryCost { get; set; }
+
+        public virtual int DeliveryAddressId { get; set; }
+
+        public virtual string ShoppingCartId { get; set; }
+
+        [Required]
+        public virtual DateTime Created { get; set; }
     }
 }
