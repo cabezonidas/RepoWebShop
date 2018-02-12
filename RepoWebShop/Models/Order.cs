@@ -174,5 +174,7 @@ namespace RepoWebShop.Models
                 return new OrderOnHold();
             }
         }
+
+        public DeliveryAddress DeliveryAddress { get; internal set; }
     }
 }

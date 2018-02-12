@@ -186,7 +186,30 @@ namespace RepoWebShop.Repositories
 
         public DeliveryAddress GetShoppingCartDeliveryAddress()
         {
-            return _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.ShoppingCartId == _shoppingCart.ShoppingCartId);
+            if(this.GetShoppingCartTotal() >= 500)
+                return _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.ShoppingCartId == _shoppingCart.ShoppingCartId);
+            return null;
+        }
+
+        public DeliveryAddress GetDelivery(string bookingId)
+        {
+            var result = _appDbContext.DeliveryAddresses.Where(x => x.ShoppingCartId == bookingId);
+            return result.FirstOrDefault();
+        }
+
+        public void RenewId()
+        {
+            _shoppingCart.RenewId();
+        }
+
+        public void RemoveDelivery()
+        {
+            var result = _appDbContext.DeliveryAddresses.Where(x => x.ShoppingCartId == GetShoppingCartId());
+            if (result != null)
+            {
+                _appDbContext.DeliveryAddresses.RemoveRange(result);
+                _appDbContext.SaveChanges();
+            }
         }
     }
 }

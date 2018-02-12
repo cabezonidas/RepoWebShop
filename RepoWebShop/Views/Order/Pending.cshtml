@@ -24,7 +24,7 @@
 
     <h2>Ni bien recibamos el pago te mandamos un mail con los detalles.</h2>
     <br />
-    @Html.Partial("~/Views/Shared/LoadingBar.cshtml")
+    
 
     <h4>Esperando...</h4>
     <h3>No te preocupes, a veces los pagos demoran un poco en llegar.</h3>
@@ -35,7 +35,8 @@
 </section>
 
 <script type="text/javascript">
-    setInterval(checkOrder, 3000);
+    checkOrder();
+    setInterval(checkOrder, 10000);
 
     function checkOrder() {
         $.ajax({

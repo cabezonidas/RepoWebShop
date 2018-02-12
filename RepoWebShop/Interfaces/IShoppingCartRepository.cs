@@ -10,6 +10,7 @@ namespace RepoWebShop.Interfaces
         string ClearComments(string bookingId);
         IQueryable<ShoppingCartItem> GetItems(string bookingId);     
         IQueryable<ShoppingCartItem> EmptyItems(string bookingId);
+        DeliveryAddress GetDelivery(string bookingId);
 
         string GetShoppingCartComments();
         int GetShoppingCartPreparationTime();
@@ -22,5 +23,7 @@ namespace RepoWebShop.Interfaces
         decimal GetShoppingCartTotal();
         string GetShoppingCartId();
         DeliveryAddress GetShoppingCartDeliveryAddress();
+        void RenewId();
+        void RemoveDelivery();
     }
 }

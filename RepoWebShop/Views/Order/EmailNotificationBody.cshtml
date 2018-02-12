@@ -42,8 +42,8 @@
 
 
 
-        @{var total = Model.OrderItems.Select(x => x.Amount * x.Price).Sum(); }
-        <p><strong>Total de Compra $@total</strong></p>
+        
+        <p><strong>Total de Compra $@Model.OrderTotal</strong></p>
 
         @if (!String.IsNullOrEmpty(Model.MercadoPagoTransaction))
     {
@@ -67,6 +67,17 @@
                 <td style='padding:2px; text-align:right;'>@subtotal</td>
             </tr>
     }
+            @if(Model.Delivery != null)
+            {
+            <tr>
+                <td style='padding:2px; text-align:center;'></td>
+                <td style='padding:2px; text-align:left;'>@Model.Delivery.AddressLine1</td>
+                <td style='padding:2px; text-align:right;'></td>
+                <td style='padding:2px; text-align:right;'>@Model.Delivery.DeliveryCost</td>
+            </tr>
+
+            }
+
         </table>
         @if (!String.IsNullOrEmpty(Model.Comments))
     {

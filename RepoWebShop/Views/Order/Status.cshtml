@@ -122,7 +122,8 @@ else
     @Html.Partial("~/Views/Shared/LoadingBar.cshtml")
     
     <script type="text/javascript">
-        setInterval(checkOrder, 3000);
+        checkOrder();
+        setInterval(checkOrder, 10000);
 
         function checkOrder() {
             $.ajax({

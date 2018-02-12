@@ -90,7 +90,7 @@ namespace RepoWebShop.Models
 
         public Order GetOrder(int id)
         {
-            return _appDbContext.Orders.Include(x => x.Registration).Include(x => x.Email).FirstOrDefault(x => x.OrderId == id);
+            return _appDbContext.Orders.Include(x => x.Registration).Include(x => x.Email).Include(x => x.DeliveryAddress).FirstOrDefault(x => x.OrderId == id);
         }
 
 
@@ -167,6 +167,8 @@ namespace RepoWebShop.Models
 
             order.PreparationTime = _shoppingCartRepository.GetShoppingCartPreparationTime();
 
+            order.DeliveryAddress = _shoppingCartRepository.GetShoppingCartDeliveryAddress();
+
             _appDbContext.Orders.Add(order);
             _appDbContext.SaveChanges();
 
@@ -206,6 +208,7 @@ namespace RepoWebShop.Models
             emailData.PreparationTime = order.PreparationTime;
             emailData.FriendlyBookingId = order.FriendlyBookingId;
             emailData.OrderId = order.OrderId.ToString();
+            emailData.Delivery = order.DeliveryAddress;
 
             emailData.CustomarAlias = order.Registration == null ? order.MercadoPagoName : order.Registration.FirstName;
             emailData.CustomarAlias = Regex.Replace(emailData.CustomarAlias.ToLower(), @"(^\w)|(\s\w)", m => m.Value.ToUpper());
@@ -338,6 +341,9 @@ namespace RepoWebShop.Models
 
             order.OrderPlaced = _calendarRepository.LocalTime();
             order.CustomerComments = _shoppingCartRepository.ClearComments(payment.BookingId);
+
+            order.DeliveryAddress = _shoppingCartRepository.GetDelivery(payment.BookingId);
+
             _appDbContext.Orders.Add(order);
             _appDbContext.SaveChanges();
 

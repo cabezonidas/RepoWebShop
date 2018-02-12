@@ -458,8 +458,9 @@ namespace RepoWebShop.Models
 
                 Hashtable preference = await CreatePreferenceAsync(preferenceData);
                 string init_point = (!sandbox ? "" : "sandbox_") + "init_point";
-                
+
                 return (preference["response"] as Hashtable)[init_point].ToString();
+                //return "#";
             }
             catch
             {

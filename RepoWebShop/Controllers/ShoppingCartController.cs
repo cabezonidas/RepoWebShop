@@ -50,13 +50,18 @@ namespace RepoWebShop.Controllers
         {
             var items = _shoppingCart.GetShoppingCartItems();
             //_shoppingCart.ShoppingCartItems = items;
-            var total = _shoppingCart.GetShoppingCartTotal();
+            var totalItems = _shoppingCart.GetShoppingCartTotal();
             var highestPrepTime = _shoppingCart.GetShoppingCartPreparationTime();
 
             var user = await _userManager.GetUser(_signInManager);
+            var delivery = _shoppingCart.GetShoppingCartDeliveryAddress();
+            var deliveryCost = (totalItems >= 500 && delivery != null) ? delivery.DeliveryCost : 0;
+
+            var total = totalItems + deliveryCost;
 
             var shoppingCartViewModel = new ShoppingCartViewModel
             {
+                
                 //ShoppingCart = _shoppingCart,
                 Items = _shoppingCart.GetShoppingCartItems(),
                 PickupDate = _calendarRepository.GetPickupEstimate(highestPrepTime),
@@ -67,7 +72,7 @@ namespace RepoWebShop.Controllers
                 Comments = _shoppingCart.GetShoppingCartComments(),
                 MercadoPagoId = _config.GetSection("MercadoPagoClientId").Value,
                 User = user,
-                DeliveryAddress = _shoppingCart.GetShoppingCartDeliveryAddress()
+                DeliveryAddress = delivery
             };
             
             return View(shoppingCartViewModel);
@@ -81,6 +86,13 @@ namespace RepoWebShop.Controllers
             {
                 _shoppingCart.AddToCart(selectedPie, 1);
             }
+            return RedirectToAction("Index");
+        }
+
+        public RedirectToActionResult RemoveDelivery()
+        {
+            _shoppingCart.RemoveDelivery();
+
             return RedirectToAction("Index");
         }
 

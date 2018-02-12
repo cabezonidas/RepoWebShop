@@ -19,5 +19,6 @@ namespace RepoWebShop.ViewModels
         public int PreparationTime { get; set; }
         public string FriendlyBookingId { get; internal set; }
         public string CustomarAlias { get; set; }
+        public DeliveryAddress Delivery { get; internal set; }
     }
 }

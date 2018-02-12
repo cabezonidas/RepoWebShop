@@ -37,7 +37,7 @@ namespace RepoWebShop.Models
             }
         }
 
-        private void RenewId()
+        public void RenewId()
         {
             _shoppingCartId = Guid.NewGuid().ToString("D").ToUpper();
             _session.SetString("CartId", _shoppingCartId);

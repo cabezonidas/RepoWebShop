@@ -45,6 +45,8 @@ namespace RepoWebShop.Controllers
 
         public IActionResult Status(string id)
         {
+            if (Request.QueryString.HasValue)
+                _shoppingCart.RenewId();
             Order order = _orderRepository.GetOrderByBookingId(id);
             OrderStatusViewModel orderstatus;
             if (order == null)
@@ -74,6 +76,8 @@ namespace RepoWebShop.Controllers
         [Route("[Controller]/Pending/{id}")]
         public IActionResult Pending(string id)
         {
+            if(Request.QueryString.HasValue)
+                _shoppingCart.RenewId();
             return View("Pending", id);
         }
 
@@ -275,7 +279,7 @@ namespace RepoWebShop.Controllers
                 order.BookingId = _shoppingCart.GetShoppingCartId();
                 order.Status = "reservation";
                 order.PickUpTime = _calendarRepository.GetPickupEstimate(_shoppingCart.GetShoppingCartPreparationTime());
-
+                order.DeliveryAddress = _shoppingCart.GetShoppingCartDeliveryAddress();
                 _orderRepository.CreateOrder(order);
                 _shoppingCart.ClearCart();
                 await _emailRespository.SendOrderConfirmationAsync(order, Request.HostUrl(), null);

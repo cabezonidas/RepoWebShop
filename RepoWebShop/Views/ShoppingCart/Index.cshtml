@@ -68,8 +68,8 @@ else
             {
                 <tr>
                     <td class="text-center">
-                        <a asp-controller="ShoppingCart" asp-action="ClearFromShoppingCart"
-                           asp-route-pieId="1">
+                        <a asp-controller="ShoppingCart" asp-action="RemoveDelivery"
+                           >
                             <span class="glyphicon glyphicon-remove remove-item"></span>
                         </a>
                     </td>
@@ -77,13 +77,11 @@ else
 
                     </td>
                     <td class="text-left">
-                        <a href="/PieDetail/Details/1">
                             Delivery: @Model.DeliveryAddress.AddressLine1
-                        </a>
                     </td>
                     <td class="text-right"></td>
                     <td class="text-right">
-                        $ @Model.DeliveryAddress.DeliveryCost
+                        @Model.DeliveryAddress.DeliveryCost.ToString("c")
                     </td>
                 </tr>
             }
@@ -97,8 +95,7 @@ else
                     </td>
                     <td class="text-right">
                         <strong>
-                            @{var total = (Model.ShoppingCartTotal + Model.DeliveryAddress?.DeliveryCost ?? 0).ToString("c");}
-                            @total
+                            @Model.ShoppingCartTotal.ToString("c")
                         </strong>
                     </td>
             </tfoot>

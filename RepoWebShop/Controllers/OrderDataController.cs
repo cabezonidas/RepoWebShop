@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Extensions;
+using System.Threading.Tasks;
+using System.Net.Http;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -28,7 +30,15 @@ namespace RepoWebShop.Controllers
             if (order != null && order.Status == "approved")
                 return Ok();
             else
+            {
+                Task.Run(async () =>
+                {
+                    var apicall = $"http://{Request.Host.ToString()}/api/WebhooksData/OnPaymentNotNotified";
+                    await new HttpClient().GetAsync(apicall);
+                });
+
                 return NotFound();
+            }
         }
 
         [Route("AddComments/{orderId}")]
