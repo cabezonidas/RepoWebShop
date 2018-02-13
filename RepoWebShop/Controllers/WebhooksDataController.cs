@@ -4,6 +4,7 @@ using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,21 +27,9 @@ namespace RepoWebShop.Controllers
         [Route("OnPaymentNotNotified")]
         public async Task<IActionResult> OnPaymentNotNotified()
         {
-            var pendings = _appDbContext.ShoppingCartItems.Select(x => x.ShoppingCartId).Distinct();
-            var payments = await _mp.SearchPaymentAsync(new System.Collections.Generic.Dictionary<string, string>(), 10, 500);
             try
             {
-                var results = ((payments["response"] as Hashtable)["results"] as ArrayList);
-                foreach(Hashtable result in results)
-                {
-                    string bookingId = (result["collection"] as Hashtable)["external_reference"]?.ToString();
-                    string id = (result["collection"] as Hashtable)["id"]?.ToString();
-                    if(pendings.Contains(bookingId))
-                    {
-                        await OnPaymentNotified(id);
-                        return Ok();
-                    }
-                }
+                await CheckPayments();
                 return Ok();
             }
             catch
@@ -48,6 +37,43 @@ namespace RepoWebShop.Controllers
                 return Ok();
             }
         }
+
+        private async Task CheckPayments()
+        {
+            var payments = await _mp.SearchPaymentAsync(new Dictionary<string, string>(), 0, 0);
+            var totalPayments = Int32.Parse(((payments["response"] as Hashtable)["paging"] as Hashtable)["total"].ToString());
+            var chunckSize = 10;
+            for (int i = 0; i < totalPayments / chunckSize; i++)
+                await CheckPaymentsChunck(totalPayments - ((i+1) * chunckSize), chunckSize);
+            var left = totalPayments % chunckSize;
+            if (left > 0)
+                await CheckPaymentsChunck(0, left);
+        }
+
+        private async Task CheckPaymentsChunck(int offset, int limit)
+        {
+            var latestPayments = await LatestPayments(offset, limit);
+            var pendingBookings = _appDbContext.ShoppingCartItems.Select(x => x.ShoppingCartId).Distinct();
+            foreach (var latestPayment in latestPayments)
+                if (pendingBookings.Contains(latestPayment.Key))
+                    await OnPaymentNotified(latestPayment.Value);
+        }
+
+        private async Task<IEnumerable<KeyValuePair<string, string>>> LatestPayments(long offset, long limit)
+        {
+            List<KeyValuePair<string, string>> result = new List<KeyValuePair<string, string>>();
+
+            var latestPayments = await _mp.SearchPaymentAsync(new Dictionary<string, string>(), offset, limit);
+            var paymentsResults = ((latestPayments["response"] as Hashtable)["results"] as ArrayList);
+            foreach (Hashtable payment in paymentsResults)
+            {
+                string bookingId = (payment["collection"] as Hashtable)["external_reference"]?.ToString();
+                string id = (payment["collection"] as Hashtable)["id"]?.ToString();
+                result.Add(new KeyValuePair<string, string>(bookingId, id));
+            }
+            return result;
+        }
+
 
         [Route("OnPaymentNotified/{notificationId}")]
         public async Task<IActionResult> OnPaymentNotified(string notificationId)
