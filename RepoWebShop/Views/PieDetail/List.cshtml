@@ -1,5 +1,6 @@
 ﻿@model PieDetailsListViewModel
 
+    @{ var test = 1;}
 <style>
     h2 {
         margin-top: -5px;
@@ -14,6 +15,12 @@
 <div class="container" id="container">
     <div class="title-container">
         <h1 id="category-title" class="title-logo" />
+    </div>
+    <div>
+        @foreach(var partialView in Model.PieDetails)
+        {
+            @Html.Partial("PieOverviewSummary", partialView)
+        }
     </div>
 </div>
 
@@ -42,30 +49,30 @@
     else
         $('#category-title').append("Productos");
 
-    $(document).ready(function () {
-        LoadPies();
-    });
+    //$(document).ready(function () {
+    //    LoadPies();
+    //});
         
-    function LoadPies() {
-        $.ajax({
-            type: 'GET',
-            url: '/api/PieDetailData/LoadMorePieDetails/' + category,
-            dataType: 'json',
-            success: onLoadSuccess,
-            error: function (ex) { console.log(ex); }
-        });
-        return false;
-    }
+    //function LoadPies() {
+    //    $.ajax({
+    //        type: 'GET',
+    //        url: '/api/PieDetailData/LoadMorePieDetails/' + category,
+    //        dataType: 'json',
+    //        success: onLoadSuccess,
+    //        error: function (ex) { console.log(ex); }
+    //    });
+    //    return false;
+    //}
 
-    function onLoadSuccess(jsonData) {
-        if (jsonData == null) {
-            console.log('no data returned');
-            return;
-        }
-        $.each(jsonData, function (index, row) {
-            $.get("/api/PieDetailData/GetOverview/" + row.pieDetail.pieDetailId, function(data) {
-                $("#container").append(data);
-            });
-        });
-    }
+    //function onLoadSuccess(jsonData) {
+    //    if (jsonData == null) {
+    //        console.log('no data returned');
+    //        return;
+    //    }
+    //    $.each(jsonData, function (index, row) {
+    //        $.get("/api/PieDetailData/GetOverview/" + row.pieDetail.pieDetailId, function(data) {
+    //            $("#container").append(data);
+    //        });
+    //    });
+    //}
 </script>

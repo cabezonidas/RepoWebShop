@@ -66,7 +66,7 @@ namespace RepoWebShop.Controllers
                 Items = _shoppingCart.GetShoppingCartItems(),
                 PickupDate = _calendarRepository.GetPickupEstimate(highestPrepTime),
                 ShoppingCartTotal = total,
-                Mercadolink = await _mp.GetRepoPaymentLinkAsync(total, _bookingId, _friendlyBookingId, Request.Host.ToString(), "La Reposteria", user?.Id),
+                //Mercadolink = await _mp.GetRepoPaymentLinkAsync(total, _bookingId, _friendlyBookingId, Request.Host.ToString(), "La Reposteria", user?.Id),
                 PreparationTime = highestPrepTime,
                 FriendlyBookingId = _friendlyBookingId,
                 Comments = _shoppingCart.GetShoppingCartComments(),

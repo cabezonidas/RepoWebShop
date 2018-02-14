@@ -24,16 +24,13 @@ namespace RepoWebShop.Controllers
         [Route("FindOrderApproved/{bookingId}")]
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> FindOrderApproved(string bookingId)
+        public IActionResult FindOrderApproved(string bookingId)
         {
             var order = _orderRepository.GetOrderByBookingId(bookingId);
             if (order != null && order.Status == "approved")
                 return Ok();
             else
             {
-                var apicall = $"http://{Request.Host.ToString()}/api/WebhooksData/OnPaymentNotNotified";
-                await new HttpClient().GetAsync(apicall);
-
                 return NotFound();
             }
         }

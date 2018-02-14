@@ -9,6 +9,7 @@ using RepoWebShop.Interfaces;
 using RepoWebShop.Extensions;
 using System.Threading.Tasks;
 using RepoWebShop.States;
+using System.Net.Http;
 
 namespace RepoWebShop.Controllers
 {
@@ -46,7 +47,16 @@ namespace RepoWebShop.Controllers
         public IActionResult Status(string id)
         {
             if (Request.QueryString.HasValue)
+            {
                 _shoppingCart.RenewId();
+
+                Task.Run(async () =>
+                {
+                    var apicall = $"http://{Request.Host.ToString()}/api/WebhooksData/OnPaymentNotNotified";
+                    await new HttpClient().GetAsync(apicall);
+                });
+            }
+
             Order order = _orderRepository.GetOrderByBookingId(id);
             OrderStatusViewModel orderstatus;
             if (order == null)
@@ -77,7 +87,15 @@ namespace RepoWebShop.Controllers
         public IActionResult Pending(string id)
         {
             if(Request.QueryString.HasValue)
+            {
                 _shoppingCart.RenewId();
+                Task.Run(async () =>
+                {
+                    var apicall = $"http://{Request.Host.ToString()}/api/WebhooksData/OnPaymentNotNotified";
+                    await new HttpClient().GetAsync(apicall);
+                });
+            }
+
             return View("Pending", id);
         }
 

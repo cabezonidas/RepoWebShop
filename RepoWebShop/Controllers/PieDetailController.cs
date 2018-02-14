@@ -33,6 +33,7 @@ namespace RepoWebShop.Controllers
 
         public ViewResult List(string category)
         {
+
             IEnumerable<PieDetail> pieDetails;
             string currentCategory = string.Empty;
 
@@ -49,25 +50,36 @@ namespace RepoWebShop.Controllers
                    .OrderBy(p => p.Name);
                 currentCategory = _categoryRepository.Categories.FirstOrDefault(c => c.CategoryName == category).CategoryName;
             }
-
-
-            var PieDetailsVM = new List<PieDetailViewModel>();
-            foreach (var pieDetail in pieDetails)
-            {
-                PieDetailsVM.Add(
-                    new PieDetailViewModel()
-                    {
-                        PieDetail = pieDetail,
-                        Pies = _pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == pieDetail.PieDetailId)
-                    }
-                );
-            }
+            var viewProducts = pieDetails.Select(x => (MapDbPieDetailToPieDetailViewModel(x)));
+            //var PieDetailsVM = new List<PieDetailViewModel>();
+            //foreach (var pieDetail in pieDetails)
+            //{
+            //    PieDetailsVM.Add(
+            //        new PieDetailViewModel()
+            //        {
+            //            PieDetail = pieDetail,
+            //            Pies = _pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == pieDetail.PieDetailId)
+            //        }
+            //    );
+            //}
 
             return View(new PieDetailsListViewModel
             {
-                PieDetails = PieDetailsVM,
-                CurrentCategory = currentCategory
+                PieDetails = viewProducts,
+                CurrentCategory = currentCategory,
+
             });
+        }
+
+        private PieDetailViewModel MapDbPieDetailToPieDetailViewModel(PieDetail dbPieDetail)
+        {
+            return new PieDetailViewModel()
+            {
+                IsMobile = this.Request.IsMobile(),
+                PrimaryPicture = _flickrRepository.GetAlbumPictures(dbPieDetail.FlickrAlbumId).PrimaryPicture,
+                PieDetail = dbPieDetail,
+                Pies = _pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == dbPieDetail.PieDetailId)
+            };
         }
 
         public IActionResult Details(int id)

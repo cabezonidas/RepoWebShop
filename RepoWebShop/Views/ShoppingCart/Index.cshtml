@@ -163,10 +163,12 @@ else
                             </td>
                             <td class="image-td-payment1">
                                 <img src="https://imgmp.mlstatic.com/org-img/banners/ar/medios/online/125X125.jpg" title="MercadoPago - Medios de pago" alt="MercadoPago - Medios de pago" width="125" height="125" />
-                                <a id="mercadolink" href="@Model.Mercadolink" name="MP-Checkout" mp-mode="redirect"
+                                <a id="mercadolink" href="#" name="MP-Checkout" mp-mode="redirect" style="display:none;"
                                    class="blue-L-Rn-Ar">
                                     Pagar
                                 </a>
+                                <img src="~/Pictures/Loader.gif" id="mpLoader"/>
+
                             </td>
                         </tr>
                         <tr>
@@ -252,7 +254,7 @@ else
     </div>
 }
 
-<script type="text/javascript">
+    <script type="text/javascript">
     $.ajax({
         type: 'GET',
         url: 'api/ShoppingCartData/GetComments/',
@@ -296,8 +298,16 @@ else
         });
     });
 
+    $.get('/api/ShoppingCartData/GetMercadoPagoLink/', function (data) {
+        $('a#mercadolink').attr('href', data.link);
+        $.getScript("https://www.mercadopago.com/org-img/jsapi/mptools/buttons/render.js", function () {
+            $('#mpLoader').hide();
+            $('#mercadolink').show();
+        });
+    });
 
-</script>
-<script type="text/javascript" src="https://www.mercadopago.com/org-img/jsapi/mptools/buttons/render.js"></script>
+    </script>
+@*
+<script type="text/javascript" src="https://www.mercadopago.com/org-img/jsapi/mptools/buttons/render.js"></script>*@
 
 
