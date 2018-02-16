@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
@@ -13,14 +15,37 @@ namespace RepoWebShop.Repositories
     public class DeliveryRepository : IDeliveryRepository
     {
         private readonly AppDbContext _appDbContext;
-        public DeliveryRepository(AppDbContext appDbContext)
+        private readonly IConfiguration _config;
+        public DeliveryRepository(AppDbContext appDbContext, IConfiguration config)
         {
             _appDbContext = appDbContext;
+            _config = config;
         }
 
-        public void AddDelivery(DeliveryAddress deliveryAddress)
+        public void AddOrUpdateDelivery(DeliveryAddress deliveryAddress)
         {
-            _appDbContext.DeliveryAddresses.Add(deliveryAddress);
+            var existingAddress = _appDbContext.DeliveryAddresses.OrderByDescending(x => x.DeliveryAddressId).FirstOrDefault(x => x.ShoppingCartId == deliveryAddress.ShoppingCartId);
+
+            if (existingAddress != null)
+            {
+                existingAddress.AddressLine1 = deliveryAddress.AddressLine1;
+                existingAddress.Country = deliveryAddress.Country;
+                existingAddress.DeliveryCost = deliveryAddress.DeliveryEstimate;
+                existingAddress.DeliveryInstructions = deliveryAddress.DeliveryInstructions;
+                existingAddress.Distance = deliveryAddress.Distance;
+                existingAddress.State = deliveryAddress.State;
+                existingAddress.StreetName = deliveryAddress.StreetName;
+                existingAddress.StreetNumber = deliveryAddress.StreetNumber;
+                existingAddress.ZipCode = deliveryAddress.ZipCode;
+                existingAddress.User = deliveryAddress.User;
+
+                _appDbContext.DeliveryAddresses.Update(existingAddress);
+            }
+            else
+            {
+                deliveryAddress.Created = DateTime.Now.Zoned(_config.GetSection("LocalZone").Value);
+                _appDbContext.DeliveryAddresses.Add(deliveryAddress);
+            }
             _appDbContext.SaveChanges();
         }
 

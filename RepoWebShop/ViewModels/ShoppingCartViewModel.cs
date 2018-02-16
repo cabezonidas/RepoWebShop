@@ -20,5 +20,7 @@ namespace RepoWebShop.ViewModels
         public string MercadoPagoId { get; set; }
         public ApplicationUser User { get; set; }
         public DeliveryAddress DeliveryAddress { get; set; }
+        public int MaxArsForReservation { get; internal set; }
+        public int MinArsForDelivery { get; internal set; }
     }
 }

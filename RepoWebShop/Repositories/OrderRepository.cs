@@ -105,6 +105,7 @@ namespace RepoWebShop.Models
             var orders = _appDbContext.Orders
                 .Include(x => x.Registration)
                 .Include(x => x.OrderLines)
+                .Include(x => x.DeliveryAddress)
                 .Where(o => o.Status != "draft").ToList();
 
             foreach (var order in orders)

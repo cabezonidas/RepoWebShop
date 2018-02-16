@@ -16,7 +16,7 @@
     var success = new List<string>();
     @if (Model.Payment.GetType() == typeof(OrderReservationNotPaid))
     {
-        info.Add("Esta orden se paga en sucursal.");
+        info.Add("Esta orden se paga con entrega.");
     }
     @if (Model.Payment.GetType() == typeof(OrderMercadoPagoNotPaid))
     {
@@ -37,7 +37,7 @@
     }
     @if (Model.Progress.GetType() == typeof(OrderComplete))
     {
-        success.Add("Orden lista para ser retirada :-)");
+        success.Add("Orden lista para ser entregada :-)");
     }
     @if (Model.Progress.GetType() == typeof(OrderCancelled))
     {
@@ -49,7 +49,7 @@
     }
     @if (Model.Progress.GetType() == typeof(OrderPickedUp))
     {
-        info.Add("Pedido ya fue terminado y retirado.");
+        info.Add("Pedido ya fue terminado y entregado.");
     }
 
 

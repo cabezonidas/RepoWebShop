@@ -28,10 +28,14 @@
             <div class="title-container">
                 <h1 class="title-logo">Delivery</h1>
             </div>
+            <div class="text-center text-muted" style="margin-top:-20px; margin-bottom: 20px;">
+                <h3 >Horarios de envío</h3>
+                <h4 class="">Entre 10:30 y 12:30 o entre 18:00 y 20:00</h4>
+            </div>
             <label asp-for="AddressLine1" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <input asp-for="AddressLine1" id="autocomplete" class="form-control"
-                       placeholder="Ingresa tu dirección"
+                       placeholder="Avenida Jose Maria Moreno 561"
                        onFocus="geolocate()" autocomplete="off" />
                 <div style="margin-top: 5px;">
                     <div class="text-center alert-danger hidden" id="addressNotSupported">
@@ -53,15 +57,10 @@
         <div class="form-group">
             <label asp-for="DeliveryInstructions" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <textarea maxlength="250" asp-for="DeliveryInstructions" placeholder="Ingresa instrucciones de envío" class="form-control" rows="4"></textarea>
+                <textarea maxlength="250" asp-for="DeliveryInstructions" placeholder="Ingresa instrucciones de envío, piso, departamento, unidad, etc.." class="form-control" rows="4"></textarea>
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="col-md-12">
-
-            </div>
-        </div>
 
         <div class="form-group hidden">
             <div class="col-md-2 control-label"></div>
@@ -106,6 +105,9 @@
                 </table>
             </div>
         </div>
+        
+        
+        
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <a asp-action="Index" asp-controller="ShoppingCart" class="btn btn-primary" value="Volver">

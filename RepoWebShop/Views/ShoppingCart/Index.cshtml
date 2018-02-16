@@ -11,6 +11,10 @@
         <h1 class="title-logo">Carrito</h1>
     </div>
 </div>
+<div class="text-center text-muted" style="margin-top:-20px; margin-bottom: 20px;">
+    <h3>Horarios de envío</h3>
+    <h4 class="">Entre 10:30 y 12:30 o entre 18:00 y 20:00</h4>
+</div>
 
 @if (Model.ShoppingCartTotal == 0)
 {
@@ -33,58 +37,59 @@ else
                 </tr>
             </thead>
             <tbody>
-            @foreach (var line in Model.Items)
-            {
-                <tr>
-                    <td class="text-center">
-                        <a asp-controller="ShoppingCart" asp-action="ClearFromShoppingCart"
-                           asp-route-pieId="@line.Pie.PieId">
-                            <span class="glyphicon glyphicon-remove remove-item"></span>
-                        </a>
-                    </td>
-                    <td class="text-center quantity">
-                        <a asp-controller="ShoppingCart" asp-action="RemoveFromShoppingCart"
-                           asp-route-pieId="@line.Pie.PieId">
-                            <span class="fa fa-caret-left"></span>
-                        </a>
-                        @line.Amount
-                        <a asp-controller="ShoppingCart" asp-action="AddToShoppingCart"
-                           asp-route-pieId="@line.Pie.PieId">
-                            <span class="fa fa-caret-right"></span>
-                        </a>
-                    </td>
-                    <td class="text-left">
-                        <a href="/PieDetail/Details/@line.Pie.PieDetailId">
-                            @line.Pie.PieDetail.Name [@line.Pie.Name] - @Model.PreparationTime hs
-                        </a>
-                    </td>
-                    <td class="text-right">@line.Pie.Price.ToString("c")</td>
-                    <td class="text-right">
-                        @((line.Amount * line.Pie.Price).ToString("c"))
-                    </td>
-                </tr>
-            }
-            @if (Model.ShoppingCartTotal >= 500 && Model.DeliveryAddress != null)
-            {
-                <tr>
-                    <td class="text-center">
-                        <a asp-controller="ShoppingCart" asp-action="RemoveDelivery"
-                           >
-                            <span class="glyphicon glyphicon-remove remove-item"></span>
-                        </a>
-                    </td>
-                    <td class="text-center quantity">
-
-                    </td>
-                    <td class="text-left">
-                            Delivery: @Model.DeliveryAddress.AddressLine1
-                    </td>
-                    <td class="text-right"></td>
-                    <td class="text-right">
-                        @Model.DeliveryAddress.DeliveryCost.ToString("c")
-                    </td>
-                </tr>
-            }
+                @foreach (var line in Model.Items)
+                {
+                    <tr>
+                        <td class="text-center">
+                            <a asp-controller="ShoppingCart" asp-action="ClearFromShoppingCart"
+                               asp-route-pieId="@line.Pie.PieId">
+                                <span class="glyphicon glyphicon-remove remove-item"></span>
+                            </a>
+                        </td>
+                        <td class="text-center quantity">
+                            <a asp-controller="ShoppingCart" asp-action="RemoveFromShoppingCart"
+                               asp-route-pieId="@line.Pie.PieId">
+                                <span class="fa fa-caret-left"></span>
+                            </a>
+                            @line.Amount
+                            <a asp-controller="ShoppingCart" asp-action="AddToShoppingCart"
+                               asp-route-pieId="@line.Pie.PieId">
+                                <span class="fa fa-caret-right"></span>
+                            </a>
+                        </td>
+                        <td class="text-left">
+                            <a href="/PieDetail/Details/@line.Pie.PieDetailId">
+                                @line.Pie.PieDetail.Name [@line.Pie.Name] - @Model.PreparationTime hs
+                            </a>
+                        </td>
+                        <td class="text-right">@line.Pie.Price.ToString("c")</td>
+                        <td class="text-right">
+                            @((line.Amount * line.Pie.Price).ToString("c"))
+                        </td>
+                    </tr>
+                }
+                @if (Model.ShoppingCartTotal >= Model.MinArsForDelivery && Model.DeliveryAddress != null)
+                {
+                    <tr>
+                        <td class="text-center">
+                            <a asp-controller="ShoppingCart" asp-action="RemoveDelivery">
+                                <span class="glyphicon glyphicon-remove remove-item"></span>
+                            </a>
+                        </td>
+                        <td class="text-center quantity"></td>
+                        <td class="text-left">
+                            <a asp-action="Index" asp-controller="Delivery" title="@Model.DeliveryAddress.DeliveryInstructions">
+                                Delivery: @Model.DeliveryAddress.AddressLine1
+                            </a>
+                        </td>
+                        <td class="text-right">
+                            @Model.DeliveryAddress.DeliveryCost.ToString("c")
+                        </td>
+                        <td class="text-right">
+                            @Model.DeliveryAddress.DeliveryCost.ToString("c")
+                        </td>
+                    </tr>
+                }
             </tbody>
             <tfoot>
                 <tr>
@@ -101,43 +106,50 @@ else
             </tfoot>
         </table>
 
-        @if(Model.DeliveryAddress == null && Model.ShoppingCartTotal < 500)
+
+
+        @if (Model.DeliveryAddress == null && Model.ShoppingCartTotal < Model.MinArsForDelivery)
         {
-        <div class="animated bounceInUp text-center" >
-            <p style="font-size: 20px;" class="text-muted">Si tu orden es de $500 o más, podés agregar delivery.</p>
-            @if(Model.ShoppingCartTotal >= 500)
-            {
-                <h2>
-                    <a asp-action="Index" asp-controller="DeliveryAddress">Agregar</a>
-                </h2>
-            }
-        </div>
+            <div class="animated bounceInUp text-center">
+                <p style="font-size: 20px;" class="text-muted">Si tu orden es de @Model.MinArsForDelivery.ToString("c") o más, podés agregar delivery.</p>
+                @if (Model.ShoppingCartTotal >= Model.MinArsForDelivery)
+                {
+                    <h2>
+                        <a asp-action="Index" asp-controller="DeliveryAddress">Agregar</a>
+                    </h2>
+                }
+            </div>
         }
-        
-        @if(Model.DeliveryAddress == null && Model.ShoppingCartTotal >= 500)
+
+        @if (Model.DeliveryAddress == null && Model.ShoppingCartTotal >= Model.MinArsForDelivery)
         {
-        <div class="animated bounceInUp text-center">
-            @if(Model.ShoppingCartTotal >= 500)
-            {
-                <h2>
-                    <a class="btn btn-primary" asp-action="Index" asp-controller="Delivery">Agregar envío</a>
-                </h2>
-            }
-            <p style="font-size: 15px;">Si estás dentro de los 3 kms, podemos enviarte el pedido por $60.</p>
-        </div>
+            <div class="animated bounceInUp text-center">
+                @if (Model.ShoppingCartTotal >= Model.MinArsForDelivery)
+                {
+                    <h2>
+                        <a class="btn btn-primary" asp-action="Index" asp-controller="Delivery">Agregar envío</a>
+                    </h2>
+                }
+                <p style="font-size: 15px;">Si estás dentro de los 3 kms, podemos enviarte el pedido.</p>
+            </div>
         }
 
         <br />
         <div class="col-md-2 col-lg-2 col-sm-3">
-            
+
             <div class="text-center">
                 <label class="" style="">Orden lista</label>
                 <div id="pickupDate" class="text-center">
                     @Html.Partial("~/Views/Shared/PickupDate.cshtml", Model.PickupDate)
                 </div>
-                <label class="control-label ">¿Por qué? <a id="moreinfo" href="#estimation-time"><span class="fa fa-question-circle"></span></a></label>
+                <div>
+                    <label class="control-label ">¿Por qué? <a id="moreinfo" href="#estimation-time"><span class="fa fa-question-circle"></span></a></label>
+                </div>
+                <div>
+                    <label class="control-label "><a style="color:black;" asp-action="OpenHours" asp-controller="Calendar">Ver Horarios</a></label>
+                </div>
             </div>
-            
+
         </div>
 
         <div class="col-md-10 col-lg-10 col-sm-9">
@@ -167,7 +179,7 @@ else
                                    class="blue-L-Rn-Ar">
                                     Pagar
                                 </a>
-                                <img src="~/Pictures/Loader.gif" id="mpLoader"/>
+                                <img src="~/Pictures/Loader.gif" id="mpLoader" />
 
                             </td>
                         </tr>
@@ -182,16 +194,16 @@ else
                                 else
                                 {
                                     <div class="alert alert-success" style="margin-left: 30px; margin-right: 30px;">
-                                    @if (!Model.User.PhoneNumberConfirmed)
-                                    {
-                                        <p>@Model.User.FirstName, ¿Querés recibir SMS cuando terminemos? </p>
-                                        <a asp-action="VerifyNumber" asp-controller="Account" asp-route-actionName="Index" asp-route-controllerName="ShoppingCart">Agregar celular</a>
-                                    }
-                                    else
-                                    {
-                                        <p>@Model.User.FirstName, te vamos a avisar cuando la orden está lista al siguiente número +@Model.User.PhoneNumber</p>
-                                        <a asp-action="VerifyNumber" asp-controller="Account" asp-route-actionName="Index" asp-route-controllerName="ShoppingCart">Cambiar</a>
-                                    }
+                                        @if (!Model.User.PhoneNumberConfirmed)
+                                        {
+                                            <p>@Model.User.FirstName, ¿Querés recibir SMS cuando terminemos? </p>
+                                            <a asp-action="VerifyNumber" asp-controller="Account" asp-route-actionName="Index" asp-route-controllerName="ShoppingCart">Agregar celular</a>
+                                        }
+                                        else
+                                        {
+                                            <p>@Model.User.FirstName, te vamos a avisar cuando la orden está lista al siguiente número +@Model.User.PhoneNumber</p>
+                                            <a asp-action="VerifyNumber" asp-controller="Account" asp-route-actionName="Index" asp-route-controllerName="ShoppingCart">Cambiar</a>
+                                        }
                                     </div>
                                 }
                             </td>
@@ -211,11 +223,14 @@ else
                                 <img class="" src="~/Pictures/logo.png" width="125">
                             </td>
                             <td class="desc-td-payment2">
-                                <p class="">Pagalo cuando lo retirás.</p>
+                                <p class="">Pagalo cuando lo recibís.</p>
                                 <p class="">Deberás disponer de una cuenta con nosotros.</p>
                                 <p class="">Te mandamos un SMS cuando la orden está lista.</p>
-                                <p class="">Válido solamente para compras de hasta $500.</p>
-                                <a class="btn btn-primary submit-btn" asp-controller="Order" asp-action="Checkout">Reservar</a>
+                                <p class="">Válido solamente para compras de hasta @Model.MaxArsForReservation.ToString("c")</p>
+                                @if (Model.ShoppingCartTotal <= Model.MaxArsForReservation)
+                                {
+                                    <a class="btn btn-primary submit-btn" asp-controller="Order" asp-action="Checkout">Reservar</a>
+                                }
                             </td>
                         </tr>
                     </tbody>
@@ -254,7 +269,7 @@ else
     </div>
 }
 
-    <script type="text/javascript">
+<script type="text/javascript">
     $.ajax({
         type: 'GET',
         url: 'api/ShoppingCartData/GetComments/',
@@ -299,15 +314,15 @@ else
     });
 
     $.get('/api/ShoppingCartData/GetMercadoPagoLink/', function (data) {
-        $('a#mercadolink').attr('href', data.link);
+        console.log(data)
+        $('a#mercadolink').attr('href', data.link.result);
         $.getScript("https://www.mercadopago.com/org-img/jsapi/mptools/buttons/render.js", function () {
             $('#mpLoader').hide();
             $('#mercadolink').show();
         });
     });
 
-    </script>
-@*
-<script type="text/javascript" src="https://www.mercadopago.com/org-img/jsapi/mptools/buttons/render.js"></script>*@
+</script>
+
 
 

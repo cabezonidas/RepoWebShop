@@ -22,6 +22,8 @@ namespace RepoWebShop.Controllers
         private readonly string _friendlyBookingId;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private int _minimumArsForOrderDelivery;
+        private int _maxArsForReservation;
 
 
         public ShoppingCartController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration config, ICalendarRepository calendarRepository, IPieRepository pieRepository, IShoppingCartRepository shoppingCart, IMercadoPago mp)
@@ -35,6 +37,8 @@ namespace RepoWebShop.Controllers
             _friendlyBookingId = _bookingId.Length >= 6 ? _bookingId?.Substring(_bookingId.Length - 6, 6) ?? string.Empty : String.Empty;
             _calendarRepository = calendarRepository;
             _mp = mp;
+            _minimumArsForOrderDelivery = _config.GetValue<int>("MinimumArsForOrderDelivery");
+            _maxArsForReservation = _config.GetValue<int>("MaxArsForReservation");
         }
 
         public IActionResult TrolleyIcon()
@@ -49,20 +53,17 @@ namespace RepoWebShop.Controllers
         public async Task<ViewResult> Index()
         {
             var items = _shoppingCart.GetShoppingCartItems();
-            //_shoppingCart.ShoppingCartItems = items;
             var totalItems = _shoppingCart.GetShoppingCartTotal();
             var highestPrepTime = _shoppingCart.GetShoppingCartPreparationTime();
 
             var user = await _userManager.GetUser(_signInManager);
             var delivery = _shoppingCart.GetShoppingCartDeliveryAddress();
-            var deliveryCost = (totalItems >= 500 && delivery != null) ? delivery.DeliveryCost : 0;
+            var deliveryCost = (totalItems >= 200 && delivery != null) ? delivery.DeliveryCost : 0;
 
             var total = totalItems + deliveryCost;
 
             var shoppingCartViewModel = new ShoppingCartViewModel
             {
-                
-                //ShoppingCart = _shoppingCart,
                 Items = _shoppingCart.GetShoppingCartItems(),
                 PickupDate = _calendarRepository.GetPickupEstimate(highestPrepTime),
                 ShoppingCartTotal = total,
@@ -72,7 +73,9 @@ namespace RepoWebShop.Controllers
                 Comments = _shoppingCart.GetShoppingCartComments(),
                 MercadoPagoId = _config.GetSection("MercadoPagoClientId").Value,
                 User = user,
-                DeliveryAddress = delivery
+                DeliveryAddress = delivery,
+                MaxArsForReservation = _maxArsForReservation,
+                MinArsForDelivery = _minimumArsForOrderDelivery
             };
             
             return View(shoppingCartViewModel);

@@ -10,6 +10,7 @@ using RepoWebShop.Extensions;
 using System.Threading.Tasks;
 using RepoWebShop.States;
 using System.Net.Http;
+using Microsoft.Extensions.Configuration;
 
 namespace RepoWebShop.Controllers
 {
@@ -24,8 +25,11 @@ namespace RepoWebShop.Controllers
         private readonly IMapper _mp;
         private readonly ICalendarRepository _calendarRepository;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IConfiguration _config;
+        private int _minimumArsForOrderDelivery;
+        private int _maxArsForReservation;
 
-        public OrderController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ICalendarRepository calendarRepository, IMapper mp, IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, IShoppingCartRepository shoppingCart, IAccountRepository accountRepository)
+        public OrderController(IConfiguration config, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ICalendarRepository calendarRepository, IMapper mp, IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, IShoppingCartRepository shoppingCart, IAccountRepository accountRepository)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -36,12 +40,22 @@ namespace RepoWebShop.Controllers
             _emailRespository = emailRespository;
             _mp = mp;
             _calendarRepository = calendarRepository;
+            _config = config;
+            _minimumArsForOrderDelivery = _config.GetValue<int>("MinimumArsForOrderDelivery");
+            _maxArsForReservation = _config.GetValue<int>("MaxArsForReservation");
         }
 
         public IActionResult EmailNotification(int id)
         {
             var viewModel = _orderRepository.GetEmailData(id, Request.HostUrl());
             return View(viewModel);
+        }
+
+        public IActionResult EmailSentNotification(int id)
+        {
+            var order = _orderRepository.GetOrder(id);
+
+            return View(order.Email);
         }
 
         public IActionResult Status(string id)
@@ -182,52 +196,28 @@ namespace RepoWebShop.Controllers
         }
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult InProgress()
-        {
-            return View(_orderRepository.GetOrdersInProgress());
-        }
+        public IActionResult InProgress() => View(_orderRepository.GetOrdersInProgress());
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult Cancelled()
-        {
-            return View(_orderRepository.GetOrdersCancelled());
-        }
+        public IActionResult Cancelled() => View(_orderRepository.GetOrdersCancelled());
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult Completed()
-        {
-            return View(_orderRepository.GetOrdersCompleted());
-        }
+        public IActionResult Completed() => View(_orderRepository.GetOrdersCompleted());
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult PickedUp()
-        {
-            return View(_orderRepository.GetOrdersPickedUp());
-        }
+        public IActionResult PickedUp() => View(_orderRepository.GetOrdersPickedUp());
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult Returned()
-        {
-            return View(_orderRepository.GetOrdersReturned());
-        }
+        public IActionResult Returned() => View(_orderRepository.GetOrdersReturned());
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult Refunded()
-        {
-            return View(_orderRepository.GetOrdersRefunded());
-        }
+        public IActionResult Refunded() => View(_orderRepository.GetOrdersRefunded());
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult NotYetPaid() 
-        {
-            return View(_orderRepository.GetOrdersPickedUpWithPendingPayment());
-        }
+        public IActionResult NotYetPaid() => View(_orderRepository.GetOrdersPickedUpWithPendingPayment());
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult AllOrders()
-        {
-            return View(_orderRepository.GetAll());
-        }
+        public IActionResult AllOrders() => View(_orderRepository.GetAll());
 
         [Authorize(Roles = "Administrator")]
         public IActionResult Detail(int id)
@@ -236,9 +226,7 @@ namespace RepoWebShop.Controllers
             if (order != null)
             {
                 var items = _orderRepository.GetOrderDetails(order.OrderId);
-
                 var orderDetails = new OrderDetailsViewModel(order, items);
-
                 return View(orderDetails);
             }
             else
@@ -278,7 +266,9 @@ namespace RepoWebShop.Controllers
             order.PhoneNumber = _currentUser.PhoneNumber;
             order.OrderTotal = _shoppingCart.GetShoppingCartTotal();
 
-            if(order.OrderTotal > 500)
+            var delivery = _shoppingCart.GetShoppingCartDeliveryAddress();
+
+            if (order.OrderTotal + (delivery?.DeliveryCost ?? 0) > _maxArsForReservation)
             {
                 ModelState.AddModelError("MaxValueReached", "El monto de la reserva supera el límite admitido. Deberás usar Mercado Pago.");
             }
@@ -297,7 +287,7 @@ namespace RepoWebShop.Controllers
                 order.BookingId = _shoppingCart.GetShoppingCartId();
                 order.Status = "reservation";
                 order.PickUpTime = _calendarRepository.GetPickupEstimate(_shoppingCart.GetShoppingCartPreparationTime());
-                order.DeliveryAddress = _shoppingCart.GetShoppingCartDeliveryAddress();
+                order.DeliveryAddress = delivery;
                 _orderRepository.CreateOrder(order);
                 _shoppingCart.ClearCart();
                 await _emailRespository.SendOrderConfirmationAsync(order, Request.HostUrl(), null);

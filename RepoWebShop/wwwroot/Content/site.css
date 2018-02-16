@@ -28,10 +28,10 @@ section {
     border-color: maroon !important;
 }
 
-.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
-    background-color: firebrick !important;
-    border-color: maroon !important;
-}
+    .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
+        background-color: firebrick !important;
+        border-color: maroon !important;
+    }
 
 .btn-repo {
     background-color: #883636 !important;
@@ -47,6 +47,7 @@ h1 {
 
 div.title-container {
     text-align: center;
+    text-shadow: 0px 0px 10px rgba(31, 31, 33, 0.9);
 }
 
 h1.title-logo {

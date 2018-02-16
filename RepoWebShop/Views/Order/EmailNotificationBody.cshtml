@@ -70,19 +70,32 @@
             @if(Model.Delivery != null)
             {
             <tr>
-                <td style='padding:2px; text-align:center;'></td>
-                <td style='padding:2px; text-align:left;'>@Model.Delivery.AddressLine1</td>
-                <td style='padding:2px; text-align:right;'></td>
+                <td style='padding:2px; text-align:center;'>1</td>
+                <td style='padding:2px; text-align:left;'>Envío: @Model.Delivery.AddressLine1</td>
+                <td style='padding:2px; text-align:right;'>@Model.Delivery.DeliveryCost</td>
                 <td style='padding:2px; text-align:right;'>@Model.Delivery.DeliveryCost</td>
             </tr>
 
             }
 
         </table>
+
+        @if(Model.Delivery != null && !string.IsNullOrWhiteSpace(Model.Delivery.DeliveryInstructions))
+        {
+            <br />
+            <p><strong>Instrucciones de envío</strong></p>
+            <p class="text-muted">@Model.Delivery.DeliveryInstructions</p>
+        }
+        @if(Model.Delivery != null)
+        {
+            <br />
+            <p><strong>Horarios de envío</strong></p>
+            <p class="text-muted">Entre 10:30 y 12:30 o entre 18:00 y 20:00</p>
+        }
         @if (!String.IsNullOrEmpty(Model.Comments))
-    {
-        <p><strong>Comentarios</strong></p><p>@Model.Comments</p>
-}
+        {
+            <p><strong>Comentarios</strong></p><p>@Model.Comments</p>
+        }
         <br />
         <p><strong>Importante</strong></p>
         <p>Antes de pasar a buscar tu pedido, fijate nuestros <a href='@Model.AbsoluteUrl/Calendar/OpenHours' target="_blank">horarios de atención</a>.</p>

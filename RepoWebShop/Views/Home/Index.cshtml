@@ -17,39 +17,37 @@
 
 <header class="intro-header" id="intro-header">
     <div class="parallax-window" data-parallax="scroll" data-image-src="@background">
-        @*<div class="parallax-window" data-parallax="scroll" data-image-src="/Pictures/index.jpg">*@
         <br />
 
         <div class="">
             @Html.Partial("~/Views/Shared/Logo.cshtml")
-        </div>
-
-
-        @*<img class="img-responsive animated bounceInLeft" alt="La Reposteria Shop'" src="~/Pictures/logo.png" />*@
-        <div class="container">
-            <div class="intro-message">
-                <div class="row">
-                    <div class="animated fadeInLeftBig">
-                            <a asp-action="List" asp-controller="PieDetail" style="color:ghostwhite; border-radius: 5px; padding: 15px; font-size: 100px; ">
-                                @*<span style="font-size: larger" class="fa fa-shopping-cart">
-
-                                </span>*@
-                                <img src="~/Pictures/Cart-1.png" style="width: 150px;" />
+            <div class="" style="color:papayawhip; padding: 10px;border-radius: 5px; text-shadow: 0px 0px 10px rgba(31, 31, 33, 0.9);">
+                <h1 class="hidden-xs" >Repostería Artesanal</h1>
+                <div class="intro-message">
+                    <div class="">
+                        <div class="animated" style="" id="buy-btn">
+                            <a asp-action="List" asp-controller="PieDetail" style="color: papayawhip; padding: 15px; font-size: 60px;  ">
+                                <div class="" >
+                                    <div class="hidden-xs">
+                                        <span class="fa fa-shopping-cart"></span>
+                                        <hr class="intro-divider">
+                                    </div>
+                                    <h1 class="text-center " >¡Comprar!</h1>
+                                </div>
                             </a>
+                        </div>
                     </div>
-                    <hr class="intro-divider">
-                    <h1 class="">Repostería Artesanal</h1>
+                    <br />
+                    @Html.Partial("ArrowDown", "#services")
                 </div>
-                <br />
-                @Html.Partial("ArrowDown", "#services")
             </div>
         </div>
+
     </div>
 </header>
 
 
 
-@Html.Partial("~/Views/Services/Index.cshtml")
 
 @if(Model.PiesOfTheWeek.Count() > 0)
 {
@@ -60,13 +58,17 @@
             </div>
             <div class="row pie-of-week-carousel">
                 @foreach (var pie in Model.PiesOfTheWeek)
-                {
-                    @Html.Partial("PieOverviewSummary", pie)
-                }
+        {
+            @Html.Partial("PieOverviewSummary", pie)
+}
             </div>
+            <a asp-action="List" asp-controller="PieDetail">
+                <h2 class="text-muted text-center">Ver más</h2>
+            </a>
         </div>
     </section>
 }
+@Html.Partial("~/Views/Services/Index.cshtml")
 
 <section id="location">
         <div class="title-container">
@@ -127,4 +129,14 @@
         variableWidth: true
     });
 
+    $(document).ready(function () {
+        setInterval(function () {
+            setTimeout(function () {
+                $('#buy-btn').addClass('flash');
+            }, 2000);
+            setTimeout(function () {
+                $('#buy-btn').removeClass('flash');
+            }, 1000);
+        }, 5000)
+    });
 </script>

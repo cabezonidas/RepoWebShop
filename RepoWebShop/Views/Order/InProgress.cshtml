@@ -63,6 +63,10 @@
 
                             items.Add(line);
                         }
+                        @if (order.DeliveryAddress != null)
+                        {
+                            items.Add("Envío: " +order.DeliveryAddress.AddressLine1?.Split(",")?.FirstOrDefault() ?? "");
+                        }
                         @Html.Raw(String.Join("<br/>", items.ToArray()))
                     </td>
                     <td>$@order.OrderTotal</td>
@@ -86,7 +90,9 @@
 </div>
 
 <script type="text/javascript">
-    $('#orders').DataTable();
+    $('#orders').DataTable({
+        pageLength: 25
+    });
 
     function pickedUp(id) {
         $('a#' + id).hide();

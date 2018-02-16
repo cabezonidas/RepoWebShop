@@ -5,6 +5,7 @@ using System.Linq;
 using RepoWebShop.Models;
 using RepoWebShop.Interfaces;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 
 namespace RepoWebShop.Repositories
 {
@@ -14,34 +15,30 @@ namespace RepoWebShop.Repositories
         private readonly IMapper _mapper;
         private readonly ICalendarRepository _calendarRepository;
         private readonly ShoppingCart _shoppingCart;
+        private readonly IConfiguration _config;
+        private int _minimumArsForOrderDelivery;
+        private int _maxArsForReservation;
 
-        public ShoppingCartRepository(ShoppingCart shoppingCart, IMapper mapper, AppDbContext appDbContext, ICalendarRepository calendarRepository)
+        public ShoppingCartRepository(IConfiguration config, ShoppingCart shoppingCart, IMapper mapper, AppDbContext appDbContext, ICalendarRepository calendarRepository)
         {
+            _config = config;
             _appDbContext = appDbContext;
             _shoppingCart = shoppingCart;
             _mapper = mapper;
             _calendarRepository = calendarRepository;
+
+            _minimumArsForOrderDelivery = _config.GetValue<int>("MinimumArsForOrderDelivery");
+            _maxArsForReservation = _config.GetValue<int>("MaxArsForReservation");
         }
 
-        private ShoppingCartComment GetShoppingCartComments(string bookingId)
-        {
-            return _appDbContext.ShoppingCartComments.FirstOrDefault(x => x.ShoppingCartId == bookingId);
-        }
+        private ShoppingCartComment GetShoppingCartComments(string bookingId) =>
+            _appDbContext.ShoppingCartComments.FirstOrDefault(x => x.ShoppingCartId == bookingId);
 
-        public IQueryable<ShoppingCartItem> GetItems(string bookingId)
-        {
-            return _appDbContext.ShoppingCartItems.Where(x => x.ShoppingCartId == bookingId).Include(x => x.Pie).ThenInclude(x => x.PieDetail);
-        }
+        public IQueryable<ShoppingCartItem> GetItems(string bookingId)=>
+            _appDbContext.ShoppingCartItems.Where(x => x.ShoppingCartId == bookingId).Include(x => x.Pie).ThenInclude(x => x.PieDetail);
 
-        public ShoppingCartComment GetComments(string shoppingCartId)
-        {
-            var shoppingCartComment = _appDbContext.ShoppingCartComments
-                .Where(c => c.ShoppingCartId == shoppingCartId)
-                .OrderByDescending(c => c.Created)
-                .FirstOrDefault();
-
-            return shoppingCartComment;
-        }
+        public ShoppingCartComment GetComments(string shoppingCartId) =>
+            _appDbContext.ShoppingCartComments.Where(c => c.ShoppingCartId == shoppingCartId).OrderByDescending(c => c.Created).FirstOrDefault();
 
         public string ClearComments(string bookingId)
         {
@@ -64,10 +61,7 @@ namespace RepoWebShop.Repositories
 
         /////////////////////////////////////////////////////////////////////////////
 
-        public string GetShoppingCartComments()
-        {
-            return GetComments(_shoppingCart.ShoppingCartId)?.Comments;
-        }
+        public string GetShoppingCartComments() => GetComments(_shoppingCart.ShoppingCartId)?.Comments;
 
         public int GetShoppingCartPreparationTime()
         {
@@ -93,9 +87,7 @@ namespace RepoWebShop.Repositories
             var shoppingCartItem =
                 _appDbContext.ShoppingCartItems.SingleOrDefault(
                     s => s.Pie.PieId == pieId && s.ShoppingCartId == _shoppingCart.ShoppingCartId);
-
             _appDbContext.ShoppingCartItems.Remove(shoppingCartItem);
-
             _appDbContext.SaveChanges();
         }
 
@@ -113,13 +105,10 @@ namespace RepoWebShop.Repositories
                     Pie = pie,
                     Amount = 1
                 };
-
                 _appDbContext.ShoppingCartItems.Add(shoppingCartItem);
             }
             else
-            {
                 shoppingCartItem.Amount++;
-            }
             _appDbContext.SaveChanges();
         }
 
@@ -149,13 +138,8 @@ namespace RepoWebShop.Repositories
             return localAmount;
         }
 
-        public List<ShoppingCartItem> GetShoppingCartItems()
-        {
-            return _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == _shoppingCart.ShoppingCartId)
-                        .Include(s => s.Pie)
-                        .Include(s => s.Pie.PieDetail)
-                        .ToList();
-        }
+        public List<ShoppingCartItem> GetShoppingCartItems() =>
+            _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == _shoppingCart.ShoppingCartId).Include(s => s.Pie).Include(s => s.Pie.PieDetail).ToList();
 
         public void ClearCart()
         {
@@ -172,35 +156,18 @@ namespace RepoWebShop.Repositories
             _appDbContext.SaveChanges();
         }
 
-        public decimal GetShoppingCartTotal()
-        {
-            var total = _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == _shoppingCart.ShoppingCartId)
-                .Select(c => c.Pie.Price * c.Amount).Sum();
-            return total;
-        }
+        public decimal GetShoppingCartTotal() =>
+            _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == _shoppingCart.ShoppingCartId).Select(c => c.Pie.Price * c.Amount).Sum();
 
-        public string GetShoppingCartId()
-        {
-            return _shoppingCart.ShoppingCartId;
-        }
+        public string GetShoppingCartId() => _shoppingCart.ShoppingCartId;
 
-        public DeliveryAddress GetShoppingCartDeliveryAddress()
-        {
-            if(this.GetShoppingCartTotal() >= 500)
-                return _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.ShoppingCartId == _shoppingCart.ShoppingCartId);
-            return null;
-        }
+        public DeliveryAddress GetShoppingCartDeliveryAddress() =>
+            GetShoppingCartTotal() >= _minimumArsForOrderDelivery ? _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.ShoppingCartId == _shoppingCart.ShoppingCartId) : null;
 
-        public DeliveryAddress GetDelivery(string bookingId)
-        {
-            var result = _appDbContext.DeliveryAddresses.Where(x => x.ShoppingCartId == bookingId);
-            return result.FirstOrDefault();
-        }
+        public DeliveryAddress GetDelivery(string bookingId) =>
+            _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.ShoppingCartId == bookingId);
 
-        public void RenewId()
-        {
-            _shoppingCart.RenewId();
-        }
+        public void RenewId() => _shoppingCart.RenewId();
 
         public void RemoveDelivery()
         {

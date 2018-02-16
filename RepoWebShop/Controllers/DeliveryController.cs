@@ -20,9 +20,9 @@ namespace RepoWebShop.Controllers
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly ShoppingCart _shoppingCart;
+        private readonly IShoppingCartRepository _shoppingCart;
 
-        public DeliveryController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IDeliveryRepository deliveryRepository, IMapper mapper, ShoppingCart shoppingCart)
+        public DeliveryController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IDeliveryRepository deliveryRepository, IMapper mapper, IShoppingCartRepository shoppingCart)
         {
             _deliveryRepository = deliveryRepository;
             _mapper = mapper;
@@ -31,7 +31,14 @@ namespace RepoWebShop.Controllers
             _signInManager = signInManager;
         }
 
-        public IActionResult Index() => View();
+        public IActionResult Index()
+        {
+            var model = _shoppingCart.GetShoppingCartDeliveryAddress();
+
+            var viewModel = _mapper.Map<DeliveryAddress, DeliveryAddressViewModel>(model);
+
+            return View(viewModel);
+        }
 
         [HttpPost]
         public async Task<IActionResult> Index(DeliveryAddressViewModel deliveryAddres)
@@ -51,9 +58,10 @@ namespace RepoWebShop.Controllers
             }
 
             var delivery = _mapper.Map<DeliveryAddressViewModel, DeliveryAddress>(deliveryAddres);
-            delivery.ShoppingCartId = _shoppingCart.ShoppingCartId;
-            delivery.DeliveryCost = 60;
+            delivery.ShoppingCartId = _shoppingCart.GetShoppingCartId();
+            delivery.DeliveryCost = delivery.DeliveryEstimate;
             delivery.Distance = distance;
+            
 
             var user = await _userManager.GetUser(_signInManager);
             if (user != null)
@@ -61,7 +69,7 @@ namespace RepoWebShop.Controllers
 
             try
             {
-                _deliveryRepository.AddDelivery(delivery);
+                _deliveryRepository.AddOrUpdateDelivery(delivery);
             }
             catch(Exception ex)
             {

@@ -108,6 +108,26 @@
                 @{var cancelled = Model.Order.Cancelled ? "<div class='text-muted'>Pedido cancelado</div>" : "";}
                 <td colspan="2" id="">@Model.Order.StatusSpanish @Html.Raw(cancelled)</td>
             </tr>
+            @if(Model.Order.DeliveryAddress != null)
+            {
+                <tr>
+                    <td><strong>Envío</strong></td>
+                    <td colspan="2">@Model.Order.DeliveryAddress.AddressLine1</td>
+                </tr>
+                <tr>
+                    <td><strong>Costo envío</strong></td>
+                    <td colspan="2">@Model.Order.DeliveryAddress.DeliveryCost</td>
+                </tr>
+                @if(!String.IsNullOrWhiteSpace(Model.Order.DeliveryAddress.DeliveryInstructions))
+                {
+                <tr>
+                    <td><strong>Instrucciones de envío</strong></td>
+                    <td colspan="2">@Model.Order.DeliveryAddress.DeliveryInstructions</td>
+                </tr>
+                }
+            }
+
+
             <tr>
                 <td><strong>Total</strong></td>
                 <td colspan="2">@Model.Order.OrderTotal</td>
@@ -119,14 +139,14 @@
 
                 </td>
             </tr>
-            @{ 
-                if(!String.IsNullOrEmpty(Model.Order.CustomerComments))
-                {
-                    <tr>
-                        <td><strong>Comentarios del cliente</strong></td>
-                        <td colspan="2">@Model.Order.CustomerComments</td>
-                    </tr>
-                }
+            @{
+        if (!String.IsNullOrEmpty(Model.Order.CustomerComments))
+        {
+            <tr>
+                <td><strong>Comentarios del cliente</strong></td>
+                <td colspan="2">@Model.Order.CustomerComments</td>
+            </tr>
+}
             }
             <tr>
                 <td><strong>Comentarios Administrativos</strong></td>
@@ -164,9 +184,9 @@
                 <td colspan="2">
                     <div>
                         @if (Model.Order.Email != null)
-                        {
-                            <p><strong>@Model.Order.Email?.To</strong> <a href="/Order/EmailNotification/@Model.Order.OrderId" target="_blank">Ver</a></p>
-                        }
+                {
+                    <p><strong>@Model.Order.Email?.To</strong> <a href="/Order/EmailSentNotification/@Model.Order.OrderId" target="_blank">Ver</a></p>
+        }
                     </div>
                 </td>
             </tr>

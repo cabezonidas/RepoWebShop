@@ -24,7 +24,8 @@
     @if (ViewContext.ModelState.ErrorCount == 0)
     {
         <div class="warning">
-            <h1 class="alert alert-warning" style="max-width:400px; margin: auto;">Importante</h1>
+            <br />
+            <h1 class="" style="max-width:400px; margin: auto;">Importante</h1>
             <h2>Estás a nada de disfrutar nuestros productos.</h2>
             <h4>Antes de continuar, por favor estate seguro que al confirmar esta reserva estás asumiendo el compromiso de compra.</h4>
 
@@ -87,7 +88,7 @@
 </div>
 <script>
     $.get('/api/ShoppingCartData/GetMercadoPagoLink/', function (data) {
-        $('a#mercadolink').attr('href', data.link);
+        $('a#mercadolink').attr('href', data.link.result);
         $.getScript("https://www.mercadopago.com/org-img/jsapi/mptools/buttons/render.js", function () {
             $('#mp_option').fadeIn();
         })
