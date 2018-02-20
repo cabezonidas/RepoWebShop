@@ -233,7 +233,7 @@ namespace RepoWebShop.Models
                 {
                     var user = order.Registration;
                     _smsRepository.SendSms(user.PhoneNumber,
-                        $"{user.FirstName}, tu pedido {order.FriendlyBookingId} ya está listo para ser retirado. Recordá traer DNI. De las Artes.");
+                        $"{user.FirstName}, ¡Tu pedido {order.FriendlyBookingId} ya está listo! De las Artes.");
                 }
                 _emailRepository.NotifyOrderCompleteAsync(order, absoluteUrl);
             });

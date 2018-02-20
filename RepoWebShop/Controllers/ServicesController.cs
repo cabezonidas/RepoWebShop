@@ -91,6 +91,12 @@ namespace RepoWebShop.Controllers
             return View(_photosRepository.GetGalleryPictures());
         }
 
+        public async Task<ViewResult> FullCatalog()
+        {
+            var access_token = await GetSharePointAccessTokenAsync();
+            return View("FullCatalog", access_token);
+        }
+
         public ViewResult SweetTable()
         {
             return View();

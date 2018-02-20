@@ -1,12 +1,24 @@
 ﻿.carousel.slide {
     height: 150px;
-    margin: 10px;
 }
+
 .carousel-control.left,
 .carousel-control.right {
     background-image: none;
 }
+
 span.glyphicon.glyphicon-chevron-left,
 span.glyphicon.glyphicon-chevron-right {
     color: darkseagreen;
+}
+
+div.prices {
+    margin: 30px;
+}
+button.slick-next.slick-arrow:before {
+    color: #883636;
+}
+
+button.slick-prev.slick-arrow:before {
+    color: #883636;
 }

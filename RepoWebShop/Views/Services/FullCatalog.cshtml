@@ -1,0 +1,57 @@
+﻿@model string
+<div class="container">
+    <div class="title-container">
+        <h1 class="title-logo">Catálogo</h1>
+    </div>
+
+    <div class="text-center">
+        <h4>Además de lo que vendemos por internet, en sucursal podés encontrar cualquiera de los siguientes productos.</h4>
+        <h4>Si querés alguno en particular, contactate con nosotros, y lo hacemos.</h4>
+    </div>
+
+    <div class="container">
+        <table class="hidden" id="table">
+            <thead>
+                <tr>
+                    <th>
+                        Producto
+                    </th>
+                    <th>
+                        Tipo
+                    </th>
+                    <th>
+                        Precio
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $.ajax({
+        url: "https://lareposteria.sharepoint.com/_api/Web/Lists(guid'b10fac5f-d656-49ca-bb9a-589b9362bb94')/items?$select=Title,Precio,Categoria,Temperatura&$filter=Categoria ne 'Lunch'&$orderby=Title asc",
+        headers: { "Authorization": "Bearer " + '@Model', "Accept": "application/json;odata=verbose"}
+    }).done(function (data) {
+
+        for (var i = 0, len = data.d.results.length; i < len; i++) {
+            $('#tbody').append('<tr class="text-capitalize">' +
+                '<td>' + data.d.results[i].Title + '</td>' +
+                '<td>' + data.d.results[i].Categoria + '</td>' +
+                '<td>' + data.d.results[i].Precio + '</td>' +
+                '</tr>');
+        }
+        $('#table').DataTable({
+            pageLength: 50,
+            searching: false,
+            "bPaginate": false,
+            "bLengthChange": false,
+            "bFilter": true,
+            "bInfo": false,
+            language: {
+                searchPlaceholder: "Buscar..."
+            }
+        });
+        $('#table').removeClass('hidden');
+    });
+</script>

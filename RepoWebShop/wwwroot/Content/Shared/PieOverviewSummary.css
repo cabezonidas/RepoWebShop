@@ -8,7 +8,9 @@
     overflow: hidden;
     position: relative;
     border-style: solid;
-    border-color: #00000017;
+    border-color: #907d7d33;
+    border-width: medium;
+    border-radius: 5px;
 }
 
     .crop img {
@@ -45,16 +47,18 @@
             color: forestgreen;
         }
 
+
 p.shortDesc {
-    font-family: 'Playball';
     font-size: large;
     text-align: center;
     color: darkslategrey;
+    height: 50px;
+    overflow: hidden;
 }
 
 .pieOverviewImage {
     position: relative;
-    margin: 5%;
+    margin: 15px;
     overflow: hidden;
 }
 
@@ -65,17 +69,19 @@ p.shortDesc {
     }
 
     .pieOverviewImage:hover img {
-        -moz-transform: scale(1.1);
-        -webkit-transform: scale(1.1);
-        transform: scale(1.1);
+        -moz-transform: scale(1.05);
+        -webkit-transform: scale(1.05);
+        transform: scale(1.05);
+    }
+
+    .pieOverviewImage div.link-detail {
+        color: darkslategrey;
     }
 
 .thumbnail {
     padding: 0;
-    background-color: #dbe9d8;
-    -moz-box-shadow: inset 0 0 5px #423b3b;
-    -webkit-box-shadow: inset 0 0 5px #423b3b;
-    box-shadow: inset 0 0 2px #423b3b;
+    background-color: #e2e2e2;
+    border-color: aliceblue
 }
 
     .thumbnail.pieoftheweek {
@@ -84,7 +90,8 @@ p.shortDesc {
 
 
 .caption {
-    height: 130px;
+    margin-top: -5px;
+    height: 80px;
     overflow: hidden;
 }
 
@@ -118,7 +125,7 @@ p.shortDesc {
 
     .ribbon span {
         font-size: 18px;
-        color: #FFF;
+        color: #fff;
         text-transform: uppercase;
         text-align: center;
         line-height: 40px;
@@ -126,8 +133,8 @@ p.shortDesc {
         -webkit-transform: rotate(-45deg);
         width: 120px;
         display: block;
-        background: #79A70A;
-        background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+        background: #008000;
+        background: linear-gradient(#47a952 0%, #008000 100%);
         box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
         position: absolute;
         top: 13px;
@@ -140,10 +147,10 @@ p.shortDesc {
             left: 0px;
             top: 100%;
             z-index: -1;
-            border-left: 3px solid #79A70A;
+            border-left: 3px solid #078408;
             border-right: 3px solid transparent;
             border-bottom: 3px solid transparent;
-            border-top: 3px solid #79A70A;
+            border-top: 3px solid #078408;
         }
 
         .ribbon span::after {
@@ -153,7 +160,7 @@ p.shortDesc {
             top: 100%;
             z-index: -1;
             border-left: 3px solid transparent;
-            border-right: 3px solid #79A70A;
+            border-right: 3px solid #078408;
             border-bottom: 3px solid transparent;
-            border-top: 3px solid #79A70A;
+            border-top: 3px solid #078408;
         }

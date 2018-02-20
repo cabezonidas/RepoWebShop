@@ -15,7 +15,7 @@
     <meta property="og:image" content="@background" />
 }
 
-<header class="intro-header" id="intro-header">
+<header class="intro-header" id="intro-header" >
     <div class="parallax-window" data-parallax="scroll" data-image-src="@background">
         <br />
 
@@ -28,7 +28,7 @@
                         <div class="animated" style="" id="buy-btn">
                             <a asp-action="List" asp-controller="PieDetail" style="color: papayawhip; padding: 15px; font-size: 60px;  ">
                                 <div class="" >
-                                    <div class="hidden-xs">
+                                    <div class="">
                                         <span class="fa fa-shopping-cart"></span>
                                         <hr class="intro-divider">
                                     </div>
@@ -37,8 +37,9 @@
                             </a>
                         </div>
                     </div>
-                    <br />
-                    @Html.Partial("ArrowDown", "#services")
+                    <div class="hidden-xs">
+                        @Html.Partial("ArrowDown", "#piesoftheweek")
+                    </div>
                 </div>
             </div>
         </div>

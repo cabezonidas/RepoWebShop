@@ -16,7 +16,7 @@ namespace RepoWebShop.Models
 
         [StringLength(100)]
         [Display(Name = "Altura")]
-        [Required(ErrorMessage = "Ingresa una altura.")]
+        [Required(ErrorMessage = "Ingresa una altura válida.")]
         public virtual string StreetNumber { get; set; }
 
         [StringLength(100)]
@@ -25,8 +25,8 @@ namespace RepoWebShop.Models
         public virtual string StreetName { get; set; }
 
         [Display(Name = "Codigo Postal")]
-        [Required(ErrorMessage = "No pudimos comprobar el código postal. Revisa la dirección.")]
-        [StringLength(50, MinimumLength = 4)]
+        //[Required(ErrorMessage = "No pudimos comprobar el código postal. Revisa la dirección.")]
+        //[StringLength(50, MinimumLength = 4)]
         public virtual string ZipCode { get; set; }
 
         [Display(Name = "Provincia")]
@@ -63,17 +63,17 @@ namespace RepoWebShop.Models
         {
             get
             {
-                if (Distance == 0)
-                    return 50;
-                if (Distance > 0 && Distance < 1000)
-                    return 60;
-                if (Distance > 1000 && Distance < 1500)
-                    return 70;
-                if (Distance > 1500 && Distance < 2000)
-                    return 80;
-                if (Distance > 2000 && Distance < 2500)
-                    return 90;
-                return 100;
+                //if (Distance == 0)
+                //    return 50;
+                //if (Distance > 0 && Distance < 1000)
+                //    return 60;
+                //if (Distance > 1000 && Distance < 1500)
+                //    return 70;
+                //if (Distance > 1500 && Distance < 2000)
+                //    return 80;
+                //if (Distance > 2000 && Distance < 2500)
+                //    return 90;
+                return 150;
             }
         }
     }

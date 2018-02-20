@@ -165,7 +165,7 @@
                     </thead>
                     <tbody>
                         @{
-                            foreach (var pie in Model.Pies)
+                            foreach (var pie in Model.Pies.OrderBy(x => x.Price))
                             {
                                 <tr class="static-price">
                                     <td class="unit-name">@pie.Name</td>

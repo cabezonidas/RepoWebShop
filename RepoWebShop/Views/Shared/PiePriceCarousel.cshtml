@@ -7,12 +7,13 @@
 
 <div class="prices" id="@id" style="display:none;">
     @{
-        var pies = Model.Pies.ToArray();
+        var pies = Model.Pies.OrderBy(x => x.Price).ToArray();
         for (int i = 0; i < pies.Count(); i++)
         {
             <div class='price-carousel'>
                 @Html.Partial("PiePriceCarouselItem", pies[i])
             </div>
+            
         }
     }
 </div>
@@ -20,9 +21,9 @@
 <script>
     @{ var selector = "#" + id + ".prices"; }
     $('@selector').slick({
-        arrows: false,
+        arrows: true,
         dots: true,
-        autoplay: true,
+        autoplay: false,
         autoplaySpeed: 2500,
         focusOnSelect: true,
         pauseOnFocus: true,
