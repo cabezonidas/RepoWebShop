@@ -18,12 +18,14 @@ namespace RepoWebShop.Models
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "marcelardec@gmail.com", "Marcela", "Declich");
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "cabeza1961@gmail.com", "Claudio", "Cabeza");
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "luciebenve@gmail.com", "Lucía", "Benvenuto");
+            await CreateUserWithRoleAsync(serviceProvider, "Administrator", "info@delasartes.com.ar", "Admin", "De las Artes");
 
             var hostEnvironment = serviceProvider.GetRequiredService<IHostingEnvironment>();
             if (!hostEnvironment.IsProduction())
             {
                 await CreateUserWithRoleAsync(serviceProvider, "Administrator", "santiag0.l0pez@hotmail.com", "Santiago", "Lopez");
                 await CreateUserWithRoleAsync(serviceProvider, "Administrator", "j_dalmasso@outlook.com", "Juan", "Dalmasso");
+                await CreateUserWithRoleAsync(serviceProvider, "Administrator", "ferchog88@gmail.com", "Fernando", "Galeano");
             }
         }
 

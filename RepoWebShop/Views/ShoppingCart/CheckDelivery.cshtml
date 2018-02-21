@@ -1,0 +1,27 @@
+﻿@model ShoppingCartViewModel
+
+@if (Model.DeliveryAddress == null && Model.ShoppingCartTotal < Model.MinArsForDelivery)
+{
+    <div class="animated bounceInUp text-center">
+        <p style="font-size: 20px;" class="text-muted">Si tu orden es de @Model.MinArsForDelivery.ToString("c") o más, podés agregar delivery.</p>
+        @if (Model.ShoppingCartTotal >= Model.MinArsForDelivery)
+        {
+            <h2>
+                <a asp-action="Index" asp-controller="DeliveryAddress">Agregar</a>
+            </h2>
+        }
+    </div>
+}
+
+@if (Model.DeliveryAddress == null && Model.ShoppingCartTotal >= Model.MinArsForDelivery)
+{
+    <div class="animated bounceInUp text-center">
+        @if (Model.ShoppingCartTotal >= Model.MinArsForDelivery)
+        {
+            <h2>
+                <a class="btn btn-primary" asp-action="Index" asp-controller="Delivery">Agregar envío</a>
+            </h2>
+        }
+        <p style="font-size: 15px;">Si estás dentro de los 3 kms, podemos enviarte el pedido con un cargo adicional.</p>
+    </div>
+}

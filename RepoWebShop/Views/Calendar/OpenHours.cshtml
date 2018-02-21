@@ -1,12 +1,22 @@
 ﻿@model OpenHoursViewModel
+
+@{ 
+    var columns = Model.OpenHours.Any() ? 1 : 0;
+    columns += Model.PublicHolidays.Any() ? 1 : 0;
+    columns += Model.Vacations.Any() ? 1 : 0;
+    columns = 12 / columns;
+}
+
+
+
 @{var daysId = Model.OpenHours.OrderBy(x => x.DayId).Select(x => x.DayId).Distinct(); }
 <div class="container">
-    <div class="col-sm-4 col-lg-4 col-md-4">
+    <div class="col-sm-@columns col-lg-@columns col-md-@columns">
         <div class="title-container">
             <h1 class="text-center title-logo">Horarios</h1>
         </div>
         <div>
-            <table id="horarios" class="table">
+            <table id="horarios" class="table" style="max-width:600px; margin: auto;">
                 <tr>
                     <th></th>
                     <th>Desde</th>
@@ -32,7 +42,7 @@
     </div>        
     @if (Model.PublicHolidays.Any())
     {
-        <div class="col-sm-4 col-lg-4 col-md-4">
+        <div class="col-sm-@columns col-lg-@columns col-md-@columns">
 
         <div class="title-container">
             <h1 class="text-center title-logo">Feriados</h1>
@@ -59,7 +69,7 @@
     } 
     @if (Model.Vacations.Any())
     {
-    <div class="col-sm-4 col-lg-4 col-md-4 text-center">
+    <div class="col-sm-@columns col-lg-@columns col-md-@columns text-center">
         <div class="title-container">
             <h1 class="text-center title-logo">Vacaciones</h1>
         </div>

@@ -1,0 +1,84 @@
+﻿@model ShoppingCartViewModel
+
+<div class="container center-block" id="checkout">
+    <div class="title-container">
+        <h1 class="title-logo">Check out</h1>
+    </div>
+    @Html.Partial("~/Views/ShoppingCart/CheckMobile.cshtml", Model)
+    <style>
+        #mercadopago-payment {
+            background-color: #defff463;
+            border-style: solid;
+            border-color: #b5bcd2;
+            max-width: 600px;
+            margin: 10px auto;
+            padding: 20px;
+            padding-bottom: 0px;
+            border-radius: 5px;
+        }
+
+        #booking-online {
+            background-color: white;
+            border-style: solid;
+            border-color: #008000;
+            max-width: 600px;
+            margin: 10px auto;
+            padding: 25px;
+            border-radius: 5px;
+        }
+    </style>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div id="mercadopago-payment" class="payment-option" style="text-align:center;">
+            <img src="~/Pictures/mercadopago.png" style="margin: 0px auto; width: 80%;" />
+            <div>
+                <br />
+                <h3>Elegís el medio de pago.</h3>
+                <h3>Es súper rápido.</h3>
+                <h3>Sin límite de compra.</h3>
+                <div>
+                    <br />
+                </div>
+            </div>
+            <div style="height:80px" class="hidden" id="mercadolink-container">
+                <a id="mercadolink" href="#" name="MP-Checkout" mp-mode="redirect" class="blue-L-Rn-Ar">
+                    Pagar
+                </a>
+            </div>
+            <img src="~/Pictures/Loader.gif" id="mpLoader" />
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div id="booking-online" class="payment-option" style="text-align:center;">
+        <div>
+            <h1 style="margin-top:20px; color: #008000">Reserva Online</h1>
+            <hr />
+            <h3 style="margin-top: 40px;">Pagalo cuando lo recibís.</h3>
+            <h3>Deberás disponer de una cuenta.</h3>
+            <h3>Válido hasta compras de @Model.MaxArsForReservation.ToString("c")</h3>
+        </div>
+        @if (Model.ShoppingCartTotal <= Model.MaxArsForReservation)
+        {
+        <div >
+            <a style="margin-top:30px;" class="btn btn-primary submit-btn" asp-controller="Order" asp-action="Checkout">Reservar</a>
+        </div>
+        }
+        else
+        {
+        <div>
+            <h4 style="margin-top:50px;" class="text-muted">Monto permitido excedido</h4>
+        </div>
+        }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $.get('/api/ShoppingCartData/GetMercadoPagoLink/', function (data) {
+        $('a#mercadolink').attr('href', data.link.result);
+        $.getScript("https://www.mercadopago.com/org-img/jsapi/mptools/buttons/render.js", function () {
+            $('#mpLoader').hide();
+            $('#mercadolink-container').removeClass('hidden');
+        });
+    });
+
+    $('.payment-option').matchHeight();
+</script>

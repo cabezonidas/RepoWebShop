@@ -116,5 +116,12 @@ namespace RepoWebShop.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public IActionResult CalendarComments(ShoppingCartViewModel vm) => View(vm);
+        public IActionResult CheckDelivery(ShoppingCartViewModel vm) => View(vm);
+        public IActionResult CheckMobile(ShoppingCartViewModel vm) => View(vm);
+        public IActionResult CheckOutOptions(ShoppingCartViewModel vm) => View(vm);
+        public IActionResult Faq(ShoppingCartViewModel vm) => View(vm);
+        public IActionResult ShoppingCartItems(ShoppingCartViewModel vm) => View(vm);
     }
 }

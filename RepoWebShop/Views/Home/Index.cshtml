@@ -20,24 +20,25 @@
         <br />
 
         <div class="">
-            @Html.Partial("~/Views/Shared/Logo.cshtml")
+            <img src="~/Pictures/LogoRepo.PNG" style="width:90%; max-width:380px;" />
+            @*@Html.Partial("~/Views/Shared/Logo.cshtml")*@
             <div class="" style="color:papayawhip; padding: 10px;border-radius: 5px; text-shadow: 0px 0px 10px rgba(31, 31, 33, 0.9);">
-                <h1 class="hidden-xs" >Repostería Artesanal</h1>
+                <h1 class="hidden-xs">Repostería Artesanal</h1>
                 <div class="intro-message">
                     <div class="">
-                        <div class="animated" style="" id="buy-btn">
-                            <a asp-action="List" asp-controller="PieDetail" style="color: papayawhip; padding: 15px; font-size: 60px;  ">
-                                <div class="" >
+                        <div class="animated" style="margin: 0px;" id="buy-btn">
+                            <a asp-action="List" asp-controller="PieDetail" style="color: papayawhip; padding: 15px;font-size: 60px;  ">
+                                <div class="">
                                     <div class="">
                                         <span class="fa fa-shopping-cart"></span>
                                         <hr class="intro-divider">
                                     </div>
-                                    <h1 class="text-center " >¡Comprar!</h1>
+                                    <h1 class="text-center" style="margin-bottom:-25px; font-family:Playball">¡Comprar!</h1>
                                 </div>
                             </a>
                         </div>
                     </div>
-                    <div class="hidden-xs">
+                    <div style="margin-bottom:150px;">
                         @Html.Partial("ArrowDown", "#piesoftheweek")
                     </div>
                 </div>

@@ -5,7 +5,7 @@
     string id = Model.PieDetail.PieDetailId.ToString() + "-" + Guid.NewGuid().ToString();
 }
 
-<div class="prices" id="@id" style="display:none;">
+<div class="prices hidden" id="@id" >
     @{
         var pies = Model.Pies.OrderBy(x => x.Price).ToArray();
         for (int i = 0; i < pies.Count(); i++)
@@ -30,5 +30,5 @@
         pauseOnHover: true,
         pauseOnDotsHover: true
     });
-    $('@selector').show();
+    $('@selector').removeClass('hidden');
 </script>
