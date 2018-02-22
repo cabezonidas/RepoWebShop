@@ -6,14 +6,15 @@
 }
 <br />
 
-<div class="container" style="max-width:600px;">
+<div class="container" >
     <br />
+    <div class="title-container">
+        <h1 class="title-logo">Delivery</h1>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
     <form asp-controller="Delivery" asp-action="Index" class="form-horizontal" method="post" role="form">
         <div class="form-group" id="locationField">
-            <div class="title-container">
-                <h1 class="title-logo">Delivery</h1>
-            </div>
-            <div class="text-center text-muted" style="margin-top:-20px; margin-bottom: 20px;">
+            <div class="text-center text-muted" style="margin-bottom: 20px;">
                 <h3>Horarios de envío</h3>
                 <h4 class="">Entre 10:30 y 12:30 o entre 18:00 y 20:00</h4>
             </div>
@@ -101,11 +102,16 @@
                     </span>
                     Volver
                 </a>
-                <input type="submit" class="btn btn-primary" value="Guardar" />
+                <input type="submit" class="btn btn-primary" value="Guardar envío" />
             </div>
         </div>
     </form>
-    <div id="map" style="height:350px; width:100%;"></div>
+
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        <h3 class="text-muted text-center">Zona de Cobertura</h3>
+        <div id="map" style="height:350px; width:100%;"></div>
+    </div>
 
 
 </div>

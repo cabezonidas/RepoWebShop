@@ -11,10 +11,7 @@
         <h1 class="title-logo">Carrito</h1>
     </div>
 </div>
-<div class="text-center text-muted" style="margin-top:-20px; margin-bottom: 20px;">
-    <h3>Horarios de envío</h3>
-    <h4 class="">Entre 10:30 y 12:30 o entre 18:00 y 20:00</h4>
-</div>
+
 
 @if (Model.ShoppingCartTotal == 0)
 {
@@ -26,10 +23,22 @@
 else
 {
     <div class="container">
-        @Html.Partial("~/Views/ShoppingCart/ShoppingCartItems.cshtml", Model)
-        @Html.Partial("~/Views/ShoppingCart/CheckDelivery.cshtml", Model)
+        <div class="col-lg-10 col-md-10 col-sm-9 col-xs-12">
+            @Html.Partial("~/Views/ShoppingCart/ShoppingCartItems.cshtml", Model)
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
+            @Html.Partial("~/Views/Shared/PickupDate.cshtml", Model.PickupDate)
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            @Html.Partial("~/Views/ShoppingCart/CheckDelivery.cshtml", Model)
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+            @Html.Partial("~/Views/ShoppingCart/Comments.cshtml")
+        </div>
+
         <br />
-        @Html.Partial("~/Views/ShoppingCart/CalendarComments.cshtml", Model)
+
         <br />
     </div>
     @Html.Partial("~/Views/ShoppingCart/CheckOutOptions.cshtml", Model)
@@ -55,6 +64,31 @@ else
             }
         }
     }
+    var myVar = setInterval(getEstimate, 60000);
+    function getEstimate() {
+        $.get('api/CalendarData/GetPickupDate/', function (data) {
+            $('#calendarView').replaceWith(data);
+            //$('#pickupDate').append(data);
+        });
+    }
+
+    $.ajax({
+        type: 'GET',
+        url: 'api/ShoppingCartData/GetComments/',
+        dataType: 'json',
+        success: function (data) {
+            if (data.comments != 'undefined')
+                $('#comments').append(data.comments);
+            else
+                $('#comments').append('');
+        }
+    });
+    $("a").on('click', function () {
+        $.ajax({
+            type: 'GET',
+            url: 'api/ShoppingCartData/AddComments/' + $('#comments').val()
+        });
+    });
 </script>
 
 

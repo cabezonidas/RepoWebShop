@@ -31,7 +31,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var order in Model)
+            @foreach (var order in Model.OrderByDescending(x => x.PickUpTime))
             {
                 string background_color;
                 @if (order.Finished)
@@ -49,7 +49,9 @@
                     <td>
                         @if (order.PickUpTime.HasValue)
                         {
-                            <div>@order.PickUpTime.Value.ToString("yyyy'/'MM'/'dd HH:mm")</div>
+                            <div>
+                                @order.PickUpTime.Value.ToString("yyyy'/'MM'/'dd HH:mm")
+                            </div>
                         }
                     </td>
                     <td>

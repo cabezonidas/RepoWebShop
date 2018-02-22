@@ -1,27 +1,49 @@
 ﻿@model ShoppingCartViewModel
 
+@*<div class="title-container">
+    <h1 class="title-logo">Delivery</h1>
+</div>*@
+<h1 class="text-center" style="margin-top:0px; font-family: Noto Serif;">Delivery</h1>
+<hr />
+<div class="text-center text-muted" style="margin-top:-10px; margin-bottom: 20px;">
+    <h3>Horarios de envío. <a asp-action="Index" asp-controller="Delivery">Ver zonas</a>.</h3>
+    <h4 class="">Entre 10:30 y 12:30 o entre 18:00 y 20:00</h4>
+</div>
 @if (Model.DeliveryAddress == null && Model.ShoppingCartTotal < Model.MinArsForDelivery)
 {
     <div class="animated bounceInUp text-center">
         <p style="font-size: 20px;" class="text-muted">Si tu orden es de @Model.MinArsForDelivery.ToString("c") o más, podés agregar delivery.</p>
-        @if (Model.ShoppingCartTotal >= Model.MinArsForDelivery)
-        {
-            <h2>
-                <a asp-action="Index" asp-controller="DeliveryAddress">Agregar</a>
-            </h2>
-        }
     </div>
 }
 
 @if (Model.DeliveryAddress == null && Model.ShoppingCartTotal >= Model.MinArsForDelivery)
 {
-    <div class="animated bounceInUp text-center">
+    <div class="animated bounceInLeft text-center">
         @if (Model.ShoppingCartTotal >= Model.MinArsForDelivery)
         {
             <h2>
                 <a class="btn btn-primary" asp-action="Index" asp-controller="Delivery">Agregar envío</a>
             </h2>
         }
-        <p style="font-size: 15px;">Si estás dentro de los 3 kms, podemos enviarte el pedido con un cargo adicional.</p>
+        <p style="font-size: 15px;" class="text-muted">El radio de cobertura es 3 kms y el cargo es $150.</p>
+    </div>
+}
+
+@if(Model.DeliveryAddress != null && Model.ShoppingCartTotal >= Model.MinArsForDelivery)
+{
+    <div class="text-center text-muted">
+        <p style="font-size: 18px;" title="@Model.DeliveryAddress.AddressLine1 @Model.DeliveryAddress.DeliveryInstructions">
+            @Model.DeliveryAddress.AddressLine1?.Split(',')?.FirstOrDefault()<br/>
+            @{ 
+                var instructions = Model.DeliveryAddress.DeliveryInstructions;
+                var strlength = Model.DeliveryAddress.DeliveryInstructions?.Length ?? 0;
+                if (strlength > 30)
+                {
+                    instructions = instructions.Substring(0, 30) + "...";
+                }
+            }
+            @instructions
+        </p>
+        <p style="font-size: 18px;"></p>
     </div>
 }

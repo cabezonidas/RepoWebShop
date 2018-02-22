@@ -29,9 +29,9 @@ namespace RepoWebShop.ViewModels
         [Display(Name = "Calle")]
         public override string StreetName { get; set; }
 
-        [Required(ErrorMessage = "Por favor ingrese su código postal")]
-        [Display(Name = "Codigo Postal")]
-        [StringLength(50, MinimumLength = 4)]
+        //[Required(ErrorMessage = "Por favor ingrese su código postal")]
+        //[Display(Name = "Codigo Postal")]
+        //[StringLength(50, MinimumLength = 4)]
         public override string ZipCode { get; set; }
     }
 }

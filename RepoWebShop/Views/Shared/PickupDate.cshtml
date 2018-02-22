@@ -77,14 +77,30 @@
 
 <link href="~/Content/Shared/PickupDate.css" rel="stylesheet" />
 
-<div class="full-date animated bounceIn">
-    <div class="calendar">
-        <div class="month">@mes</div>
-        <div class="weekday">@dia</div>
-        <div class="day">@Model.Day</div>
+<div id="calendarView">
+    <div class="text-center">
+        <label class="" style="">Orden lista</label>
+        <br />
+        <div id="pickupDate" class="text-center">
+            <div class="full-date animated bounceIn">
+                <div class="calendar">
+                    <div class="month">@mes</div>
+                    <div class="weekday">@dia</div>
+                    <div class="day">@Model.Day</div>
+                </div>
+                <div class="time">
+                    @string.Format("{0:hh:mm tt}", Model)
+                </div>
+            </div>
+        </div>
+        <div>
+            <label class="control-label ">¿Por qué? <a id="moreinfo" href="#estimation-time"><span class="fa fa-question-circle"></span></a></label>
+        </div>
+        <div>
+            <label class="control-label "></label>
+        </div>
     </div>
-    <div class="time">
-        @string.Format("{0:hh:mm tt}", Model)
-    </div>
+
 </div>
+
 
