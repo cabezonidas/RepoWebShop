@@ -114,10 +114,10 @@ namespace RepoWebShop.Repositories
                     break;
             }
 
+            var horas = date.Hour <= 9 ? $"0{date.Hour}" : date.Hour.ToString();
             var minutos = date.Minute <= 9 ? $"0{date.Minute}" : date.Minute.ToString();
-            var segundos = date.Second <= 9 ? $"0{date.Second}" : date.Second.ToString();
 
-            return $"{dia} {date.Day} <br/>{mes} {segundos}:{minutos}";
+            return $"{dia} {date.Day} <br/>{mes} {horas}:{minutos}";
 
         }
     }
