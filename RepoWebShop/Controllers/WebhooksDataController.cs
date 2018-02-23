@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
@@ -16,9 +17,11 @@ namespace RepoWebShop.Controllers
         private readonly IPaymentNoticeRepository _paymentNoticeRepository;
         private readonly AppDbContext _appDbContext;
         private readonly IMercadoPago _mp;
+        private readonly IConfiguration _config;
 
-        public WebhooksDataController(IPaymentNoticeRepository paymentNoticeRepository, IMercadoPago mp, AppDbContext appDbContext)
+        public WebhooksDataController(IConfiguration config, IPaymentNoticeRepository paymentNoticeRepository, IMercadoPago mp, AppDbContext appDbContext)
         {
+            _config = config;
             _paymentNoticeRepository = paymentNoticeRepository;
             _mp = mp;
             _appDbContext = appDbContext;
@@ -81,7 +84,7 @@ namespace RepoWebShop.Controllers
             var payment = await _mp.GetPaymentAsync(notificationId);
             if (payment["status"]?.ToString() == "200")
             {
-                PaymentNotice paymentInfo = new PaymentNotice(((payment["response"] as Hashtable)["collection"] as Hashtable));
+                PaymentNotice paymentInfo = new PaymentNotice(((payment["response"] as Hashtable)["collection"] as Hashtable), _config.GetSection("LocalZone").Value);
                 var merchantOrder = await _mp.GetMerchantOrderAsync(paymentInfo.Merchant_Order_Id);
                 if(merchantOrder["status"]?.ToString() == "200")
                     paymentInfo.User_Id = (merchantOrder["response"] as Hashtable)["additional_info"]?.ToString();

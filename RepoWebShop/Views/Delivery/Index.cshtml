@@ -10,16 +10,13 @@
     <div class="title-container">
         <h1 class="title-logo">Delivery</h1>
     </div>
-    <h4 class="text-center text-muted">
-        El costo mínimo es $@Model.MinimumCharge para distancias menores a @(Model.MinimumCharge * 10) metros.<br />
-        Para distancias mayores, el costo es $@Model.CostByBlock por cada $100 metros.
-    </h4>
+
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
     <form asp-controller="Delivery" asp-action="Index" class="form-horizontal" method="post" role="form">
         <div class="form-group" id="locationField">
             <div class="text-center text-muted" style="margin-bottom: 20px;">
                 <h3>Horarios de envío</h3>
-                <h4 class="">Entre 10:30 y 12:30 o entre 18:00 y 20:00</h4>
+                <h4 class="">De Martes a Sábados<br />Entre 10:30 y 12:30 o entre 18:00 y 20:00</h4>
             </div>
             <label asp-for="AddressLine1" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -109,10 +106,20 @@
             </div>
         </div>
     </form>
-
+    <div class="text-center text-muted">
+        <h3 class="">¿Qué pasa si el delivery no llega a tu zona?</h3>
+        <h4>Podemos hacer el envío dependiendo del monto y la antelación del pedido.</h4>
+        <h4>Para eso deberás ponerte en contacto con nosotros.</h4>
+        <h4>Llamanos al <a href="tel:+5491149250262">4925-0262</a> o escribirnos a <a href="mailto:info@@delasartes.com.ar">info@@delasartes.com.ar</a></h4>
+        <h4>Tambien podés ponerte en contacto a través de nuestros medios sociales.</h4>
+    </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
         <h3 class="text-muted text-center">Zona de Cobertura - Radio de 3kms</h3>
+        <h4 class="text-center text-muted">
+            El costo mínimo es $@Model.MinimumCharge para distancias menores a @(Model.MinimumCharge * 10) metros.<br />
+            Para distancias mayores, el costo es $@Model.CostByBlock por cada 100 metros.
+        </h4>
         <div id="map" style="height:350px; width:100%;"></div>
     </div>
 
@@ -230,10 +237,10 @@
         for (var city in citymap) {
             // Add the circle for this city to the map.
             var cityCircle = new google.maps.Circle({
-                strokeColor: '#FF0000',
+                strokeColor: '#006600',
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
-                fillColor: '#FF0000',
+                fillColor: '#66ff66',
                 fillOpacity: 0.35,
                 map: map,
                 center: citymap[city].center,

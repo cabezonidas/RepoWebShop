@@ -52,7 +52,7 @@
                         @if (order.PickUpTime.HasValue)
                         {
                         <div>
-                            @Html.Raw(_calendarRepository.SuperFriendlyDate(order.PickUpTime.Value))
+                            @Html.Raw(_calendarRepository.SuperFriendlyDate(order.PickUpTime))
                         </div>
                         }
                     </td>

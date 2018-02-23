@@ -6,6 +6,6 @@ namespace RepoWebShop.Interfaces
         DateTime GetPickupEstimate(int hours);
         DateTime LocalTime();
         string LocalTimeAsString();
-        string SuperFriendlyDate(DateTime date);
+        string SuperFriendlyDate(DateTime? date);
     }
 }

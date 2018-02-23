@@ -12,7 +12,7 @@ namespace RepoWebShop.Models
     {
         public PaymentNotice() { }
 
-        public PaymentNotice(Hashtable paymentInfo)
+        public PaymentNotice(Hashtable paymentInfo, string localZone)
         {
             BookingId = paymentInfo.GetValue("external_reference", typeof(string)); //Mapped
             MercadoPagoTransaction = paymentInfo.GetValue("id", typeof(string)); //Mapped
@@ -28,9 +28,9 @@ namespace RepoWebShop.Models
             Net_Received_Amount = paymentInfo.GetValue("net_received_amount", typeof(Decimal));
             Installment_Amount = paymentInfo.GetValue("installment_amount", typeof(Decimal));
             
-            Date_Created = paymentInfo.GetValue("date_created", typeof(DateTime)); //Mapped
-            Date_Approved = paymentInfo.GetValue("date_approved", typeof(DateTime));
-            Money_Release_Date = paymentInfo.GetValue("money_release_date", typeof(DateTime));
+            Date_Created = ((DateTime)paymentInfo.GetValue("date_created", typeof(DateTime))).Zoned(localZone); //Mapped
+            Date_Approved = ((DateTime)paymentInfo.GetValue("date_approved", typeof(DateTime))).Zoned(localZone);
+            Money_Release_Date = ((DateTime)paymentInfo.GetValue("money_release_date", typeof(DateTime))).Zoned(localZone);
             
             Installments = paymentInfo.GetValue("installments", typeof(int));
 

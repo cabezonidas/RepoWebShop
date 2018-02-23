@@ -1,10 +1,11 @@
 ﻿@model IEnumerable<PaymentViewModel>
 
+@inject ICalendarRepository _calendarRepository
+
 <style>
     div.container {
         font-family: Arial;
     }
-
 </style>
 
 <div class="container">
@@ -50,42 +51,42 @@
         <tbody>
             @foreach (var payment in Model)
             {
-            <tr>
-                <td>
-                    @payment.PaymentNotice.StatusSpanish
-                </td>
-                <td>
-                    @payment.PaymentNotice.Payment_Type
-                </td>
-                <td>
-                    @payment.PaymentNotice.Installments
-                </td>
-                <td>
-                    @payment.PaymentNotice.Installment_Amount
-                </td>
-                <td>
-                    @payment.PaymentNotice.Date_Created
-                </td>
-                <td>
-                    @payment.PaymentNotice.Net_Received_Amount
-                </td>
-                <td>
-                    @payment.PaymentNotice.OrderTotal
-                </td>
-                <td>
-                    @{ var com = ((1 - (payment.PaymentNotice.Net_Received_Amount / payment.PaymentNotice.OrderTotal)) * 100);  }
-                    @Decimal.Round(com, 2) %
-                </td>
-                <td>
-                    @payment.PaymentNotice.Money_Release_Date
-                </td>
-                <td>
-                    @Html.Raw(payment.PaymentNotice.PayerAsHtml)
-                </td>
-                <td>
-                    <a href="/Order/Detail/@payment.Order.OrderId">@payment.Order.FriendlyBookingId</a>
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        @payment.PaymentNotice.StatusSpanish
+                    </td>
+                    <td>
+                        @payment.PaymentNotice.Payment_Type
+                    </td>
+                    <td>
+                        @payment.PaymentNotice.Installments
+                    </td>
+                    <td>
+                        @payment.PaymentNotice.Installment_Amount
+                    </td>
+                    <td>
+                        @Html.Raw(_calendarRepository.SuperFriendlyDate(payment.PaymentNotice.Date_Created))
+                    </td>
+                    <td>
+                        @payment.PaymentNotice.Net_Received_Amount
+                    </td>
+                    <td>
+                        @payment.PaymentNotice.OrderTotal
+                    </td>
+                    <td>
+                        @{ var com = ((1 - (payment.PaymentNotice.Net_Received_Amount / payment.PaymentNotice.OrderTotal)) * 100); }
+                        @Decimal.Round(com, 2) %
+                    </td>
+                    <td>
+                        @Html.Raw(_calendarRepository.SuperFriendlyDate(payment.PaymentNotice.Money_Release_Date))
+                    </td>
+                    <td>
+                        @Html.Raw(payment.PaymentNotice.PayerAsHtml)
+                    </td>
+                    <td>
+                        <a href="/Order/Detail/@payment.Order.OrderId">@payment.Order.FriendlyBookingId</a>
+                    </td>
+                </tr>
 
             }
         </tbody>

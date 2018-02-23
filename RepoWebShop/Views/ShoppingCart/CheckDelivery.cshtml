@@ -7,7 +7,10 @@
 <hr />
 <div class="text-center text-muted" style="margin-top:-10px; margin-bottom: 20px;">
     <h3>Horarios de envío. <a asp-action="Index" asp-controller="Delivery">Ver zonas</a>.</h3>
-    <h4 class="">Entre 10:30 y 12:30 o entre 18:00 y 20:00</h4>
+    <h4 class="">
+        De Martes a Sábados<br />
+        Entre 10:30 y 12:30 o entre 18:00 y 20:00
+    </h4>
 </div>
 @if (Model.DeliveryAddress == null && Model.ShoppingCartTotal < Model.MinArsForDelivery)
 {
@@ -25,7 +28,8 @@
                 <a class="btn btn-primary" asp-action="Index" asp-controller="Delivery">Agregar envío</a>
             </h2>
         }
-        <p style="font-size: 15px;" class="text-muted">El radio de cobertura es 3 kms. El cargo es $@Model.DeliveryCostByBlock por cada 100 mts, con un mínimo de $@Model.MinimumDeliveryCharge.</p>
+        <p style="font-size: 15px;" class="text-muted">El cargo es $@Model.DeliveryCostByBlock por cada 100 metros.
+        <br />Costo mínimo de envío $@Model.MinimumDeliveryCharge.</p>
     </div>
 }
 
