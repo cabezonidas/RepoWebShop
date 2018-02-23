@@ -25,7 +25,7 @@
                 <a class="btn btn-primary" asp-action="Index" asp-controller="Delivery">Agregar envío</a>
             </h2>
         }
-        <p style="font-size: 15px;" class="text-muted">El radio de cobertura es 3 kms y el cargo es $150.</p>
+        <p style="font-size: 15px;" class="text-muted">El radio de cobertura es 3 kms. El cargo es $@Model.DeliveryCostByBlock por cada 100 mts, con un mínimo de $@Model.MinimumDeliveryCharge.</p>
     </div>
 }
 

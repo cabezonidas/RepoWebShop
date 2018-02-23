@@ -16,5 +16,7 @@ namespace RepoWebShop.ViewModels
         public override string ShoppingCartId { get; set; }
         
         public override DateTime Created { get; set; }
+        public int MinimumCharge { get; set; }
+        public int CostByBlock { get; set; }
     }
 }

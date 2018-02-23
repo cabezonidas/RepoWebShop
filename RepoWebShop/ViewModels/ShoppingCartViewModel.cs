@@ -22,5 +22,7 @@ namespace RepoWebShop.ViewModels
         public DeliveryAddress DeliveryAddress { get; set; }
         public int MaxArsForReservation { get; internal set; }
         public int MinArsForDelivery { get; internal set; }
+        public int MinimumDeliveryCharge { get; internal set; }
+        public int DeliveryCostByBlock { get; internal set; }
     }
 }

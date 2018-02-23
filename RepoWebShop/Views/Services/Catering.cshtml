@@ -9,6 +9,8 @@
         <h4>Echale un vistazo a nuestros deliciosos bocaditos que podemos preparar para tu servico.</h4>
         <h4>Normalmente nosotros recomendamos entre 10 y 12 bocados por adulto.</h4>
         <h4>Acercate a nuestra sucursal, o llamanos para que te podamos asesorar con un catering súper rico y novedoso.</h4>
+
+        <img src="~/Pictures/Loader.gif" id="loading" style="margin: auto;" />
     </div>
 
     <div class="container">
@@ -51,6 +53,7 @@
             "bFilter": true,
             "bInfo": false,
         });
+        $('#loading').addClass('hidden');
         $('#table').removeClass('hidden');
     });
 </script>

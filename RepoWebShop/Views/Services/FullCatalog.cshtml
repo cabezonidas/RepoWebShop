@@ -7,6 +7,7 @@
     <div class="text-center">
         <h4>Además de lo que vendemos por internet, en sucursal podés encontrar cualquiera de los siguientes productos.</h4>
         <h4>Si querés alguno en particular, contactate con nosotros, y lo hacemos.</h4>
+        <img src="~/Pictures/Loader.gif" id="loading" style="margin: auto;" />
     </div>
 
     <div class="container">
@@ -52,6 +53,7 @@
                 searchPlaceholder: "Buscar..."
             }
         });
+        $('#loading').addClass('hidden');
         $('#table').removeClass('hidden');
     });
 </script>

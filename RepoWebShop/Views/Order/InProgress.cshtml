@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<Order>
 
+@inject ICalendarRepository _calendarRepository
+
 <style>
     div.container {
         font-family: Arial;
@@ -31,7 +33,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var order in Model.OrderByDescending(x => x.PickUpTime))
+            @foreach (var order in Model.OrderBy(x => x.PickUpTime))
             {
                 string background_color;
                 @if (order.Finished)
@@ -49,16 +51,16 @@
                     <td>
                         @if (order.PickUpTime.HasValue)
                         {
-                            <div>
-                                @order.PickUpTime.Value.ToString("yyyy'/'MM'/'dd HH:mm")
-                            </div>
+                        <div>
+                            @Html.Raw(_calendarRepository.SuperFriendlyDate(order.PickUpTime.Value))
+                        </div>
                         }
                     </td>
                     <td>
                         @{
                             List<string> items = new List<string>();
                         }
-                        @foreach(var ol in order.OrderLines)
+                        @foreach (var ol in order.OrderLines)
                         {
                             var line = ol.Amount == 1 ? "" : ol.Amount + "x ";
                             line += $"{ol.Pie.PieDetail.Name} {ol.Pie.Name}";
@@ -67,7 +69,7 @@
                         }
                         @if (order.DeliveryAddress != null)
                         {
-                            items.Add("Envío: " +order.DeliveryAddress.AddressLine1?.Split(",")?.FirstOrDefault() ?? "");
+                            items.Add("Envío: " + order.DeliveryAddress.AddressLine1?.Split(",")?.FirstOrDefault() ?? "");
                         }
                         @Html.Raw(String.Join("<br/>", items.ToArray()))
                     </td>
@@ -76,11 +78,11 @@
                     <td>
                         @if (order.Finished)
                         {
-                            <a class="btn btn-success" onclick="pickedUp(@order.OrderId);" id="@order.OrderId" >¡Entregado!</a>
+                            <a class="btn btn-success" onclick="pickedUp(@order.OrderId);" id="@order.OrderId">¡Entregado!</a>
                         }
                         else
                         {
-                            <a class="btn btn-success" onclick="orderCompleted(@order.OrderId);" id="@order.OrderId" >¡Pedido Listo!</a>
+                            <a class="btn btn-success" onclick="orderCompleted(@order.OrderId);" id="@order.OrderId">¡Pedido Listo!</a>
                         }
 
                     </td>
@@ -93,7 +95,8 @@
 
 <script type="text/javascript">
     $('#orders').DataTable({
-        pageLength: 25
+        pageLength: 25,
+        "aaSorting": []
     });
 
     function pickedUp(id) {

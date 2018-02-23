@@ -22,8 +22,10 @@ namespace RepoWebShop.Controllers
         private readonly string _friendlyBookingId;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private int _minimumArsForOrderDelivery;
-        private int _maxArsForReservation;
+        private readonly int _minimumArsForOrderDelivery;
+        private readonly int _maxArsForReservation;
+        private readonly int _minimumCharge;
+        private readonly int _costByBlock;
 
 
         public ShoppingCartController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration config, ICalendarRepository calendarRepository, IPieRepository pieRepository, IShoppingCartRepository shoppingCart, IMercadoPago mp)
@@ -39,6 +41,8 @@ namespace RepoWebShop.Controllers
             _mp = mp;
             _minimumArsForOrderDelivery = _config.GetValue<int>("MinimumArsForOrderDelivery");
             _maxArsForReservation = _config.GetValue<int>("MaxArsForReservation");
+            _minimumCharge = _config.GetValue<int>("LowestDeliveryCost");
+            _costByBlock = _config.GetValue<int>("DeliveryCostByBlock");
         }
 
         public IActionResult TrolleyIcon()
@@ -75,7 +79,9 @@ namespace RepoWebShop.Controllers
                 User = user,
                 DeliveryAddress = delivery,
                 MaxArsForReservation = _maxArsForReservation,
-                MinArsForDelivery = _minimumArsForOrderDelivery
+                MinArsForDelivery = _minimumArsForOrderDelivery,
+                MinimumDeliveryCharge = _minimumCharge,
+                DeliveryCostByBlock = _costByBlock
             };
             
             return View(shoppingCartViewModel);

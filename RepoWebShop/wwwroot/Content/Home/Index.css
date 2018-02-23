@@ -163,7 +163,9 @@ blockquote {
         vertical-align: -0.4em;
     }
 
-    blockquote h1 {
+    blockquote h1,
+    blockquote h2,
+    blockquote h3 {
         display: inline;
     }
 /** </team> **/

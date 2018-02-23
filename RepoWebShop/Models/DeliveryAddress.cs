@@ -57,24 +57,5 @@ namespace RepoWebShop.Models
         public virtual DateTime Created { get; set; }
 
         public ApplicationUser User { get; set; }
-
-        [BindNever]
-        public decimal DeliveryEstimate
-        {
-            get
-            {
-                //if (Distance == 0)
-                //    return 50;
-                //if (Distance > 0 && Distance < 1000)
-                //    return 60;
-                //if (Distance > 1000 && Distance < 1500)
-                //    return 70;
-                //if (Distance > 1500 && Distance < 2000)
-                //    return 80;
-                //if (Distance > 2000 && Distance < 2500)
-                //    return 90;
-                return 150;
-            }
-        }
     }
 }

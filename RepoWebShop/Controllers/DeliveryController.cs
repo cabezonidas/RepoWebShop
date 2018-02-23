@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RepoWebShop.Extensions;
@@ -21,14 +22,20 @@ namespace RepoWebShop.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IShoppingCartRepository _shoppingCart;
+        private readonly IConfiguration _config;
+        private readonly int _minimumCharge;
+        private readonly int _costByBlock;
 
-        public DeliveryController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IDeliveryRepository deliveryRepository, IMapper mapper, IShoppingCartRepository shoppingCart)
+        public DeliveryController(IConfiguration config, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IDeliveryRepository deliveryRepository, IMapper mapper, IShoppingCartRepository shoppingCart)
         {
             _deliveryRepository = deliveryRepository;
             _mapper = mapper;
             _shoppingCart = shoppingCart;
             _userManager = userManager;
             _signInManager = signInManager;
+            _config = config;
+            _minimumCharge = _config.GetValue<int>("LowestDeliveryCost");
+            _costByBlock = _config.GetValue<int>("DeliveryCostByBlock");
         }
 
         public IActionResult Index()
@@ -36,6 +43,12 @@ namespace RepoWebShop.Controllers
             var model = _shoppingCart.GetShoppingCartDeliveryAddress();
 
             var viewModel = _mapper.Map<DeliveryAddress, DeliveryAddressViewModel>(model);
+
+            if (viewModel == null)
+                viewModel = new DeliveryAddressViewModel();
+
+            viewModel.MinimumCharge = _minimumCharge;
+            viewModel.CostByBlock = _costByBlock;
 
             return View(viewModel);
         }
@@ -50,7 +63,7 @@ namespace RepoWebShop.Controllers
             if(distance > 3000)
             {
                 if(distance > 0)
-                    ModelState.AddModelError("DistanceNotCovered", $"La distancia debe ser menor a 3k. Tu ubicación está a {(distance / 1000.0).ToString("#.##")} kms.");
+                    ModelState.AddModelError("DistanceNotCovered", $"La distancia debe ser menor a 3kms. Tu ubicación está a {(distance / 1000.0).ToString("#.##")} kms.");
                 else
                     ModelState.AddModelError("DistanceError", "No pudimos calcular la distancia.");
 
@@ -59,7 +72,7 @@ namespace RepoWebShop.Controllers
 
             var delivery = _mapper.Map<DeliveryAddressViewModel, DeliveryAddress>(deliveryAddres);
             delivery.ShoppingCartId = _shoppingCart.GetShoppingCartId();
-            delivery.DeliveryCost = delivery.DeliveryEstimate;
+            delivery.DeliveryCost = _deliveryRepository.GetDeliveryEstimate(distance);
             delivery.Distance = distance;
             
 
