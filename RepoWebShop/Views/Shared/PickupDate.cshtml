@@ -76,31 +76,44 @@
 }
 
 <link href="~/Content/Shared/PickupDate.css" rel="stylesheet" />
-
 <div id="calendarView">
-    <div class="text-center">
-        <label class="" style="">Orden lista</label>
-        <br />
-        <div id="pickupDate" class="text-center">
-            <div class="full-date animated bounceIn">
-                <div class="calendar">
-                    <div class="month">@mes</div>
-                    <div class="weekday">@dia</div>
-                    <div class="day">@Model.Day</div>
-                </div>
-                <div class="time">
-                    @string.Format("{0:hh:mm tt}", Model)
-                </div>
-            </div>
-        </div>
-        <div>
-            <label class="control-label ">¿Por qué? <a id="moreinfo" href="#estimation-time"><span class="fa fa-question-circle"></span></a></label>
-        </div>
-        <div>
-            <label class="control-label "></label>
+    <div class="">
+        <h1 class="text-center" style="font-family: Noto serif; margin-top:0px;" >Estimación</h1>
+        <div class="text-center">
+            <table style="width:100%;max-width:400px; margin: auto;">
+                <tbody>
+                    <tr>
+                        <td style="width: 1%; white-space: nowrap; ">
+                            <div id="pickupDate" class="text-center">
+                                <div class="full-date animated bounceIn">
+                                    <div class="calendar">
+                                        <div class="month">@mes</div>
+                                        <div class="weekday">@dia</div>
+                                        <div class="day">@Model.Day</div>
+                                    </div>
+                                    <div class="time">
+                                        @string.Format("{0:hh:mm tt}", Model)
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="control-label ">¿Por qué? <a id="moreinfo" href="#estimation-time"><span class="fa fa-question-circle"></span></a></label>
+                            </div>
+                            <div>
+                                <label class="control-label "></label>
+                            </div>
+                        </td>
+                        <td style="width: auto; vertical-align: top; padding: 10px; ">
+                            <div class="text-muted">
+                                Nosotros nos comprometemos a tener tu pedido listo en esta fecha.
+                                Si querés que la entrega sea posterior a esta fecha, dejánoslo escrito en la sección de Comentarios.
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-
 </div>
 
 

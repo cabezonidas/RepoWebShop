@@ -37,5 +37,6 @@ namespace RepoWebShop.Interfaces
         Order OrderInProcess(PaymentNotice paymentNotification);
         void CancelPaymentOrder(int orderId, string reason);
         Order LatestReservationInProgress(ApplicationUser currentUser);
+        IEnumerable<Order> GetByUserOrders(ApplicationUser user);
     }
 }

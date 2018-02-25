@@ -25,13 +25,15 @@ namespace RepoWebShop.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IAccountRepository _accountRepository;
         private readonly IEmailRepository _emailRepository;
+        private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
         //private readonly ILogger _logger;
 
 
-        public AccountController(IEmailRepository emailRepository, IAccountRepository accountRepository, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
+        public AccountController(IOrderRepository orderRepository, IEmailRepository emailRepository, IAccountRepository accountRepository, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
         {
             //_logger = logger;
+            _orderRepository = orderRepository;
             _emailRepository = emailRepository;
             _userManager = userManager;
             _signInManager = signInManager;
@@ -303,8 +305,11 @@ namespace RepoWebShop.Controllers
         [Authorize]
         public async Task<IActionResult> Profile()
         {
+            UserOrdersViewModel vm = new UserOrdersViewModel();
+            vm.User = await _userManager.GetUser(_signInManager);
+            vm.Orders = _orderRepository.GetByUserOrders(vm.User);
             
-            return View(await _userManager.GetUser(_signInManager));
+            return View(vm);
         }
 
         [Authorize]

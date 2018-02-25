@@ -416,6 +416,7 @@ namespace RepoWebShop.Models
         
         public async Task<string> GetRepoPaymentLinkAsync(decimal total, string bookingId, string friendlyBookingId, string host, string title, string userId = null)
         {
+            var totalForMp = total.ToString().Replace(',', '.');
             try
             {
                 String preferenceData =
@@ -426,7 +427,7 @@ namespace RepoWebShop.Models
                                     "\"quantity\":1," +
                                     $"\"id\":\"{bookingId}\"," +
                                     "\"currency_id\":\"ARS\"," +
-                                    "\"unit_price\":" + total +
+                                    "\"unit_price\":" + totalForMp +
                                 "}" +
                             "]," +
                         "\"back_urls\":" +

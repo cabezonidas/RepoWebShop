@@ -23,18 +23,24 @@
 else
 {
     <div class="container">
-        <div class="col-lg-10 col-md-10 col-sm-9 col-xs-12">
-            @Html.Partial("~/Views/ShoppingCart/ShoppingCartItems.cshtml", Model)
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+                @Html.Partial("~/Views/ShoppingCart/ShoppingCartItems.cshtml", Model)
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                @Html.Partial("~/Views/Shared/PickupDate.cshtml", Model.PickupDate)
+            </div>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
-            @Html.Partial("~/Views/Shared/PickupDate.cshtml", Model.PickupDate)
+        <div class="row">
+            <hr style="margin-left:10%;margin-right:10%; margin-top: 30px; margin-bottom: 30px;"/>
         </div>
-
-        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-            @Html.Partial("~/Views/ShoppingCart/CheckDelivery.cshtml", Model)
-        </div>
-        <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
-            @Html.Partial("~/Views/ShoppingCart/Comments.cshtml")
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+                @Html.Partial("~/Views/ShoppingCart/Comments.cshtml")
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                @Html.Partial("~/Views/ShoppingCart/CheckDelivery.cshtml", Model)
+            </div>
         </div>
 
         <br />

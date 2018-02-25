@@ -1,17 +1,17 @@
-﻿@model ApplicationUser
+﻿@model UserOrdersViewModel
 
 <style>
     table.userdata {
         width: 98%;
         margin: 10px auto;
         border-radius: 5px;
-        background-color: beige;
+        /*background-color: beige;*/
         border-radius: 5px;
-        max-width:600px;
+        max-width: 600px;
     }
 
         table.userdata h2 {
-            text-decoration: underline
+            /*text-decoration: underline*/
         }
 
         table.userdata td, th {
@@ -30,29 +30,29 @@
         </thead>
         <tbody>
             <tr>
-                <td colspan="1" valign="top"><label asp-for="UserName"></label></td>
-                <td colspan="1" valign="top">@Model.UserName</td>
+                <td colspan="1" valign="top"><label asp-for="User.UserName"></label></td>
+                <td colspan="1" valign="top">@Model.User.UserName</td>
                 <td colspan="1" rowspan="3" valign="top"><a asp-action="ProfileDetails" asp-controller="Account">Modificar</a></td>
             </tr>
             <tr>
-                <td colspan="1" valign="top"><label asp-for="FirstName"></label></td>
-                <td colspan="1" valign="top">@Model.FirstName</td>
+                <td colspan="1" valign="top"><label asp-for="User.FirstName"></label></td>
+                <td colspan="1" valign="top">@Model.User.FirstName</td>
             </tr>
             <tr>
-                <td colspan="1" valign="top"><label asp-for="LastName"></label></td>
-                <td colspan="1" valign="top">@Model.LastName</td>
+                <td colspan="1" valign="top"><label asp-for="User.LastName"></label></td>
+                <td colspan="1" valign="top">@Model.User.LastName</td>
             </tr>
             <tr>
-                <td colspan="1" valign="top"><label asp-for="AddressLine1"></label></td>
-                <td colspan="1" valign="top">@Model.AddressLine1</td>
+                <td colspan="1" valign="top"><label asp-for="User.AddressLine1"></label></td>
+                <td colspan="1" valign="top">@Model.User.AddressLine1</td>
             </tr>
             <tr>
-                <td colspan="1" valign="top"><label asp-for="Email"></label></td>
+                <td colspan="1" valign="top"><label asp-for="User.Email"></label></td>
 
                 <td colspan="1" valign="top">
-                    @Model.Email
+                    @Model.User.Email
 
-                    @if (Model.EmailConfirmed)
+                    @if (Model.User.EmailConfirmed)
             {
                 <i class="fa fa-check" style="color: limegreen;" aria-hidden="true"></i>
     }
@@ -62,7 +62,7 @@
 }
                 </td>
                 <td colspan="1" valign="top">
-                    @if (!Model.EmailConfirmed)
+                    @if (!Model.User.EmailConfirmed)
             {
                 <div id="emailConfirmBox">
                     <a href="#" id="confirmEmail" onclick="confirmEmail();">Confirmar</a>
@@ -72,12 +72,12 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="1" valign="top"><label asp-for="PhoneNumber"></label></td>
+                <td colspan="1" valign="top"><label asp-for="User.PhoneNumber"></label></td>
 
                 <td colspan="1" valign="top">
-                    @Model.PhoneNumber
+                    @Model.User.PhoneNumber
 
-                    @if (Model.PhoneNumberConfirmed)
+                    @if (Model.User.PhoneNumberConfirmed)
             {
                 <i class="fa fa-check" style="color: limegreen;" aria-hidden="true"></i>
     }
@@ -87,7 +87,7 @@
 }
                 </td>
                 <td colspan="1" valign="top">
-                    @if (!Model.PhoneNumberConfirmed)
+                    @if (!Model.User.PhoneNumberConfirmed)
             {
                 <a asp-action="VerifyNumber" asp-controller="Account">Confirmar</a>
     }
@@ -106,6 +106,54 @@
 
         </tbody>
     </table>
+
+    @if(Model.Orders.Any())
+    {
+        <h2 class=" text-center">Historial de ordenes</h2>
+        <div >
+            <table class="table table-condensed" style="max-width:600px; text-align:center; margin: auto;" >
+                <thead>
+                    <tr >
+                        <td>
+                            <strong>Reserva</strong>
+                        </td>
+                        <td>
+                            <strong>Creada</strong>
+                        </td>
+                        <td>
+                            <strong>Estado</strong>
+                        </td>
+                        <td>
+                            <strong>Total</strong>
+                        </td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model.Orders.OrderByDescending(x => x.OrderPlaced))
+            {
+                <tr>
+                    <td>
+                        @order.FriendlyBookingId
+                    </td>
+                    <td>
+                        @order.OrderPlaced
+                    </td>
+                    <td>
+                        @order.StatusSpanish
+                    </td>
+                    <td>
+                        @order.OrderTotal
+                    </td>
+                    <td>
+                        <a href="/Order/EmailSentNotification/@order.OrderId" target="_blank">Ver</a>
+                    </td>
+                </tr>
+    }
+                </tbody>
+            </table>
+        </div>
+    }
 </div>
 
 <script>

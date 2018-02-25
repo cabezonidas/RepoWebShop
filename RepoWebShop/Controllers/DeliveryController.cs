@@ -23,8 +23,6 @@ namespace RepoWebShop.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IShoppingCartRepository _shoppingCart;
         private readonly IConfiguration _config;
-        private readonly int _minimumCharge;
-        private readonly int _costByBlock;
 
         public DeliveryController(IConfiguration config, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IDeliveryRepository deliveryRepository, IMapper mapper, IShoppingCartRepository shoppingCart)
         {
@@ -33,9 +31,7 @@ namespace RepoWebShop.Controllers
             _shoppingCart = shoppingCart;
             _userManager = userManager;
             _signInManager = signInManager;
-            _config = config;
-            _minimumCharge = _config.GetValue<int>("LowestDeliveryCost");
-            _costByBlock = _config.GetValue<int>("DeliveryCostByBlock");
+            _config = config; 
         }
 
         public IActionResult Index()
@@ -47,8 +43,8 @@ namespace RepoWebShop.Controllers
             if (viewModel == null)
                 viewModel = new DeliveryAddressViewModel();
 
-            viewModel.MinimumCharge = _minimumCharge;
-            viewModel.CostByBlock = _costByBlock;
+            viewModel.MinimumCharge = _config.GetValue<int>("LowestDeliveryCost");
+            viewModel.CostByBlock = _config.GetValue<int>("DeliveryCostByBlock");
 
             return View(viewModel);
         }

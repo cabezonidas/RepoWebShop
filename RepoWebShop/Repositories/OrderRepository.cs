@@ -394,5 +394,10 @@ namespace RepoWebShop.Models
                     && x.OrderProgressState.GetType() == typeof(OrderInProgress)
                     && x.OrderPaymentStatus.GetType() == typeof(OrderReservationNotPaid));
         }
+
+        public IEnumerable<Order> GetByUserOrders(ApplicationUser user)
+        {
+            return _appDbContext.Orders.Where(x => x.Registration == user).Include(x => x.Email);
+        }
     }
 }
