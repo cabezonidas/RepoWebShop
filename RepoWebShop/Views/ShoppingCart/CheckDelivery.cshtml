@@ -14,14 +14,14 @@
 </div>
 @if (Model.DeliveryAddress == null && Model.ShoppingCartTotal < Model.MinArsForDelivery)
 {
-    <div class="animated bounceInUp text-center">
+    <div class="animated bounceInRight text-center">
         <p style="font-size: 20px;" class="text-muted">Si tu orden es de @Model.MinArsForDelivery.ToString("c") o más, podés agregar delivery.</p>
     </div>
 }
 
 @if (Model.DeliveryAddress == null && Model.ShoppingCartTotal >= Model.MinArsForDelivery)
 {
-    <div class="animated bounceInLeft text-center">
+    <div class="animated bounceInRight text-center">
         @if (Model.ShoppingCartTotal >= Model.MinArsForDelivery)
         {
             <h2>

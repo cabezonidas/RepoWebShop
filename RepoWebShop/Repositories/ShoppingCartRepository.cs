@@ -178,5 +178,9 @@ namespace RepoWebShop.Repositories
                 _appDbContext.SaveChanges();
             }
         }
+
+        public string GetMpPreference() => _shoppingCart.MpPreferenceId;
+
+        public void SetMpPreference(string preferenceId) => _shoppingCart.MpPreferenceId = preferenceId;
     }
 }

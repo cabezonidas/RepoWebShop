@@ -73,7 +73,7 @@
 </div>
 <script type="text/javascript">
     $.get('/api/ShoppingCartData/GetMercadoPagoLink/', function (data) {
-        $('a#mercadolink').attr('href', data.link.result);
+        $('a#mercadolink').attr('href', data.link);
         $.getScript("https://www.mercadopago.com/org-img/jsapi/mptools/buttons/render.js", function () {
             $('#mpLoader').hide();
             $('#mercadolink-container').removeClass('hidden');

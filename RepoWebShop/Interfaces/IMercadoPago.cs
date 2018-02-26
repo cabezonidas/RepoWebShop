@@ -39,6 +39,6 @@ namespace RepoWebShop.Interfaces
         Task<Hashtable> DeleteAsync(String uri);
         Task<Hashtable> DeleteAsync(String uri, Dictionary<String, String> parameters);
         Task<Hashtable> GetMerchantOrderAsync(String merchantOrderId);
-        Task<string> GetRepoPaymentLinkAsync(decimal total, string bookingId, string friendlyBookingId, string host, string title, string userId);
+        string BuildPreference(decimal total, string bookingId, string friendlyBookingId, string host, string title, string userId);
     }
 }

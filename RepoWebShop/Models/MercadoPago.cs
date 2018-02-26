@@ -414,11 +414,9 @@ namespace RepoWebShop.Models
 
         /******************************************** Extensions *********************************************/
         
-        public async Task<string> GetRepoPaymentLinkAsync(decimal total, string bookingId, string friendlyBookingId, string host, string title, string userId = null)
+        public string BuildPreference(decimal total, string bookingId, string friendlyBookingId, string host, string title, string userId = null)
         {
             var totalForMp = total.ToString().Replace(',', '.');
-            try
-            {
                 String preferenceData =
                         "{\"items\":" +
                             "["+
@@ -457,17 +455,7 @@ namespace RepoWebShop.Models
                         $"\"additional_info\":\"{userId}\"" +
                 "}";
 
-                Hashtable preference = await CreatePreferenceAsync(preferenceData);
-                string init_point = (!sandbox ? "" : "sandbox_") + "init_point";
-
-                return (preference["response"] as Hashtable)[init_point].ToString();
-                //return "#";
-            }
-            catch
-            {
-
-                return "#";
-            }
+            return preferenceData;
         }
 
         public async Task<Hashtable> GetMerchantOrderAsync(string merchantOrederId)

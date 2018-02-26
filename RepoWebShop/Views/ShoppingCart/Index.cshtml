@@ -4,8 +4,6 @@
     <link href="~/Content/ShoppingCart/Index.css" rel="stylesheet" />
 }
 
-<br />
-
 <div class="header" id="title">
     <div class="title-container">
         <h1 class="title-logo">Carrito</h1>
@@ -74,6 +72,8 @@ else
     function getEstimate() {
         $.get('api/CalendarData/GetPickupDate/', function (data) {
             $('#calendarView').replaceWith(data);
+
+            $('a#moreinfo[href *=\\#]:not([href =\\#])').click(smoothScroll);
             //$('#pickupDate').append(data);
         });
     }

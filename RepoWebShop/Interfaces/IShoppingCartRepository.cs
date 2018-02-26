@@ -25,5 +25,7 @@ namespace RepoWebShop.Interfaces
         DeliveryAddress GetShoppingCartDeliveryAddress();
         void RenewId();
         void RemoveDelivery();
+        string GetMpPreference();
+        void SetMpPreference(string preferenceId);
     }
 }

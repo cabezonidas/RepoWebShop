@@ -20,6 +20,12 @@ namespace RepoWebShop.Models
             InitializeId();
         }
 
+        public string MpPreferenceId
+        {
+            get => _session.GetString("PreferenceId");
+            set => _session.SetString("PreferenceId", value);
+        }
+
         public static ShoppingCart GetCart(IServiceProvider services) => new ShoppingCart(services);
 
         public string ShoppingCartId
