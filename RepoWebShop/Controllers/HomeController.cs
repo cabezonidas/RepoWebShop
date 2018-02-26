@@ -36,7 +36,8 @@ namespace RepoWebShop.Controllers
             var homeViewModel = new HomeViewModel
             {
                 PiesOfTheWeek = result,
-                HostUrl = this.Request.HostUrl()
+                HostUrl = this.Request.HostUrl(),
+                IsMobile = this.Request.IsMobile()
             };
             
             return View(homeViewModel);

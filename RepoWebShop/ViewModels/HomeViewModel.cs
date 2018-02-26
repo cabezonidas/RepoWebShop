@@ -10,5 +10,6 @@ namespace RepoWebShop.ViewModels
     {
         public IEnumerable<PieDetailViewModel> PiesOfTheWeek { get; set; }
         public string HostUrl { get; internal set; }
+        public bool IsMobile { get; set; }
     }
 }

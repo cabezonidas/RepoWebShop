@@ -1,7 +1,7 @@
 ﻿@model Pie
 
 
-<div class='addToCart'>
+<div class='addToCart' style="margin: auto;">
     <h4><strong>@Model.Name - $@Model.Price</strong></h4>
     <p class='button'>
         <a class='btn btn-repo btn-primary' asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@Model.PieId'>

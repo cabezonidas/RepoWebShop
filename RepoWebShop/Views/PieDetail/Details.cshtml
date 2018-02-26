@@ -17,23 +17,23 @@
     }
 
 
-    .thumbnailDetail {
+    /*.thumbnailDetail {
         padding: 10px;
         max-width: 900px;
         margin: 10px auto;
         border-radius: 20px;
-    }
+    }*/
 
         .thumbnailDetail h1 {
         }
 
-    #pictures {
+    /*#pictures {
         background-color: #dbe9d8;
         border-radius: 3px;
         border-style: solid;
         border-color: grey;
         border-width: 2px;
-    }
+    }*/
 
         #pictures h2 {
             padding: 5px;
@@ -45,7 +45,8 @@
         }
 
     .longdesc {
-        font-size: larger;
+        /*font-size: larger;*/
+        text-align: left;
     }
 
     .short-Desc {
@@ -100,7 +101,9 @@
             text-align: center;
         }
     /***************************************/
-
+    #gallery-title {
+        display: none;
+    }
 </style>
 
 @section metatags {
@@ -127,7 +130,7 @@
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
 </script>
-
+<br />
 <div class="container">
     <br />
     <div class="thumbnailDetail">
@@ -138,22 +141,24 @@
         </div>
 
         <div class="short-Desc">
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" id="pictures">
-                <div id="photos"></div>
-                <img alt="@Model.PieDetail.Name" src="~/Pictures/imgnotfound.png" id="defaultPicture" style="display:none; width: 100%;">
-                <div class="caption-full">
-                    @Html.Partial("PiePriceCarousel", Model)
-                    <div class="fb-share-button"
-                         data-href="/PieDetail/Details/@Model.PieDetail.PieDetailId"
-                         data-layout="button_count">
+            <div class="row">
+
+            <div class="col-xs-12 col-sm-7 col-md-7 col-lg-6" id="description">
+                <div style="/*display:inline-flex;*/">
+                    <h4>@Model.PieDetail.ShortDescription</h4>
+                    <div class="caption-full">
+                        <div class="fb-share-button"
+                             data-href="/PieDetail/Details/@Model.PieDetail.PieDetailId"
+                             data-layout="button_count">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8" id="description">
-                <h3>@Model.PieDetail.ShortDescription</h3>
+
                 <br />
                 <p class="longdesc">@Model.PieDetail.LongDescription</p>
-                <h3 class="alert alert-success">Preparación: @Model.PieDetail.PreparationTime hs</h3>
+                <div style="display: flex; ">
+                    <h4 style="margin: auto;" class="">Preparación: @Model.PieDetail.PreparationTime hs</h4>
+                </div>
                 <table class="table static-prices animated flipInX">
                     <thead>
                         <tr>
@@ -165,28 +170,50 @@
                     </thead>
                     <tbody>
                         @{
-                            foreach (var pie in Model.Pies.OrderBy(x => x.Price))
-                            {
-                                <tr class="static-price">
-                                    <td class="unit-name">@pie.Name</td>
-                                    <td class="unit-description">@pie.SizeDescription</td>
-                                    <td class="unit-price">
-                                        $@pie.Price
-                                    </td>
-                                    <td>
-                                        <a title="Comprar" asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@pie.PieId'>
-                                            <span class="fa fa-shopping-cart">
-                                            </span>
-                                        </a>
-                                    </td>
-                                </tr>
-                            }
+                foreach (var pie in Model.Pies.OrderBy(x => x.Price))
+                {
+                    <tr class="static-price">
+                        <td class="unit-name">@pie.Name</td>
+                        <td class="unit-description">@pie.SizeDescription</td>
+                        <td class="unit-price">
+                            $@pie.Price
+                        </td>
+                        <td>
+                            <a title="Comprar" asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@pie.PieId'>
+                                <span class="fa fa-shopping-cart">
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+    }
                         }
                     </tbody>
                 </table>
-                <div style="text-align: center;">
+
+                <div style="text-align: center;margin-bottom: 10px;" class="hidden-xs">
+                    <br />
                     <a asp-action="List" asp-controller="PieDetail" class="btn btn-primary submit-btn">
-                        Ver más
+                        Seguir Comprando
+                    </a>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-5 col-md-5 col-lg-6" id="pictures">
+                @{ 
+                    var primarypic = $"{Model.PrimaryPicture}{(Model.IsMobile ? "z" : "b")}.jpg";
+                }
+                <img src="@primarypic" style="width: 100%"/>
+                <img alt="@Model.PieDetail.Name" src="~/Pictures/imgnotfound.png" id="defaultPicture" style="display:none; width: 100%;">
+
+            </div>
+            </div>
+            <div class="row">
+                <div id="photos"></div>
+            </div>
+            <div class="row">
+                <div class="hidden-sm hidden-md hidden-lg">
+                    <br />
+                    <a asp-action="List" asp-controller="PieDetail" class="btn btn-primary submit-btn">
+                        Seguir Comprando
                     </a>
                 </div>
             </div>

@@ -4,7 +4,7 @@
     <link href="~/Content/Home/Index.css" rel="stylesheet" />
 }
 @{
-    var background = "https://farm5.staticflickr.com/4536/23986590027_0f15735eb1_o.jpg";
+    var background = $"./Pictures/Backgrounds/background{(Model.IsMobile ? "-mobile" : "")}.jpg";
 }
 
 @section metatags {
@@ -15,25 +15,32 @@
     <meta property="og:image" content="@background" />
 }
 
-<header class="intro-header" id="intro-header" >
-    <div class="parallax-window" data-parallax="scroll" data-image-src="@background">
-        <br />
-
+<header class="intro-header" id="intro-header" >        
+    <div class="parallax-window" data-parallax="scroll" data-image-src="@background"/>
         <div class="">
             <img src="~/Pictures/LogoRepo.PNG" style="width:90%; max-width:380px;" />
-            @*@Html.Partial("~/Views/Shared/Logo.cshtml")*@
             <div class="" style="color:papayawhip; padding: 10px;border-radius: 5px; text-shadow: 0px 0px 10px rgba(31, 31, 33, 0.9);">
-                <h1 class="hidden-xs">Repostería Artesanal</h1>
+                <h2 class="" style="margin-top: -10px;">Repostería Artesanal</h2>
                 <div class="intro-message">
                     <div class="">
                         <div class="animated" style="margin: 0px;" id="buy-btn">
                             <a asp-action="List" asp-controller="PieDetail" style="color: papayawhip; padding: 15px;font-size: 60px;  ">
                                 <div class="">
                                     <div class="">
-                                        <span class="fa fa-shopping-cart"></span>
-                                        <hr class="intro-divider">
+                                        @*<span class="fa fa-shopping-cart"></span>
+                                            <hr class="intro-divider">*@
                                     </div>
-                                    <h1 class="text-center" style="margin-bottom:-25px; font-family:Playball">¡Comprar!</h1>
+                                    <style>
+
+                                        #comprar-h1 {
+                                            margin-bottom: 0px;
+                                            /*margin-top: -25px;*/
+                                            font-family: Noto Serif;
+                                            text-shadow: 2px 2px 20px #000000;
+                                        }
+                                    
+                                    </style>
+                                    <h1 id="comprar-h1" class="text-center">¡Comprar!</h1>
                                 </div>
                             </a>
                         </div>
