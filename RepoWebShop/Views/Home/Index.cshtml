@@ -15,42 +15,41 @@
     <meta property="og:image" content="@background" />
 }
 
-<header class="intro-header" id="intro-header" >        
-    <div class="parallax-window" data-parallax="scroll" data-image-src="@background"/>
-        <div class="">
-            <img src="~/Pictures/LogoRepo.PNG" style="width:90%; max-width:380px;" />
-            <div class="" style="color:papayawhip; padding: 10px;border-radius: 5px; text-shadow: 0px 0px 10px rgba(31, 31, 33, 0.9);">
-                <h2 class="" style="margin-top: -10px;">Repostería Artesanal</h2>
-                <div class="intro-message">
-                    <div class="">
-                        <div class="animated" style="margin: 0px;" id="buy-btn">
-                            <a asp-action="List" asp-controller="PieDetail" style="color: papayawhip; padding: 15px;font-size: 60px;  ">
+<header class="intro-header" id="intro-header">
+    <div class="parallax-window" data-parallax="scroll" data-image-src="@background" />
+    <div class="">
+        <img src="~/Pictures/LogoRepo.PNG" style="width:90%; max-width:380px;" />
+        <div class="" style="color:papayawhip; padding: 10px;border-radius: 5px; text-shadow: 0px 0px 10px rgba(31, 31, 33, 0.9);">
+            <h2 class="" style="margin-top: -10px;">Repostería Artesanal</h2>
+            <div class="intro-message">
+                <div class="">
+                    <div class="animated" style="margin: 0px;" id="buy-btn">
+                        <a asp-action="List" asp-controller="PieDetail" style="color: papayawhip; padding: 15px;font-size: 60px;  ">
+                            <div class="">
                                 <div class="">
-                                    <div class="">
-                                        @*<span class="fa fa-shopping-cart"></span>
-                                            <hr class="intro-divider">*@
-                                    </div>
-                                    <style>
-
-                                        #comprar-h1 {
-                                            margin-bottom: 0px;
-                                            /*margin-top: -25px;*/
-                                            font-family: Noto Serif;
-                                            text-shadow: 2px 2px 20px #000000;
-                                        }
-                                    
-                                    </style>
-                                    <h1 id="comprar-h1" class="text-center">¡Comprar!</h1>
+                                    @*<span class="fa fa-shopping-cart"></span>
+                                        <hr class="intro-divider">*@
                                 </div>
-                            </a>
-                        </div>
+                                <style>
+
+                                    #comprar-h1 {
+                                        margin-bottom: 0px;
+                                        /*margin-top: -25px;*/
+                                        font-family: Noto Serif;
+                                        text-shadow: 2px 2px 20px #000000;
+                                    }
+                                </style>
+                                <h1 id="comprar-h1" class="text-center">¡Comprar!</h1>
+                            </div>
+                        </a>
                     </div>
-                    <div style="margin-bottom:150px;">
-                        @Html.Partial("ArrowDown", "#piesoftheweek")
-                    </div>
+                </div>
+                <div style="margin-bottom:150px;">
+                    @Html.Partial("ArrowDown", "#piesoftheweek")
                 </div>
             </div>
         </div>
+    </div>
 
     </div>
 </header>
@@ -58,7 +57,7 @@
 
 
 
-@if(Model.PiesOfTheWeek.Count() > 0)
+@if (Model.PiesOfTheWeek.Count() > 0)
 {
     <section class="bg-light" id="piesoftheweek">
         <div class="container">
@@ -67,9 +66,9 @@
             </div>
             <div class="row pie-of-week-carousel">
                 @foreach (var pie in Model.PiesOfTheWeek)
-        {
-            @Html.Partial("PieOverviewSummary", pie)
-}
+                {
+                    @Html.Partial("PieOverviewSummary", pie)
+                }
             </div>
             <a asp-action="List" asp-controller="PieDetail">
                 <h2 class="text-muted text-center">Ver más</h2>
@@ -80,15 +79,15 @@
 @Html.Partial("~/Views/Services/Index.cshtml")
 
 <section id="location">
-        <div class="title-container">
-            <h1 class="text-center title-logo">Dirección</h1>
-        </div>
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d40509.165163836115!2d-58.42386838681868!3d-34.620141749222064!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x36138e4afdfc67e8!2sDe+las+Artes!5e0!3m2!1sen!2snz!4v1503363586219" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+    <div class="title-container">
+        <h1 class="text-center title-logo">Dirección</h1>
+    </div>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d40509.165163836115!2d-58.42386838681868!3d-34.620141749222064!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x36138e4afdfc67e8!2sDe+las+Artes!5e0!3m2!1sen!2snz!4v1503363586219" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
 </section>
 
 <section class="container bg-light" id="team">
     <div class="">
-        <div class="">
+        <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="title-container">
                     <h1 class="section-heading title-logo">De las Artes</h1>
@@ -106,7 +105,8 @@
                 </div>
             </div>
         </div>
-        <div class="owl-carousel team-carousel">
+
+        <div class="owl-carousel team-carousel hidden">
             @Html.Partial("TeamMember", new TeamMemberViewModel() { Name = "Claudio", Picture = "/Pictures/Team/Claudio.jpg", Title = "Maestro pastelero", Subtitle = "Cofundador", Email = "" })
             @Html.Partial("TeamMember", new TeamMemberViewModel() { Name = "Marcela", Picture = "/Pictures/Team/Marcela.jpg", Title = "Mente creativa", Subtitle = "Cofundadora", Email = "" })
             @Html.Partial("TeamMember", new TeamMemberViewModel() { Name = "Fiorella", Picture = "/Pictures/Team/Fio.jpeg", Title = "Master Chef", Subtitle = "Manager de Ventas", Email = "" })
@@ -114,7 +114,13 @@
             @Html.Partial("TeamMember", new TeamMemberViewModel() { Name = "Nico", Picture = "/Pictures/Team/Nico.PNG", Title = "Master de Todo", Subtitle = "Genio culinario", Email = "" })
             @Html.Partial("TeamMember", new TeamMemberViewModel() { Name = "Alicia", Picture = "/Pictures/Team/ALita.PNG", Title = "La Jefa", Subtitle = "Atención al Cliente", Email = "" })
         </div>
-        <div class="">
+
+        <div class="row">
+            <div id="staff"></div>
+        </div>
+
+
+        <div class="row">
             <div class="col-lg-12 mx-auto text-center">
                 <h1>El secreto está en la pasión.</h1>
             </div>
@@ -129,24 +135,28 @@
 </section>
 
 <script type="text/javascript">
-    $(function () {
-        $('.carousel').carousel({
-            interval: 2000
-        });
-    });
+    $.get("/api/PhotosData/GetAlbumStaff/72157693137937504", function (data) {
+        $("#staff").append(data);
+    })
 
-    $('.team-carousel').slick({
-        arrows: false,
-        dots: false,
-        autoplay: true,
-        autoplaySpeed: 2500,
-        focusOnSelect: true,
-        pauseOnFocus: true,
-        pauseOnHover: true,
-        pauseOnDotsHover: true,
-        centerMode: true,
-        variableWidth: true
-    });
+    //$(function () {
+    //    $('.carousel').carousel({
+    //        interval: 2000
+    //    });
+    //});
+
+    //$('.team-carousel').slick({
+    //    arrows: false,
+    //    dots: false,
+    //    autoplay: true,
+    //    autoplaySpeed: 2500,
+    //    focusOnSelect: true,
+    //    pauseOnFocus: true,
+    //    pauseOnHover: true,
+    //    pauseOnDotsHover: true,
+    //    centerMode: true,
+    //    variableWidth: true
+    //});
 
     $(document).ready(function () {
         setInterval(function () {

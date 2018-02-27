@@ -6,6 +6,10 @@
     }
 </style>
 
+<link href="~/Content/froala_editor.pkgd.min.css" rel="stylesheet" />
+<link href="~/Content/froala_style.min.css" rel="stylesheet" />
+<script src="~/CommonJs/froala_editor.pkgd.min.js"></script>
+
 <div class="container create-pie-detail">
     <h2>Registrar producto nuevo</h2>
     <form asp-controller="PieDetail" asp-action="Create" method="post" class="form-horizontal" role="form">
@@ -37,7 +41,7 @@
         <div class="form-group">
             <label asp-for="LongDescription" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <textarea asp-for="LongDescription" class="form-control" style="height: 150px;"></textarea>
+                <textarea asp-for="LongDescription" id="textarea-desc" class="form-control" ></textarea>
                 <span asp-validation-for="LongDescription" class="text-danger"></span>
             </div>
         </div>
@@ -83,3 +87,8 @@
         </div>
     </form>
 </div>
+<script>
+    $(function () {
+        $('#textarea-desc').froalaEditor()
+    });
+</script>

@@ -31,5 +31,19 @@ namespace RepoWebShop.Controllers
                 return result;
             }
         }
+
+        [HttpGet]
+        [Route("GetAlbumStaff/{Id}")]
+        public ActionResult GetAlbumStaff(long Id)
+        {
+            var album = _photosetAlbums.GetAlbumPictures(Id);
+            if (album == null)
+                return NotFound();
+            else
+            {
+                var result = PartialView("AlbumCarouselStaff", album);
+                return result;
+            }
+        }
     }
 }

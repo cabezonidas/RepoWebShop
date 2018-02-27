@@ -52,7 +52,10 @@ namespace RepoWebShop.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(DeliveryAddressViewModel deliveryAddres)
         {
-            if(!ModelState.IsValid)
+            deliveryAddres.MinimumCharge = _config.GetValue<int>("LowestDeliveryCost");
+            deliveryAddres.CostByBlock = _config.GetValue<int>("DeliveryCostByBlock");
+
+            if (!ModelState.IsValid)
                 return View(deliveryAddres);
 
             var distance = await _deliveryRepository.GetDistanceAsync(deliveryAddres.AddressLine1);

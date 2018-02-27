@@ -57,7 +57,7 @@ namespace RepoWebShop.Controllers
         {
             try
             {
-                DateTime date = new DateTime(yyyy, mm, dd, hh, mm, 0);
+                DateTime date = new DateTime(yyyy, mm, dd, hh, min, 0);
                 _orderRepository.UpdatePickUpDate(orderId, date);
                 return Ok();
             }catch

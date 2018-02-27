@@ -12,7 +12,7 @@
     </div>
 
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-    <form asp-controller="Delivery" asp-action="Index" class="form-horizontal" method="post" role="form">
+    <form asp-controller="Delivery" asp-action="Index" class="form-horizontal" method="post" role="form" autocomplete="off">
         <div class="form-group" id="locationField">
             <div class="text-center text-muted" style="margin-bottom: 20px;">
                 <h3>Horarios de envío</h3>
@@ -22,7 +22,7 @@
             <div class="col-md-10">
                 <input asp-for="AddressLine1" id="autocomplete" class="form-control"
                        placeholder="Avenida Jose Maria Moreno 561"
-                       onFocus="geolocate()" autocomplete="off" />
+                       onFocus="geolocate()" autocomplete="off"/>
                 <div style="margin-top: 5px;">
                     <div class="text-center alert-danger hidden" id="addressNotSupported">
                         <span class="fa fa-times" style="color: red;">
@@ -116,10 +116,12 @@
     </div>
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
         <h3 class="text-muted text-center">Zona de Cobertura - Radio de 3kms</h3>
-        <h4 class="text-center text-muted">
+        <h4 class="text-center text-muted">El costo de envío se calcula automáticamente</h4>
+        <h5 class="text-center text-muted">
             El costo mínimo es $@Model.MinimumCharge para distancias menores a @(Model.MinimumCharge * 10) metros.<br />
-            Para distancias mayores, el costo es $@Model.CostByBlock por cada 100 metros.
-        </h4>
+            Para distancias mayores, el costo es $@Model.CostByBlock por cada 100 metros.<br />
+            
+        </h5>
         <div id="map" style="height:350px; width:100%;"></div>
     </div>
 

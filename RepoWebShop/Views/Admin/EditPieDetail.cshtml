@@ -1,7 +1,8 @@
-﻿@model PieDetailCreateViewModel 
+﻿@model PieDetailCreateViewModel
 
-<link href="~/Content/Admin/EditPieDetail.css" rel="stylesheet" />
-
+<link href="~/Content/froala_editor.pkgd.min.css" rel="stylesheet" />
+<link href="~/Content/froala_style.min.css" rel="stylesheet" />
+<script src="~/CommonJs/froala_editor.pkgd.min.js"></script>
 <div class="container edit-pie-detail">
     <h2>Editar @Model.Name </h2>
     <a asp-controller="Admin" asp-action="AllProducts" class="btn btn-primary">Productos</a>
@@ -49,7 +50,7 @@
         <div class="form-group">
             <label asp-for="LongDescription" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <textarea asp-for="LongDescription" class="form-control" style="height: 150px;"></textarea>
+                <textarea asp-for="LongDescription" class="form-control" id="textarea-desc" style="height: 150px;"></textarea>
                 <span asp-validation-for="LongDescription" class="text-danger"></span>
             </div>
         </div>
@@ -117,6 +118,11 @@
     </div>
 </div>
 <script type="text/javascript">
+
+    $(function () {
+        $('#textarea-desc').froalaEditor()
+    });
+
     var dataTable;
     $(document).ready(function () {
         getPies();
@@ -224,7 +230,7 @@
             row.append('<td>Inactivo</td>');
             row.append('<td>' + '<a onclick="restorePie(' + item.pieId + ')" class="restorePie" id="' + item.pieId + '" href="#">Restaurar</a>' + '</td>');
         }
-            
+
         return row;
     }
 </script>

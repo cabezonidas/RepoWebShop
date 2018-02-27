@@ -1,8 +1,7 @@
 ﻿@model AlbumPictures
 
 <link href="~/Content/Shared/AlbumCarousel.css" rel="stylesheet" />
-<link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick.css" />
-<link rel="stylesheet" type="text/css" href="~/lib/slick-carousel/slick/slick-theme.css" />
+
 
 <div class="partialView" id="@Model.Photoset.Id" style="display:none;">
     <!-- Gallery -->
@@ -16,7 +15,7 @@
                 foreach (var photo in Model.Photoset.Photo)
                 {
                     var url = $"https://farm{photo.Farm}.staticflickr.com/{photo.Server}/{photo.Id}_{photo.Secret}";
-                    var full = url + "_h.jpg";
+                    var full = url + "_c.jpg";
                     var thumb = url + "_q.jpg";
                     <div class="item li @classname" data-full="@full">
                         <img src="@thumb" />

@@ -1,5 +1,6 @@
 ﻿@model PieDetailViewModel
 
+
 <style>
     .static-prices {
         margin: 5px;
@@ -24,8 +25,8 @@
         border-radius: 20px;
     }*/
 
-        .thumbnailDetail h1 {
-        }
+    .thumbnailDetail h1 {
+    }
 
     /*#pictures {
         background-color: #dbe9d8;
@@ -35,14 +36,14 @@
         border-width: 2px;
     }*/
 
-        #pictures h2 {
-            padding: 5px;
-            background-color: white;
-            border-radius: 3px;
-            border-style: solid;
-            border-width: 1px;
-            border-color: green;
-        }
+    #pictures h2 {
+        padding: 5px;
+        background-color: white;
+        border-radius: 3px;
+        border-style: solid;
+        border-width: 1px;
+        border-color: green;
+    }
 
     .longdesc {
         /*font-size: larger;*/
@@ -97,9 +98,9 @@
         color: #333;
     }
 
-        #description h4 {
-            text-align: center;
-        }
+    #description h4 {
+        text-align: center;
+    }
     /***************************************/
     #gallery-title {
         display: none;
@@ -143,68 +144,68 @@
         <div class="short-Desc">
             <div class="row">
 
-            <div class="col-xs-12 col-sm-7 col-md-7 col-lg-6" id="description">
-                <div style="/*display:inline-flex;*/">
-                    <h4>@Model.PieDetail.ShortDescription</h4>
-                    <div class="caption-full">
-                        <div class="fb-share-button"
-                             data-href="/PieDetail/Details/@Model.PieDetail.PieDetailId"
-                             data-layout="button_count">
+                <div class="col-xs-12 col-sm-7 col-md-7 col-lg-6" id="description">
+                    <div style="/*display:inline-flex;*/">
+                        <h4>@Model.PieDetail.ShortDescription</h4>
+                        <div class="caption-full">
+                            <div class="fb-share-button"
+                                 data-href="/PieDetail/Details/@Model.PieDetail.PieDetailId"
+                                 data-layout="button_count">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <br />
-                <p class="longdesc">@Model.PieDetail.LongDescription</p>
-                <div style="display: flex; ">
-                    <h4 style="margin: auto;" class="">Preparación: @Model.PieDetail.PreparationTime hs</h4>
-                </div>
-                <table class="table static-prices animated flipInX">
-                    <thead>
-                        <tr>
-                            <th scope="col">Descripción</th>
-                            <th scope="col">Tamaño</th>
-                            <th scope="col">Precio</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @{
-                foreach (var pie in Model.Pies.OrderBy(x => x.Price))
-                {
-                    <tr class="static-price">
-                        <td class="unit-name">@pie.Name</td>
-                        <td class="unit-description">@pie.SizeDescription</td>
-                        <td class="unit-price">
-                            $@pie.Price
-                        </td>
-                        <td>
-                            <a title="Comprar" asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@pie.PieId'>
-                                <span class="fa fa-shopping-cart">
-                                </span>
-                            </a>
-                        </td>
-                    </tr>
-    }
-                        }
-                    </tbody>
-                </table>
-
-                <div style="text-align: center;margin-bottom: 10px;" class="hidden-xs">
                     <br />
-                    <a asp-action="List" asp-controller="PieDetail" class="btn btn-primary submit-btn">
-                        Seguir Comprando
-                    </a>
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-5 col-md-5 col-lg-6" id="pictures">
-                @{ 
-                    var primarypic = $"{Model.PrimaryPicture}{(Model.IsMobile ? "z" : "b")}.jpg";
-                }
-                <img src="@primarypic" style="width: 100%"/>
-                <img alt="@Model.PieDetail.Name" src="~/Pictures/imgnotfound.png" id="defaultPicture" style="display:none; width: 100%;">
+                    <div class="longdesc">@Html.Raw(Model.PieDetail.LongDescription)</div>
+                    <div style="display: flex; ">
+                        <h4 style="margin: auto;" class="">Preparación: @Model.PieDetail.PreparationTime hs</h4>
+                    </div>
+                    <table class="table static-prices animated flipInX">
+                        <thead>
+                            <tr>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Tamaño</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (var pie in Model.Pies.OrderBy(x => x.Price))
+                                {
+                                    <tr class="static-price">
+                                        <td class="unit-name">@pie.Name</td>
+                                        <td class="unit-description">@pie.SizeDescription</td>
+                                        <td class="unit-price">
+                                            $@pie.Price
+                                        </td>
+                                        <td>
+                                            <a title="Comprar" asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@pie.PieId'>
+                                                <span class="fa fa-shopping-cart">
+                                                </span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
 
-            </div>
+                    <div style="text-align: center;margin-bottom: 10px;" class="hidden-xs">
+                        <br />
+                        <a asp-action="List" asp-controller="PieDetail" class="btn btn-primary submit-btn">
+                            Seguir Comprando
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-5 col-md-5 col-lg-6" id="pictures">
+                    @{
+                        var primarypic = $"{Model.PrimaryPicture}{(Model.IsMobile ? "z" : "b")}.jpg";
+                    }
+                    <img src="@primarypic" style="width: 100%" />
+                    <img alt="@Model.PieDetail.Name" src="~/Pictures/imgnotfound.png" id="defaultPicture" style="display:none; width: 100%;">
+
+                </div>
             </div>
             <div class="row">
                 <div id="photos"></div>

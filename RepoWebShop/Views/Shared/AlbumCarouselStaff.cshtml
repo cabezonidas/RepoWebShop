@@ -1,0 +1,77 @@
+﻿@model AlbumPictures
+
+<link href="~/Content/Shared/AlbumCarousel.css" rel="stylesheet" />
+
+
+<div class="partialView" id="@Model.Photoset.Id" style="display:none;">
+    <!-- Gallery -->
+    <div class="gallery-div">
+        <div id="@Model.Photoset.Id" class="gallery ul">
+            @{
+                var classname = Model.Photoset.Id + "-item";
+                foreach (var photo in Model.Photoset.Photo)
+                {
+                    var url = $"https://farm{photo.Farm}.staticflickr.com/{photo.Server}/{photo.Id}_{photo.Secret}";
+                    var full = url + "_c.jpg";
+                    var thumb = url + "_q.jpg";
+                    <div class="item li @classname" data-full="@full">
+                        <img src="@thumb" />
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="lightbox" id="lb-@Model.Photoset.Id">
+        <figure id="fig-@Model.Photoset.Id">
+
+        </figure>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var $lightbox = $('#lb-@Model.Photoset.Id'),
+            $figure = $('#fig-@Model.Photoset.Id');
+
+        $('.@classname').on('click', function () {
+            var full = $(this).attr('data-full');
+            toggleLightbox(full);
+        });
+
+        function toggleLightbox(url) {
+            if ($lightbox.is('.open')) {
+                $lightbox
+                    .removeClass('open')
+                    .fadeOut(200);
+            } else {
+                $figure.css('background-image', 'url(' + url + ')');
+                $lightbox
+                    .addClass('open')
+                    .fadeIn(200);
+            }
+        }
+        $lightbox.on('click', toggleLightbox);
+    });
+
+    var sliderSelector = '@Model.Photoset.Id' + ".gallery";
+
+    @if(Model.Photoset.Photo.Count() > 1)
+    {
+        <text>
+            $('#' + sliderSelector).slick({
+                dots: true,
+                infinite: true,
+                speed: 300,
+                slidesToShow: 1,
+                centerMode: true,
+                variableWidth: true,
+                arrows: false,
+                autoplay: true,
+                autoplaySpeed: 2000
+            });
+        </text>
+    }
+
+    var partialViewSelector = '@Model.Photoset.Id' + '.partialView';
+    $('#' + partialViewSelector).fadeIn();
+</script>
