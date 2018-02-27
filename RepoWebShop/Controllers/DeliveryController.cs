@@ -54,9 +54,24 @@ namespace RepoWebShop.Controllers
         {
             deliveryAddres.MinimumCharge = _config.GetValue<int>("LowestDeliveryCost");
             deliveryAddres.CostByBlock = _config.GetValue<int>("DeliveryCostByBlock");
+            
 
             if (!ModelState.IsValid)
-                return View(deliveryAddres);
+            {
+                try
+                {
+                    var potentialPlace = await _deliveryRepository.GuessPlaceIdAsync(deliveryAddres.AddressLine1);
+                    var placeConfirmed = await _deliveryRepository.GetPlaceAsync(potentialPlace);
+                    deliveryAddres.AddressLine1 = placeConfirmed.StreetName + " " + placeConfirmed.StreetNumber + ", " + placeConfirmed.PostalCode;
+                    deliveryAddres.ZipCode = placeConfirmed.PostalCode;
+                    deliveryAddres.StreetName = placeConfirmed.StreetName;
+                    deliveryAddres.StreetNumber = placeConfirmed.StreetNumber;
+                }
+                catch
+                {
+                    return View(deliveryAddres);
+                }
+            }
 
             var distance = await _deliveryRepository.GetDistanceAsync(deliveryAddres.AddressLine1);
             if(distance > 3000)

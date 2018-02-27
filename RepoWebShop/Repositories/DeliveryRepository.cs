@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
+using RepoWebShop.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -129,5 +130,63 @@ namespace RepoWebShop.Repositories
                 result = _minimumCharge;
             return result;
         }
+
+        public async Task<string> GuessPlaceIdAsync(string address)
+        {
+            var httpClient = new HttpClient();
+            var autocompleteApi = "maps.googleapis.com/maps/api/place/autocomplete";
+            var apiKey = "key=AIzaSyBxKMKlaxoM9x9Jv-r4KXxhvgHBsKbAmEk";
+            var result = await httpClient.GetAsync($"https://{autocompleteApi}/xml?input={address}&types=address&{apiKey}");
+            var body = await result.Content.ReadAsStringAsync();
+
+            var xmlDocument = XDocument.Parse(body);
+            var place_id = xmlDocument.Element("AutocompletionResponse").Element("prediction").Element("place_id").Value;
+
+
+            var test = await GetPlaceAsync(place_id);
+
+            return place_id;
+        }
+
+        public async Task<AddressViewModel> GetPlaceAsync(string placeId)
+        {
+            var httpClient = new HttpClient();
+            var placeApi = "maps.googleapis.com/maps/api/place/details";
+            var apiKey = "key=AIzaSyBxKMKlaxoM9x9Jv-r4KXxhvgHBsKbAmEk";
+            var response = await httpClient.GetAsync($"https://{placeApi}/xml?placeid={placeId}&{apiKey}");
+            var body = await response.Content.ReadAsStringAsync();
+
+            var xmlDocument = XDocument.Parse(body);
+            //var place = xmlDocument.Element("AutocompletionResponse").Element("prediction").Element("place_id").Value;
+
+            var result = xmlDocument.Element("PlaceDetailsResponse").Element("result");
+
+            var addressLine1 = result.Element("formatted_address").Value;
+            string postalCode = string.Empty, streetNumber = string.Empty, streetName = string.Empty;
+
+            foreach(var addressComponent in result.Elements("address_component"))
+            {
+                if (addressComponent.Element("type").Value == "route")
+                    streetName = addressComponent.Element("long_name").Value;
+
+                if (addressComponent.Element("type").Value == "street_number")
+                    streetNumber = addressComponent.Element("long_name").Value;
+
+                if (addressComponent.Element("type").Value == "postal_code")
+                    postalCode = addressComponent.Element("long_name").Value;
+            }
+
+            var address = new AddressViewModel()
+            {
+                AddressLine1 = addressLine1,
+                PostalCode = postalCode,
+                StreetName = streetName,
+                StreetNumber = streetNumber
+            };
+
+            return address;
+        }
+
+
     }
 }
