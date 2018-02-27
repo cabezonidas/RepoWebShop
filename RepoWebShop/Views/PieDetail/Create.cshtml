@@ -1,14 +1,13 @@
 ﻿@model PieDetailCreateViewModel
 
-<style>
-    .create-pie-detail {
-        font-family: Arial;
-    }
-</style>
 
-<link href="~/Content/froala_editor.pkgd.min.css" rel="stylesheet" />
-<link href="~/Content/froala_style.min.css" rel="stylesheet" />
-<script src="~/CommonJs/froala_editor.pkgd.min.js"></script>
+
+<script src="~/CommonJs/summernote.js"></script>
+
+
+@section styles {
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
+}
 
 <div class="container create-pie-detail">
     <h2>Registrar producto nuevo</h2>
@@ -41,7 +40,7 @@
         <div class="form-group">
             <label asp-for="LongDescription" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <textarea asp-for="LongDescription" id="textarea-desc" class="form-control" ></textarea>
+                <textarea asp-for="LongDescription" id="textarea-desc" class="form-control"></textarea>
                 <span asp-validation-for="LongDescription" class="text-danger"></span>
             </div>
         </div>
@@ -88,7 +87,7 @@
     </form>
 </div>
 <script>
-    $(function () {
-        $('#textarea-desc').froalaEditor()
+    $(document).ready(function () {
+        $('#textarea-desc').summernote();
     });
 </script>

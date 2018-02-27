@@ -10,16 +10,7 @@
 
 <div class="container">
     <h2>Pedidos en proceso</h2>
-    <br />
-    <a asp-controller="Order" asp-action="InProgress" class="">En proceso</a> -
-    <a asp-controller="Order" asp-action="AllOrders" class="">Todos</a> -
-    <a asp-controller="Order" asp-action="Cancelled" class="">Cancelados</a> -
-    <a asp-controller="Order" asp-action="NotYetPaid" class="">Sin pagar</a> -
-    <a asp-controller="Order" asp-action="PickedUp" class="">Retirados</a> -
-    <a asp-controller="Order" asp-action="Returned" class="">Retornados</a> -
-    <a asp-controller="Order" asp-action="Refunded" class="">Dinero devuelto</a>
-    <br />
-    <br />
+
     <table id="orders">
         <thead>
             <tr>
@@ -51,9 +42,9 @@
                     <td>
                         @if (order.PickUpTime.HasValue)
                         {
-                        <div>
-                            @Html.Raw(_calendarRepository.SuperFriendlyDate(order.PickUpTime))
-                        </div>
+                            <div>
+                                @Html.Raw(_calendarRepository.SuperFriendlyDate(order.PickUpTime))
+                            </div>
                         }
                     </td>
                     <td>
@@ -90,7 +81,16 @@
             }
         </tbody>
     </table>
-
+    <br />
+    <a asp-controller="Order" asp-action="InProgress" class="">En proceso</a> -
+    <a asp-controller="Order" asp-action="AllOrders" class="">Todos</a> -
+    <a asp-controller="Order" asp-action="Cancelled" class="">Cancelados</a> -
+    <a asp-controller="Order" asp-action="NotYetPaid" class="">Sin pagar</a> -
+    <a asp-controller="Order" asp-action="PickedUp" class="">Retirados</a> -
+    <a asp-controller="Order" asp-action="Returned" class="">Retornados</a> -
+    <a asp-controller="Order" asp-action="Refunded" class="">Dinero devuelto</a>
+    <br />
+    <br />
 </div>
 
 <script type="text/javascript">

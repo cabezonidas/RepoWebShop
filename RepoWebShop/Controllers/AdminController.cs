@@ -142,7 +142,7 @@ namespace RepoWebShop.Controllers
             {
                 await _pieDetailRepository.Update(_mapper.Map<PieDetailCreateViewModel, PieDetail>(pieDetailCreateViewModel));
 
-                return View(pieDetailCreateViewModel);
+                //return View(pieDetailCreateViewModel);
             }
 
             pieDetailCreateViewModel.Categories = _categories;

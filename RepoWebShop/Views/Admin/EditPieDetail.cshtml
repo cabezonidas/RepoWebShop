@@ -1,8 +1,13 @@
 ﻿@model PieDetailCreateViewModel
 
-<link href="~/Content/froala_editor.pkgd.min.css" rel="stylesheet" />
-<link href="~/Content/froala_style.min.css" rel="stylesheet" />
-<script src="~/CommonJs/froala_editor.pkgd.min.js"></script>
+<script src="~/CommonJs/summernote.js"></script>
+
+
+@section styles {
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
+}
+
+
 <div class="container edit-pie-detail">
     <h2>Editar @Model.Name </h2>
     <a asp-controller="Admin" asp-action="AllProducts" class="btn btn-primary">Productos</a>
@@ -119,10 +124,9 @@
 </div>
 <script type="text/javascript">
 
-    $(function () {
-        $('#textarea-desc').froalaEditor()
+    $(document).ready(function () {
+        $('#textarea-desc').summernote();
     });
-
     var dataTable;
     $(document).ready(function () {
         getPies();
