@@ -1,5 +1,5 @@
 ﻿@model PieDetailViewModel
-
+@using System.Text.RegularExpressions
 
 <style>
     .static-prices {
@@ -111,7 +111,10 @@
     <meta property="og:url" content="@Model.RequestAbsoluteUrl" />
     <meta property="og:type" content="product" />
     <meta property="og:title" content="@Model.PieDetail.Name" />
-    <meta property="og:description" content="@Model.PieDetail.LongDescription" />
+    @{
+        var desc = Regex.Replace(Model.PieDetail.LongDescription, "<.*?>", String.Empty);
+    }
+    <meta property="og:description" content="@desc" />
     @{
         if (Model.PieDetail.FlickrAlbumId != 0 && !String.IsNullOrWhiteSpace(Model.PrimaryPicture))
         {
@@ -195,7 +198,7 @@
                 </div>
                 <div class="col-xs-12 col-sm-5 col-md-5 col-lg-6" id="pictures">
                     @{
-        var primarypic = $"{Model.PrimaryPicture}{(Model.IsMobile ? "z" : "b")}.jpg";
+                        var primarypic = $"{Model.PrimaryPicture}{(Model.IsMobile ? "z" : "b")}.jpg";
                     }
                     <img src="@primarypic" style="width: 100%" />
                     <img alt="@Model.PieDetail.Name" src="~/Pictures/imgnotfound.png" id="defaultPicture" style="display:none; width: 100%;">
