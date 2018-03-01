@@ -51,14 +51,10 @@
     }
 
     .short-Desc {
-        padding: 20px;
+        padding-top: 20px;
         max-width: 900px;
-        margin: 30px auto;
+        margin: auto;
         text-align: center;
-    }
-
-    h2 {
-        font-family: 'Playball'
     }
 
 
@@ -136,69 +132,64 @@
 </script>
 <br />
 <div class="container">
-    <br />
     <div class="thumbnailDetail">
-        <div class="header" id="title">
-            <div class="title-container">
-                <h1 class="title-logo">@Model.PieDetail.Name</h1>
-            </div>
-        </div>
+
+
+        <h1 class="text-center" style="font-family:Noto serif;">@Model.PieDetail.Name</h1>
+        <h3 class="text-center text-muted" style="font-family:Noto serif;">@Model.PieDetail.ShortDescription</h3>
 
         <div class="short-Desc">
             <div class="row">
 
                 <div class="col-xs-12 col-sm-7 col-md-7 col-lg-6" id="description">
-                    <div style="/*display:inline-flex;*/">
-                        <h4>@Model.PieDetail.ShortDescription</h4>
 
-                    </div>
+                    <div class="longdesc">@Html.Raw(Model.PieDetail.LongDescription)</div>
 
                     <br />
-                    <div class="longdesc">@Html.Raw(Model.PieDetail.LongDescription)</div>
-                    <div style="display: flex; ">
-                        <h4 style="margin: auto;" class="">Preparación: @Model.PieDetail.PreparationTime hs</h4>
-                    </div>
                     <table class="table static-prices animated flipInX">
                         <thead>
                             <tr>
                                 <th scope="col">Descripción</th>
-                                <th scope="col">Tamaño</th>
                                 <th scope="col">Precio</th>
-                                <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody>
                             @{
-                                foreach (var pie in Model.Pies.OrderBy(x => x.Price))
-                                {
-                                    <tr class="static-price">
-                                        <td class="unit-name">@pie.Name</td>
-                                        <td class="unit-description">@pie.SizeDescription</td>
-                                        <td class="unit-price">
-                                            $@pie.Price
-                                        </td>
-                                        <td>
-                                            <a title="Comprar" asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@pie.PieId'>
-                                                <span class="fa fa-shopping-cart">
-                                                </span>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                }
+                foreach (var pie in Model.Pies.OrderBy(x => x.Price))
+                {
+                    <tr class="static-price">
+                        <td class="unit-name">
+                            <div>
+                                @pie.Name<br />
+                                @pie.SizeDescription
+                            </div>
+                        </td>
+                        <td class="unit-price">
+                            <div>
+                                $@pie.Price<br />
+                                <a title="Comprar" asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@pie.PieId'>
+                                    Agregar al carrito <span class="fa fa-shopping-cart"></span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+}
                             }
                         </tbody>
                     </table>
-
+                    <div style="display: flex; ">
+                        <h4 style="margin: auto;" class="">Preparación: @Model.PieDetail.PreparationTime hs</h4>
+                    </div>
                     <div style="text-align: center;margin-bottom: 10px;" class="hidden-xs">
                         <br />
                         <a asp-action="List" asp-controller="PieDetail" class="btn btn-primary submit-btn">
-                            Seguir Comprando
+                            <span class="glyphicon glyphicon-arrow-left "></span> Volver
                         </a>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-5 col-md-5 col-lg-6" id="pictures">
                     @{
-                        var primarypic = $"{Model.PrimaryPicture}{(Model.IsMobile ? "z" : "b")}.jpg";
+                    var primarypic = $"{Model.PrimaryPicture}{(Model.IsMobile ? "z" : "b")}.jpg";
                     }
                     <img src="@primarypic" style="width: 100%" />
                     <img alt="@Model.PieDetail.Name" src="~/Pictures/imgnotfound.png" id="defaultPicture" style="display:none; width: 100%;">
