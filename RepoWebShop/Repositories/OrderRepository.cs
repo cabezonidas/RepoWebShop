@@ -85,6 +85,8 @@ namespace RepoWebShop.Models
 
         public Order GetOrderByBookingId(string friendlyBookingId)
         {
+            if (friendlyBookingId == null)
+                return null;
             return _appDbContext.Orders.Include(x => x.Registration).OrderByDescending(x => x.OrderId).FirstOrDefault(x => x.BookingId.EndsWith(friendlyBookingId));
         }
 
@@ -399,5 +401,9 @@ namespace RepoWebShop.Models
         {
             return _appDbContext.Orders.Where(x => x.Registration == user).Include(x => x.Email);
         }
+
+        public bool ValidBookingId(string bookingId)
+        => _appDbContext.ShoppingCartItems.Any(x => x.ShoppingCartId == bookingId)
+            || _appDbContext.Orders.Any(x => x.BookingId == bookingId);
     }
 }

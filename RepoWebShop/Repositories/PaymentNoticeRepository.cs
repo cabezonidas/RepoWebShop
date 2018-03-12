@@ -35,19 +35,23 @@ namespace RepoWebShop.Repositories
             charged_back    - Was made a chargeback in the buyer’s credit card
             */
 
-            if (paymentNotification.Status == "approved")
-            {
-                Order orderApproved = _orderRespository.OrderApproved(paymentNotification);
-                await _emailRespository.SendOrderConfirmationAsync(orderApproved, hostUrl, paymentNotification);
-            }
 
-            else if (paymentNotification.Status == "in_process")
-            {
-                Order order = _orderRespository.OrderInProcess(paymentNotification);
-            }
+            if(_orderRespository.ValidBookingId(paymentNotification.BookingId))
+            { 
+                if (paymentNotification.Status == "approved")
+                {
+                    Order orderApproved = _orderRespository.OrderApproved(paymentNotification);
+                    await _emailRespository.SendOrderConfirmationAsync(orderApproved, hostUrl, paymentNotification);
+                }
 
-            else
-                _orderRespository.UpdateOrder(paymentNotification);
+                else if (paymentNotification.Status == "in_process")
+                {
+                    Order order = _orderRespository.OrderInProcess(paymentNotification);
+                }
+
+                else
+                    _orderRespository.UpdateOrder(paymentNotification);
+            }
         }
 
         public IEnumerable<PaymentNotice> GetPayments()

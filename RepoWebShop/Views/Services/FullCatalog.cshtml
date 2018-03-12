@@ -31,7 +31,7 @@
 </div>
 <script>
     $.ajax({
-        url: "https://lareposteria.sharepoint.com/_api/Web/Lists(guid'b10fac5f-d656-49ca-bb9a-589b9362bb94')/items?$select=Title,Precio,Categoria,Temperatura&$filter=Categoria ne 'Lunch'&$orderby=Title asc",
+        url: "https://lareposteria.sharepoint.com/_api/Web/Lists(guid'b10fac5f-d656-49ca-bb9a-589b9362bb94')/items?$select=Title,Precio,Categoria,Temperatura&$filter=Categoria ne 'Lunch'&$orderby=Title asc&$top=500",
         headers: { "Authorization": "Bearer " + '@Model', "Accept": "application/json;odata=verbose"}
     }).done(function (data) {
 

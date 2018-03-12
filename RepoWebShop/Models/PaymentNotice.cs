@@ -14,7 +14,11 @@ namespace RepoWebShop.Models
 
         public PaymentNotice(Hashtable paymentInfo, string localZone)
         {
-            BookingId = paymentInfo.GetValue("external_reference", typeof(string)); //Mapped
+            var externalReference = paymentInfo.GetValue("external_reference", typeof(string)); //Mapped
+            Guid BookingReference;
+            if (Guid.TryParse(externalReference, out BookingReference))
+                BookingId = externalReference;
+
             MercadoPagoTransaction = paymentInfo.GetValue("id", typeof(string)); //Mapped
             Payment_Type = paymentInfo.GetValue("payment_type", typeof(string));
             Reason = paymentInfo.GetValue("reason", typeof(string));
