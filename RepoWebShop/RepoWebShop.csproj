@@ -72,6 +72,31 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Views\Shared\AlbumCarousel.cshtml" />
+    <None Include="Views\Shared\AlbumCarouselStaff.cshtml" />
+    <None Include="Views\Shared\ArrowDown.cshtml" />
+    <None Include="Views\Shared\ArrowUp.cshtml" />
+    <None Include="Views\Shared\Card.cshtml" />
+    <None Include="Views\Shared\Carousel.cshtml" />
+    <None Include="Views\Shared\Clock.cshtml" />
+    <None Include="Views\Shared\Components\CategoryMenu\Default.cshtml" />
+    <None Include="Views\Shared\Components\PhotosMenu\Default.cshtml" />
+    <None Include="Views\Shared\Components\ShoppingCartSummary\Default.cshtml" />
+    <None Include="Views\Shared\ExternalCss.cshtml" />
+    <None Include="Views\Shared\Favicon.cshtml" />
+    <None Include="Views\Shared\Index.cshtml" />
+    <None Include="Views\Shared\LoadingBar.cshtml" />
+    <None Include="Views\Shared\LoginPartial.cshtml" />
+    <None Include="Views\Shared\Logo.cshtml" />
+    <None Include="Views\Shared\PickupDate.cshtml" />
+    <None Include="Views\Shared\PieOverviewSummary.cshtml" />
+    <None Include="Views\Shared\PiePriceCarousel.cshtml" />
+    <None Include="Views\Shared\PiePriceCarouselItem.cshtml" />
+    <None Include="Views\Shared\SharedCss.cshtml" />
+    <None Include="Views\Shared\_Layout.cshtml" />
+  </ItemGroup>
+
   <!--<ItemGroup>
     <Reference Include="System.Web" />
   </ItemGroup>-->

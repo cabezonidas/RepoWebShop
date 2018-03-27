@@ -1,0 +1,87 @@
+﻿@model DateTime
+
+@{
+    var dia = "";
+    var day = Model.DayOfWeek.ToString();
+    switch (day)
+    {
+        case "Monday":
+            dia = "Lunes";
+            break;
+        case "Tuesday":
+            dia = "Martes";
+            break;
+        case "Wednesday":
+            dia = "Miercoles";
+            break;
+        case "Thursday":
+            dia = "Jueves";
+            break;
+        case "Friday":
+            dia = "Viernes";
+            break;
+        case "Saturday":
+            dia = "Sábado";
+            break;
+        case "Sunday":
+            dia = "Domingo";
+            break;
+        default:
+            break;
+    }
+
+    var mes = "";
+    var month = Model.Month;
+    switch (month)
+    {
+        case 1:
+            mes = "Enero";
+            break;
+        case 2:
+            mes = "Febrero";
+            break;
+        case 3:
+            mes = "Marzo";
+            break;
+        case 4:
+            mes = "Abril";
+            break;
+        case 5:
+            mes = "Mayo";
+            break;
+        case 6:
+            mes = "Junio";
+            break;
+        case 7:
+            mes = "Julio";
+            break;
+        case 8:
+            mes = "Agosto";
+            break;
+        case 9:
+            mes = "Septiembre";
+            break;
+        case 10:
+            mes = "Octubre";
+            break;
+        case 11:
+            mes = "Noviembre";
+            break;
+        case 12:
+            mes = "Diciembre";
+            break;
+        default:
+            break;
+    }
+}
+
+<div id="calendarView">
+    <div class="alert alert-warning text-center animated flash" style="">
+        Compralo ahora y tenelo listo el @dia @Model.Day de @mes a las @string.Format("{0:hh:mm tt}", Model)
+        <div>
+            <strong><a class="text-muted" id="moreinfo" href="#estimation-time">¿Por qué? ¿Quiero otra fecha?</a></strong>
+        </div>
+    </div>
+</div>
+
+

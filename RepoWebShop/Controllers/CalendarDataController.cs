@@ -37,6 +37,14 @@ namespace RepoWebShop.Controllers
             return PartialView("PickupDate", result);
         }
 
+        [HttpGet]
+        [Route("GetProductPickupDate/{hours}")]
+        public IActionResult GetProductPickupDate(int hours)
+        {
+            DateTime result = _calendarRepository.GetPickupEstimate(hours);
+            return PartialView("ProductPickupDate", result);
+        }
+
         [HttpPost]
         [Route("OpenHoursAddTimeFrame/{dayId}/{startingAt}/{finishAt}")]
         public IActionResult OpenHoursAddTimeFrame(int dayId, string startingAt, string finishAt)

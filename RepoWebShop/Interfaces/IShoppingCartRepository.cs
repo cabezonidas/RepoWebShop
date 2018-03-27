@@ -20,12 +20,13 @@ namespace RepoWebShop.Interfaces
         int RemoveFromCart(Pie pie);
         List<ShoppingCartItem> GetShoppingCartItems();
         void ClearCart();
-        decimal GetShoppingCartTotal();
+        decimal GetShoppingCartItemsTotal();
         string GetShoppingCartId();
         DeliveryAddress GetShoppingCartDeliveryAddress();
         void RenewId();
         void RemoveDelivery();
         string GetMpPreference();
         void SetMpPreference(string preferenceId);
+        decimal GetShoppingCartTotal();
     }
 }

@@ -13,7 +13,7 @@ namespace RepoWebShop.Models
         [Display(Name = "Descripción")]
         public string Name { get; set; }
         [Required]
-        [Display(Name = "Precio")]
+        [Display(Name = "Precio Online")]
         public decimal Price { get; set; }
         [Required]
         [Display(Name = "Tamaño")]
@@ -22,6 +22,10 @@ namespace RepoWebShop.Models
         [Display(Name = "Activo")]
         public bool IsActive { get; set; }
         public int PieDetailId { get; set; }
+
+
+        [Display(Name = "Precio en Local")]
+        public decimal? StorePrice { get; set; }
 
         public PieDetail PieDetail { get; set; }
     }

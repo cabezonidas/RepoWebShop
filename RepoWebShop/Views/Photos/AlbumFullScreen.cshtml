@@ -1,0 +1,57 @@
+﻿@model AlbumPictures
+@{ var source = Model.PrimaryPicture + "b.jpg"; }
+
+<div class="slider-nav" id="nav-@Model.Photoset.Id">
+    @foreach (var picture in Model.PicturesUrls)
+    {
+        var pic = picture + "q.jpg";
+        <div class="item" style="padding-right: 5px;">
+            <img src="@pic" alt="image" draggable="false" style="margin-right: 0px;" />
+        </div>
+    }
+</div>
+
+<div class="slider-for" style="margin-top: 20px;" id="for-@Model.Photoset.Id">
+    @foreach (var picture in Model.PicturesUrls)
+    {
+        var picPreview = picture + "z.jpg";
+        var picBig = picture + "b.jpg";
+        <div class="item" >
+            <a href="@picBig" data-caption="">
+                <img src="@picPreview" alt="image" draggable="false" style="text-align: center; display:block; padding: 0px; margin:auto; vertical-align:middle; width: 100%; " />
+            </a>
+        </div>
+    }
+</div>
+
+
+
+<script type="text/javascript">
+    $('#for-@Model.Photoset.Id' + '.slider-for').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+        fade: true,
+        //autoplay: true,
+        adaptiveHeight: true,
+        asNavFor: '#nav-@Model.Photoset.Id' + '.slider-nav'
+    });
+    $('#nav-@Model.Photoset.Id' + '.slider-nav').slick({
+        slidesToScroll: 1,
+        asNavFor: '#for-@Model.Photoset.Id' + '.slider-for',
+        dots: false,
+        infinite: true,
+        focusOnSelect: true,
+        arrows: false,
+        centerMode: true,
+        variableWidth: true
+    });
+    $(document).ready(function () {
+        $('#for-@Model.Photoset.Id' + '.slider-for').slickLightbox({
+            itemSelector: 'a',
+            slick: {
+                arrows: false
+            }
+        });
+    });
+</script>

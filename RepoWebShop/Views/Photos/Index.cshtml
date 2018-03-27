@@ -18,7 +18,7 @@
                 foreach (var photosetPhotos in Model)
                 {
                     <div>
-                        <a href="#@photosetPhotos.Photoset.Id">@photosetPhotos.Photoset.Title</a>
+                        <a href="#album-@photosetPhotos.Photoset.Id">@photosetPhotos.Photoset.Title</a>
                     </div>
                 }
             }
@@ -28,11 +28,18 @@
     </div>
 
     @Html.Partial("ArrowUp")
-    <div class="row">
-        <div class="" id="allAlbums">
 
+
+    @foreach(var album in Model)
+    {
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" >
+        <div style="border-style: solid; background-color: white; padding: 10px; margin-bottom: 10px; border-width: 1px; border-color: white; border-radius: 5px;">
+            <h3 class="text-center" id="album-@album.Photoset.Id" style="color:#883636; ">@album.Photoset.Title</h3>
+            @Html.Partial("~/Views/Photos/AlbumFullScreen.cshtml", album)
         </div>
     </div>
+
+    }
 </section>
 
 <script>
@@ -51,15 +58,5 @@
         });
     });
 
-
-
-
-    @foreach(var item in Model)
-    {
-        <text>
-            $.get("/api/PhotosData/GetAlbum/@item.Photoset.Id", function (data) {
-                $("#allAlbums").append(data);
-            });
-        </text>
-    }
+    $('.slider-for').matchHeight();
 </script>

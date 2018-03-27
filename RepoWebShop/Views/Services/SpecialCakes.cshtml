@@ -39,7 +39,7 @@
             padding: 10px;
             border-radius: 2px;
             width: 100%;
-            font-family: 'Kalam';
+            font-family: 'Noto Serif';
         }
 
             .special-cakes .step h3 {
@@ -137,39 +137,19 @@
                 </div>
             </div>
             <div class="contact-mail">
-                <h3>¿Te gustan? Escribinos a <a href="mailto:info@delasartes.com.ar">info@delasartes.com.ar</a></h3>
+                <a asp-controller="Photos" asp-action="Index">
+                    <h3 style="font-family: 'Noto Serif';" class="text-capitalize text-muted">Ver fotos</h3>
+                </a>
+                <h3 style="font-family: 'Noto Serif';">Escribinos a <a href="mailto:info@delasartes.com.ar">info@delasartes.com.ar</a></h3>
             </div>
-            <div class="" id="allAlbums">
+
+            <div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    @{
-        var albumes = new List<long>()
-        {
-            72157663338249098,
-            72157631388046352,
-            72157689990349894
-        };
-        foreach(var item in albumes)
-        {
-            <text>
-                $.get("/api/PhotosData/GetAlbum/@item", function (data) {
-                    $("#allAlbums").append(data);
-                });
-            </text>
-        }
-    }
-    $('.special-cakes').appendTo('.content');
-    $('.step').matchHeight();
-    $('.special-cakes').removeClass('hide');
-    $('.special-cakes').show();
-    $('a[data-toggle="list"]').on('shown.bs.tab', function (e) {
-        e.target // newly activated tab
-        e.relatedTarget // previous active tab
-    })
 </script>
 
 

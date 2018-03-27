@@ -57,20 +57,17 @@ namespace RepoWebShop.Controllers
         public async Task<ViewResult> Index()
         {
             var items = _shoppingCart.GetShoppingCartItems();
-            var totalItems = _shoppingCart.GetShoppingCartTotal();
+            var totalItems = _shoppingCart.GetShoppingCartItemsTotal();
             var highestPrepTime = _shoppingCart.GetShoppingCartPreparationTime();
 
             var user = await _userManager.GetUser(_signInManager);
             var delivery = _shoppingCart.GetShoppingCartDeliveryAddress();
-            var deliveryCost = (totalItems >= 200 && delivery != null) ? delivery.DeliveryCost : 0;
-
-            var total = totalItems + deliveryCost;
 
             var shoppingCartViewModel = new ShoppingCartViewModel
             {
                 Items = _shoppingCart.GetShoppingCartItems(),
                 PickupDate = _calendarRepository.GetPickupEstimate(highestPrepTime),
-                ShoppingCartTotal = total,
+                ShoppingCartTotal = _shoppingCart.GetShoppingCartTotal(),
                 //Mercadolink = await _mp.GetRepoPaymentLinkAsync(total, _bookingId, _friendlyBookingId, Request.Host.ToString(), "La Reposteria", user?.Id),
                 PreparationTime = highestPrepTime,
                 FriendlyBookingId = _friendlyBookingId,

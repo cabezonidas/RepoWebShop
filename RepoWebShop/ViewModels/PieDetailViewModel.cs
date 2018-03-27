@@ -14,5 +14,6 @@ namespace RepoWebShop.ViewModels
         public string PrimaryPicture { get; set; }
         public bool IsMobile { get; internal set; }
         public string RequestAbsoluteUrl { get; set; }
+        public AlbumPictures AlbumPitures { get; internal set; }
     }
 }

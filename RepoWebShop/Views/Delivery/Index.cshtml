@@ -118,7 +118,7 @@
         <h3 class="text-muted text-center">Zona de Cobertura - Radio de 3kms</h3>
         <h4 class="text-center text-muted">El costo de envío se calcula automáticamente</h4>
         <h5 class="text-center text-muted">
-            El costo mínimo es $@Model.MinimumCharge para distancias menores a @(Model.MinimumCharge * 10) metros.<br />
+            El costo mínimo es $@Model.MinimumCharge para distancias menores a @(Model.MinimumCharge / Model.CostByBlock * 100) metros.<br />
             Para distancias mayores, el costo es $@Model.CostByBlock por cada 100 metros.<br />
             
         </h5>

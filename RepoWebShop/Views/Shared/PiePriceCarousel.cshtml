@@ -5,7 +5,7 @@
     string id = Model.PieDetail.PieDetailId.ToString() + "-" + Guid.NewGuid().ToString();
 }
 
-<div class="prices hidden" id="@id" >
+<div class="prices" id="@id" >
     @{
         var pies = Model.Pies.OrderBy(x => x.Price).ToArray();
         for (int i = 0; i < pies.Count(); i++)
@@ -13,7 +13,6 @@
             <div class='price-carousel'>
                 @Html.Partial("PiePriceCarouselItem", pies[i])
             </div>
-            
         }
     }
 </div>
@@ -21,11 +20,6 @@
 <script>
     @{ var selector = "#" + id + ".prices"; }
     $('@selector').slick({
-        //arrows: true,
-        dots: true,
-        //slidesToShow: 1,
-        //centerMode: true,
-        //variableWidth: true
+        dots: true
     });
-    $('@selector').removeClass('hidden');
 </script>

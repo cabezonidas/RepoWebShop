@@ -2,11 +2,42 @@
 
 
 <div class='addToCart' style="margin: auto;">
-    <h4><strong>@Model.Name - $@Model.Price</strong></h4>
+    <div style="height: 70px; max-height:70px; ">
+
+        @{var isPromo = Model.StorePrice.HasValue && Model.StorePrice.Value > Model.Price; }
+
+            <div style="font-size: larger; ">
+                <div>
+                    <strong>@Model.Name </strong>
+                </div>
+                <div>
+                    <strong>$@Model.Price </strong>
+                    @if (isPromo)
+                    {
+                        var perc = Decimal.Floor(100 - (Model.Price / Model.StorePrice.Value * 100));
+                        <strong style="color: green;">-@perc% Online</strong>
+                    }
+                </div>
+            </div>
+            <div style="font-size: smaller;" >
+                <div>
+                    @if (isPromo)
+                    {
+                        <strong style="color: red;">$@Model.StorePrice </strong>
+                        <strong>En sucursal</strong>
+                    }
+                </div>
+            </div>
+
+
+    </div>
+
     <p class='button'>
         <a class='btn btn-repo btn-primary' asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@Model.PieId'>
             Comprar <span class='glyphicon glyphicon-shopping-cart'></span>
         </a>
     </p>
-    <p> <strong>@Model.SizeDescription</strong></p>
+    <div style="height: 50px; max-height: 50px;  ">
+        @Model.SizeDescription
+    </div>
 </div>

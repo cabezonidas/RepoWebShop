@@ -95,7 +95,7 @@ namespace RepoWebShop.Controllers
                 
                 return RedirectToAction(nameof(EditPieDetail), "Admin", new { id = pie.PieDetailId });
             }
-            return View();
+            return View(_pieRepository.AllPies.FirstOrDefault(x => x.PieId == pie.PieId));
         }
 
         [HttpGet]
@@ -176,6 +176,8 @@ namespace RepoWebShop.Controllers
 
                 return RedirectToAction("EditPieDetail/" + pieId.PieDetailId);
             }
+
+            pie.PieDetail = _pieDetailRepository.GetPieDetailById(pie.PieDetailId);
             return View(pie);
         }
     }

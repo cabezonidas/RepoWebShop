@@ -2,105 +2,7 @@
 @using System.Text.RegularExpressions
 
 <style>
-    .static-prices {
-        margin: 5px;
-    }
 
-    .table thead tr th {
-        text-align: center;
-    }
-
-
-    .header h1 {
-        text-align: center;
-        margin-bottom: -20px;
-        margin-top: -20px;
-    }
-
-
-    /*.thumbnailDetail {
-        padding: 10px;
-        max-width: 900px;
-        margin: 10px auto;
-        border-radius: 20px;
-    }*/
-
-    .thumbnailDetail h1 {
-    }
-
-    /*#pictures {
-        background-color: #dbe9d8;
-        border-radius: 3px;
-        border-style: solid;
-        border-color: grey;
-        border-width: 2px;
-    }*/
-
-    #pictures h2 {
-        padding: 5px;
-        background-color: white;
-        border-radius: 3px;
-        border-style: solid;
-        border-width: 1px;
-        border-color: green;
-    }
-
-    .longdesc {
-        /*font-size: larger;*/
-        text-align: left;
-    }
-
-    .short-Desc {
-        padding-top: 20px;
-        max-width: 900px;
-        margin: auto;
-        text-align: center;
-    }
-
-
-
-    img.main {
-        width: 100%;
-    }
-
-    @@media screen and (max-width: 400px) {
-        img.nav {
-            /*width: 40px;*/
-            padding: 5px;
-        }
-    }
-
-    @@media screen and (max-width: 600px) {
-        img.nav {
-            /*width: 60px;*/
-            padding: 5px;
-        }
-    }
-
-    @@media screen and (min-width: 600px) {
-        img.nav {
-            /*width: 80px;*/
-            padding: 10px;
-        }
-    }
-
-    div.row p {
-        padding-right: 10px;
-        padding-left: 10px;
-    }
-
-    .thumbnailDetail .caption-full {
-        padding: 9px;
-        color: #333;
-    }
-
-    #description h4 {
-        text-align: center;
-    }
-    /***************************************/
-    #gallery-title {
-        display: none;
-    }
 </style>
 
 @section metatags {
@@ -132,99 +34,118 @@
 </script>
 <br />
 <div class="container">
-    <div class="thumbnailDetail">
-
-
-        <h1 class="text-center" style="font-family:Noto serif;">@Model.PieDetail.Name</h1>
-        <h3 class="text-center text-muted" style="font-family:Noto serif;">@Model.PieDetail.ShortDescription</h3>
-
+    <div class="">
+        <h1 class="text-center" style="margin-bottom: -5px; font-family:Noto serif;">@Model.PieDetail.Name</h1>
+        <h3 class="text-center" style="margin-bottom: 25px; color: #883636;">Tiempo de Preparación: @Model.PieDetail.PreparationTime hs</h3>
         <div class="short-Desc">
             <div class="row">
-
                 <div class="col-xs-12 col-sm-7 col-md-7 col-lg-6" id="description">
-
-                    <div class="longdesc">@Html.Raw(Model.PieDetail.LongDescription)</div>
-
+                    <h3 class="text-center text-muted" style="font-family:Noto serif;">@Model.PieDetail.ShortDescription</h3>
                     <br />
-                    <table class="table static-prices animated flipInX">
+                    <div class="longdesc">@Html.Raw(Model.PieDetail.LongDescription)</div>
+                    <br />
+                    <div style="padding-left: 20px; padding-right: 20px;">
+                        <div id="calendarView">
+                        </div>
+                    </div>
+                    <table class="table static-prices text-center">
                         <thead>
                             <tr>
-                                <th scope="col">Descripción</th>
-                                <th scope="col">Precio</th>
+                                <th scope="col" class="text-center">Descripción</th>
+                                <th scope="col" class="text-center">Precio</th>
                             </tr>
                         </thead>
                         <tbody>
                             @{
-                foreach (var pie in Model.Pies.OrderBy(x => x.Price))
-                {
-                    <tr class="static-price">
-                        <td class="unit-name">
-                            <div>
-                                @pie.Name<br />
-                                @pie.SizeDescription
-                            </div>
-                        </td>
-                        <td class="unit-price">
-                            <div>
-                                $@pie.Price<br />
-                                <a title="Comprar" asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@pie.PieId'>
-                                    Agregar al carrito <span class="fa fa-shopping-cart"></span>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-}
-                            }
+                        foreach (var pie in Model.Pies.OrderBy(x => x.Price))
+                        {
+                            <tr class="static-price">
+                                <td class="unit-name">
+                                    <div>
+                                        @pie.Name<br />
+                                        @pie.SizeDescription
+                                    </div>
+                                </td>
+                                <td class="unit-price">
+                                    <div>
+                                        @if (pie.StorePrice.HasValue && pie.StorePrice.Value > pie.Price)
+                                {
+                                    var perc = Decimal.Floor(100 - (pie.Price / pie.StorePrice.Value * 100));
+
+                                    <div style="font-size: larger; ">
+                                        <div>
+                                            <strong>$@pie.Price </strong>
+                                            <strong style="color: green;">-@perc% Online</strong>
+                                        </div>
+                                    </div>
+                                    <div style="font-size: smaller;">
+                                        <div>
+                                            <strong style="color: red;">$@pie.StorePrice </strong>
+                                            <strong>En sucursal</strong>
+                                        </div>
+                                    </div>
+                        }
+                        else
+                        {
+                            <div>$@pie.Price</div>
+                        }
+                                        <a title="Comprar" asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@pie.PieId'>
+                                            Agregar al carrito <span class="fa fa-shopping-cart"></span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                    }
+                }
                         </tbody>
                     </table>
-                    <div style="display: flex; ">
-                        <h4 style="margin: auto;" class="">Preparación: @Model.PieDetail.PreparationTime hs</h4>
-                    </div>
-                    <div style="text-align: center;margin-bottom: 10px;" class="hidden-xs">
-                        <br />
-                        <a asp-action="List" asp-controller="PieDetail" class="btn btn-primary submit-btn">
-                            <span class="glyphicon glyphicon-arrow-left "></span> Volver
-                        </a>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-5 col-md-5 col-lg-6" id="pictures">
-                    @{
-                    var primarypic = $"{Model.PrimaryPicture}{(Model.IsMobile ? "z" : "b")}.jpg";
-                    }
-                    <img src="@primarypic" style="width: 100%" />
-                    <img alt="@Model.PieDetail.Name" src="~/Pictures/imgnotfound.png" id="defaultPicture" style="display:none; width: 100%;">
-                    <div class="caption-full">
-                        <div class="fb-share-button"
+                    <div class="row text-center">
+                        <div style="margin:20px;">
+                            <a asp-action="List" asp-controller="PieDetail" class="btn btn-primary submit-btn ">
+                                <span class="glyphicon glyphicon-arrow-left "></span> Volver
+                            </a>
+                        </div>
+                        <div class="fb-share-button" style="margin-bottom: 25px;"
                              data-href="/PieDetail/Details/@Model.PieDetail.PieDetailId"
                              data-layout="button_count">
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div id="photos"></div>
-            </div>
-            <div class="row">
-                <div class="hidden-sm hidden-md hidden-lg">
-                    <br />
-                    <a asp-action="List" asp-controller="PieDetail" class="btn btn-primary submit-btn">
-                        Seguir Comprando
-                    </a>
+
+                <div class="col-xs-12 col-sm-5 col-md-5 col-lg-6" id="pictures5">
+                    @Html.Partial("~/Views/Photos/AlbumFullScreen.cshtml", Model.AlbumPitures)
                 </div>
             </div>
+            @Html.Partial("~/Views/ShoppingCart/Faq.cshtml")
+
         </div>
     </div>
 </div>
+
 <script type="text/javascript">
     $(function () {
         $('.carousel').carousel({
             interval: 2000
         });
     });
-
-    $.get("/api/PhotosData/GetAlbum/@Model.PieDetail.FlickrAlbumId", function (data) {
-        $("#photos").append(data);
-    }).fail(function () {
-        $('#defaultPicture').show();
-    });
+    function smoothScroll() {
+        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+            var target = $(this.hash);
+            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+            if (target.length) {
+                $('html,body').animate({
+                    scrollTop: target.offset().top - 65
+                }, 1000);
+                return false;
+            }
+        }
+    }
+    function getEstimate() {
+        $.get('/api/CalendarData/GetProductPickupDate/@Model.PieDetail.PreparationTime', function (data) {
+            $('#calendarView').replaceWith(data);
+            $('a#moreinfo[href *=\\#]:not([href =\\#])').click(smoothScroll);
+        });
+    }
+    var myVar = setInterval(getEstimate, 10000);
+    getEstimate();
 </script>

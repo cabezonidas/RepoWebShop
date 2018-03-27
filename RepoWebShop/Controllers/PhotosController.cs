@@ -29,5 +29,16 @@ namespace RepoWebShop.Controllers
             var view = _photosGalleryRepository.GetGalleryPictures();
             return View(view);
         }
+
+        [HttpGet]
+        [Route("[controller]/AlbumFullScreen/{Id}")]
+        public ActionResult AlbumFullScreen(long Id)
+        {
+            var album = _photosetAlbums.GetAlbumPictures(Id);
+            if (album == null)
+                return NotFound();
+            else
+                return View(album);
+        }
     }
 }

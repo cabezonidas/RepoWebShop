@@ -19,9 +19,11 @@
     "matchheight": "^0.7.2",
     "Snap.svg": "^0.5.1",
     "parallax.js": "^1.5.0",
-    "eonasdan-bootstrap-datetimepicker": "^4.17.47"
+    "eonasdan-bootstrap-datetimepicker": "^4.17.47",
+    "slick-lightbox": "~0.2.12"
   },
   "resolutions": {
-    "jquery": "3.2.1"
+    "jquery": "3.2.1",
+    "slick-carousel": "^1.8.1"
   }
 }

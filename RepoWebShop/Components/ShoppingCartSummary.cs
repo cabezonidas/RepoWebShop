@@ -23,7 +23,7 @@ namespace RepoWebShop.Components
             {
                 //ShoppingCart = _shoppingCart,
                 Items = _shoppingCart.GetShoppingCartItems(),
-                ShoppingCartTotal = _shoppingCart.GetShoppingCartTotal()
+                ShoppingCartTotal = _shoppingCart.GetShoppingCartItemsTotal()
             };
             return View(shoppingCartViewModel);
         }

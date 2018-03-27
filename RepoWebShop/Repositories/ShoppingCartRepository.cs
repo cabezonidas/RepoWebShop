@@ -156,13 +156,21 @@ namespace RepoWebShop.Repositories
             _appDbContext.SaveChanges();
         }
 
-        public decimal GetShoppingCartTotal() =>
+        public decimal GetShoppingCartItemsTotal() =>
             _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == _shoppingCart.ShoppingCartId).Select(c => c.Pie.Price * c.Amount).Sum();
+
+        public decimal GetShoppingCartTotal()
+        {
+            var itemsCost = GetShoppingCartItemsTotal();
+            var delivery = GetShoppingCartDeliveryAddress();
+            var deliveryCost = (itemsCost >= _minimumArsForOrderDelivery && delivery != null) ? delivery.DeliveryCost : 0;
+            return itemsCost + deliveryCost;
+        }
 
         public string GetShoppingCartId() => _shoppingCart.ShoppingCartId;
 
         public DeliveryAddress GetShoppingCartDeliveryAddress() =>
-            GetShoppingCartTotal() >= _minimumArsForOrderDelivery ? _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.ShoppingCartId == _shoppingCart.ShoppingCartId) : null;
+            GetShoppingCartItemsTotal() >= _minimumArsForOrderDelivery ? _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.ShoppingCartId == _shoppingCart.ShoppingCartId) : null;
 
         public DeliveryAddress GetDelivery(string bookingId) =>
             _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.ShoppingCartId == bookingId);

@@ -83,6 +83,7 @@ namespace RepoWebShop.Repositories
             oldPieDetail.IsActive = pie.IsActive;
             oldPieDetail.Name = pie.Name;
             oldPieDetail.Price = pie.Price;
+            oldPieDetail.StorePrice = pie.StorePrice;
             oldPieDetail.SizeDescription = pie.SizeDescription;
 
             return _appDbContext.SaveChangesAsync();

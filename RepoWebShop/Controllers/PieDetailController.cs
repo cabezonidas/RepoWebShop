@@ -90,6 +90,7 @@ namespace RepoWebShop.Controllers
 
             var result = new PieDetailViewModel() { PieDetail = pieDetail, Pies = _pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == pieDetail.PieDetailId) };
             result.PrimaryPicture = _flickrRepository.GetAlbumPictures(pieDetail.FlickrAlbumId).PrimaryPicture;
+            result.AlbumPitures = _flickrRepository.GetAlbumPictures(pieDetail.FlickrAlbumId);
             result.RequestAbsoluteUrl = Request.AbsoluteUrl();
 
             return View(result);
