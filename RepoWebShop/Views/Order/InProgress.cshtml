@@ -4,14 +4,17 @@
 
 <style>
     div.container {
-        font-family: Arial;
+        font-family: Noto Serif;
+    }
+    a{
+        color: black;
     }
 </style>
 
 <div class="container">
     <h2>Pedidos en proceso</h2>
 
-    <table id="orders">
+    <table id="orders" class="table-striped">
         <thead>
             <tr>
                 <th data-breakpoints="xs">Reserva</th>
@@ -29,16 +32,26 @@
                 string background_color;
                 @if (order.Finished)
                 {
-                    background_color = "#d7e9d7";
+                    background_color = "grey";
                 }
                 else
                 {
-                    background_color = "#ffe2e2";
+                    background_color = "red"; //"#ffe2e2";
                 }
-                <tr style="background-color: @background_color">
-                    <td><a asp-action="Detail" asp-controller="Order" asp-route-id="@order.OrderId">@order.FriendlyBookingId</a></td>
-                    <td>@order.StatusSpanish</td>
-                    <td>@Html.Raw(order.ContactDataAsHtml)</td>
+                <tr style='color:@background_color; '>
+                    <td style="text-align: center;">
+                        <a style="font-size:large; color: @background_color" asp-action="Detail" asp-controller="Order" asp-route-id="@order.OrderId">@order.FriendlyBookingId</a>
+                        @if (order.Finished)
+                        {
+                            <div style="font-size:smaller">Esperando ser entregada</div>
+                        }
+                        else
+                        {
+                            <div style="font-size:smaller">Elaboración en proceso</div>
+                        }
+                    </td>
+                    <td style="color: grey;">@order.StatusSpanish</td>
+                    <td style="color: grey;">@Html.Raw(order.ContactDataAsHtml)</td>
                     <td>
                         @if (order.PickUpTime.HasValue)
                         {
@@ -47,10 +60,12 @@
                             </div>
                         }
                     </td>
-                    <td>
+                    <td style="text-align:center;">
                         @{
                             List<string> items = new List<string>();
+                            items.Add($"<div style=''>");
                         }
+                        
                         @foreach (var ol in order.OrderLines)
                         {
                             var line = ol.Amount == 1 ? "" : ol.Amount + "x ";
@@ -62,19 +77,24 @@
                         {
                             items.Add("Envío: " + order.DeliveryAddress.AddressLine1?.Split(",")?.FirstOrDefault() ?? "");
                         }
-                        @Html.Raw(String.Join("<br/>", items.ToArray()))
+                        @{ 
+                            items.Add("</div>");
+                        }
+                        @Html.Raw(String.Join("", items.ToArray()))
                     </td>
                     <td>$@order.OrderTotal</td>
 
-                    <td>
-                        @if (order.Finished)
-                        {
-                            <a class="btn btn-success" onclick="pickedUp(@order.OrderId);" id="@order.OrderId">¡Entregado!</a>
-                        }
-                        else
-                        {
-                            <a class="btn btn-success" onclick="orderCompleted(@order.OrderId);" id="@order.OrderId">¡Pedido Listo!</a>
-                        }
+                    <td style="max-width:200px; " class="text-center">
+                    @if (order.Finished)
+                    {
+                    <a class="btn btn-info" onclick="pickedUp(@order.OrderId);" id="@order.OrderId" title="Hacer click si el pedido ya fue entregado">Archivar</a>
+                    <div class="text-muted" style="font-size:smaller">Guarda la orden en la base de datos y significa que el cliente ya recibió su producto</div>
+                    }
+                    else
+                    {
+                    <a class="btn btn-warning" onclick="orderCompleted(@order.OrderId);" id="@order.OrderId" title="Comunica al cliente que la orden está lista para ser entregada">Notificar Cliente</a>
+                    <div class="text-muted" style="font-size:smaller">Avisa al cliente que la orden está lista para ser entregada</div>
+                    }
 
                     </td>
                 </tr>
