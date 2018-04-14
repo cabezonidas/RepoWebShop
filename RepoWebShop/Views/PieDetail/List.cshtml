@@ -1,12 +1,13 @@
 ﻿@model PieDetailsListViewModel
-
+@section metatags {
+    <title>Catálogo</title>
+}
 <style>
     h2 {
         margin-top: -5px;
         margin-bottom: 25px;
         text-align: center;
     }
-
 </style>
 
 
@@ -16,15 +17,15 @@
         <h1 id="category-title" class="title-logo" />
     </div>
     <div id="products" class="">
-        @foreach(var partialView in Model.PieDetails)
+        @foreach (var partialView in Model.PieDetails)
         {
             @Html.Partial("PieOverviewSummary", partialView)
         }
     </div>
 </div>
-    <div class="container text-center" >
-        <h3><a asp-action="FullCatalog" asp-controller="Services" style="color:black">Ver catálogo completo</a></h3>
-    </div>
+<div class="container text-center">
+    <h3><a asp-action="FullCatalog" asp-controller="Services" style="color:black">Ver catálogo completo</a></h3>
+</div>
 
 <script type="text/javascript">
     $(function () {
@@ -49,7 +50,7 @@
     if(category)
         $('#category-title').append(category);
     else
-        $('#category-title').append("Productos");  
+        $('#category-title').append("Productos");
 
     //$('.pieOverviewImage').matchHeight();
 

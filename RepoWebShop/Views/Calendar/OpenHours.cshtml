@@ -1,12 +1,15 @@
 ﻿@model OpenHoursViewModel
 
-@{ 
+@{
     var columns = Model.OpenHours.Any() ? 1 : 0;
     columns += Model.PublicHolidays.Any() ? 1 : 0;
     columns += Model.Vacations.Any() ? 1 : 0;
     columns = 12 / columns;
 }
-
+@section metatags {
+    <title>Horarios de Atención</title>
+}
+@inject ICalendarRepository _calendarRepository
 
 
 @{var daysId = Model.OpenHours.OrderBy(x => x.DayId).Select(x => x.DayId).Distinct(); }
@@ -23,69 +26,70 @@
                     <th>Hasta</th>
                 </tr>
                 @foreach (var dayId in daysId)
-            {
-                var openHours = Model.OpenHours.Where(x => x.DayId == dayId).ToArray();
-                @for (int i = 0; i < openHours.Count(); i++)
-            {
-                <tr>
-                    @if (i == 0)
                 {
-                    <td rowspan="@openHours.Count()"><strong>@Model.DayToString(dayId)</strong></td>
-            }
-                    <td>@openHours[i].StartingAt.ToString("hh\\:mm")</td>
-                    <td>@openHours[i].StartingAt.Add(openHours[i].Duration).ToString("hh\\:mm")</td>
-                </tr>
-        }
-        }
+                    var openHours = Model.OpenHours.Where(x => x.DayId == dayId).ToArray();
+                    @for (int i = 0; i < openHours.Count(); i++)
+                    {
+                        <tr>
+                            @if (i == 0)
+                            {
+                                <td rowspan="@openHours.Count().ToString()"><strong>@Model.DayToString(dayId)</strong></td>
+                            }
+                            <td>@openHours[i].StartingAt.ToString("hh\\:mm")</td>
+                            <td>@openHours[i].StartingAt.Add(openHours[i].Duration).ToString("hh\\:mm")</td>
+                        </tr>
+                    }
+                }
             </table>
         </div>
-    </div>        
+    </div>
     @if (Model.PublicHolidays.Any())
     {
         <div class="col-sm-@columns col-lg-@columns col-md-@columns">
 
-        <div class="title-container">
-            <h1 class="text-center title-logo">Feriados</h1>
-        </div>
+            <div class="title-container">
+                <h1 class="text-center title-logo">Feriados</h1>
+            </div>
 
             @foreach (var holiday in Model.PublicHolidays.OrderBy(x => x.Date))
             {
-                <div>
-                @{
-                    if (holiday.OpenHours == null)
-                    {
-                        <p>@holiday.Date.ToString("dd'/'MM'/'yyyy") - Cerrado</p>
+                <div class="text-center">
+                    @{
+                        if (holiday.OpenHours == null)
+                        {
+                            
+                            <p>@Html.Raw(_calendarRepository.FriendlyDate(holiday.Date)) - Cerrado</p>
+                        }
+                        else
+                        {
+                            <p>
+                                @Html.Raw(_calendarRepository.FriendlyDate(holiday.Date)) - Abierto desde @holiday.OpenHours.StartingAt.ToString("hh\\:mm") hasta @holiday.OpenHours.StartingAt.Add(holiday.OpenHours.Duration).ToString("hh\\:mm")
+                            </p>
+                        }
                     }
-                    else
-                    {
-                        <p>
-                            @holiday.Date.ToString("dd'/'MM'/'yyyy") - Abierto desde @holiday.OpenHours.StartingAt.ToString("hh\\:mm") hasta @holiday.OpenHours.StartingAt.Add(holiday.OpenHours.Duration).ToString("hh\\:mm")
-                        </p>
-                    }
-                }
                 </div>
             }
         </div>
-    } 
+    }
     @if (Model.Vacations.Any())
     {
-    <div class="col-sm-@columns col-lg-@columns col-md-@columns text-center">
-        <div class="title-container">
-            <h1 class="text-center title-logo">Vacaciones</h1>
+        <div class="col-sm-@columns col-lg-@columns col-md-@columns text-center">
+            <div class="title-container">
+                <h1 class="text-center title-logo">Vacaciones</h1>
+            </div>
+            <p>Nosotros tambien necesitamos descansar!</p>
+            @foreach (var vac in Model.Vacations)
+            {
+                <p>Cerramos el @vac.StartDate.ToString("dd'/'MM'/'yyyy") hasta el @vac.EndDate.ToString("dd'/'MM'/'yyyy")</p>
+                if (DateTime.Now.Ticks >= vac.StartDate.Ticks && DateTime.Now.Ticks <= vac.EndDate.Ticks)
+                {
+                    <p>No te preocupes, faltan pocos dias y se pasan volando!</p>
+                }
+                else
+                {
+                    <p>No te preocupes, @(vac.EndDate.Subtract(vac.StartDate).Days) dias se pasan volando!</p>
+                }
+            }
         </div>
-        <p>Nosotros tambien necesitamos descansar!</p>
-        @foreach (var vac in Model.Vacations)
-        {
-            <p>Cerramos el @vac.StartDate.ToString("dd'/'MM'/'yyyy") hasta el @vac.EndDate.ToString("dd'/'MM'/'yyyy")</p>
-            if (DateTime.Now.Ticks >= vac.StartDate.Ticks && DateTime.Now.Ticks <= vac.EndDate.Ticks)
-            {
-                <p>No te preocupes, faltan pocos dias y se pasan volando!</p>
-            }
-            else
-            {
-                <p>No te preocupes, @(vac.EndDate.Subtract(vac.StartDate).Days) dias se pasan volando!</p>
-            }
-        }
-    </div>
     }
 </div>

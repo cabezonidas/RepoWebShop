@@ -1,13 +1,7 @@
 ﻿@model  Pie
 
-<style>
-    .add-pie-to-pie-detail {
-        font-family: Arial;
-    }
-</style>
-
 <div class="container add-pie-to-pie-detail">
-    <h2>Agregar version para @Model.PieDetail.Name</h2>
+    <h2>Agregar versión para @Model.PieDetail.Name</h2>
     <form asp-controller="Admin" asp-action="AddPieToPieDetail" method="post" class="form-horizontal" role="form">
         <hr />
         <div asp-validation-summary="All" class="text-danger"></div>

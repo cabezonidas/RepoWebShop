@@ -7,5 +7,6 @@ namespace RepoWebShop.Interfaces
         DateTime LocalTime();
         string LocalTimeAsString();
         string SuperFriendlyDate(DateTime? date);
+        string FriendlyDate(DateTime? date);
     }
 }

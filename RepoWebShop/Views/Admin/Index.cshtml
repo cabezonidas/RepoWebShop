@@ -1,16 +1,21 @@
-﻿<style>
+﻿@section metatags {
+    <title>Admin</title>
+}
+<style>
     .admin-index {
-        font-family: Arial;
+        /*font-family: Arial;*/
     }
 </style>
 
 <div class="container admin-index">
     <h2>Tareas administrativas</h2>
-    <a asp-controller="Order" asp-action="InProgress" class="btn btn-primary">Pedidos</a>
-    <a asp-controller="Admin" asp-action="AllProducts" class="btn btn-primary">Productos</a>
-    <a asp-controller="Admin" asp-action="Prices" class="btn btn-primary">Precios</a>
-    <a asp-controller="Admin" asp-action="Galleries" class="btn btn-primary">Fotos</a>
-    <a asp-controller="Calendar" asp-action="Index" class="btn btn-primary">Horarios</a>
-    <a asp-controller="Calendar" asp-action="SpecialDates" class="btn btn-primary">Fechas especiales</a>
-    <a asp-controller="Payment" asp-action="Payments" class="btn btn-primary">Pagos</a>
+    <a asp-controller="Order" asp-action="InProgress" class="btn btn-primary" style="margin: 5px;">Pedidos</a>
+    <a asp-controller="Admin" asp-action="AllProducts" class="btn btn-primary" style="margin: 5px;">Productos</a>
+    <a asp-controller="Admin" asp-action="Prices" class="btn btn-primary" style="margin: 5px;">Precios</a>
+    <a asp-controller="Admin" asp-action="Galleries" class="btn btn-primary" style="margin: 5px;">Fotos</a>
+    <a asp-controller="Calendar" asp-action="Index" class="btn btn-primary" style="margin: 5px;">Horarios</a>
+    <a asp-controller="Calendar" asp-action="SpecialDates" class="btn btn-primary" style="margin: 5px;">Fechas especiales</a>
+    <a asp-controller="Payment" asp-action="Payments" class="btn btn-primary" style="margin: 5px;">Pagos</a>
+    <a asp-controller="Users" asp-action="Index" class="btn btn-primary" style="margin: 5px;">Usuarios</a>
+    <a asp-controller="Stats" asp-action="Index" class="btn btn-primary" style="margin: 5px;">Estadísticas</a>
 </div>

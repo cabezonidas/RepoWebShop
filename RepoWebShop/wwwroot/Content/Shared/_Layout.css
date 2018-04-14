@@ -1,7 +1,7 @@
 ﻿/** <Navbar> **/
 .navbar {
     background-image: none;
-    z-index: 140;
+    z-index: 501; /*Era 140*/
 }
 
 #navbrand {

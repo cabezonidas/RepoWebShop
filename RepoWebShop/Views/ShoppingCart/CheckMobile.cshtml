@@ -13,7 +13,7 @@
         @if (Model.User == null)
         {
             <div class="alert alert-warning animated" style="margin-left: 30px; margin-right: 30px;">
-                <p class="mobile-msg">¿Querés recibir un SMS cuando la orden esté lista? <a asp-action="Login" asp-controller="Account" asp-route-returnUrl="/ShoppingCart">Click aquí</a></p>
+                <p class="mobile-msg">¿Querés recibir un SMS cuando la orden esté lista? <a asp-action="Login" asp-controller="Account" asp-route-returnUrl="/ShoppingCart"><strong>Click aquí</strong></a></p>
             </div>
         }
         else
@@ -21,7 +21,7 @@
             <div class="alert alert-success animated" style="margin-left: 30px; margin-right: 30px;">
                 @if (!Model.User.PhoneNumberConfirmed)
                 {
-                    <p class="mobile-msg">@Model.User.FirstName, para recibir SMS cuando terminemos tu pedido por favor, <a asp-action="VerifyNumber" asp-controller="Account" asp-route-actionName="Index" asp-route-controllerName="ShoppingCart">ingresa tu número aquí.</a></p>
+                    <p class="mobile-msg">@Model.User.FirstName, para recibir SMS cuando terminemos tu pedido por favor, <a asp-action="VerifyNumber" asp-controller="Account" asp-route-actionName="Index" asp-route-controllerName="ShoppingCart"><strong>ingresa tu número aquí.</strong></a></p>
                 }
                 else
                 {

@@ -1,5 +1,8 @@
 ﻿@model LoginViewModel
 @inject SignInManager<ApplicationUser> SignInManager
+@section metatags {
+    <title>Login</title>
+}
 <style>
     td {
         padding: 5px;
@@ -84,9 +87,9 @@
 <div class="container" style="margin: auto; max-width: 600px;">
     <form asp-controller="Account" asp-action="Login" method="post" role="form">
         <input type="hidden" asp-for="ReturnUrl" />
-        @if(Model.Errors != null)
-        { 
-        <div class="text-danger">@Html.Raw(String.Join("<br/>",Model.Errors))</div>
+        @if (Model.Errors != null)
+        {
+            <div class="text-danger">@Html.Raw(String.Join("<br/>", Model.Errors))</div>
         }
         <table>
             <tbody>
@@ -133,45 +136,45 @@
         </table>
     </form>
     @{
-    var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-    if (loginProviders.Count > 0)
-    {
-    <form asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
-        <input type="hidden" asp-for="ReturnUrl" />
-        <table>
-            <tbody>
-                <tr>
-                    <td>
-                        <hr>
-                    </td>
-                </tr>
-                @foreach (var provider in loginProviders)
-                {   
-                <tr>
-                    <td>
-                        @if (provider.Name == "Facebook")
+        var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+        if (loginProviders.Count > 0)
+        {
+            <form asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                <input type="hidden" asp-for="ReturnUrl" />
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <hr>
+                            </td>
+                        </tr>
+                        @foreach (var provider in loginProviders)
                         {
-                        <button class="loginBtn loginBtn--facebook" type="submit" value="@provider.Name" name="provider">
-                            Seguir con Facebook
-                        </button>
+                            <tr>
+                                <td>
+                                    @if (provider.Name == "Facebook")
+                                    {
+                                        <button class="loginBtn loginBtn--facebook" type="submit" value="@provider.Name" name="provider">
+                                            Seguir con Facebook
+                                        </button>
+                                    }
+                                    else if (provider.Name == "Google")
+                                    {
+                                        <button class="loginBtn loginBtn--google" type="submit" value="@provider.Name" name="provider">
+                                            Seguir con Google
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="submit" class="btn btn-default" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.Name</button>
+                                    }
+                                </td>
+                            </tr>
                         }
-                        else if (provider.Name == "Google")
-                        {
-                        <button class="loginBtn loginBtn--google" type="submit" value="@provider.Name" name="provider">
-                            Seguir con Google
-                        </button>                            
-                        }
-                        else
-                        {
-                        <button type="submit" class="btn btn-default" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.Name</button>
-                        }
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </form>
-    }
+                    </tbody>
+                </table>
+            </form>
+        }
     }
 
 

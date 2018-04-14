@@ -2,7 +2,6 @@
 @using System.Text.RegularExpressions
 
 <style>
-
 </style>
 
 @section metatags {
@@ -20,6 +19,7 @@
             <meta property="og:image" content="@fb_img" />
         }
     }
+    <title>@Model.PieDetail.Name</title>
 }
 
 <div id="fb-root"></div>
@@ -57,46 +57,46 @@
                         </thead>
                         <tbody>
                             @{
-                        foreach (var pie in Model.Pies.OrderBy(x => x.Price))
-                        {
-                            <tr class="static-price">
-                                <td class="unit-name">
-                                    <div>
-                                        @pie.Name<br />
-                                        @pie.SizeDescription
-                                    </div>
-                                </td>
-                                <td class="unit-price">
-                                    <div>
-                                        @if (pie.StorePrice.HasValue && pie.StorePrice.Value > pie.Price)
+                                foreach (var pie in Model.Pies.OrderBy(x => x.Price))
                                 {
-                                    var perc = Decimal.Floor(100 - (pie.Price / pie.StorePrice.Value * 100));
+                                    <tr class="static-price">
+                                        <td class="unit-name">
+                                            <div>
+                                                @pie.Name<br />
+                                                @pie.SizeDescription
+                                            </div>
+                                        </td>
+                                        <td class="unit-price">
+                                            <div>
+                                                @if (pie.StorePrice.HasValue && pie.StorePrice.Value > pie.Price)
+                                                {
+                                                    var perc = Decimal.Floor(100 - (pie.Price / pie.StorePrice.Value * 100));
 
-                                    <div style="font-size: larger; ">
-                                        <div>
-                                            <strong>$@pie.Price </strong>
-                                            <strong style="color: green;">-@perc% Online</strong>
-                                        </div>
-                                    </div>
-                                    <div style="font-size: smaller;">
-                                        <div>
-                                            <strong style="color: red;">$@pie.StorePrice </strong>
-                                            <strong>En sucursal</strong>
-                                        </div>
-                                    </div>
-                        }
-                        else
-                        {
-                            <div>$@pie.Price</div>
-                        }
-                                        <a title="Comprar" asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@pie.PieId'>
-                                            Agregar al carrito <span class="fa fa-shopping-cart"></span>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                    }
-                }
+                                                    <div style="font-size: larger; ">
+                                                        <div>
+                                                            <strong>$@pie.Price </strong>
+                                                            <strong style="color: green;">-@perc% Online</strong>
+                                                        </div>
+                                                    </div>
+                                                    <div style="font-size: smaller;">
+                                                        <div>
+                                                            <strong style="color: red;">$@pie.StorePrice </strong>
+                                                            <strong>En sucursal</strong>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div>$@pie.Price</div>
+                                                }
+                                                <a title="Comprar" asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@pie.PieId'>
+                                                    Agregar al carrito <span class="fa fa-shopping-cart"></span>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
                         </tbody>
                     </table>
                     <div class="row text-center">

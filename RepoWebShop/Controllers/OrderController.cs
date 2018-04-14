@@ -264,7 +264,7 @@ namespace RepoWebShop.Controllers
             }
 
             order.PhoneNumber = _currentUser.PhoneNumber;
-            order.OrderTotal = _shoppingCart.GetShoppingCartItemsTotal();
+            order.OrderTotal = _shoppingCart.GetShoppingCartTotal();
 
             var delivery = _shoppingCart.GetShoppingCartDeliveryAddress();
 

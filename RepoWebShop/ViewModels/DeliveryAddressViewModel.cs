@@ -18,5 +18,6 @@ namespace RepoWebShop.ViewModels
         public override DateTime Created { get; set; }
         public int MinimumCharge { get; set; }
         public int CostByBlock { get; set; }
+        public int DeliveryRadius { get; internal set; }
     }
 }

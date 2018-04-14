@@ -1,0 +1,143 @@
+﻿@model UsersIndexViewModel
+
+<div class="container">
+    <h2 class="text-center">Compras/Reservas con Login</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Contacto</th>
+                <th>Login</th>
+                <th>Pedidos</th>
+                <th>Total Gastado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var user in Model.UsersThatOrdered)
+                {
+                    var userOrders = Model.OrdersWithUsers.Where(x => x.Registration == user);
+                    <tr>
+                        <td>
+                            @user.FirstName @user.LastName
+                        </td>
+                        <td>
+                            @user.Email @Html.Raw(user.EmailConfirmed ? "<span class='fa fa-check'></span>" : "<span class='fa fa-question'></span>")
+                            <br />
+                            @user.PhoneNumber
+                            @if (!string.IsNullOrEmpty(user.PhoneNumber))
+                            {
+                                @Html.Raw(user.PhoneNumberConfirmed ? "<span class='fa fa-check'></span>" : "<span class='fa fa-question'></span>")
+                            }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(user.FacebookNameIdentifier))
+                            {
+                                <span class="fa fa-facebook"></span>
+                            }
+                            @if (!string.IsNullOrEmpty(user.GoogleNameIdentifier))
+                            {
+                                <span class="fa fa-google"></span>
+                            }
+                        </td>
+                        <td>
+                            @{
+                                var results = new List<string>();
+                                foreach (var order in userOrders)
+                                {
+                                    results.Add($"<a href='/Order/Detail/{order.OrderId}'>{order.FriendlyBookingId}</a>");
+                                }
+                                <div>
+                                    <strong>Pedidos: @userOrders.Count()</strong><br />
+                                    @Html.Raw(String.Join("<br />", results))<br />
+
+                                </div>
+
+                            }
+                        </td>
+                        <td>
+                            @userOrders.Sum(x => x.OrderTotal)
+                        </td>
+                    </tr>
+
+                }
+            }
+        </tbody>
+
+    </table>
+
+    <h2 class="text-center">Compras sin Login [Mercado Pago]</h2>
+    <h4 class="text-center text-muted">Puede que hayan hecho compras sin loguearse</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Contacto</th>
+                <th>Pedido</th>
+                <th>Pago</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var ordersWithoutLogin = Model.OrdersWithoutUsers.OrderBy(x => x.MercadoPagoUsername);
+                foreach (var order in ordersWithoutLogin)
+                {
+                    <tr>
+                        <td>
+                            @order.MercadoPagoName <br />
+                            @order.MercadoPagoMail <br />
+                            @order.MercadoPagoUsername
+                        </td>
+                        <td>
+                            <a href='/Order/Detail/@order.OrderId'>@order.FriendlyBookingId</a>
+                        </td>
+                        <td>
+                            $@order.OrderTotal
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <h2 class="text-center">Usuarios sin Compras</h2>
+    <h4 class="text-center text-muted">Puede que hayan hecho compras sin loguearse</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Contacto</th>
+                <th>Login</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var user in Model.UsersThatDidntOrder)
+                {
+                    <tr>
+                        <td>
+                            @user.FirstName @user.LastName
+                        </td>
+                        <td>
+                            @user.Email @Html.Raw(user.EmailConfirmed ? "<span class='fa fa-check'></span>" : "<span class='fa fa-question'></span>")<br />
+                            @user.PhoneNumber
+                            @if (!string.IsNullOrEmpty(user.PhoneNumber))
+                            {
+                                @Html.Raw(user.PhoneNumberConfirmed ? "<span class='fa fa-check'></span>" : "<span class='fa fa-question'></span>")
+                            }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(user.FacebookNameIdentifier))
+                            {
+                                <span class="fa fa-facebook"></span>
+                            }
+                            @if (!string.IsNullOrEmpty(user.GoogleNameIdentifier))
+                            {
+                                <span class="fa fa-google"></span>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

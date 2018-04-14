@@ -45,6 +45,7 @@ namespace RepoWebShop.Controllers
 
             viewModel.MinimumCharge = _config.GetValue<int>("LowestDeliveryCost");
             viewModel.CostByBlock = _config.GetValue<int>("DeliveryCostByBlock");
+            viewModel.DeliveryRadius = _config.GetValue<int>("DeliveryRadius");
 
             return View(viewModel);
         }
@@ -54,7 +55,7 @@ namespace RepoWebShop.Controllers
         {
             deliveryAddres.MinimumCharge = _config.GetValue<int>("LowestDeliveryCost");
             deliveryAddres.CostByBlock = _config.GetValue<int>("DeliveryCostByBlock");
-            
+            deliveryAddres.DeliveryRadius = _config.GetValue<int>("DeliveryRadius");
 
             if (!ModelState.IsValid)
             {
@@ -74,10 +75,10 @@ namespace RepoWebShop.Controllers
             }
 
             var distance = await _deliveryRepository.GetDistanceAsync(deliveryAddres.AddressLine1);
-            if(distance > 3000)
+            if(distance > deliveryAddres.DeliveryRadius)
             {
                 if(distance > 0)
-                    ModelState.AddModelError("DistanceNotCovered", $"La distancia debe ser menor a 3kms. Tu ubicación está a {(distance / 1000.0).ToString("#.##")} kms.");
+                    ModelState.AddModelError("DistanceNotCovered", $"La distancia debe ser menor a {deliveryAddres.DeliveryRadius/1000}kms. Tu ubicación está a {(distance / 1000.0).ToString("#.##")} kms.");
                 else
                     ModelState.AddModelError("DistanceError", "No pudimos calcular la distancia.");
 

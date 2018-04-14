@@ -1,12 +1,17 @@
 ﻿@model IEnumerable<Order>
 
+@section metatags {
+    <title>Pedidos en Proceso</title>
+}
+
 @inject ICalendarRepository _calendarRepository
 
 <style>
     div.container {
         font-family: Noto Serif;
     }
-    a{
+
+    a {
         color: black;
     }
 </style>
@@ -65,7 +70,7 @@
                             List<string> items = new List<string>();
                             items.Add($"<div style=''>");
                         }
-                        
+
                         @foreach (var ol in order.OrderLines)
                         {
                             var line = ol.Amount == 1 ? "" : ol.Amount + "x ";
@@ -77,7 +82,7 @@
                         {
                             items.Add("Envío: " + order.DeliveryAddress.AddressLine1?.Split(",")?.FirstOrDefault() ?? "");
                         }
-                        @{ 
+                        @{
                             items.Add("</div>");
                         }
                         @Html.Raw(String.Join("", items.ToArray()))
@@ -85,16 +90,16 @@
                     <td>$@order.OrderTotal</td>
 
                     <td style="max-width:200px; " class="text-center">
-                    @if (order.Finished)
-                    {
-                    <a class="btn btn-info" onclick="pickedUp(@order.OrderId);" id="@order.OrderId" title="Hacer click si el pedido ya fue entregado">Archivar</a>
-                    <div class="text-muted" style="font-size:smaller">Guarda la orden en la base de datos y significa que el cliente ya recibió su producto</div>
-                    }
-                    else
-                    {
-                    <a class="btn btn-warning" onclick="orderCompleted(@order.OrderId);" id="@order.OrderId" title="Comunica al cliente que la orden está lista para ser entregada">Notificar Cliente</a>
-                    <div class="text-muted" style="font-size:smaller">Avisa al cliente que la orden está lista para ser entregada</div>
-                    }
+                        @if (order.Finished)
+                        {
+                            <a class="btn btn-info" onclick="pickedUp(@order.OrderId);" id="@order.OrderId" title="Hacer click si el pedido ya fue entregado">Archivar</a>
+                            <div class="text-muted" style="font-size:smaller">Guarda la orden en la base de datos y significa que el cliente ya recibió su producto</div>
+                        }
+                        else
+                        {
+                            <a class="btn btn-warning" onclick="orderCompleted(@order.OrderId);" id="@order.OrderId" title="Comunica al cliente que la orden está lista para ser entregada">Notificar Cliente</a>
+                            <div class="text-muted" style="font-size:smaller">Avisa al cliente que la orden está lista para ser entregada</div>
+                        }
 
                     </td>
                 </tr>

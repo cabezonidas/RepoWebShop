@@ -24,5 +24,6 @@ namespace RepoWebShop.ViewModels
         public int MinArsForDelivery { get; internal set; }
         public int MinimumDeliveryCharge { get; internal set; }
         public int DeliveryCostByBlock { get; internal set; }
+        public int DeliveryRadius { get; internal set; }
     }
 }

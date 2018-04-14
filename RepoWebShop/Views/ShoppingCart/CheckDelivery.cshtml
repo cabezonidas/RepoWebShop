@@ -3,15 +3,18 @@
 @*<div class="title-container">
     <h1 class="title-logo">Delivery</h1>
 </div>*@
-<h1 class="text-center" style="margin-top:0px; font-family: Noto Serif;">Delivery</h1>
+<h1 class="text-center" style="margin-top:0px; font-family: Noto Serif; margin-bottom: 5px;">Delivery</h1>
+<div class="text-center ">
+    @if (Model.ShoppingCartTotal >= Model.MinArsForDelivery)
+    {
+        <a asp-action="Index" asp-controller="Delivery" class="text-muted">Ver zonas</a>
+    }
+</div>
 <hr />
 <div class="text-center text-muted" style="margin-top:-10px; margin-bottom: 20px;">
     <h3>
-        Horarios de envío.
-        @if (Model.ShoppingCartTotal >= Model.MinArsForDelivery)
-        {
-        <a asp-action="Index" asp-controller="Delivery">Ver zonas.</a>
-        }
+        Horarios de envío
+
     </h3>
     <h4 class="">
         De Martes a Sábados<br />
@@ -34,26 +37,31 @@
                 <a class="btn btn-primary" asp-action="Index" asp-controller="Delivery">Agregar envío</a>
             </h2>
         }
-        <p style="font-size: 15px;" class="text-muted">El cargo es $@Model.DeliveryCostByBlock por cada 100 metros.
-        <br />Costo mínimo de envío $@Model.MinimumDeliveryCharge.</p>
+        @{var maxCostDelivery = (Model.DeliveryRadius / 100) * Model.DeliveryCostByBlock; }
+           <br />
+           <p style="font-size: 15px;" class="text-muted">
+               El costo varía entre $@Model.MinimumDeliveryCharge y $@maxCostDelivery dependiendo la distancia.
+           </p>
     </div>
 }
 
 @if(Model.DeliveryAddress != null && Model.ShoppingCartTotal >= Model.MinArsForDelivery)
 {
     <div class="text-center text-muted">
-        <p style="font-size: 18px;" title="@Model.DeliveryAddress.AddressLine1 @Model.DeliveryAddress.DeliveryInstructions">
-            @Model.DeliveryAddress.AddressLine1?.Split(',')?.FirstOrDefault()<br/>
-            @{ 
-                var instructions = Model.DeliveryAddress.DeliveryInstructions;
-                var strlength = Model.DeliveryAddress.DeliveryInstructions?.Length ?? 0;
-                if (strlength > 30)
-                {
-                    instructions = instructions.Substring(0, 30) + "...";
-                }
+        <a asp-action="Index" asp-controller="Delivery" class="text-muted">
+            <p style="font-size: 18px;" title="@Model.DeliveryAddress.AddressLine1 @Model.DeliveryAddress.DeliveryInstructions">
+                @Model.DeliveryAddress.AddressLine1?.Split(',')?.FirstOrDefault()<br />
+                @{
+            var instructions = Model.DeliveryAddress.DeliveryInstructions;
+            var strlength = Model.DeliveryAddress.DeliveryInstructions?.Length ?? 0;
+            if (strlength > 30)
+            {
+                instructions = instructions.Substring(0, 30) + "...";
             }
-            @instructions
-        </p>
+                }
+                @instructions
+            </p>
+        </a>
         <p style="font-size: 18px;"></p>
     </div>
 }
