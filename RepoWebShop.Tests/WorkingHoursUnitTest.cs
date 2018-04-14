@@ -51,13 +51,13 @@ namespace RepoWebShop.Tests
             Assert.IsTrue(finishingDate.Month == 9);
             Assert.IsTrue(finishingDate.Day == 5);
             Assert.IsTrue(finishingDate.Hour == 19);
-            Assert.IsTrue(finishingDate.Minute == 59);
+            Assert.IsTrue(finishingDate.Minute == 45);
             orderPickup = WorkingHours.GetPickUpDate(orderAccreditted, estimationHs, _processingHours, _openHours, null, null);
             Assert.IsTrue(orderPickup.Year == 2017);
             Assert.IsTrue(orderPickup.Month == 9);
             Assert.IsTrue(orderPickup.Day == 5);
             Assert.IsTrue(orderPickup.Hour == 19);
-            Assert.IsTrue(orderPickup.Minute == 59);
+            Assert.IsTrue(orderPickup.Minute == 45);
 
             estimationHs = 6;
             orderAccreditted = new DateTime(2017, 9, 5, 19, 50, 0); // Martes 5 de septiembre 2017
@@ -66,7 +66,7 @@ namespace RepoWebShop.Tests
             Assert.IsTrue(finishingDate.Month == 9);
             Assert.IsTrue(finishingDate.Day == 6);
             Assert.IsTrue(finishingDate.Hour == 14);
-            Assert.IsTrue(finishingDate.Minute == 19);
+            Assert.IsTrue(finishingDate.Minute == 15);
             orderPickup = WorkingHours.GetPickUpDate(orderAccreditted, estimationHs, _processingHours, _openHours, null, null);
             Assert.IsTrue(orderPickup.Year == 2017);
             Assert.IsTrue(orderPickup.Month == 9);
@@ -81,13 +81,13 @@ namespace RepoWebShop.Tests
             Assert.IsTrue(finishingDate.Month == 9);
             Assert.IsTrue(finishingDate.Day == 12);
             Assert.IsTrue(finishingDate.Hour == 19);
-            Assert.IsTrue(finishingDate.Minute == 49);
+            Assert.IsTrue(finishingDate.Minute == 45);
             orderPickup = WorkingHours.GetPickUpDate(orderAccreditted, estimationHs, _processingHours, _openHours, null, null);
             Assert.IsTrue(orderPickup.Year == 2017);
             Assert.IsTrue(orderPickup.Month == 9);
             Assert.IsTrue(orderPickup.Day == 12);
             Assert.IsTrue(orderPickup.Hour == 19);
-            Assert.IsTrue(orderPickup.Minute == 49);
+            Assert.IsTrue(orderPickup.Minute == 45);
         }
 
         [TestMethod]
@@ -176,7 +176,7 @@ namespace RepoWebShop.Tests
             Assert.IsTrue(orderPickup.Month == 1);
             Assert.IsTrue(orderPickup.Day == 23);
             Assert.IsTrue(orderPickup.Hour == 11);
-            Assert.IsTrue(orderPickup.Minute == 59);
+            Assert.IsTrue(orderPickup.Minute == 45);
 
         }
     }

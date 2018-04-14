@@ -46,6 +46,10 @@ namespace RepoWebShop.Models
                     orderReady = true;
                 }
             }
+
+            //Adjust to 15'
+            offset -= offset % 15;
+
             return orderAccreditted.Date.AddDays(preparationDays).AddMinutes(offset);
         }
 
