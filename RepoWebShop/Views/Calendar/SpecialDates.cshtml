@@ -57,7 +57,7 @@
                         else
                         {
                             <td>@holiday.ProcessingHours.StartingAt.ToString("hh\\:mm")</td>
-                            <td>@holiday.ProcessingHours.StartingAt.Add(holiday.ProcessingHours.StartingAt).ToString("hh\\:mm")</td>
+                            <td>@holiday.ProcessingHours.StartingAt.Add(holiday.ProcessingHours.Duration).ToString("hh\\:mm")</td>
                         }
                     }
                     @{
