@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180415170952_discountsfixDiscountShoppingCart")]
+    partial class discountsfixDiscountShoppingCart
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -378,8 +379,6 @@ namespace RepoWebShop.Migrations
 
                     b.Property<int?>("DeliveryAddressId");
 
-                    b.Property<int?>("DiscountId");
-
                     b.Property<int?>("EmailId");
 
                     b.Property<bool>("Finished");
@@ -424,8 +423,6 @@ namespace RepoWebShop.Migrations
                     b.HasKey("OrderId");
 
                     b.HasIndex("DeliveryAddressId");
-
-                    b.HasIndex("DiscountId");
 
                     b.HasIndex("EmailId");
 
@@ -647,22 +644,6 @@ namespace RepoWebShop.Migrations
                     b.ToTable("ShoppingCartComments");
                 });
 
-            modelBuilder.Entity("RepoWebShop.Models.ShoppingCartDiscount", b =>
-                {
-                    b.Property<int>("ShoppingCartDiscountId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("DiscountId");
-
-                    b.Property<string>("ShoppingCartId");
-
-                    b.HasKey("ShoppingCartDiscountId");
-
-                    b.HasIndex("DiscountId");
-
-                    b.ToTable("ShoppingCartDiscount");
-                });
-
             modelBuilder.Entity("RepoWebShop.Models.ShoppingCartItem", b =>
                 {
                     b.Property<int>("ShoppingCartItemId")
@@ -753,10 +734,6 @@ namespace RepoWebShop.Migrations
                         .WithMany()
                         .HasForeignKey("DeliveryAddressId");
 
-                    b.HasOne("RepoWebShop.Models.Discount", "Discount")
-                        .WithMany()
-                        .HasForeignKey("DiscountId");
-
                     b.HasOne("RepoWebShop.Models.Email", "Email")
                         .WithMany()
                         .HasForeignKey("EmailId");
@@ -808,13 +785,6 @@ namespace RepoWebShop.Migrations
                     b.HasOne("RepoWebShop.Models.ProcessingHours", "ProcessingHours")
                         .WithMany()
                         .HasForeignKey("ProcessingHoursId");
-                });
-
-            modelBuilder.Entity("RepoWebShop.Models.ShoppingCartDiscount", b =>
-                {
-                    b.HasOne("RepoWebShop.Models.Discount", "Discount")
-                        .WithMany()
-                        .HasForeignKey("DiscountId");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.ShoppingCartItem", b =>

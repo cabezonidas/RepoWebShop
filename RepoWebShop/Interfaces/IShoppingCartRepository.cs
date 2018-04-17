@@ -8,8 +8,8 @@ namespace RepoWebShop.Interfaces
     {
         ShoppingCartComment GetComments(string bookingId);
         string ClearComments(string bookingId);
-        IQueryable<ShoppingCartItem> GetItems(string bookingId);     
-        IQueryable<ShoppingCartItem> EmptyItems(string bookingId);
+        IEnumerable<ShoppingCartItem> GetItems(string bookingId);     
+        IEnumerable<ShoppingCartItem> EmptyItems(string bookingId);
         DeliveryAddress GetDelivery(string bookingId);
 
         string GetShoppingCartComments();
@@ -28,5 +28,10 @@ namespace RepoWebShop.Interfaces
         string GetMpPreference();
         void SetMpPreference(string preferenceId);
         decimal GetShoppingCartTotal();
+        Discount GetShoppingDiscount();
+        Discount ClearDiscount(string bookingId);
+        void RemoveShoppingDiscount();
+        void AddDiscount(Discount discount);
+        decimal GetShoppingCartTotalWithoutDiscount();
     }
 }

@@ -38,5 +38,7 @@ namespace RepoWebShop.Models
         public DbSet<ApplicationUser> Registrations { get; set; }
         public DbSet<Vacation> Vacations { get; set; }
         public DbSet<PublicHoliday> Holidays { get; set; }
+        public DbSet<Discount> Discounts { get; set; }
+        public DbSet<ShoppingCartDiscount> ShoppingCartDiscount { get; set; }
     }
 }

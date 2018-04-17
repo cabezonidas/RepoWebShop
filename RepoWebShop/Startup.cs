@@ -72,6 +72,7 @@ namespace RepoWebShop
             });
 
             services.AddTransient<IDeliveryRepository, DeliveryRepository>();
+            services.AddTransient<IDiscountRepository, DiscountRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IPieRepository, PieRepository>();
             services.AddTransient<IPieDetailRepository, PieDetailRepository>();

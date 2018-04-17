@@ -25,5 +25,7 @@ namespace RepoWebShop.ViewModels
         public int MinimumDeliveryCharge { get; internal set; }
         public int DeliveryCostByBlock { get; internal set; }
         public int DeliveryRadius { get; internal set; }
+        public Discount Discount { get; internal set; }
+        public decimal ShopingCartTotalWithoutDiscount { get; internal set; }
     }
 }

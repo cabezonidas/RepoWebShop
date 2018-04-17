@@ -344,6 +344,7 @@ namespace RepoWebShop.Models
 
             order.OrderPlaced = _calendarRepository.LocalTime();
             order.CustomerComments = _shoppingCartRepository.ClearComments(payment.BookingId);
+            order.Discount = _shoppingCartRepository.ClearDiscount(payment.BookingId);
 
             order.DeliveryAddress = _shoppingCartRepository.GetDelivery(payment.BookingId);
 

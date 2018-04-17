@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Discount>
+@inject ICalendarRepository _calendarRepository;
+
+<div class="container">
+    <h3 class="text-center text-muted">Descuentos</h3>
+    <a asp-controller="Discounts" asp-action="Create" class="btn btn-primary" style="margin: 5px;">Agregar Descuento</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Código
+                </th>
+                <th>
+                    Válido Desde
+                </th>
+                <th>
+                    Válido Hasta
+                </th>
+                <th>
+                    Repetición cada
+                </th>
+                <th>
+                    Usos disponibles
+                </th>
+                <th>
+                    Descuento
+                </th>
+                <th>
+                    Tope
+                </th>
+                <th>
+                    Comentarios
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var discount in Model)
+            {
+            <tr>
+                <td>
+                    @discount.Phrase.ToUpper()
+                </td>
+                <td>
+                    @Html.Raw($"{_calendarRepository.FriendlyDate(discount.ValidFrom)} de {discount.ValidFrom.Year}")
+                </td>
+                <td>
+                    @Html.Raw($"{_calendarRepository.FriendlyDate(discount.ValidFrom.AddDays(discount.DurationDays - 1))} de {discount.ValidFrom.Year}")
+                </td>
+                <td>
+                    @Html.Raw(discount.Loop.HasValue ? discount.Loop.Value + " día" + (discount.Loop.Value > 1 ? "s" : "") : "No se repite")
+                </td>
+                <td>
+                    @Html.Raw(discount.InstancesLeft.HasValue ? discount.InstancesLeft.Value.ToString() : "Infinitos")
+                </td>
+                <td>
+                    @discount.Percentage %
+                </td>
+                <td>
+                    $@discount.Roof
+                </td>
+                <td>
+                    @discount.Comments
+                </td>
+                <td>
+                    <a asp-controller="Discounts" asp-action="Delete" asp-route-id="@discount.DiscountId">Eliminar</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+
+</div>

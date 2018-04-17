@@ -69,6 +69,7 @@ namespace RepoWebShop.Controllers
             {
                 Items = _shoppingCart.GetShoppingCartItems(),
                 PickupDate = _calendarRepository.GetPickupEstimate(highestPrepTime),
+                ShopingCartTotalWithoutDiscount = _shoppingCart.GetShoppingCartTotalWithoutDiscount(),
                 ShoppingCartTotal = _shoppingCart.GetShoppingCartTotal(),
                 //Mercadolink = await _mp.GetRepoPaymentLinkAsync(total, _bookingId, _friendlyBookingId, Request.Host.ToString(), "La Reposteria", user?.Id),
                 PreparationTime = highestPrepTime,
@@ -81,8 +82,9 @@ namespace RepoWebShop.Controllers
                 MinArsForDelivery = _minimumArsForOrderDelivery,
                 MinimumDeliveryCharge = _minimumCharge,
                 DeliveryCostByBlock = _costByBlock,
-                DeliveryRadius = _deliveryRadius
-            };
+                DeliveryRadius = _deliveryRadius,
+                Discount = _shoppingCart.GetShoppingDiscount()
+        };
             
             return View(shoppingCartViewModel);
         }
@@ -104,7 +106,12 @@ namespace RepoWebShop.Controllers
 
             return RedirectToAction("Index");
         }
+        public RedirectToActionResult RemoveDiscount()
+        {
+            _shoppingCart.RemoveShoppingDiscount();
 
+            return RedirectToAction("Index");
+        }
         public RedirectToActionResult RemoveFromShoppingCart(int pieId)
         {
             var selectedPie = _pieRepository.AllPies.FirstOrDefault(p => p.PieId == pieId);

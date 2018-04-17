@@ -21,7 +21,7 @@ namespace RepoWebShop.Repositories
                 case "Tuesday":
                     return "Martes";
                 case "Wednesday":
-                    return "Miercoles";
+                    return "Miércoles";
                 case "Thursday":
                     return "Jueves";
                 case "Friday":

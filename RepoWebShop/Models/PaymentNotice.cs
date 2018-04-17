@@ -32,9 +32,9 @@ namespace RepoWebShop.Models
             Net_Received_Amount = paymentInfo.GetValue("net_received_amount", typeof(Decimal));
             Installment_Amount = paymentInfo.GetValue("installment_amount", typeof(Decimal));
             
-            Date_Created = ((DateTime)paymentInfo.GetValue("date_created", typeof(DateTime))).Zoned(localZone); //Mapped
-            Date_Approved = ((DateTime)paymentInfo.GetValue("date_approved", typeof(DateTime))).Zoned(localZone);
-            Money_Release_Date = ((DateTime)paymentInfo.GetValue("money_release_date", typeof(DateTime))).Zoned(localZone);
+            Date_Created = ((DateTime?)paymentInfo.GetValue("date_created", typeof(DateTime)))?.Zoned(localZone); //Mapped
+            Date_Approved = ((DateTime?)paymentInfo.GetValue("date_approved", typeof(DateTime)))?.Zoned(localZone);
+            Money_Release_Date = ((DateTime?)paymentInfo.GetValue("money_release_date", typeof(DateTime)))?.Zoned(localZone);
             
             Installments = paymentInfo.GetValue("installments", typeof(int));
 

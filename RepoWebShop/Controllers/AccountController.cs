@@ -26,12 +26,12 @@ namespace RepoWebShop.Controllers
         private readonly IAccountRepository _accountRepository;
         private readonly IEmailRepository _emailRepository;
         private readonly IOrderRepository _orderRepository;
-        private readonly IDeliveryRepository _deliveryRepository;
+        private readonly IDiscountRepository _deliveryRepository;
         private readonly IMapper _mapper;
         //private readonly ILogger _logger;
 
 
-        public AccountController(IDeliveryRepository deliveryRepository, IOrderRepository orderRepository, IEmailRepository emailRepository, IAccountRepository accountRepository, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
+        public AccountController(IDiscountRepository deliveryRepository, IOrderRepository orderRepository, IEmailRepository emailRepository, IAccountRepository accountRepository, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
         {
             //_logger = logger;
             _deliveryRepository = deliveryRepository;

@@ -176,5 +176,6 @@ namespace RepoWebShop.Models
         }
 
         public DeliveryAddress DeliveryAddress { get; internal set; }
+        public Discount Discount { get; internal set; }
     }
 }

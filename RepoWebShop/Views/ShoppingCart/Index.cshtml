@@ -11,6 +11,8 @@
 </div>
 
 
+
+
 @if (Model.ShoppingCartTotal == 0)
 {
     <div class="container">
@@ -24,6 +26,10 @@ else
         <div class="row">
             <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
                 @Html.Partial("~/Views/ShoppingCart/ShoppingCartItems.cshtml", Model)
+                @if (Model.Discount == null)
+                {
+                    @Html.Partial("~/Views/Discounts/ApplyDiscount.cshtml", new AddDiscountViewModel())
+                }
             </div>
             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 @Html.Partial("~/Views/Shared/PickupDate.cshtml", Model.PickupDate)
