@@ -13,7 +13,7 @@ namespace RepoWebShop.Controllers
     [Route("api/[controller]")]
     public class ShoppingCartDataController : Controller
     {
-        private readonly IShoppingCartRepository _shoppingCart;
+        private readonly IShoppingCartRepository _cartRepository;
         private readonly IMercadoPago _mp;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -25,14 +25,14 @@ namespace RepoWebShop.Controllers
             _mp = mp;
             _userManager = userManager;
             _signInManager = signInManager;
-            _shoppingCart = shoppingCart;
+            _cartRepository = shoppingCart;
         }
 
         [HttpGet]
         [Route("AddComments")]
         public IActionResult AddComments()
         {
-            _shoppingCart.AddComments(string.Empty);
+            _cartRepository.AddComments(string.Empty);
             return Ok();
         }
 
@@ -40,7 +40,7 @@ namespace RepoWebShop.Controllers
         [Route("AddComments/{comments}")]
         public IActionResult AddComments(string comments)
         {
-            _shoppingCart.AddComments(comments);
+            _cartRepository.AddComments(comments ?? string.Empty);
             return Ok();
         }
 
@@ -48,28 +48,34 @@ namespace RepoWebShop.Controllers
         [Route("GetComments")]
         public IActionResult GetComments()
         {
-            return Ok(new { comments = _shoppingCart.GetShoppingCartComments() });
+            return Ok(new { comments = _cartRepository.GetComments()?.Comments ?? string.Empty });
         }
 
         [HttpGet]
         [Route("GetItemsCount")]
         public IActionResult GetItemsCount()
         {
-            return Ok(new { items = _shoppingCart.GetShoppingCartItems().Count });
+            return Ok(new { items = _cartRepository.GetItems().Count() });
         }
 
         [HttpGet]
         [Route("GetMercadoPagoLink")]
-        public async Task<IActionResult> GetMercadoPagoLink()
+        public async Task<IActionResult> GetMercadoPagoLink() => await GetMercadoPagoLink(null);
+
+        [HttpGet]
+        [Route("GetMercadoPagoLink/{bookingId}")]
+        public async Task<IActionResult> GetMercadoPagoLink(string bookingId)
         {
-            var _total = _shoppingCart.GetShoppingCartTotal();
-            var _bookingId = _shoppingCart.GetShoppingCartId();
-            var _friendlyBookingId = _bookingId.Length >= 6 ? _bookingId?.Substring(_bookingId.Length - 6, 6) ?? String.Empty : String.Empty;
-            var _user = await _userManager.GetUser(_signInManager);
+            var _user = string.IsNullOrEmpty(bookingId) ? await _userManager.GetUser(_signInManager) : null; 
+            bookingId = string.IsNullOrEmpty(bookingId) ? _cartRepository.GetSessionCartId() : bookingId;
 
-            var preference = _mp.BuildPreference(_total, _bookingId, _friendlyBookingId, Request.Host.ToString(), "De las Artes", _user?.Id);
+            var _total = _cartRepository.GetTotal(bookingId);
+            
+            var _friendlyBookingId = bookingId.Length >= 6 ? bookingId?.Substring(bookingId.Length - 6, 6) ?? String.Empty : String.Empty;
 
-            string preferenceId = _shoppingCart.GetMpPreference();
+            var preference = _mp.BuildPreference(_total, bookingId, _friendlyBookingId, Request.Host.ToString(), "De las Artes", _user?.Id);
+
+            string preferenceId = _cartRepository.GetMpPreference(bookingId);
             bool validPreference = true;
             string init_point;
             Hashtable response;
@@ -77,15 +83,15 @@ namespace RepoWebShop.Controllers
             if (!String.IsNullOrEmpty(preferenceId))
             {
                 response = ((await _mp.GetPreferenceAsync(preferenceId))["response"] as Hashtable);
-                var bookingId = response["external_reference"].ToString();
+                var bookId = response["external_reference"].ToString();
                 //validPreference = _appDbContext.ShoppingCartItems.Any(x => x.ShoppingCartId == bookingId);
-                validPreference = bookingId == _shoppingCart.GetShoppingCartId();
+                validPreference = bookId == bookingId;
             }
 
             if(String.IsNullOrEmpty(preferenceId) || !validPreference)
             {
                 response = ((await _mp.CreatePreferenceAsync(preference))["response"] as Hashtable);
-                _shoppingCart.SetMpPreference(response["id"].ToString());
+                _cartRepository.SetMpPreference(response["id"].ToString());
             }
             else
             {

@@ -17,11 +17,11 @@ namespace RepoWebShop.Controllers
         private readonly AppDbContext _appDbContext;
         private readonly ICalendarRepository _calendarRepository;
         private readonly IMapper _mapper;
-        private readonly IShoppingCartRepository _sCart;
+        private readonly IShoppingCartRepository _cartRepository;
 
         public CalendarDataController(AppDbContext appDbContext, IShoppingCartRepository sCart, IMapper mapper, ICalendarRepository calendarRepository)
         {
-            _sCart = sCart;
+            _cartRepository = sCart;
             _appDbContext = appDbContext;
             _mapper = mapper;
             _calendarRepository = calendarRepository;
@@ -31,7 +31,7 @@ namespace RepoWebShop.Controllers
         [Route("GetPickupDate")]
         public IActionResult GetPickupDate()
         {
-            var hours = _sCart.GetShoppingCartPreparationTime();
+            var hours = _cartRepository.GetPreparationTime();
             DateTime result = _calendarRepository.GetPickupEstimate(hours);
             
             return PartialView("PickupDate", result);

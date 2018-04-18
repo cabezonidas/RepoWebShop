@@ -8,12 +8,12 @@ namespace RepoWebShop.Controllers
     public class PaymentDataController : Controller
     {
         private readonly IOrderRepository _orderRepository;
-        private readonly ShoppingCart _shoppingCart;
+        private readonly ShoppingCart _cartSession;
 
         public PaymentDataController(IOrderRepository orderRepository, ShoppingCart shoppingCart)
         {
             _orderRepository = orderRepository;
-            _shoppingCart = shoppingCart;
+            _cartSession = shoppingCart;
         }
 
         [HttpGet]

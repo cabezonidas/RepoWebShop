@@ -13,13 +13,13 @@ namespace RepoWebShop.Controllers
     {
         private readonly ICalendarRepository _calendarRepository;
         private readonly IDiscountRepository _discountRepository;
-        private readonly IShoppingCartRepository _shoppingCartRepository;
+        private readonly IShoppingCartRepository _cartRepository;
 
         public DiscountsDataController(ICalendarRepository calendarRepository, IDiscountRepository discountRepository, IShoppingCartRepository shoppingCartRepository)
         {
             _calendarRepository = calendarRepository;
             _discountRepository = discountRepository;
-            _shoppingCartRepository = shoppingCartRepository;
+            _cartRepository = shoppingCartRepository;
         }
 
         [HttpPost]
@@ -32,7 +32,7 @@ namespace RepoWebShop.Controllers
         {
             var discount = _discountRepository.FindByCode(code ?? string.Empty);
             var error = "";
-            Discount.ApplyDiscount(_calendarRepository.LocalTime(), _shoppingCartRepository.GetShoppingCartItemsTotal(), discount, out error);
+            Discount.ApplyDiscount(_calendarRepository.LocalTime(), _cartRepository.GetItemsTotal(), discount, out error);
 
             if (!string.IsNullOrEmpty(error))
             {
@@ -40,7 +40,7 @@ namespace RepoWebShop.Controllers
             }
             else
             {
-                _shoppingCartRepository.AddDiscount(discount);
+                _cartRepository.AddDiscount(discount);
                 return Ok();
             }
         }

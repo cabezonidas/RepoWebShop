@@ -14,6 +14,7 @@ using RepoWebShop.Repositories;
 using React.AspNet;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace RepoWebShop
 {
@@ -88,6 +89,7 @@ namespace RepoWebShop
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IMercadoPago, MercadoPago>();
             services.AddSingleton<IConfiguration>(_configurationRoot);
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped(sp => ShoppingCart.GetCart(sp));
 
             services.AddReact();

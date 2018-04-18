@@ -2,28 +2,29 @@
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
+using System.Linq;
 
 namespace RepoWebShop.Components
 {
     public class ShoppingCartSummary : ViewComponent
     {
-        private readonly IShoppingCartRepository _shoppingCart;
+        private readonly IShoppingCartRepository _cartRepository;
 
         public ShoppingCartSummary(IShoppingCartRepository shoppingCart)
         {
-            _shoppingCart = shoppingCart;
+            _cartRepository = shoppingCart;
         }
 
         public IViewComponentResult Invoke()
         {
-            var items = _shoppingCart.GetShoppingCartItems();
+            var items = _cartRepository.GetItems();
             //_shoppingCart.ShoppingCartItems = items;
 
             var shoppingCartViewModel = new ShoppingCartViewModel
             {
                 //ShoppingCart = _shoppingCart,
-                Items = _shoppingCart.GetShoppingCartItems(),
-                ShoppingCartTotal = _shoppingCart.GetShoppingCartItemsTotal()
+                Items = _cartRepository.GetItems().ToList(),
+                ShoppingCartTotal = _cartRepository.GetItemsTotal()
             };
             return View(shoppingCartViewModel);
         }

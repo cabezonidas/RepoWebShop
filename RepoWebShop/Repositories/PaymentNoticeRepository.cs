@@ -18,10 +18,14 @@ namespace RepoWebShop.Repositories
             _orderRespository = orderRepository;
             _emailRespository = emailRespository;
         }
+
         public async Task CreatePayment(PaymentNotice paymentNotification, string hostUrl)
         {
             _appDbContext.PaymentNotices.Add(paymentNotification);
             _appDbContext.SaveChanges();
+
+            if(_orderRespository.ValidBookingId(paymentNotification.BookingId))
+                await _orderRespository.PaymentNotified(paymentNotification, hostUrl);
 
             /*
             pending         - The user has not yet completed the payment process
@@ -34,24 +38,6 @@ namespace RepoWebShop.Repositories
             refunded        - Payment was refunded to the user
             charged_back    - Was made a chargeback in the buyer’s credit card
             */
-
-
-            if(_orderRespository.ValidBookingId(paymentNotification.BookingId))
-            { 
-                if (paymentNotification.Status == "approved")
-                {
-                    Order orderApproved = _orderRespository.OrderApproved(paymentNotification);
-                    await _emailRespository.SendOrderConfirmationAsync(orderApproved, hostUrl, paymentNotification);
-                }
-
-                else if (paymentNotification.Status == "in_process")
-                {
-                    Order order = _orderRespository.OrderInProcess(paymentNotification);
-                }
-
-                else
-                    _orderRespository.UpdateOrder(paymentNotification);
-            }
         }
 
         public IEnumerable<PaymentNotice> GetPayments()

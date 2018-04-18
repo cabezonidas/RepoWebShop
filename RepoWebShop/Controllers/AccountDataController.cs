@@ -22,7 +22,7 @@ namespace RepoWebShop.Controllers
     [Route("api/[controller]")]
     public class AccountDataController : Controller
     {
-        private readonly ShoppingCart _shoppingCart;
+        private readonly ShoppingCart _cartSession;
         private readonly IOrderRepository _orderRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -44,7 +44,7 @@ namespace RepoWebShop.Controllers
             _emailRepository = emailRepository;
             _accountRepository = accountRepository;
             _orderRepository = orderRepository;
-            _shoppingCart = shoppingCart;
+            _cartSession = shoppingCart;
             _accountSid = config.GetSection("TwilioAccoundSid").Value;
             _authToken = config.GetSection("TwilioAuthToken").Value;
             _sender = config.GetSection("TwilioSender").Value;

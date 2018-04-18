@@ -8,13 +8,14 @@ using RepoWebShop.Models;
 using Microsoft.AspNetCore.Identity;
 using RepoWebShop.Extensions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace RepoWebShop.Controllers
 {
     public class ShoppingCartController : Controller
     {
         private readonly IPieRepository _pieRepository;
-        private readonly IShoppingCartRepository _shoppingCart;
+        private readonly IShoppingCartRepository _cartRepository;
         private readonly IMercadoPago _mp;
         private readonly ICalendarRepository _calendarRepository;
         private readonly IConfiguration _config;
@@ -28,15 +29,18 @@ namespace RepoWebShop.Controllers
         private readonly int _costByBlock;
         private readonly int _deliveryRadius;
 
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public ShoppingCartController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration config, ICalendarRepository calendarRepository, IPieRepository pieRepository, IShoppingCartRepository shoppingCart, IMercadoPago mp)
+
+        public ShoppingCartController(IHttpContextAccessor contextAccessor, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration config, ICalendarRepository calendarRepository, IPieRepository pieRepository, IShoppingCartRepository shoppingCart, IMercadoPago mp)
         {
+            _contextAccessor = contextAccessor;
             _userManager = userManager;
             _signInManager = signInManager;
             _config = config;
             _pieRepository = pieRepository;
-            _shoppingCart = shoppingCart;
-            _bookingId = shoppingCart.GetShoppingCartId();
+            _cartRepository = shoppingCart;
+            _bookingId = shoppingCart.GetSessionCartId();
             _friendlyBookingId = _bookingId.Length >= 6 ? _bookingId?.Substring(_bookingId.Length - 6, 6) ?? string.Empty : String.Empty;
             _calendarRepository = calendarRepository;
             _mp = mp;
@@ -51,39 +55,34 @@ namespace RepoWebShop.Controllers
         {
             var result = new ShoppingCartViewModel
             {
-                Items = _shoppingCart.GetShoppingCartItems()
+                Items = _cartRepository.GetItems().ToList()
             };
             return View(result);
         }
 
         public async Task<ViewResult> Index()
         {
-            var items = _shoppingCart.GetShoppingCartItems();
-            var totalItems = _shoppingCart.GetShoppingCartItemsTotal();
-            var highestPrepTime = _shoppingCart.GetShoppingCartPreparationTime();
 
-            var user = await _userManager.GetUser(_signInManager);
-            var delivery = _shoppingCart.GetShoppingCartDeliveryAddress();
+            var highestPrepTime = _cartRepository.GetPreparationTime();
 
             var shoppingCartViewModel = new ShoppingCartViewModel
             {
-                Items = _shoppingCart.GetShoppingCartItems(),
+                Items = _cartRepository.GetItems().ToList(),
                 PickupDate = _calendarRepository.GetPickupEstimate(highestPrepTime),
-                ShopingCartTotalWithoutDiscount = _shoppingCart.GetShoppingCartTotalWithoutDiscount(),
-                ShoppingCartTotal = _shoppingCart.GetShoppingCartTotal(),
-                //Mercadolink = await _mp.GetRepoPaymentLinkAsync(total, _bookingId, _friendlyBookingId, Request.Host.ToString(), "La Reposteria", user?.Id),
+                ShoppingCartTotal = _cartRepository.GetTotal(),
                 PreparationTime = highestPrepTime,
                 FriendlyBookingId = _friendlyBookingId,
-                Comments = _shoppingCart.GetShoppingCartComments(),
+                ShopingCartTotalWithoutDiscount = _cartRepository.GetTotalWithoutDiscount(),
+                Comments = _cartRepository.GetComments()?.Comments,
                 MercadoPagoId = _config.GetSection("MercadoPagoClientId").Value,
-                User = user,
-                DeliveryAddress = delivery,
+                User = await _userManager.GetUser(_signInManager),
+                DeliveryAddress = _cartRepository.GetDelivery(),
                 MaxArsForReservation = _maxArsForReservation,
                 MinArsForDelivery = _minimumArsForOrderDelivery,
                 MinimumDeliveryCharge = _minimumCharge,
                 DeliveryCostByBlock = _costByBlock,
                 DeliveryRadius = _deliveryRadius,
-                Discount = _shoppingCart.GetShoppingDiscount()
+                Discount = _cartRepository.GetDiscount()
         };
             
             return View(shoppingCartViewModel);
@@ -95,20 +94,20 @@ namespace RepoWebShop.Controllers
 
             if (selectedPie != null)
             {
-                _shoppingCart.AddToCart(selectedPie, 1);
+                _cartRepository.AddToCart(selectedPie, 1);
             }
             return RedirectToAction("Index");
         }
 
         public RedirectToActionResult RemoveDelivery()
         {
-            _shoppingCart.RemoveDelivery();
+            _cartRepository.RemoveDelivery();
 
             return RedirectToAction("Index");
         }
         public RedirectToActionResult RemoveDiscount()
         {
-            _shoppingCart.RemoveShoppingDiscount();
+            _cartRepository.RemoveShoppingDiscount();
 
             return RedirectToAction("Index");
         }
@@ -118,14 +117,14 @@ namespace RepoWebShop.Controllers
 
             if (selectedPie != null)
             {
-                _shoppingCart.RemoveFromCart(selectedPie);
+                _cartRepository.RemoveFromCart(selectedPie);
             }
             return RedirectToAction("Index");
         }
 
         public RedirectToActionResult ClearFromShoppingCart(int pieId)
         {
-            _shoppingCart.ClearFromCart(pieId);
+            _cartRepository.ClearFromCart(pieId);
 
             return RedirectToAction("Index");
         }

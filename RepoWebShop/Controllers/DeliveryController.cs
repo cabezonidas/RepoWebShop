@@ -21,14 +21,14 @@ namespace RepoWebShop.Controllers
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IShoppingCartRepository _shoppingCart;
+        private readonly IShoppingCartRepository _cartRepository;
         private readonly IConfiguration _config;
 
         public DeliveryController(IConfiguration config, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IDeliveryRepository deliveryRepository, IMapper mapper, IShoppingCartRepository shoppingCart)
         {
             _deliveryRepository = deliveryRepository;
             _mapper = mapper;
-            _shoppingCart = shoppingCart;
+            _cartRepository = shoppingCart;
             _userManager = userManager;
             _signInManager = signInManager;
             _config = config; 
@@ -36,7 +36,7 @@ namespace RepoWebShop.Controllers
 
         public IActionResult Index()
         {
-            var model = _shoppingCart.GetShoppingCartDeliveryAddress();
+            var model = _cartRepository.GetDelivery();
 
             var viewModel = _mapper.Map<DeliveryAddress, DeliveryAddressViewModel>(model);
 
@@ -86,7 +86,7 @@ namespace RepoWebShop.Controllers
             }
 
             var delivery = _mapper.Map<DeliveryAddressViewModel, DeliveryAddress>(deliveryAddres);
-            delivery.ShoppingCartId = _shoppingCart.GetShoppingCartId();
+            delivery.ShoppingCartId = _cartRepository.GetSessionCartId();
             delivery.DeliveryCost = _deliveryRepository.GetDeliveryEstimate(distance);
             delivery.Distance = distance;
             

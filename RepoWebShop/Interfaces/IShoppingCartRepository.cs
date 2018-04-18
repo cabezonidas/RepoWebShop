@@ -6,32 +6,27 @@ namespace RepoWebShop.Interfaces
 {
     public interface IShoppingCartRepository
     {
-        ShoppingCartComment GetComments(string bookingId);
-        string ClearComments(string bookingId);
-        IEnumerable<ShoppingCartItem> GetItems(string bookingId);     
-        IEnumerable<ShoppingCartItem> EmptyItems(string bookingId);
-        DeliveryAddress GetDelivery(string bookingId);
+        IEnumerable<ShoppingCartItem> GetItems(string bookingId = null);     
+        ShoppingCartComment GetComments(string bookingId = null);
+        DeliveryAddress GetDelivery(string bookingId = null);
+        Discount GetDiscount(string bookingId = null);
+        decimal GetItemsTotal(string bookingId = null);
+        decimal GetTotalWithoutDiscount(string bookingId = null);
+        int GetPreparationTime(string bookingId = null);
+        void ClearCart(string bookingId = null);
+        decimal GetTotal(string bookingId = null);
 
-        string GetShoppingCartComments();
-        int GetShoppingCartPreparationTime();
         void AddComments(string comments);
         void ClearFromCart(int pieId);
         void AddToCart(Pie pie, int amount);
         int RemoveFromCart(Pie pie);
-        List<ShoppingCartItem> GetShoppingCartItems();
-        void ClearCart();
-        decimal GetShoppingCartItemsTotal();
-        string GetShoppingCartId();
-        DeliveryAddress GetShoppingCartDeliveryAddress();
-        void RenewId();
         void RemoveDelivery();
-        string GetMpPreference();
-        void SetMpPreference(string preferenceId);
-        decimal GetShoppingCartTotal();
-        Discount GetShoppingDiscount();
-        Discount ClearDiscount(string bookingId);
         void RemoveShoppingDiscount();
         void AddDiscount(Discount discount);
-        decimal GetShoppingCartTotalWithoutDiscount();
+
+        void RenewId();
+        string GetSessionCartId();
+        string GetMpPreference(string bookingId);
+        void SetMpPreference(string preferenceId);
     }
 }

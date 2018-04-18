@@ -15,13 +15,13 @@ namespace RepoWebShop.Controllers
     {
         private readonly ICalendarRepository _calendarRepository;
         private readonly IDiscountRepository _discountRepository;
-        private readonly IShoppingCartRepository _shoppingCartRepository;
+        private readonly IShoppingCartRepository _cartRepository;
 
         public DiscountsController(ICalendarRepository calendarRepository, IDiscountRepository discountRepository, IShoppingCartRepository shoppingCartRepository)
         {
             _calendarRepository = calendarRepository;
             _discountRepository = discountRepository;
-            _shoppingCartRepository = shoppingCartRepository;
+            _cartRepository = shoppingCartRepository;
         }
 
         public IActionResult Index()

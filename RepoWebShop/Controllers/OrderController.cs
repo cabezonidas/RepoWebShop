@@ -18,7 +18,7 @@ namespace RepoWebShop.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IOrderRepository _orderRepository;
-        private readonly IShoppingCartRepository _shoppingCart;
+        private readonly IShoppingCartRepository _cartRepository;
         private readonly IPieDetailRepository _pieDetailRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IEmailRepository _emailRespository;
@@ -35,7 +35,7 @@ namespace RepoWebShop.Controllers
             _userManager = userManager;
             _pieDetailRepository = pieDetailRepository;
             _orderRepository = orderRepository;
-            _shoppingCart = shoppingCart;
+            _cartRepository = shoppingCart;
             _accountRepository = accountRepository;
             _emailRespository = emailRespository;
             _mp = mp;
@@ -62,7 +62,7 @@ namespace RepoWebShop.Controllers
         {
             if (Request.QueryString.HasValue)
             {
-                _shoppingCart.RenewId();
+                _cartRepository.RenewId();
 
                 Task.Run(async () =>
                 {
@@ -102,7 +102,7 @@ namespace RepoWebShop.Controllers
         {
             if(Request.QueryString.HasValue)
             {
-                _shoppingCart.RenewId();
+                _cartRepository.RenewId();
                 Task.Run(async () =>
                 {
                     var apicall = $"http://{Request.Host.ToString()}/api/WebhooksData/OnPaymentNotNotified";
@@ -237,7 +237,7 @@ namespace RepoWebShop.Controllers
         public async Task<IActionResult> Checkout()
         {
             var user = await _userManager.GetUser(_signInManager);
-            if ((_shoppingCart.GetShoppingCartItems()).Count() > 0)
+            if ((_cartRepository.GetItems()).Count() > 0)
                 if(user.PhoneNumberConfirmed)
                     return View(user);
                 else
@@ -250,28 +250,20 @@ namespace RepoWebShop.Controllers
         [Authorize]
         public async Task<IActionResult> Checkout(Order order)
         {
-            var items = _shoppingCart.GetShoppingCartItems();
-
-            if (items.Count == 0)
+ 
+            if (_cartRepository.GetItems().Count() == 0)
             {
                 ModelState.AddModelError("EmptyTrolley", "Tu carrito no puede estar vacío, agrega algunos productos.");
             }
+
+            if (_cartRepository.GetTotal() > _maxArsForReservation)
+                ModelState.AddModelError("MaxValueReached", "El monto de la reserva supera el límite admitido. Deberás usar Mercado Pago.");
+
             var _currentUser = await _userManager.GetUser(_signInManager);
             if(!_currentUser.PhoneNumberConfirmed)
             {
                 ModelState.AddModelError("InvalidPhone", "El número de teléfono no esta verificado.");
                 Redirect($"/Account/VerifyNumber/Order/Checkout/");
-            }
-
-            order.PhoneNumber = _currentUser.PhoneNumber;
-            order.OrderTotal = _shoppingCart.GetShoppingCartTotal();
-            order.Discount = _shoppingCart.GetShoppingDiscount();
-
-            var delivery = _shoppingCart.GetShoppingCartDeliveryAddress();
-
-            if (order.OrderTotal + (delivery?.DeliveryCost ?? 0) > _maxArsForReservation)
-            {
-                ModelState.AddModelError("MaxValueReached", "El monto de la reserva supera el límite admitido. Deberás usar Mercado Pago.");
             }
 
             Order anotherReservationInProgress = _orderRepository.LatestReservationInProgress(_currentUser);
@@ -283,14 +275,10 @@ namespace RepoWebShop.Controllers
 
             if (ModelState.IsValid)
             {
-                order.Registration = _currentUser;
-                order.CustomerComments = _shoppingCart.GetShoppingCartComments();
-                order.BookingId = _shoppingCart.GetShoppingCartId();
                 order.Status = "reservation";
-                order.PickUpTime = _calendarRepository.GetPickupEstimate(_shoppingCart.GetShoppingCartPreparationTime());
-                order.DeliveryAddress = delivery;
-                _orderRepository.CreateOrder(order);
-                _shoppingCart.ClearCart();
+                order.Registration = _currentUser;
+                order = _orderRepository.CreateOrder(order);
+
                 await _emailRespository.SendOrderConfirmationAsync(order, Request.HostUrl(), null);
                 return Redirect($"/Order/Status/{order.FriendlyBookingId}");
             }

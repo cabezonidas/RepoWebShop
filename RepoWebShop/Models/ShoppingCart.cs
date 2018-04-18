@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using RepoWebShop.Interfaces;
 
 namespace RepoWebShop.Models
 {
@@ -9,26 +10,54 @@ namespace RepoWebShop.Models
     {
         private readonly IServiceProvider _services;
         private readonly AppDbContext _appDbContext;
-        private readonly ISession _session;
+        private readonly ICalendarRepository _calendarRepository;
+        private readonly HttpContext _ctx;
         private string _shoppingCartId;
 
         private ShoppingCart(IServiceProvider services)
         {
             _services = services;
-            _session = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
+            _ctx = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext;
             _appDbContext = services.GetRequiredService<AppDbContext>();
+            _calendarRepository = services.GetRequiredService<ICalendarRepository>();
             InitializeId();
         }
 
         public string MpPreferenceId
         {
-            get => _session.GetString("PreferenceId");
-            set => _session.SetString("PreferenceId", value);
+            get => _ctx.Session.GetString("PreferenceId");
+            set
+            {
+                _ctx.Session.SetString("PreferenceId", value);
+                LinkMPIdBookingId(value);
+            }
+        }
+
+        private void LinkMPIdBookingId(string value)
+        {
+            var shoppingCartData = _appDbContext.ShoppingCartData.FirstOrDefault(x => x.BookingId == BookingId);
+            if (shoppingCartData == null)
+            {
+                _appDbContext.ShoppingCartData.Add(new ShoppingCartData
+                {
+                    BookingId = _shoppingCartId,
+                    Created = _calendarRepository.LocalTime(),
+                    LastUpdate = _calendarRepository.LocalTime(),
+                    MercadoPagoPreferenceId = value
+                });
+            }
+            else
+            {
+                shoppingCartData.MercadoPagoPreferenceId = value;
+                shoppingCartData.LastUpdate = _calendarRepository.LocalTime();
+                _appDbContext.ShoppingCartData.Update(shoppingCartData);
+            }
+            _appDbContext.SaveChanges();
         }
 
         public static ShoppingCart GetCart(IServiceProvider services) => new ShoppingCart(services);
 
-        public string ShoppingCartId
+        public string BookingId
         {
             get
             {
@@ -46,13 +75,13 @@ namespace RepoWebShop.Models
         public void RenewId()
         {
             _shoppingCartId = Guid.NewGuid().ToString("D").ToUpper();
-            _session.SetString("CartId", _shoppingCartId);
+            _ctx.Session.SetString("CartId", _shoppingCartId);
         }
 
         private void InitializeId()
         {
-            _shoppingCartId = _session.GetString("CartId") ?? Guid.NewGuid().ToString("D").ToUpper();
-            _session.SetString("CartId", _shoppingCartId);
+            _shoppingCartId = _ctx.Session.GetString("CartId") ?? Guid.NewGuid().ToString("D").ToUpper();
+            _ctx.Session.SetString("CartId", _shoppingCartId);
         }
     }
 }

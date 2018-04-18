@@ -41,6 +41,12 @@ namespace RepoWebShop.Models
         private static bool IsWithinRange(DateTime date, DateTime dateFrom, int daysDuration) =>
                 dateFrom <= date && dateFrom.AddDays(daysDuration) >= date;
 
+        public static decimal ApplyDiscount(DateTime dateTime, decimal orderTotal, Discount discount)
+        {
+            string error = string.Empty;
+            return ApplyDiscount(dateTime, orderTotal, discount, out error);
+        }
+
         public static decimal ApplyDiscount(DateTime dateTime, decimal orderTotal, Discount discount, out string error)
         {
             error = string.Empty;

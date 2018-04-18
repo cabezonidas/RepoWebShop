@@ -6,6 +6,9 @@ using RepoWebShop.Models;
 using RepoWebShop.Interfaces;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
+using System.Net.Http;
+using Microsoft.AspNetCore.Http;
 
 namespace RepoWebShop.Repositories
 {
@@ -14,17 +17,19 @@ namespace RepoWebShop.Repositories
         private readonly AppDbContext _appDbContext;
         private readonly IMapper _mapper;
         private readonly ICalendarRepository _calendarRepository;
-        private readonly ShoppingCart _shoppingCart;
+        private readonly ShoppingCart _cartSession;
         private readonly IConfiguration _config;
         private readonly IDiscountRepository _discountRepository;
+        private readonly IHttpContextAccessor _contextAccessor;
         private int _minimumArsForOrderDelivery;
         private int _maxArsForReservation;
 
-        public ShoppingCartRepository(IConfiguration config, IDiscountRepository discountRepository, ShoppingCart shoppingCart, IMapper mapper, AppDbContext appDbContext, ICalendarRepository calendarRepository)
+        public ShoppingCartRepository(IHttpContextAccessor contextAccessor, IConfiguration config, IDiscountRepository discountRepository, ShoppingCart shoppingCart, IMapper mapper, AppDbContext appDbContext, ICalendarRepository calendarRepository)
         {
+            _contextAccessor = contextAccessor;
             _config = config;
             _appDbContext = appDbContext;
-            _shoppingCart = shoppingCart;
+            _cartSession = shoppingCart;
             _mapper = mapper;
             _calendarRepository = calendarRepository;
             _discountRepository = discountRepository;
@@ -33,55 +38,116 @@ namespace RepoWebShop.Repositories
             _maxArsForReservation = _config.GetValue<int>("MaxArsForReservation");
         }
 
-        private ShoppingCartComment GetShoppingCartComments(string bookingId) =>
-            _appDbContext.ShoppingCartComments.FirstOrDefault(x => x.ShoppingCartId == bookingId);
-
-        public IEnumerable<ShoppingCartItem> GetItems(string bookingId)=>
-            _appDbContext.ShoppingCartItems.Include(x => x.Pie).ThenInclude(x => x.PieDetail).Where(x => x.ShoppingCartId == bookingId).ToList();
-
-        public ShoppingCartComment GetComments(string shoppingCartId) =>
-            _appDbContext.ShoppingCartComments.Where(c => c.ShoppingCartId == shoppingCartId).OrderByDescending(c => c.Created).FirstOrDefault();
-
-        public ShoppingCartDiscount GetDiscount(string shoppingCartId) =>
-            _appDbContext.ShoppingCartDiscount.Include(x => x.Discount).FirstOrDefault(c => c.ShoppingCartId == shoppingCartId);
-
-        public string ClearComments(string bookingId)
+        public IEnumerable<ShoppingCartItem> GetItems(string bookingId = null)
         {
-            var result = GetComments(bookingId);
-            if(result != null)
-            {
-                var comments = _appDbContext.ShoppingCartComments.Where(x => x.ShoppingCartId == bookingId);
-                _appDbContext.ShoppingCartComments.RemoveRange(comments);
-                _appDbContext.SaveChanges();
-            }
-                
-            return result?.Comments ?? String.Empty;
+            bookingId = bookingId ?? _cartSession.BookingId;
+            return _appDbContext.ShoppingCartItems.Include(x => x.Pie).ThenInclude(x => x.PieDetail).Where(x => x.ShoppingCartId == bookingId).ToList();
         }
 
-        public IEnumerable<ShoppingCartItem> EmptyItems(string bookingId)
+        public ShoppingCartComment GetComments(string bookingId = null)
         {
-            var result = GetItems(bookingId);
-            _appDbContext.ShoppingCartItems.RemoveRange(result);
+            bookingId = bookingId ?? _cartSession.BookingId;
+            return _appDbContext.ShoppingCartComments.Where(c => c.ShoppingCartId == bookingId).OrderByDescending(c => c.Created).FirstOrDefault();
+        }
+
+        public Discount GetDiscount(string bookingId = null)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            return _appDbContext.ShoppingCartDiscount.Include(x => x.Discount).FirstOrDefault(c => c.ShoppingCartId == bookingId)?.Discount;
+        }
+
+        public int GetPreparationTime(string bookingId = null)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            var items = GetItems(bookingId);
+            return items.Count() == 0 ? 0 : items.OrderByDescending(x => x.Pie.PieDetail.PreparationTime).First().Pie.PieDetail.PreparationTime;
+        }
+
+        public void ClearCart(string bookingId = null)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+
+            _appDbContext.ShoppingCartItems.RemoveRange(_appDbContext.ShoppingCartItems.Where(cart => cart.ShoppingCartId == bookingId));
+            _appDbContext.ShoppingCartComments.RemoveRange(_appDbContext.ShoppingCartComments.Where(cart => cart.ShoppingCartId == bookingId));
+            _appDbContext.ShoppingCartData.RemoveRange(_appDbContext.ShoppingCartData.Where(cart => cart.BookingId == bookingId));
+
+            var cartDiscount = _appDbContext.ShoppingCartDiscount.Include(x => x.Discount).FirstOrDefault(cart => cart.ShoppingCartId == bookingId);
+            if (cartDiscount != null)
+            {
+                cartDiscount.Discount.InstancesLeft--;
+                _appDbContext.Discounts.Update(cartDiscount.Discount);
+                _appDbContext.ShoppingCartDiscount.Remove(cartDiscount);
+            }
             _appDbContext.SaveChanges();
-            return result;
+
+            UpdateMPPreferencesWithDiscount(cartDiscount);
+
+        }
+
+        private void UpdateMPPreferencesWithDiscount(ShoppingCartDiscount cartDiscount)
+        {
+            if (cartDiscount != null)
+            {
+                var bookingsWithDiscountsInUse = _appDbContext.ShoppingCartDiscount.Where(x => x.Discount == cartDiscount.Discount).ToList();
+                if (bookingsWithDiscountsInUse.Count > 0)
+                {
+                    var bookings = bookingsWithDiscountsInUse.Select(y => y.ShoppingCartId);
+                    var currentPreferencesWithDiscount = _appDbContext.ShoppingCartData.Where(x => bookings.Contains(x.BookingId)).ToList();
+
+                    if(currentPreferencesWithDiscount.Count > 0)
+                    {
+                        foreach(var pref in currentPreferencesWithDiscount)
+                        {
+                            Task.Run(async () =>
+                            {
+                                var apicall = $"http://{_contextAccessor.HttpContext.Request.Host.ToString()}/api/ShoppingCartData/GetMercadoPagoLink/{pref.BookingId}";
+                                await new HttpClient().GetAsync(apicall);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        public decimal GetItemsTotal(string bookingId = null)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            return _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == bookingId).Select(c => c.Pie.Price * c.Amount).Sum();
+        }
+
+        public decimal GetTotal(string bookingId = null)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            var subtotal = GetTotalWithoutDiscount(bookingId);
+            var discount = Discount.ApplyDiscount(_calendarRepository.LocalTime(), subtotal, GetDiscount(bookingId));
+            return subtotal + discount;
+        }
+
+        public decimal GetTotalWithoutDiscount(string bookingId = null)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            var items = GetItemsTotal(bookingId);
+            var delivery = GetDelivery(bookingId)?.DeliveryCost ?? 0;
+            return items + delivery;
+        }
+
+        public DeliveryAddress GetDelivery(string bookingId = null)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            return GetItemsTotal(bookingId) >= _minimumArsForOrderDelivery ? _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.ShoppingCartId == bookingId) : null;
         }
 
         /////////////////////////////////////////////////////////////////////////////
 
-        public string GetShoppingCartComments() => GetComments(_shoppingCart.ShoppingCartId)?.Comments;
 
-        public int GetShoppingCartPreparationTime()
-        {
-            var items = GetShoppingCartItems();
-            return items.Count == 0 ? 0 : items.OrderByDescending(x => x.Pie.PieDetail.PreparationTime).First().Pie.PieDetail.PreparationTime;
-        }
 
         public void AddComments(string comments)
         {
+            _appDbContext.ShoppingCartComments.RemoveRange(_appDbContext.ShoppingCartComments.Where(x => x.ShoppingCartId == _cartSession.BookingId));
             _appDbContext.ShoppingCartComments.Add(
                 new ShoppingCartComment()
                 {
-                    ShoppingCartId = _shoppingCart.ShoppingCartId,
+                    ShoppingCartId = _cartSession.BookingId,
                     Comments = comments,
                     Created = _calendarRepository.LocalTime()
                 }
@@ -93,22 +159,22 @@ namespace RepoWebShop.Repositories
         {
             var shoppingCartItem =
                 _appDbContext.ShoppingCartItems.SingleOrDefault(
-                    s => s.Pie.PieId == pieId && s.ShoppingCartId == _shoppingCart.ShoppingCartId);
+                    s => s.Pie.PieId == pieId && s.ShoppingCartId == _cartSession.BookingId);
             _appDbContext.ShoppingCartItems.Remove(shoppingCartItem);
             _appDbContext.SaveChanges();
         }
 
-        public void AddToCart(Pie pie, int amount)
+        public void AddToCart(Pie pie, int amount)  
         {
             var shoppingCartItem =
                     _appDbContext.ShoppingCartItems.SingleOrDefault(
-                        s => s.Pie.PieId == pie.PieId && s.ShoppingCartId == _shoppingCart.ShoppingCartId);
+                        s => s.Pie.PieId == pie.PieId && s.ShoppingCartId == _cartSession.BookingId);
 
             if (shoppingCartItem == null)
             {
                 shoppingCartItem = new ShoppingCartItem
                 {
-                    ShoppingCartId = _shoppingCart.ShoppingCartId,
+                    ShoppingCartId = _cartSession.BookingId,
                     Pie = pie,
                     Amount = 1
                 };
@@ -123,7 +189,7 @@ namespace RepoWebShop.Repositories
         {
             var shoppingCartItem =
                     _appDbContext.ShoppingCartItems.SingleOrDefault(
-                        s => s.Pie.PieId == pie.PieId && s.ShoppingCartId == _shoppingCart.ShoppingCartId);
+                        s => s.Pie.PieId == pie.PieId && s.ShoppingCartId == _cartSession.BookingId);
 
             var localAmount = 0;
 
@@ -145,68 +211,13 @@ namespace RepoWebShop.Repositories
             return localAmount;
         }
 
-        public List<ShoppingCartItem> GetShoppingCartItems() =>
-            _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == _shoppingCart.ShoppingCartId).Include(s => s.Pie).Include(s => s.Pie.PieDetail).ToList();
-
-        public void ClearCart()
-        {
-            foreach (var bookingId in _appDbContext.Orders.Select(x => x.BookingId))
-            {
-                var cartItems = _appDbContext
-                    .ShoppingCartItems
-                    .Where(cart => cart.ShoppingCartId == bookingId);
-                _appDbContext.ShoppingCartItems.RemoveRange(cartItems);
-
-                var cartComments = _appDbContext
-                    .ShoppingCartComments
-                    .Where(cart => cart.ShoppingCartId == bookingId);
-                _appDbContext.ShoppingCartComments.RemoveRange(cartComments);
-
-                var cartDiscounts = _appDbContext
-                    .ShoppingCartDiscount
-                    .Include(x => x.Discount)
-                    .Where(cart => cart.ShoppingCartId == bookingId);
-
-                foreach (var discount in cartDiscounts)
-                {
-                    var disc = _appDbContext.Discounts.FirstOrDefault(x => x.DiscountId == discount.Discount.DiscountId);
-                    if (disc != null)
-                        if (disc.InstancesLeft.HasValue)
-                        {
-                            disc.InstancesLeft--;
-                            _appDbContext.Discounts.Update(disc);
-                            //Updetear preferenceId
-                        }
-                }
-
-                _appDbContext.ShoppingCartDiscount.RemoveRange(cartDiscounts);
-            }
-            _appDbContext.SaveChanges();
-        }
-
-        public decimal GetShoppingCartItemsTotal() =>
-            _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == _shoppingCart.ShoppingCartId).Select(c => c.Pie.Price * c.Amount).Sum();
-
-        public decimal GetShoppingCartTotal()
-        {
-            var subtotal = GetShoppingCartTotalWithoutDiscount();
-            var discount = GetShoppingDiscountAmount(subtotal);
-            return subtotal + discount;
-        }
-
-        public string GetShoppingCartId() => _shoppingCart.ShoppingCartId;
-
-        public DeliveryAddress GetShoppingCartDeliveryAddress() =>
-            GetShoppingCartItemsTotal() >= _minimumArsForOrderDelivery ? _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.ShoppingCartId == _shoppingCart.ShoppingCartId) : null;
-
-        public DeliveryAddress GetDelivery(string bookingId) =>
-            _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.ShoppingCartId == bookingId);
-
-        public void RenewId() => _shoppingCart.RenewId();
+        public string GetSessionCartId() => _cartSession.BookingId;
+       
+        public void RenewId() => _cartSession.RenewId();
 
         public void RemoveDelivery()
         {
-            var result = _appDbContext.DeliveryAddresses.Where(x => x.ShoppingCartId == GetShoppingCartId());
+            var result = _appDbContext.DeliveryAddresses.Where(x => x.ShoppingCartId == GetSessionCartId());
             if (result != null)
             {
                 _appDbContext.DeliveryAddresses.RemoveRange(result);
@@ -214,99 +225,50 @@ namespace RepoWebShop.Repositories
             }
         }
 
-        public string GetMpPreference() => _shoppingCart.MpPreferenceId;
+        public string GetMpPreference(string bookingId)
+        {
+            if(string.IsNullOrEmpty(bookingId))
+                return _cartSession.MpPreferenceId;
+            else
+            {
+                return _appDbContext.ShoppingCartData.FirstOrDefault(x => x.BookingId == bookingId)?.MercadoPagoPreferenceId ?? string.Empty;
+            }
+        }
 
         public void SetMpPreference(string preferenceId)
         {
 
-            _shoppingCart.MpPreferenceId = preferenceId;
-        }
-
-        public Decimal GetShoppingDiscountAmount(decimal amount)
-        {
-            var cartDiscount = _appDbContext.ShoppingCartDiscount.Include(x => x.Discount).FirstOrDefault(x => x.ShoppingCartId == GetShoppingCartId());
-            if(cartDiscount != null)
-            {
-                string error;
-                return Discount.ApplyDiscount(_calendarRepository.LocalTime(), amount, cartDiscount.Discount, out error);
-            }
-            return 0;
-        }
-
-        private void AddShoppingDiscount(Discount discount)
-        {
-            _appDbContext.ShoppingCartDiscount.Add(
-                new ShoppingCartDiscount
-                {
-                    Discount = discount,
-                    ShoppingCartId = GetShoppingCartId()
-                }
-            );
-            _appDbContext.SaveChanges();
+            _cartSession.MpPreferenceId = preferenceId;
         }
 
         public void RemoveShoppingDiscount()
         {
-            _appDbContext.ShoppingCartDiscount.RemoveRange(_appDbContext.ShoppingCartDiscount.FirstOrDefault(x => x.ShoppingCartId == GetShoppingCartId()));
+            _appDbContext.ShoppingCartDiscount.RemoveRange(_appDbContext.ShoppingCartDiscount.FirstOrDefault(x => x.ShoppingCartId == GetSessionCartId()));
             _appDbContext.SaveChanges();
-        }
-
-        public Discount ClearDiscount(string bookingId)
-        {
-            var shoppingCartDiscount = GetDiscount(bookingId);
-            Discount result = null;
-            
-            if (shoppingCartDiscount != null)
-            {
-                result = shoppingCartDiscount.Discount;
-                var discounts = _appDbContext.ShoppingCartDiscount.Where(x => x.ShoppingCartId == bookingId);
-                foreach(var discount in discounts)
-                {
-                    var disc = _appDbContext.Discounts.FirstOrDefault(x => x.DiscountId == discount.Discount.DiscountId);
-                    if (disc != null)
-                        if (disc.InstancesLeft.HasValue)
-                        {
-                            disc.InstancesLeft--;
-                            _appDbContext.Discounts.Update(disc);
-                            //Updatear preferenceId
-                        }
-                }
-                _appDbContext.ShoppingCartDiscount.RemoveRange(discounts);
-                _appDbContext.SaveChanges();
-            }
-
-            return result;
-        }
-
-        public Discount GetShoppingDiscount()
-        {
-            var result = GetDiscount(GetShoppingCartId());
-            return result != null ? result.Discount : null;
         }
 
         public void AddDiscount(Discount discount)
         {
-            var shoppingCartDiscount = GetDiscount(GetShoppingCartId());
+            var shoppingCartDiscount = _appDbContext.ShoppingCartDiscount.FirstOrDefault(x => x.ShoppingCartId == _cartSession.BookingId);
+
             if(shoppingCartDiscount != null)
             {
                 shoppingCartDiscount.Discount = discount;
                 _appDbContext.ShoppingCartDiscount.Update(shoppingCartDiscount);
-                _appDbContext.SaveChanges();
             }
             else
             {
-                AddShoppingDiscount(discount);
+                _appDbContext.ShoppingCartDiscount.Add(
+                    new ShoppingCartDiscount
+                    {
+                        Discount = discount,
+                        ShoppingCartId = _cartSession.BookingId
+                    }
+                );
             }
+            _appDbContext.SaveChanges();
         }
 
-        public decimal GetShoppingCartTotalWithoutDiscount()
-        {
-            var itemsCost = GetShoppingCartItemsTotal();
-            var delivery = GetShoppingCartDeliveryAddress();
-            var deliveryCost = (itemsCost >= _minimumArsForOrderDelivery && delivery != null) ? delivery.DeliveryCost : 0;
-            var subtotal = itemsCost + deliveryCost;
 
-            return subtotal;
-        }
     }
 }

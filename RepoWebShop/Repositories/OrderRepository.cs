@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,7 @@ namespace RepoWebShop.Models
     public class OrderRepository : IOrderRepository
     {
         private readonly AppDbContext _appDbContext;
-        private readonly IShoppingCartRepository _shoppingCartRepository;
+        private readonly IShoppingCartRepository _cartRepository;
         private readonly ICalendarRepository _calendarRepository;
         private readonly IEmailRepository _emailRepository;
         private readonly ISmsRepository _smsRepository;
@@ -33,23 +34,8 @@ namespace RepoWebShop.Models
             _mapper = mapper;
             _mp = mp;
             _appDbContext = appDbContext;
-            _shoppingCartRepository = shoppingCartRepository;
+            _cartRepository = shoppingCartRepository;
             _calendarRepository = calendarRepository;
-        }
-
-        public Order UpdateOrder(PaymentNotice paymentNotice)
-        {
-            Order order = this.GetOrderByBookingId(paymentNotice.BookingId);
-            if (order != null)
-            {
-                order.MercadoPagoMail = paymentNotice.MercadoPagoMail;
-                order.MercadoPagoName = paymentNotice.MercadoPagoName;
-                order.MercadoPagoUsername = paymentNotice.MercadoPagoUsername;
-                order.MercadoPagoTransaction = paymentNotice.Payment_Id;
-                order.Status = paymentNotice.Status;
-                _appDbContext.SaveChanges();
-            }
-            return order;
         }
 
         public void UpdateManagementComments(int orderId, string comments)
@@ -95,8 +81,6 @@ namespace RepoWebShop.Models
             return _appDbContext.Orders.Include(x => x.Registration).Include(x => x.Email).Include(x => x.DeliveryAddress).FirstOrDefault(x => x.OrderId == id);
         }
 
-
-
         public IEnumerable<OrderDetail> GetOrderDetails(int id)
         {
             return _appDbContext.OrderDetails.Include(x => x.Order.Email).Include(x => x.Pie).ThenInclude(x => x.PieDetail).Where(x => x.OrderId == id);
@@ -128,30 +112,15 @@ namespace RepoWebShop.Models
             || x.OrderProgressState.GetType() == typeof(OrderComplete));
         }
 
-        public IEnumerable<Order> GetOrdersCancelled()
-        {
-            return GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderCancelled));
-        }
+        public IEnumerable<Order> GetOrdersCancelled() => GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderCancelled));
 
-        public IEnumerable<Order> GetOrdersCompleted()
-        {
-            return GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderComplete));
-        }
+        public IEnumerable<Order> GetOrdersCompleted() => GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderComplete));
 
-        public IEnumerable<Order> GetOrdersPickedUp()
-        {
-            return GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderPickedUp));
-        }
+        public IEnumerable<Order> GetOrdersPickedUp() => GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderPickedUp));
 
-        public IEnumerable<Order> GetOrdersReturned()
-        {
-            return GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderReturned));
-        }
+        public IEnumerable<Order> GetOrdersReturned() => GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderReturned));
 
-        public IEnumerable<Order> GetOrdersRefunded()
-        {
-            return GetAll().Where(x => x.Refunded);
-        }
+        public IEnumerable<Order> GetOrdersRefunded() => GetAll().Where(x => x.Refunded);
 
         public IEnumerable<Order> GetOrdersPickedUpWithPendingPayment()
         {
@@ -161,33 +130,39 @@ namespace RepoWebShop.Models
             );
         }
 
-        public void CreateOrder(Order order)
+        public Order CreateOrder(Order order)
         {
+            order.BookingId = order.BookingId ?? _cartRepository.GetSessionCartId();
+            order.PhoneNumber = order.Registration?.PhoneNumber;
+            order.OrderTotal = _cartRepository.GetTotal(order.BookingId);
+            order.Discount = _cartRepository.GetDiscount(order.BookingId);
+            order.DeliveryAddress = _cartRepository.GetDelivery(order.BookingId);
+            order.CustomerComments = _cartRepository.GetComments(order.BookingId)?.Comments;
+            order.PreparationTime = _cartRepository.GetPreparationTime(order.BookingId);
+            order.PickUpTime = _calendarRepository.GetPickupEstimate(order.PreparationTime);
             order.OrderPlaced = _calendarRepository.LocalTime();
             order.PickedUp = false;
 
-            var shoppingCartItems = _shoppingCartRepository.GetShoppingCartItems();
-
-            order.PreparationTime = _shoppingCartRepository.GetShoppingCartPreparationTime();
-
-            order.DeliveryAddress = _shoppingCartRepository.GetShoppingCartDeliveryAddress();
-
             _appDbContext.Orders.Add(order);
             _appDbContext.SaveChanges();
-
-            foreach (var shoppingCartItem in shoppingCartItems)
+         
+            /**********************/
+            
+            var shoppingItems = _cartRepository.GetItems(order.BookingId);
+            _appDbContext.OrderDetails.AddRange(shoppingItems.Select(x => new OrderDetail()
             {
-                var orderDetail = new OrderDetail()
-                {
-                    Amount = shoppingCartItem.Amount,
-                    PieId = shoppingCartItem.Pie.PieId,
-                    OrderId = order.OrderId,
-                    Price = shoppingCartItem.Pie.Price
-                };
-
-                _appDbContext.OrderDetails.Add(orderDetail);
-            }
+                Amount = x.Amount,
+                PieId = x.Pie.PieId,
+                OrderId = order.OrderId,
+                Price = x.Pie.Price
+            }));
             _appDbContext.SaveChanges();
+
+            /**********************/
+
+            _cartRepository.ClearCart(order.BookingId);
+
+            return order;
         }
 
         public EmailNotificationViewModel GetEmailData(int id, string hostUrl)
@@ -327,45 +302,6 @@ namespace RepoWebShop.Models
             });
         }
 
-        private Order CreateOrder(PaymentNotice payment)
-        {
-            Order order = this.GetOrderByBookingId(payment.BookingId);
-            if (order != null)
-                return order;
-
-            order = _mapper.Map<PaymentNotice, Order>(payment);
-            if(!String.IsNullOrEmpty(payment.User_Id))
-            {
-                var user = _userManager.FindByIdAsync(payment.User_Id);
-                user.Wait();
-                if (user.IsCompletedSuccessfully && user.Result != null)
-                    order.Registration = user.Result;
-            }
-
-            order.OrderPlaced = _calendarRepository.LocalTime();
-            order.CustomerComments = _shoppingCartRepository.ClearComments(payment.BookingId);
-            order.Discount = _shoppingCartRepository.ClearDiscount(payment.BookingId);
-
-            order.DeliveryAddress = _shoppingCartRepository.GetDelivery(payment.BookingId);
-
-            _appDbContext.Orders.Add(order);
-            _appDbContext.SaveChanges();
-
-            var shoppingItems = _shoppingCartRepository.EmptyItems(payment.BookingId);
-            _appDbContext.OrderDetails.AddRange(shoppingItems.Select(x => new OrderDetail()
-            {
-                Amount = x.Amount,
-                PieId = x.Pie.PieId,
-                OrderId = order.OrderId,
-                Price = x.Pie.Price
-            }));
-            _appDbContext.SaveChanges();
-
-            order.PreparationTime = GetPreparationTime(order.OrderId);
-            _appDbContext.SaveChanges();
-            return order;
-        }
-
         private int GetPreparationTime(int orderId)
         {
             int preparationTime = 0;
@@ -376,17 +312,31 @@ namespace RepoWebShop.Models
             return preparationTime;
         }
 
-        public Order OrderInProcess(PaymentNotice payment)
+       
+        public async Task<Order> PaymentNotified(PaymentNotice payment, string hostUrl)
         {
-            return CreateOrder(payment);
-        }
+            Order order = GetOrderByBookingId(payment.BookingId);
 
-        public Order OrderApproved(PaymentNotice payment)
-        {
-            Order order = OrderInProcess(payment);
-            order.Status = payment.Status;
-            order.PickUpTime = _calendarRepository.GetPickupEstimate(order.PreparationTime);
-            _appDbContext.SaveChanges();
+            var orderStatusBefore = order?.Status;
+
+            if (order == null)
+                if(payment.Status == "approved" || payment.Status == "in_process")
+                {
+                    order = _mapper.Map<PaymentNotice, Order>(payment);
+                    order.Registration = await _userManager.FindByIdAsync(payment.User_Id ?? string.Empty);
+                    order = CreateOrder(order);
+                }
+
+            if(order != null && orderStatusBefore != "approved" && (order.Status == "approved" || payment.Status == "approved"))
+            {
+                order.PickUpTime = _calendarRepository.GetPickupEstimate(order.PreparationTime);
+                order.Status = "approved";
+                order.Payout = _calendarRepository.LocalTime();
+                _appDbContext.Orders.Update(order);
+                _appDbContext.SaveChanges();
+                await _emailRepository.SendOrderConfirmationAsync(order, hostUrl, payment);
+            }
+
             return order;
         }
 
@@ -398,13 +348,8 @@ namespace RepoWebShop.Models
                     && x.OrderPaymentStatus.GetType() == typeof(OrderReservationNotPaid));
         }
 
-        public IEnumerable<Order> GetByUserOrders(ApplicationUser user)
-        {
-            return _appDbContext.Orders.Where(x => x.Registration == user).Include(x => x.Email);
-        }
+        public IEnumerable<Order> GetByUserOrders(ApplicationUser user) => _appDbContext.Orders.Where(x => x.Registration == user).Include(x => x.Email);
 
-        public bool ValidBookingId(string bookingId)
-        => _appDbContext.ShoppingCartItems.Any(x => x.ShoppingCartId == bookingId)
-            || _appDbContext.Orders.Any(x => x.BookingId == bookingId);
+        public bool ValidBookingId(string bookingId) => _appDbContext.ShoppingCartItems.Any(x => x.ShoppingCartId == bookingId) || _appDbContext.Orders.Any(x => x.BookingId == bookingId);
     }
 }

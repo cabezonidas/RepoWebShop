@@ -26,12 +26,13 @@ namespace RepoWebShop.Tests
                 Loop = 7,
                 Percentage = 15,
                 Phrase = "SABADO15REPO",
-                Roof = 200
+                Roof = 200,
+                IsActive = true
             };
             string error = string.Empty;
             var result = Discount.ApplyDiscount(date, 500, discount, out error);
 
-            Assert.AreEqual(result, 500 * 0.15m);
+            Assert.AreEqual(result, -500 * 0.15m);
         }
 
         [TestMethod]
@@ -47,7 +48,8 @@ namespace RepoWebShop.Tests
                 Loop = 7,
                 Percentage = 15,
                 Phrase = "VIERNES15REPO",
-                Roof = 200
+                Roof = 200,
+                IsActive = true
             };
             string error = string.Empty;
             var result = Discount.ApplyDiscount(date, 500, discount, out error);
@@ -68,12 +70,13 @@ namespace RepoWebShop.Tests
                 Loop = 7,
                 Percentage = 15,
                 Phrase = "VIERNES15REPO",
-                Roof = 30
+                Roof = 30,
+                IsActive = true
             };
             string error = string.Empty;
             var result = Discount.ApplyDiscount(date, 500, discount, out error);
 
-            Assert.AreEqual(result, 30m);
+            Assert.AreEqual(result, -30m);
         }
 
         [TestMethod]
@@ -89,7 +92,8 @@ namespace RepoWebShop.Tests
                 Loop = 7,
                 Percentage = 15,
                 Phrase = "VIERNES15REPO",
-                Roof = 30
+                Roof = 30,
+                IsActive = true
             };
             string error = string.Empty;
             var result = Discount.ApplyDiscount(date, 500, discount, out error);
@@ -110,12 +114,13 @@ namespace RepoWebShop.Tests
                 Loop = 7,
                 Percentage = 15,
                 Phrase = "VIERNES15REPO",
-                Roof = 30
+                Roof = 30,
+                IsActive = true
             };
             string error = string.Empty;
             var result = Discount.ApplyDiscount(date, 500, discount, out error);
 
-            Assert.AreEqual(result, 30m);
+            Assert.AreEqual(result, -30m);
         }
     }
 }

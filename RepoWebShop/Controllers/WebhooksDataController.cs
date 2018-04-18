@@ -86,11 +86,14 @@ namespace RepoWebShop.Controllers
             {
                 PaymentNotice paymentInfo = new PaymentNotice(((payment["response"] as Hashtable)["collection"] as Hashtable), _config.GetSection("LocalZone").Value);
                 var merchantOrder = await _mp.GetMerchantOrderAsync(paymentInfo.Merchant_Order_Id);
-                if(merchantOrder["status"]?.ToString() == "200")
+
+                if (merchantOrder["status"]?.ToString() == "200")
                     paymentInfo.User_Id = (merchantOrder["response"] as Hashtable)["additional_info"]?.ToString();
+
                 if (!String.IsNullOrWhiteSpace(paymentInfo.BookingId))
                     await _paymentNoticeRepository.CreatePayment(paymentInfo, Request.HostUrl());
             }
+
             return Ok();
         }
     }
