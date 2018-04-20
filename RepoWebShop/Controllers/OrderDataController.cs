@@ -78,7 +78,7 @@ namespace RepoWebShop.Controllers
         [HttpPost]
         public IActionResult CompleteOrder(int orderId)
         {
-            _orderRepository.CompleteOrder(orderId, Request.HostUrl());
+            _orderRepository.CompleteOrder(orderId);
             return Ok();
         }
 

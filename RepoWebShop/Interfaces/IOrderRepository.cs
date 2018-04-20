@@ -8,7 +8,7 @@ namespace RepoWebShop.Interfaces
 {
     public interface IOrderRepository
     {
-        EmailNotificationViewModel ToEmailNotification(Order order, string absoluteUrl);
+        EmailNotificationViewModel ToEmailNotification(Order order);
         Order CreateOrder(Order order);
         void UpdateOrderStatus(int orderId, string status);
         Order GetDraftOrderByBookingId(string bookingId);
@@ -19,8 +19,8 @@ namespace RepoWebShop.Interfaces
         void UpdateManagementComments(int orderId, string comments);
         void UpdatePickUpDate(int orderId, DateTime pickUp);
         bool InvertPickedUpStatus(int orderId);
-        EmailNotificationViewModel GetEmailData(int id, string v);
-        void CompleteOrder(int orderId, string hostUrl);
+        EmailNotificationViewModel GetEmailData(int id);
+        void CompleteOrder(int orderId);
         void PickUpOrder(int orderId);
         void CancelOrder(int orderId, string reason);
         void RefundOrder(int orderId, string reason);
@@ -33,7 +33,7 @@ namespace RepoWebShop.Interfaces
         IEnumerable<Order> GetOrdersRefunded();
         IEnumerable<Order> GetOrdersPickedUpWithPendingPayment();
         void PayOrder(int orderId);
-        Task<Order> PaymentNotified(PaymentNotice paymentNotification, string hostUrl);
+        Task<Order> PaymentNotified(PaymentNotice paymentNotification);
         void CancelPaymentOrder(int orderId, string reason);
         Order LatestReservationInProgress(ApplicationUser currentUser);
         bool ValidBookingId(string bookingId);

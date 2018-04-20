@@ -258,7 +258,7 @@ namespace RepoWebShop.Controllers
 
                 if (result.Succeeded)
                 {
-                    await _emailRepository.SendEmailActivationAsync(user, Request.HostUrl());
+                    await _emailRepository.SendEmailActivationAsync(user);
                     await _signInManager.PasswordSignInAsync(user, registration.Password, false, false);
                     return RedirectToAction("Index", "Home");
                 }
@@ -409,7 +409,7 @@ namespace RepoWebShop.Controllers
                 }
                 else
                 {
-                    _emailRepository.SendEmailResetPasswordAsync(foundUser, Request.HostUrl());
+                    _emailRepository.SendEmailResetPasswordAsync(foundUser);
                     return RedirectToAction(nameof(PieDetailController.List), "PieDetail");
                 }
             }

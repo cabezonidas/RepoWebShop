@@ -55,7 +55,12 @@
                             <div style="font-size:smaller">Elaboración en proceso</div>
                         }
                     </td>
-                    <td style="color: grey;">@order.StatusSpanish</td>
+                    <td style="color: grey; text-align:center">
+                        @order.StatusSpanish
+                        <div style="color: green;">
+                            @order.Discount?.Phrase
+                        </div>
+                    </td>
                     <td style="color: grey;">@Html.Raw(order.ContactDataAsHtml)</td>
                     <td>
                         @if (order.PickUpTime.HasValue)
@@ -68,7 +73,6 @@
                     <td style="text-align:center;">
                         @{
                             List<string> items = new List<string>();
-                            items.Add($"<div style=''>");
                         }
 
                         @foreach (var ol in order.OrderLines)
@@ -82,10 +86,7 @@
                         {
                             items.Add("Envío: " + order.DeliveryAddress.AddressLine1?.Split(",")?.FirstOrDefault() ?? "");
                         }
-                        @{
-                            items.Add("</div>");
-                        }
-                        @Html.Raw(String.Join("", items.ToArray()))
+                        @Html.Raw(String.Join("<br/>", items.ToArray()))
                     </td>
                     <td>$@order.OrderTotal</td>
 

@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-
+@inject IHostingEnvironment env
 <html lang="es-ar">
 <head>
     @Html.Partial("~/Views/Shared/Favicon.cshtml")
@@ -30,31 +30,37 @@
     <script src="~/lib/matchheight/dist/jquery.matchHeight-min.js"></script>
     <script src="~/lib/Snap.svg/dist/snap.svg-min.js"></script>
     <script type="text/javascript" src="~/lib/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-    <script type="text/javascript" src="~/CommonJs/ZopimChat.js"></script>
+    @if(env.IsProduction())
+    {
+        <script type="text/javascript" src="~/CommonJs/ZopimChat.js"></script>
+    }
     <script src="~/lib/parallax.js/parallax.min.js"></script>
     <script src="~/lib/slick-lightbox/dist/slick-lightbox.js"></script>
 
-    <!-- Facebook Pixel Code -->
-    <script>
-        !function (f, b, e, v, n, t, s) {
-            if (f.fbq) return; n = f.fbq = function () {
-                n.callMethod ?
-                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-            };
-            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
-            n.queue = []; t = b.createElement(e); t.async = !0;
-            t.src = v; s = b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t, s)
-        }(window, document, 'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '165224134283131');
-        fbq('track', 'PageView');
-    </script>
-    <noscript>
-        <img height="1" width="1" style="display:none"
-             src="https://www.facebook.com/tr?id=165224134283131&ev=PageView&noscript=1" />
-    </noscript>
-    <!-- End Facebook Pixel Code -->
+    @if(env.IsProduction())
+    {
+        <!-- Facebook Pixel Code -->
+        <script>
+            !function (f, b, e, v, n, t, s) {
+                if (f.fbq) return; n = f.fbq = function () {
+                    n.callMethod ?
+                        n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                };
+                if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+                n.queue = []; t = b.createElement(e); t.async = !0;
+                t.src = v; s = b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t, s)
+            }(window, document, 'script',
+                'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '165224134283131');
+            fbq('track', 'PageView');
+        </script>
+        <noscript>
+            <img height="1" width="1" style="display:none"
+                 src="https://www.facebook.com/tr?id=165224134283131&ev=PageView&noscript=1" />
+        </noscript>
+        <!-- End Facebook Pixel Code -->
+    }
 
 
 

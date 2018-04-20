@@ -40,7 +40,8 @@ namespace RepoWebShop.Controllers
         [Route("AddComments/{comments}")]
         public IActionResult AddComments(string comments)
         {
-            _cartRepository.AddComments(comments ?? string.Empty);
+            comments = (string.IsNullOrEmpty(comments) || comments == "undefined") ? string.Empty : comments;
+            _cartRepository.AddComments(comments);
             return Ok();
         }
 

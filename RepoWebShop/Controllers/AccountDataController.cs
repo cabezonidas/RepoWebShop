@@ -58,7 +58,7 @@ namespace RepoWebShop.Controllers
         {
             try
             {
-                _emailRepository.SendEmailActivationAsync(_currentUser, Request.HostUrl());
+                _emailRepository.SendEmailActivationAsync(_currentUser);
                 return Ok();
             }
             catch

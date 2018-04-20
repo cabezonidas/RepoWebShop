@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,9 +26,11 @@ namespace RepoWebShop.Models
         private readonly IMercadoPago _mp;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly string host;
 
-        public OrderRepository(UserManager<ApplicationUser> userManager, IEmailRepository emailRepository, ISmsRepository smsRepository, AppDbContext appDbContext, IMercadoPago mp, ICalendarRepository calendarRepository, IShoppingCartRepository shoppingCartRepository, IMapper mapper)
+        public OrderRepository(UserManager<ApplicationUser> userManager, IHttpContextAccessor contextAccessor, IEmailRepository emailRepository, ISmsRepository smsRepository, AppDbContext appDbContext, IMercadoPago mp, ICalendarRepository calendarRepository, IShoppingCartRepository shoppingCartRepository, IMapper mapper)
         {
+            host = "http://" + contextAccessor.HttpContext?.Request.Host.ToString();
             _userManager = userManager;
             _emailRepository = emailRepository;
             _smsRepository = smsRepository;
@@ -78,7 +81,7 @@ namespace RepoWebShop.Models
 
         public Order GetOrder(int id)
         {
-            return _appDbContext.Orders.Include(x => x.Registration).Include(x => x.Email).Include(x => x.DeliveryAddress).FirstOrDefault(x => x.OrderId == id);
+            return _appDbContext.Orders.Include(x => x.Registration).Include(x => x.Discount).Include(x => x.Email).Include(x => x.DeliveryAddress).FirstOrDefault(x => x.OrderId == id);
         }
 
         public IEnumerable<OrderDetail> GetOrderDetails(int id)
@@ -92,6 +95,7 @@ namespace RepoWebShop.Models
                 .Include(x => x.Registration)
                 .Include(x => x.OrderLines)
                 .Include(x => x.DeliveryAddress)
+                .Include(x => x.Discount)
                 .Where(o => o.Status != "draft").ToList();
 
             foreach (var order in orders)
@@ -165,18 +169,18 @@ namespace RepoWebShop.Models
             return order;
         }
 
-        public EmailNotificationViewModel GetEmailData(int id, string hostUrl)
+        public EmailNotificationViewModel GetEmailData(int id)
         {
             var order = GetOrder(id);
-            EmailNotificationViewModel emailData = ToEmailNotification(order, hostUrl);
+            EmailNotificationViewModel emailData = ToEmailNotification(order);
             return emailData;
         }
 
-        public EmailNotificationViewModel ToEmailNotification(Order order, string absolutUrl)
+        public EmailNotificationViewModel ToEmailNotification(Order order)
         {
             var orderDetails = GetOrderDetails(order.OrderId);
             var emailData = new EmailNotificationViewModel();
-            emailData.AbsoluteUrl = absolutUrl;
+            emailData.AbsoluteUrl = host;
             emailData.Comments = order.CustomerComments;
             emailData.MercadoPagoTransaction = order.MercadoPagoTransaction;
             emailData.OrderItems = orderDetails;
@@ -187,6 +191,7 @@ namespace RepoWebShop.Models
             emailData.FriendlyBookingId = order.FriendlyBookingId;
             emailData.OrderId = order.OrderId.ToString();
             emailData.Delivery = order.DeliveryAddress;
+            emailData.Discount = order.Discount;
 
             emailData.CustomarAlias = order.Registration == null ? order.MercadoPagoName : order.Registration.FirstName;
             emailData.CustomarAlias = Regex.Replace(emailData.CustomarAlias.ToLower(), @"(^\w)|(\s\w)", m => m.Value.ToUpper());
@@ -194,7 +199,7 @@ namespace RepoWebShop.Models
             return emailData;
         }
 
-        public void CompleteOrder(int orderId, string absoluteUrl)
+        public void CompleteOrder(int orderId)
         {
             var order = GetOrder(orderId);
             order.OrderProgressState.Complete(() =>
@@ -212,7 +217,7 @@ namespace RepoWebShop.Models
                     _smsRepository.SendSms(user.PhoneNumber,
                         $"{user.FirstName}, ¡Tu pedido {order.FriendlyBookingId} ya está listo! De las Artes.");
                 }
-                _emailRepository.NotifyOrderCompleteAsync(order, absoluteUrl);
+                _emailRepository.NotifyOrderCompleteAsync(order);
             });
         }
 
@@ -311,9 +316,8 @@ namespace RepoWebShop.Models
 
             return preparationTime;
         }
-
        
-        public async Task<Order> PaymentNotified(PaymentNotice payment, string hostUrl)
+        public async Task<Order> PaymentNotified(PaymentNotice payment)
         {
             Order order = GetOrderByBookingId(payment.BookingId);
 
@@ -334,7 +338,7 @@ namespace RepoWebShop.Models
                 order.Payout = _calendarRepository.LocalTime();
                 _appDbContext.Orders.Update(order);
                 _appDbContext.SaveChanges();
-                await _emailRepository.SendOrderConfirmationAsync(order, hostUrl, payment);
+                await _emailRepository.SendOrderConfirmationAsync(order);
             }
 
             return order;

@@ -91,7 +91,7 @@ namespace RepoWebShop.Controllers
                     paymentInfo.User_Id = (merchantOrder["response"] as Hashtable)["additional_info"]?.ToString();
 
                 if (!String.IsNullOrWhiteSpace(paymentInfo.BookingId))
-                    await _paymentNoticeRepository.CreatePayment(paymentInfo, Request.HostUrl());
+                    await _paymentNoticeRepository.CreatePayment(paymentInfo);
             }
 
             return Ok();

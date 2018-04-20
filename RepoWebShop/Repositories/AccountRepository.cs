@@ -58,7 +58,7 @@ namespace RepoWebShop.Repositories
                 newUser.UserName = email;
             var result = await _userManager.CreateAsync(newUser);
             if (result.Succeeded && !newUser.EmailConfirmed)
-                await _emailRepository.SendEmailActivationAsync(newUser, hostUrl);
+                await _emailRepository.SendEmailActivationAsync(newUser);
             return result;
         }
 

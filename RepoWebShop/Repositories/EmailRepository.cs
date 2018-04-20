@@ -12,6 +12,7 @@ using Google.Apis.Auth.OAuth2;
 using System.Threading;
 using System.Security.Cryptography;
 using RepoWebShop.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace RepoWebShop.Repositories
 {
@@ -25,9 +26,12 @@ namespace RepoWebShop.Repositories
         private readonly string _serviceAccount;
         private readonly string _serviceAccountPrivateKey;
         private readonly string _zone;
+        private readonly string host;
 
-        public EmailRepository(AppDbContext appDbContext, IHostingEnvironment env, IConfiguration config)
+
+        public EmailRepository(AppDbContext appDbContext, IHttpContextAccessor contextAccessor, IHostingEnvironment env, IConfiguration config)
         {
+            host = "http://" + contextAccessor.HttpContext?.Request.Host.ToString();
             _appDbContext = appDbContext;
             _env = env;
             _config = config;
@@ -38,11 +42,11 @@ namespace RepoWebShop.Repositories
             _zone = _config.GetSection("LocalZone").Value;
         }
 
-        public async Task SendEmailActivationAsync(ApplicationUser appUser, string hostUrl)
+        public async Task SendEmailActivationAsync(ApplicationUser appUser)
         {
             string hash = SHA256.Create().FromString(appUser.ValidationMailToken.ToString());
             
-            var apicall = $"{hostUrl}/Account/EmailVerificationBodyEmail/{appUser.UserName}/{hash}";
+            var apicall = $"{host}/Account/EmailVerificationBodyEmail/{appUser.UserName}/{hash}";
             HttpResponseMessage responseTask = await new HttpClient().GetAsync(apicall);
 
             Email email = new Email()
@@ -64,12 +68,12 @@ namespace RepoWebShop.Repositories
             }
         }
 
-        public async Task NotifyOrderCompleteAsync(Order order, string hostUrl)
+        public async Task NotifyOrderCompleteAsync(Order order)
         {
             string principalEmail, secondaryEmail;
             GetOrderEmails(order, out principalEmail, out secondaryEmail);
 
-            var apicall = $"{hostUrl}/Order/OrderComplete/{order.OrderId}/";
+            var apicall = $"{host}/Order/OrderComplete/{order.OrderId}/";
             HttpResponseMessage responseTask = await new HttpClient().GetAsync(apicall);
 
             Email email = new Email()
@@ -90,7 +94,7 @@ namespace RepoWebShop.Repositories
             }
         }
         
-        public async Task SendOrderConfirmationAsync(Order order, string hostUrl, PaymentNotice payment = null)
+        public async Task SendOrderConfirmationAsync(Order order)
         {
             if (order != null)
             {
@@ -99,14 +103,14 @@ namespace RepoWebShop.Repositories
                 string principalEmail, secondaryEmail;
                 GetOrderEmails(order, out principalEmail, out secondaryEmail);
 
-                var apicall = $"{hostUrl}/Order/EmailNotification/{order.OrderId}";
+                var apicall = $"{host}/Order/EmailNotification/{order.OrderId}";
                 HttpResponseMessage responseTask = await new HttpClient().GetAsync(apicall);
                 
                 Email email = new Email()
                 {
                     To = principalEmail,
                     Bcc = _sender,
-                    Subject = "De las Artes - Confirmación de " + (payment == null ? "reserva" : "compra"),
+                    Subject = "De las Artes - Confirmación de orden",
                     Body = await responseTask.Content.ReadAsStringAsync()
                 };
                 
@@ -124,11 +128,11 @@ namespace RepoWebShop.Repositories
             }
         }
         
-        public async Task SendEmailResetPasswordAsync(ApplicationUser foundUser, string hostUrl)
+        public async Task SendEmailResetPasswordAsync(ApplicationUser foundUser)
         {
             string hash = SHA256.Create().FromString(foundUser.Id.ToString());
 
-            var apicall = $"{hostUrl}/Account/ResetPasswordBodyEmail/{foundUser.Id}/{hash}";
+            var apicall = $"{host}/Account/ResetPasswordBodyEmail/{foundUser.Id}/{hash}";
             HttpResponseMessage responseTask = await new HttpClient().GetAsync(apicall);
 
             Email email = new Email()
@@ -170,6 +174,7 @@ namespace RepoWebShop.Repositories
                 await client.DisconnectAsync(true);
             }
         }
+
         private void GetOrderEmails(Order order, out string principalEmail, out string secondaryEmail)
         {
             principalEmail = order.Registration?.Email ?? order.MercadoPagoMail;

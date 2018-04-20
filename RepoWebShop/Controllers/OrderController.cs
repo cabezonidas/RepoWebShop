@@ -47,7 +47,7 @@ namespace RepoWebShop.Controllers
 
         public IActionResult EmailNotification(int id)
         {
-            var viewModel = _orderRepository.GetEmailData(id, Request.HostUrl());
+            var viewModel = _orderRepository.GetEmailData(id);
             return View(viewModel);
         }
 
@@ -62,7 +62,9 @@ namespace RepoWebShop.Controllers
         {
             if (Request.QueryString.HasValue)
             {
-                _cartRepository.RenewId();
+                if(Request.Query.ContainsKey("preference_id"))
+                    if(Request.Query["preference_id"].ToString() == _cartRepository.GetMpPreference(_cartRepository.GetSessionCartId()))
+                        _cartRepository.RenewId();
 
                 Task.Run(async () =>
                 {
@@ -88,7 +90,7 @@ namespace RepoWebShop.Controllers
                 orderstatus = new OrderStatusViewModel()
                 {
                     BookingId = id ?? string.Empty,
-                    Notification = _orderRepository.GetEmailData(order.OrderId, Request.HostUrl()),
+                    Notification = _orderRepository.GetEmailData(order.OrderId),
                     Payment = order.OrderPaymentStatus,
                     Progress = order.OrderProgressState
                 };
@@ -122,7 +124,7 @@ namespace RepoWebShop.Controllers
                 return NotFound();
             else
             {
-                EmailNotificationViewModel viewModel = _orderRepository.ToEmailNotification(order, Request.HostUrl());
+                EmailNotificationViewModel viewModel = _orderRepository.ToEmailNotification(order);
                 return View(viewModel);
             }
         }
@@ -279,7 +281,7 @@ namespace RepoWebShop.Controllers
                 order.Registration = _currentUser;
                 order = _orderRepository.CreateOrder(order);
 
-                await _emailRespository.SendOrderConfirmationAsync(order, Request.HostUrl(), null);
+                await _emailRespository.SendOrderConfirmationAsync(order);
                 return Redirect($"/Order/Status/{order.FriendlyBookingId}");
             }
             return View(_currentUser);

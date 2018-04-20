@@ -19,13 +19,13 @@ namespace RepoWebShop.Repositories
             _emailRespository = emailRespository;
         }
 
-        public async Task CreatePayment(PaymentNotice paymentNotification, string hostUrl)
+        public async Task CreatePayment(PaymentNotice paymentNotification)
         {
             _appDbContext.PaymentNotices.Add(paymentNotification);
             _appDbContext.SaveChanges();
 
             if(_orderRespository.ValidBookingId(paymentNotification.BookingId))
-                await _orderRespository.PaymentNotified(paymentNotification, hostUrl);
+                await _orderRespository.PaymentNotified(paymentNotification);
 
             /*
             pending         - The user has not yet completed the payment process

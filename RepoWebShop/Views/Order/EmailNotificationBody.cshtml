@@ -1,110 +1,195 @@
 ﻿@model EmailNotificationViewModel
+@inject ICalendarRepository _calendar
+@inject IFlickrRepository _flickr
+<div style="max-width: 750px;margin: auto;">
+    <div style="text-align:center; font-family: 'Trebuchet MS'; ">
+        <section style='padding: 20px; width:100%; min-width:300px; ' id='body'>
+            <div style=" background-color: #883636; color: papayawhip; border-top-left-radius: 10px;border-top-right-radius: 10px;">
+                <br />
+                <a href="@Model.AbsoluteUrl" target="_blank" style="text-decoration: none; ">
+                    <div style="padding-left: 20px; padding-right: 20px;">
+                        <img src="@Model.AbsoluteUrl/Pictures/LogoRepo.png" width="250" />
+                    </div>
+                </a>
 
-<div style="text-align:center; font-family: 'Arial', Georgia, Serif; ">
-    <section style='padding: 20px; max-width:600px; min-width:400px;' id='body'>
-        <h2 style="font-family: 'Times New Roman'; font-style: italic;color: green; ">
-            <a href="@Model.AbsoluteUrl" target="_blank"
-               style="  padding: 15px;
-                            color: white;
-                            text-decoration: none;
-                            border-radius: 50%;
-                            background: green;">
-                <strong>De las Artes</strong>
-            </a>
-        </h2>
-        <br>
-        <h2><strong>¡Gracias @Model.CustomarAlias por tu @Model.OrderType.ToLower()!</strong></h2>
-        <p>
-            @*Ya estamos trabajando para que puedas disfrutar de tu compra.*@
-        </p>
+                <div style="font-size: 20px;">
+                    <strong>¡Gracias @Model.CustomarAlias!</strong>
+                </div>
+                <div style="font-size: 15px;">
+                    <div>
+                        <br />
+                        Tu pedido
+                        <a href="@Model.AbsoluteUrl/Order/Status/@Model.FriendlyBookingId" target="_blank" style="color: papayawhip ; text-decoration: none;">
+                            @Model.FriendlyBookingId
+                        </a>
+                        está confirmado
+                    </div>
+                    <div>
+                        <br />Tiempo de elaboración: <strong>@Model.PreparationTime hs</strong>
+                    </div>
+                    @if (Model.OrderReady.HasValue)
+                    {
+                        <div>
+                            <br />
+                            Disponible: @_calendar.FriendlyDate(Model.OrderReady) a las @Model.OrderReady.Value.ToString("hh\\:mm tt").ToLower() @Html.Raw((String.IsNullOrEmpty(Model.Comments) ? "" : "*"))
+                        </div>
+                    }
+                    <br />
+                </div>
+            </div>
 
-        <p style="font-size:10px;">Código de Pedido</p>
+            <div style=" background-color: papayawhip; ">
+                <div style="width: 90%; margin: auto;">
+                    <br />
+                    <div style="font-size: 30px; color:#883636">
+                        <strong>
+                            Pedido
+                            <a href="@Model.AbsoluteUrl/Order/Status/@Model.FriendlyBookingId" target="_blank" style="color: #883636 ; text-decoration: none;">
+                                @Model.FriendlyBookingId
+                            </a>
+                        </strong>
+                    </div>
+                    <br />
+                    <table style="margin: auto; max-width:400px; padding-left: 10px; padding-right: 10px; border-collapse:collapse;">
+                        <thead>
+                            <tr>
+                                <th style='' colspan="3"></th>
+                            </tr>
+                        </thead>
+                        @{
+                            var totalItems = 0m;
+                            var deliveryCost = 0m;
+                        }
+                        <tbody>
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <tr>
+                                    @{
+                                        var pic = _flickr.GetAlbumPictures(item.Pie.PieDetail.FlickrAlbumId)?.PrimaryPicture;
+                                        pic = !string.IsNullOrEmpty(pic) ? pic + "s.jpg" : "/Pictures/logo.png";
+                                        var itemref = Model.AbsoluteUrl + $"/PieDetail/Details/{item.Pie.PieDetail.PieDetailId}";
+                                    }
+                                    <td style='padding:10px; padding-left:2px; text-align:center;'>
 
-        <div style="background-color: white; width: 150px; margin: auto; border-radius: 5px; border-style: solid; border-color: green;">
-            <a href="@Model.AbsoluteUrl/Order/Status/@Model.FriendlyBookingId" target="_blank" style="color: black; text-decoration: none;">
-                <h1 style="font-size: 20px;">@Model.FriendlyBookingId</h1>
-            </a>
-        </div>
-        <br />
+                                        <a href="@itemref">
+                                            <img src=@pic width="75" style="border-radius:5px;" />
+                                        </a>
+                                    </td>
+                                    <td style='padding:2px; text-align:left; '>
+                                        <a href="@itemref" style="text-decoration: none; color: black">
+                                            <div>
+                                                @item.Pie.PieDetail.Name @item.Pie.Name<br />
+                                                Precio: $@item.Price<br />
+                                                Cantidad: @item.Amount
+                                            </div>
+                                        </a>
+                                    </td>
+                                    @{var subtotal = item.Price * item.Amount;}
+                                    <td style='padding:2px; text-align:right; font-size: large; '>$@subtotal</td>
+                                    @{totalItems += subtotal;}
+                                </tr>
+                            }
+                            @if (Model.Delivery != null)
+                            {
+                                <tr>
+                                    <td style='padding:10px; padding-left:2px; text-align:center;'>
+                                        <img src="@Model.AbsoluteUrl/Pictures/delivery3.png" width="75" />
+                                    </td>
+                                    <td style='padding:2px; text-align:left;' colspan="1">@Model.Delivery.AddressLine1</td>
+                                    <td style='padding:2px; text-align:right; font-size: large'>$@Model.Delivery.DeliveryCost</td>
+                                    @{deliveryCost = Model.Delivery.DeliveryCost;}
+                                </tr>
+                            }
+                            @if (Model.Discount != null)
+                            {
+                                <tr style="font-size: large">
+                                    <td style='padding:10px; padding-left:2px; text-align:center;'>
+                                        <img src="@Model.AbsoluteUrl/Pictures/deal2.png" width="75" />
+                                    </td>
+                                    <td style='padding:2px; text-align:left;' colspan="1">
+                                        @{
+                                            string error = string.Empty;
+                                            var discount = deliveryCost + totalItems - Model.OrderTotal;
+                                        }
+                                        <div style="color: green;">
+                                            <strong>@Model.Discount.Phrase</strong>
+                                        </div>
+                                    </td>
+                                    <td style='padding:2px; text-align:right; color: green; '>-$@discount</td>
+                                </tr>
+                            }
+                            <tr>
+                                <td colspan="3">
+                                    <br />
+                                </td>
+                            </tr>
+                            <tr style="font-size: 30px;">
+                                <td colspan="1"></td>
+                                <td colspan="1" style="text-align: center">Total $@Model.OrderTotal</td>
+                                <td style='padding:2px; text-align:right; '></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
 
-        @if (!String.IsNullOrEmpty(Model.MercadoPagoTransaction))
-    {
-        <p>Comprobante MercadoPago <strong>@Model.MercadoPagoTransaction</strong></p>
-}
-        <p>Tiempo de Elaboración: <strong>@Model.PreparationTime hs</strong></p>
+                    @if (!String.IsNullOrEmpty(Model.MercadoPagoTransaction))
+                    {
+                        <br />
+                        <div style="font-size: larger"><strong>MercadoPago</strong><br /></div>
+                        <div>Total Pagado <strong>$@Model.OrderTotal</strong></div>
+                        <div>Comprobante <strong>@Model.MercadoPagoTransaction</strong></div>
+                    }
 
-        @{
-        if (Model.OrderReady.HasValue)
-        {
-            <p>Fecha y hora de producto terminado calculada por sistema</p>
-            <p><strong>@Model.OrderReady.Value.ToString("dd-MM-yyyy") </strong> a las <strong>@Model.OrderReady.Value.ToString("hh\\:mm")</strong></p>
-    }
-        }
+                    @if (Model.Delivery != null && !string.IsNullOrWhiteSpace(Model.Delivery.DeliveryInstructions))
+                    {
+                        <br />
+                        <div style="font-size: larger"><strong>Instrucciones de envío</strong><br /></div>
+                        <div class="text-muted">@Model.Delivery.DeliveryInstructions</div>
+                    }
 
+                    @if (Model.Delivery != null)
+                    {
+                        <br />
+                        <div style="font-size: larger"><strong>Horarios de envío</strong></div>
+                        <div>Entre 10:30 y 12:30 o entre 18:00 y 20:00</div>
+                    }
 
-
-
-        <p><strong>Total de Compra $@Model.OrderTotal</strong></p>
-
-        @if (!String.IsNullOrEmpty(Model.MercadoPagoTransaction))
-    {
-        <p><strong>Total Pagado a MercadoPago $@Model.OrderTotal</strong></p>
-}
-
-        <table style="margin: auto; width: 100%; padding-left: 10px; padding-right: 10px; border-collapse:collapse;">
-            <tr>
-                <th style='border-bottom: 1px solid #ddd;'>Cantidad</th>
-                <th style="border-bottom: 1px solid #ddd; text-align:left;">Producto</th>
-                <th style="border-bottom: 1px solid #ddd; text-align:right;">Precio&#8291;U.</th>
-                <th style="border-bottom: 1px solid #ddd; text-align:right;">Subtotal</th>
-            </tr>
-            @foreach (var item in Model.OrderItems)
-        {
-            <tr>
-                <td style='padding:2px; text-align:center;'>@item.Amount</td>
-                <td style='padding:2px; text-align:left;'>@item.Pie.PieDetail.Name @item.Pie.Name</td>
-                <td style='padding:2px; text-align:right;'>@item.Price</td>
-                @{var subtotal = item.Price * item.Amount;}
-                <td style='padding:2px; text-align:right;'>@subtotal</td>
-            </tr>
-    }
-            @if (Model.Delivery != null)
-        {
-            <tr>
-                <td style='padding:2px; text-align:center;'>1</td>
-                <td style='padding:2px; text-align:left;'>Envío: @Model.Delivery.AddressLine1</td>
-                <td style='padding:2px; text-align:right;'>@Model.Delivery.DeliveryCost</td>
-                <td style='padding:2px; text-align:right;'>@Model.Delivery.DeliveryCost</td>
-            </tr>
-
-    }
-
-        </table>
-
-        @if (Model.Delivery != null && !string.IsNullOrWhiteSpace(Model.Delivery.DeliveryInstructions))
-    {
-        <br />
-        <p><strong>Instrucciones de envío</strong></p>
-        <p class="text-muted">@Model.Delivery.DeliveryInstructions</p>
-}
-        @if (Model.Delivery != null)
-    {
-        <br />
-        <p><strong>Horarios de envío</strong></p>
-        <p class="text-muted">Entre 10:30 y 12:30 o entre 18:00 y 20:00</p>
-}
-        @if (!String.IsNullOrEmpty(Model.Comments))
-    {
-        <p><strong>Comentarios</strong></p><p>@Model.Comments</p>
-}
-        <br />
-        <p><strong>Importante</strong></p>
-        <p>
-            Si querés retirar/recibir tu pedido en otro momento, ponete en contacto con nosotros y vamos a tratar de hacer lo posible por adaptarnos. A veces podemos hacer las entregas antes del tiempo calculado, pero no siempre podremos.
-        </p>
-        <p>
-        Ante cualquier duda o alteración, podés <a href='@Model.AbsoluteUrl/Contact' target="_blank">contactarnos</a> o
-        visitarnos/llamarnos en nuestros <a href='@Model.AbsoluteUrl/Calendar/OpenHours' target="_blank">horarios de atención</a>.</p>
-    </section>
-
+                    @if (!String.IsNullOrEmpty(Model.Comments))
+                    {
+                        <br />
+                        <div style="font-size: larger"><strong>Comentarios</strong></div>
+                        <div style="font-style:italic">
+                            "@Model.Comments"
+                        </div>
+                        <div style="text-align: left">
+                            <br />
+                            * La disponibilidad del pedido es calculada por el sistema. Si nos especificaste otra fecha, el pedido se completará para esa fecha, garantizando que los productos sean frescos.
+                            <br />
+                        </div>
+                    }
+                    <br />
+                </div>
+                <div style="margin: auto; width: 90%; text-align: left">
+                    <div style="font-size: larger; text-align: left"><strong style="">Importante</strong></div>
+                    <div >
+                        <br />
+                        Si querés retirar o recibir tu pedido en otro momento, ponete en contacto con nosotros y vamos a tratar de hacer lo posible por adaptarnos. A veces podemos hacer las entregas antes del tiempo calculado, pero no siempre podremos.
+                    </div>
+                    <div>
+                        <br />
+                        Ante cualquier duda o alteración, podés <a href='@Model.AbsoluteUrl/Contact' target="_blank" style="color: #883636">contactarnos</a> o
+                        visitarnos o llamarnos en nuestros <a href='@Model.AbsoluteUrl/Calendar/OpenHours' target="_blank" style="color: #883636">horarios de atención</a>.
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div style=" background-color: #883636; color: papayawhip; text-align:left; border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+                    <div style="text-align: center;">
+                        <br />
+                        <a href='@Model.AbsoluteUrl' target="_blank" style="color: papayawhip">@Model.AbsoluteUrl</a>
+                    </div>
+                    <br />
+            </div>
+        </section>
+    </div>
 </div>

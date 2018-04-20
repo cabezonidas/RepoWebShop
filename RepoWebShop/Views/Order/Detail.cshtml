@@ -130,6 +130,11 @@
                 <td><strong>Total</strong></td>
                 <td colspan="2">@Model.Order.OrderTotal</td>
             </tr>
+            @if (Model.Order.Discount != null)
+            {<tr>
+                <td><strong>Descuento</strong></td>
+                <td colspan="2">@Model.Order.Discount.Phrase</td>
+            </tr>}
             <tr>
                 <td><strong>Cliente</strong></td>
                 <td colspan="2" id="">

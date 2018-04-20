@@ -40,7 +40,7 @@ else
         </div>
         <div class="row">
             <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
-                @Html.Partial("~/Views/ShoppingCart/Comments.cshtml")
+                @Html.Partial("~/Views/ShoppingCart/Comments.cshtml", Model.Comments)
             </div>
             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 @Html.Partial("~/Views/ShoppingCart/CheckDelivery.cshtml", Model)
@@ -84,17 +84,17 @@ else
         });
     }
 
-    $.ajax({
-        type: 'GET',
-        url: 'api/ShoppingCartData/GetComments/',
-        dataType: 'json',
-        success: function (data) {
-            if (data.comments != 'undefined')
-                $('#comments').append(data.comments);
-            else
-                $('#comments').append('');
-        }
-    });
+    //$.ajax({
+    //    type: 'GET',
+    //    url: 'api/ShoppingCartData/GetComments/',
+    //    dataType: 'json',
+    //    success: function (data) {
+    //        if (data.comments != 'undefined')
+    //            $('#comments').append(data.comments);
+    //        else
+    //            $('#comments').append('');
+    //    }
+    //});
     $("a").on('click', function () {
         $.ajax({
             type: 'GET',
