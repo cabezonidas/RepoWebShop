@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180422015153_Catalog")]
+    partial class Catalog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -630,7 +631,8 @@ namespace RepoWebShop.Migrations
 
                     b.Property<decimal>("Price");
 
-                    b.Property<string>("Temperature");
+                    b.Property<string>("Temperature")
+                        .IsRequired();
 
                     b.HasKey("ProductId");
 

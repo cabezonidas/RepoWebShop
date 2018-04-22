@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Product>
+
+<div class="container">
+    <div>
+        <h2>Productos</h2>
+        <a href="/Catalog/New" class="btn btn-primary">Nuevo</a>
+    </div>
+    <br />
+    <table class="table table-striped" id="products">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Categoría</th>
+                <th>Temperatura</th>
+                <th>Cantidad Mínima</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ foreach (var prod in Model)
+                {
+                    <tr>
+                        <td>
+                            <a href="/Catalog/Edit/@prod.ProductId">
+                                @prod.Name
+                            </a>
+                        </td>
+                        <td>
+                            @if (prod.OldPrice.HasValue)
+                            {
+                                <div style="font-size:smaller; text-decoration: line-through">@prod.OldPrice.Value.ToString("c")</div>
+                            }
+                            @prod.Price.ToString("c")
+                        </td>
+                        <td>
+                            @prod.Category
+                        </td>
+                        <td>
+                            @prod.Temperature
+                        </td>
+                        <td>
+                            @prod.MinOrderAmount
+                        </td>
+                        <td>
+                            @if (prod.IsActive)
+                            {
+                                <input type="submit" class="btn btn-default" value="Eliminar" onclick="deleteProduct(@prod.ProductId)" />
+                            }
+                            else
+                            {
+                                <input type="submit" class="btn btn-default" value="Restaurar" onclick="restoreProduct(@prod.ProductId)" />
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    function deleteProduct(produtId) {
+        alert('delete' + produtId);
+    }
+
+    function restoreProduct(produtId) {
+        alert('restore ' + produtId);
+    }
+
+    $('#products').DataTable({
+        pageLength: 25
+    });
+</script>
