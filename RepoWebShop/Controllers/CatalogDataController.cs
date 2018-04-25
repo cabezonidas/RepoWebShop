@@ -22,29 +22,35 @@ namespace RepoWebShop.Controllers
             _catalogRepository = catalogRepository;
         }
 
-        [HttpGet]
-        [Route("InflationEstimate/{percentage}")]
-        public IActionResult InflationEstimate(int percentage)
-        {
-            var result = _catalogRepository.InflationEstimate(percentage, 5);
-            return View(result);
-        }
-
         [HttpPost]
-        [Route("Inflation/{percentage}")]
-        public IActionResult Inflation(int percentage)
+        [Route("Inflation/{percentage}/{roundTo}")]
+        public IActionResult AdjustToInflation(int percentage, int roundTo)
         {
-            _catalogRepository.ApplyPriceRise(percentage, 5);
-
+            _catalogRepository.ApplyPriceRise(percentage, roundTo);
             return Ok();
         }
 
+        [HttpPost]
+        [Route("Delete/{id}")]
+        public IActionResult Delete(int id)
+        {
+            _catalogRepository.Deactivate(id);
+            return Ok();
+        }
 
         [HttpPost]
-        public IActionResult Restore()
+        [Route("Restore/{id}")]
+        public IActionResult Restore(int id)
+        {
+            _catalogRepository.Activate(id);
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("RestorePrices")]
+        public IActionResult RestorePrices()
         {
             _catalogRepository.RestorePrices();
-
             return Ok();
         }
     }

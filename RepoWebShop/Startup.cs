@@ -12,9 +12,6 @@ using AutoMapper;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Repositories;
 using React.AspNet;
-using Microsoft.AspNetCore.Localization;
-using System.Globalization;
-using Microsoft.AspNetCore.HttpOverrides;
 
 namespace RepoWebShop
 {
@@ -72,6 +69,7 @@ namespace RepoWebShop
                 options.User.RequireUniqueEmail = true;
             });
 
+            services.AddTransient<ILunchRepository, LunchRepository>();
             services.AddTransient<IDeliveryRepository, DeliveryRepository>();
             services.AddTransient<ICatalogRepository, CatalogRepository>();
             services.AddTransient<IDiscountRepository, DiscountRepository>();
@@ -117,7 +115,23 @@ namespace RepoWebShop
                 app.UseExceptionHandler("/AppException");
             }
 
-            app.UseReact(config => { });
+            app.UseReact(config => {
+                // If you want to use server-side rendering of React components,
+                // add all the necessary JavaScript files here. This includes
+                // your components as well as all of their dependencies.
+                // See http://reactjs.net/ for more information. Example:
+                config
+                    .AddScript("~/Scripts/LunchEstimate.jsx")
+                    .AddScript("~/Scripts/LunchItem.jsx");
+
+                // If you use an external build too (for example, Babel, Webpack,
+                // Browserify or Gulp), you can improve performance by disabling
+                // ReactJS.NET's version of Babel and loading the pre-transpiled
+                // scripts. Example:
+                //config
+                //    .SetLoadBabel(false)
+                //    .AddScriptWithoutTransform("~/Scripts/bundle.server.js");
+            });
 
             app.UseStaticFiles();
             app.UseSession();

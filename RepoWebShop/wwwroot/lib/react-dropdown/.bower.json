@@ -1,0 +1,14 @@
+{
+  "name": "react-dropdown",
+  "homepage": "https://github.com/Carlows/react-dropdown",
+  "version": "0.4.0",
+  "_release": "0.4.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.4.0",
+    "commit": "644e449513d16608828923802bb6b9295f4c8dda"
+  },
+  "_source": "https://github.com/Carlows/react-dropdown.git",
+  "_target": "^0.4.0",
+  "_originalSource": "react-dropdown"
+}

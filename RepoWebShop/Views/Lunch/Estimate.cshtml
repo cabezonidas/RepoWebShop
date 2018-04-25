@@ -1,0 +1,164 @@
+﻿@model ShoppingCartLunch
+
+<style>
+    .fa, .remove:hover{
+        cursor: pointer;
+    }
+    div.selecteItem{
+        background-color: papayawhip
+    }
+    .row{
+        padding: 10px;
+    }
+</style>
+
+<div class="container text-center" >
+    <br />
+    <div class="row" style="max-width: 500px; margin: auto; background-color: #883636; color:papayawhip">
+        <h2>Presupuesto</h2>
+    </div>
+
+    <div id="lunchbox">
+        @if(Model != null && Model.Items != null)
+        {
+            foreach(var item in Model.Items)
+            {
+                @Html.Partial("~/Views/Lunch/ItemDetail.cshtml", item)
+            }
+        }
+    </div>
+
+    <div class="row" style="max-width: 500px; margin: auto;background-color: papayawhip; ">
+        <div class="selecteItem">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-left">
+                <div>Agregar</div>
+                <div style="max-width: 500px; margin: auto">
+                    <select name="state" id="items"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row " style="max-width: 500px; margin: auto; background-color: #883636; color:papayawhip">
+        <div class="selecteItem">
+            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-left">
+                <div>Bocados: 36</div>
+                <div>Invitados: 3/4 personas</div>
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-right">
+                <h4>Total $384</h4>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="row" style="max-width: 500px; margin: auto; ">
+        <div class="selecteItem">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-left">
+                <a class="btn btn-primary">Guardar</a>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+
+<script>
+    $.get('/api/LunchData/GetProducts/').then((data) => {
+        initializeSelector(data);
+    });
+
+    function initializeSelector(data) {
+        $selectize = $('select#items').selectize({
+            options: data,
+            labelField: 'name',
+            valueField: 'productId',
+            searchField: ['name'],
+            placeholder: "Buscar producto...",
+            delimiter: ",",
+            render: {
+                option: function (item, escape) {
+                    return '<div>' +
+                        (item.name ? '<div class="name" style="color:#883636"">' + escape(item.name) + ' $' + escape(item.minOrderAmount * item.price) + '</div>' : '') +
+                        (item.price ? '<div class="price">Precio Unitario: $' + escape(item.price) + '</div>' : '') +
+                        (item.minOrderAmount ? '<div class="bites">Bocados: ' + escape(item.minOrderAmount) + '</div>' : '') +
+                        '</div>';
+                },
+                item: function (item, escape) {
+                    return '<div style="color: green;">' +
+                        (item.name ? '<span class="name" >' + escape(item.name) + '</span>' : '') +
+                        (item.minOrderAmount ? ' x ' + escape(item.minOrderAmount) : '') +
+                        (item.price ? ' - $' + escape(item.price * item.minOrderAmount) : '') +
+                        '</div>';
+                }
+            },
+            onChange: function (event) {
+                appendItem(event);
+            }
+        });
+    };
+
+    function appendItem(id) {
+        $.post('/api/LunchData/AddProduct/' + id).then((data) => {
+            pasteItem(data, id);
+
+        }).fail(() => console.log('No se pudo traer el producto'));
+    }
+
+    function pasteItem(data, id) {
+        if ($('#product-' + id).length > 0) {
+            $('#product-' + id).replaceWith(data);
+            $('#product-' + id).find(".itemprice").addClass("animated jackInTheBox");
+        } else {
+            $('#lunchbox').append(data);
+            $('#product-' + id).find(".itemprice").addClass("animated jackInTheBox");
+        }
+    }
+
+    function removeLunchItemInstance(id) {
+        $.ajax({
+            url: '/api/LunchData/RemoveProductInstance/' + id,
+            type: 'DELETE',
+            success: function (data) {
+                pasteItem(data, id);
+            }
+        });
+    }
+
+    function removeLunchItem(id) {
+        $.ajax({
+            url: '/api/LunchData/RemoveProduct/' + id,
+            type: 'DELETE',
+            success: function (data) {
+                pasteItem(data, id);
+            }
+        });
+    }
+
+    function addLunchItemInstance(id) {
+        $.ajax({
+            url: '/api/LunchData/AddProductInstance/' + id,
+            type: 'POST',
+            success: function (data) {
+                pasteItem(data, id);
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

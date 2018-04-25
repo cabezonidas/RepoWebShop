@@ -1,0 +1,35 @@
+﻿@model ShoppingCartLunchItem
+@if (Model == null)
+{
+    <div></div>
+}
+else
+{
+    <div class="row" style="max-width: 500px; margin: auto; background-color: papayawhip;" id="product-@Model.Product.ProductId">
+        <div class="selecteItem" style="">
+            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-left">
+                <div style="font-size: large" >@Model.Product.Name </div>
+                <div>
+                    <span class="" style="margin-right: 5px;">Unidades </span>
+                    @if(Model.Quantity > 1)
+                    {
+                        <span class="fa fa-caret-left" onclick="removeLunchItemInstance(@Model.Product.ProductId)"></span>
+                    }
+                    else
+                    {
+                        <span class="fa fa-caret-left text-muted"></span>
+                    }
+                    <span  style="margin-left: 5px;margin-right: 5px;">@Html.Raw(Model.Product.MinOrderAmount * Model.Quantity)</span>
+                    <span class="fa fa-caret-right" onclick="addLunchItemInstance(@Model.Product.ProductId)"></span>
+                </div>
+                <div onclick="removeLunchItem(@Model.Product.ProductId)" class="remove">
+                    Quitar
+                </div>
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <div style="font-size: x-large; color:#883636" class=" text-right itemprice">@Html.Raw((Model.Product.MinOrderAmount * Model.Quantity * Model.Product.Price).ToString("c"))</div>
+                <div class=" text-right">@Model.Product.Price.ToString("c")  c/u</div>
+            </div>
+        </div>
+    </div>
+}

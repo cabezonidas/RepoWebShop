@@ -1,0 +1,41 @@
+{
+  "name": "react-dropdown",
+  "version": "0.4.0",
+  "description": "React dropdown component",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/fraserxu/react-dropdown.git"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "component",
+    "dropdown",
+    "select"
+  ],
+  "author": {
+    "name": "Fraser Xu",
+    "email": "xvfeng123@gmail.com",
+    "url": "https://fraserxu.me"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fraserxu/react-dropdown/issues"
+  },
+  "homepage": "https://github.com/fraserxu/react-dropdown",
+  "peerDependencies": {
+    "react": ">=0.13.0"
+  },
+  "dependencies": {
+    "react": "^0.13.1",
+    "classnames": "^1.2.0"
+  },
+  "devDependencies": {
+    "babel": "^4.7.16",
+    "watchify": "^2.6.0"
+  },
+  "scripts": {
+    "build": "babel index.js > dist/index.js"
+  }
+}

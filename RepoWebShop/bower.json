@@ -20,7 +20,9 @@
     "Snap.svg": "^0.5.1",
     "parallax.js": "^1.5.0",
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
-    "slick-lightbox": "~0.2.12"
+    "slick-lightbox": "~0.2.12",
+    "selectize": "^0.12.4",
+    "lodash": "^4.17.5"
   },
   "resolutions": {
     "jquery": "3.2.1",

@@ -725,6 +725,44 @@ namespace RepoWebShop.Migrations
                     b.ToTable("ShoppingCartItems");
                 });
 
+            modelBuilder.Entity("RepoWebShop.Models.ShoppingCartLunch", b =>
+                {
+                    b.Property<int>("ShoppingCartLunchId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("BookingId");
+
+                    b.Property<string>("Comments");
+
+                    b.Property<string>("MiscellaneousDescription");
+
+                    b.Property<decimal>("MiscellaneousPrice");
+
+                    b.HasKey("ShoppingCartLunchId");
+
+                    b.ToTable("ShoppingCartLunch");
+                });
+
+            modelBuilder.Entity("RepoWebShop.Models.ShoppingCartLunchItem", b =>
+                {
+                    b.Property<int>("ShoppingCartLunchItemId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("ProductId");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<int?>("ShoppingCartLunchId");
+
+                    b.HasKey("ShoppingCartLunchItemId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ShoppingCartLunchId");
+
+                    b.ToTable("ShoppingCartLunchItems");
+                });
+
             modelBuilder.Entity("RepoWebShop.Models.Vacation", b =>
                 {
                     b.Property<int>("VacationId")
@@ -866,6 +904,17 @@ namespace RepoWebShop.Migrations
                     b.HasOne("RepoWebShop.Models.Pie", "Pie")
                         .WithMany()
                         .HasForeignKey("PieId");
+                });
+
+            modelBuilder.Entity("RepoWebShop.Models.ShoppingCartLunchItem", b =>
+                {
+                    b.HasOne("RepoWebShop.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("RepoWebShop.Models.ShoppingCartLunch", "ShoppingCartLunch")
+                        .WithMany("Items")
+                        .HasForeignKey("ShoppingCartLunchId");
                 });
 #pragma warning restore 612, 618
         }

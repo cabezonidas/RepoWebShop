@@ -4,6 +4,7 @@
     <div>
         <h2>Productos</h2>
         <a href="/Catalog/New" class="btn btn-primary">Nuevo</a>
+        <a href="/Catalog/Inflation" class="btn btn-primary">Ajustar Precios</a>
     </div>
     <br />
     <table class="table table-striped" id="products">
@@ -20,18 +21,25 @@
         <tbody>
             @{ foreach (var prod in Model)
                 {
+                    var showDelete = prod.IsActive ? "" : "hidden";
+                    var showRestore = prod.IsActive ? "hidden" : "";
                     <tr>
                         <td>
                             <a href="/Catalog/Edit/@prod.ProductId">
                                 @prod.Name
                             </a>
+                            
+                            <div id="state-@prod.ProductId" class="text-muted">
+                                @if(!prod.IsActive)
+                                { <div>Inactivo</div> }
+                            </div>
                         </td>
                         <td>
+                            @prod.Price.ToString("c")
                             @if (prod.OldPrice.HasValue)
                             {
                                 <div style="font-size:smaller; text-decoration: line-through">@prod.OldPrice.Value.ToString("c")</div>
                             }
-                            @prod.Price.ToString("c")
                         </td>
                         <td>
                             @prod.Category
@@ -43,14 +51,8 @@
                             @prod.MinOrderAmount
                         </td>
                         <td>
-                            @if (prod.IsActive)
-                            {
-                                <input type="submit" class="btn btn-default" value="Eliminar" onclick="deleteProduct(@prod.ProductId)" />
-                            }
-                            else
-                            {
-                                <input type="submit" class="btn btn-default" value="Restaurar" onclick="restoreProduct(@prod.ProductId)" />
-                            }
+                            <input id="delete-@prod.ProductId" type="submit" class="btn btn-danger @showDelete" value="Eliminar" onclick="deleteProduct(@prod.ProductId)" />
+                            <input id="restore-@prod.ProductId" type="submit" class="btn btn-success @showRestore" value="Restaurar" onclick="restoreProduct(@prod.ProductId)" />
                         </td>
                     </tr>
                 }
@@ -60,12 +62,20 @@
 </div>
 
 <script type="text/javascript">
-    function deleteProduct(produtId) {
-        alert('delete' + produtId);
+    function deleteProduct(productId) {
+        $.post('/api/CatalogData/Delete/' + productId).then(() => {
+            $('#delete-' + productId).addClass("hidden");
+            $('#restore-' + productId).removeClass("hidden");
+            $('#state-' + productId).empty().append("Inactivo");
+        }).fail(() => alert("No se pudo hacer el cambio."))
     }
 
-    function restoreProduct(produtId) {
-        alert('restore ' + produtId);
+    function restoreProduct(productId) {
+        $.post('/api/CatalogData/Restore/' + productId).then(() => {
+            $('#delete-' + productId).removeClass("hidden");
+            $('#restore-' + productId).addClass("hidden");
+            $('#state-' + productId).empty();
+        }).fail(() => alert("No se pudo hacer el cambio."))
     }
 
     $('#products').DataTable({

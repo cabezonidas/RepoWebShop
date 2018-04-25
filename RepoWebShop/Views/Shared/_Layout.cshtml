@@ -30,14 +30,16 @@
     <script src="~/lib/matchheight/dist/jquery.matchHeight-min.js"></script>
     <script src="~/lib/Snap.svg/dist/snap.svg-min.js"></script>
     <script type="text/javascript" src="~/lib/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-    @if(env.IsProduction())
+    <script type="text/javascript" src="~/lib/lodash/dist/lodash.min.js"></script>
+    @if (env.IsProduction())
     {
         <script type="text/javascript" src="~/CommonJs/ZopimChat.js"></script>
     }
     <script src="~/lib/parallax.js/parallax.min.js"></script>
     <script src="~/lib/slick-lightbox/dist/slick-lightbox.js"></script>
+    <script src="~/lib/selectize/dist/js/standalone/selectize.min.js"></script>
 
-    @if(env.IsProduction())
+    @if (env.IsProduction())
     {
         <!-- Facebook Pixel Code -->
         <script>
@@ -175,7 +177,16 @@ new MediaViewModel() { Icon = "fa-whatsapp", Class = "social-whatsapp", Ref = "h
     </script>
 
     @RenderSection("scripts", required: false)
-
-
+    @*@if (env.IsProduction())
+    {
+        <script src="~/lib/react/react.production.min.js"></script>
+        <script src="~/lib/react/react-dom.production.min.js"></script>
+    }
+    else
+    {
+        <script src="~/lib/react/react.development.js"></script>
+        <script src="~/lib/react/react-dom.development.js"></script>
+    }
+    @Html.ReactInitJavaScript()*@
 </body>
 </html>

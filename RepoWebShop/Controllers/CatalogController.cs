@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
+using RepoWebShop.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,9 +63,22 @@ namespace RepoWebShop.Controllers
         }
 
         [HttpGet]
+        [Route("[controller]/Inflation/{percentage}/{roundTo}")]
+        public IActionResult Inflation(int percentage, int roundTo)
+        {
+            var vm = new InflationEstimateViewModel
+            {
+                Products = _catalogRepo.InflationEstimate(percentage, roundTo),
+                Inflation = 10,
+                RoundTo = roundTo
+            };
+            return View(vm);
+        }
+
+        [HttpGet]
         public IActionResult Inflation()
         {
-            return View();
+            return Inflation(10, 5);
         }
     }
 }

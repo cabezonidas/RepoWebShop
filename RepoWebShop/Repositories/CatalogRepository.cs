@@ -88,7 +88,7 @@ namespace RepoWebShop.Models
 
         public Product GetById(int id)
         {
-            return _appDbContext.Products.FirstOrDefault(x => x.IsActive);
+            return _appDbContext.Products.FirstOrDefault(x => x.ProductId == id);
         }
 
         public IEnumerable<ProductInflationEstimateViewModel> InflationEstimate(decimal percentage, int roundTo)
