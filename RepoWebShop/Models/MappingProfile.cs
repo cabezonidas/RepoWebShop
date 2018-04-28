@@ -1,6 +1,7 @@
 ﻿using AutoMapper;   
 using Microsoft.AspNetCore.Identity;
 using RepoWebShop.Extensions;
+using RepoWebShop.Interfaces;
 using RepoWebShop.ViewModels;
 using System;
 using System.Security.Claims;
@@ -11,6 +12,9 @@ namespace RepoWebShop.Models
     {
         public MappingProfile()
         {
+            CreateMap<DeliveryAddress, DeliveryAddressViewModel>();
+            CreateMap<DeliveryAddress, DeliveryAddressViewModel>();
+
             CreateMap<ExternalLoginInfo, ApplicationUser>()
                 .ForMember(x => x.ValidationMailToken, opt => opt.MapFrom(y => DateTime.Now))
                 .ForMember(x => x.UserName, opt =>

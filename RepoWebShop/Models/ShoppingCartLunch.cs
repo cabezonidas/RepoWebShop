@@ -9,9 +9,6 @@ namespace RepoWebShop.Models
     {
         public int ShoppingCartLunchId { get; set; }
         public string BookingId { get; set; }
-        public IEnumerable<ShoppingCartLunchItem> Items { get; set; }
-        public decimal MiscellaneousPrice { get; set; }
-        public string MiscellaneousDescription { get; set; }
-        public string Comments { get; set; }
+        public Lunch Lunch { get; set; }
     }
 }

@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RepoWebShop.Repositories
@@ -9,72 +11,67 @@ namespace RepoWebShop.Repositories
     {
         private readonly AppDbContext _appDbContext;
         private readonly IShoppingCartRepository _cartRepository;
+        private readonly IMapper _mapper;
 
-        public LunchRepository(AppDbContext appDbContext, IShoppingCartRepository cartRepository)
+        public LunchRepository(IMapper mapper, AppDbContext appDbContext, IShoppingCartRepository cartRepository)
         {
+            _mapper = mapper;
             _appDbContext = appDbContext;
             _cartRepository = cartRepository;
         }
 
-        public ShoppingCartLunch GetLunch(string bookingId)
+        public ShoppingCartLunch GetSessionLunch(string bookingId = null)
+
         {
             bookingId = bookingId ?? _cartRepository.GetSessionCartId();
             ShoppingCartLunch result = _appDbContext.ShoppingCartLunch
-                .Include(x => x.Items)
+                .Include(x => x.Lunch)
+                .Include(x => x.Lunch.Miscellanea)
+                .Include(x => x.Lunch.Items)
                 .ThenInclude(x => x.Product)
                 .FirstOrDefault(x => x.BookingId == bookingId);
 
             if (result == null)
             {
-                result = new ShoppingCartLunch { BookingId = bookingId };
+                result = new ShoppingCartLunch
+                {
+                    BookingId = bookingId,
+                    Lunch = new Lunch()
+                };
                 _appDbContext.ShoppingCartLunch.Add(result);
                 _appDbContext.SaveChanges();
             }
+
             return result;
         }
 
-        public decimal GetCost(string bookingId)
+        public Lunch GetLunch(int lunchId)
         {
-            var lunch = GetLunch(bookingId);
-            return lunch?.Items?.Sum(x => x.Product.MinOrderAmount * x.Product.Price * x.Quantity) ?? 0;
+            Lunch result = _appDbContext.Lunch
+                .Include(x => x.Miscellanea)
+                .Include(x => x.Items)
+                .ThenInclude(x => x.Product)
+                .FirstOrDefault(x => x.LunchId == lunchId);
+            
+            return result;
         }
 
-        public int GetBites(string bookingId)
+        public LunchItem AddItemInstance(int lunchId, int productId)
         {
-            var lunch = GetLunch(bookingId);
-            return lunch.Items?.Sum(x => x.Product.MinOrderAmount * x.Quantity) ?? 0;
-        }
-
-        public void AddMiscellaneous(string bookingId, string desc, decimal price)
-        {
-            var lunch = GetLunch(bookingId);
-            lunch.MiscellaneousDescription = desc;
-            lunch.MiscellaneousPrice = price;
-            _appDbContext.ShoppingCartLunch.Update(lunch);
-            _appDbContext.SaveChanges();
-        }
-
-        public void RemoveMiscellaneous(string bookingId)
-        {
-            AddMiscellaneous(bookingId, string.Empty, 0);
-        }
-
-        public ShoppingCartLunchItem AddItemInstance(string bookingId, int productId)
-        {
-            var lunch = GetLunch(bookingId);
+            var lunch = GetLunch(lunchId);
             var product = _appDbContext.Products.First(x => x.ProductId == productId);
 
             var shoppingCartLunchItem = lunch.Items?.FirstOrDefault(x => x.Product == product);
 
             if (shoppingCartLunchItem == null)
             {
-                shoppingCartLunchItem = new ShoppingCartLunchItem { ShoppingCartLunch = lunch, Product = product, Quantity = 1 };
-                _appDbContext.ShoppingCartLunchItems.Add(shoppingCartLunchItem);
+                shoppingCartLunchItem = new LunchItem { Lunch = lunch, Product = product, Quantity = 1 };
+                _appDbContext.LunchItems.Add(shoppingCartLunchItem);
             }
             else
             {
                 shoppingCartLunchItem.Quantity += 1;
-                _appDbContext.ShoppingCartLunchItems.Update(shoppingCartLunchItem);
+                _appDbContext.LunchItems.Update(shoppingCartLunchItem);
             }
             _appDbContext.SaveChanges();
             return shoppingCartLunchItem;
@@ -82,26 +79,26 @@ namespace RepoWebShop.Repositories
 
 
 
-        public ShoppingCartLunchItem AddItem(string bookingId, int productId)
+        public LunchItem AddItem(int lunchId, int productId)
         {
-            var lunch = GetLunch(bookingId);
+            var lunch = GetLunch(lunchId);
             var product = _appDbContext.Products.First(x => x.ProductId == productId);
 
             var shoppingCartLunchItem = lunch.Items?.FirstOrDefault(x => x.Product == product);
 
             if (shoppingCartLunchItem == null)
             {
-                shoppingCartLunchItem = new ShoppingCartLunchItem { ShoppingCartLunch = lunch, Product = product, Quantity = 1 };
-                _appDbContext.ShoppingCartLunchItems.Add(shoppingCartLunchItem);
+                shoppingCartLunchItem = new LunchItem { Lunch = lunch, Product = product, Quantity = 1 };
+                _appDbContext.LunchItems.Add(shoppingCartLunchItem);
                 _appDbContext.SaveChanges();
             }
             return shoppingCartLunchItem;
         }
 
-        public ShoppingCartLunchItem RemoveItemInstance(string bookingId, int productId)
+        public LunchItem RemoveItemInstance(int lunchId, int productId)
         {
-            ShoppingCartLunchItem result = null;
-            var lunch = GetLunch(bookingId);
+            LunchItem result = null;
+            var lunch = GetLunch(lunchId);
             var product = _appDbContext.Products.First(x => x.ProductId == productId);
 
             var shoppingCartLunchItem = lunch.Items.FirstOrDefault(x => x.Product == product);
@@ -111,32 +108,119 @@ namespace RepoWebShop.Repositories
                 if(shoppingCartLunchItem.Quantity > 1)
                 {
                     shoppingCartLunchItem.Quantity -= 1;
-                    _appDbContext.ShoppingCartLunchItems.Update(shoppingCartLunchItem);
+                    _appDbContext.LunchItems.Update(shoppingCartLunchItem);
                     result = shoppingCartLunchItem;
                 }
                 else
                 {
-                    _appDbContext.ShoppingCartLunchItems.Remove(shoppingCartLunchItem);
+                    _appDbContext.LunchItems.Remove(shoppingCartLunchItem);
                 }
                 _appDbContext.SaveChanges();
             }
             return result;
         }
 
-        public ShoppingCartLunchItem RemoveItem(string bookingId, int productId)
+        public LunchItem RemoveItem(int lunchId, int productId)
         {
-            ShoppingCartLunchItem result = null;
-            var lunch = GetLunch(bookingId);
+            LunchItem result = null;
+            var lunch = GetLunch(lunchId);
             var product = _appDbContext.Products.First(x => x.ProductId == productId);
 
             var shoppingCartLunchItem = lunch.Items.FirstOrDefault(x => x.Product == product);
 
             if (shoppingCartLunchItem != null)
             {
-                _appDbContext.ShoppingCartLunchItems.Remove(shoppingCartLunchItem);
+                _appDbContext.LunchItems.Remove(shoppingCartLunchItem);
                 _appDbContext.SaveChanges();
             }
             return result;
+        }
+
+        public int SaveLunch()
+        {
+            ShoppingCartLunch lunch = GetSessionLunch();
+            var result = lunch.Lunch.LunchId;
+            _appDbContext.ShoppingCartLunch.Remove(lunch);
+            _appDbContext.SaveChanges();
+            return result;
+        }
+
+        public LunchMiscellaneous AddMiscellaneous(int lunchId, string description, decimal price)
+        {
+            var lunch = GetLunch(lunchId);
+            var miscellaneous = new LunchMiscellaneous { Description = description, Price = price, Quantity = 1, Lunch = lunch };
+            _appDbContext.LunchMiscellanea.Add(miscellaneous);
+            _appDbContext.SaveChanges();
+            return miscellaneous;
+        }
+
+        public LunchMiscellaneous AddMiscellaneousInstance(int lunchId, int miscellaneousId)
+        {
+            var lunch = GetLunch(lunchId);
+            var result = lunch.Miscellanea.First(x => x.LunchMiscellaneousId == miscellaneousId);
+
+            result.Quantity += 1;
+
+            _appDbContext.LunchMiscellanea.Update(result);
+            _appDbContext.SaveChanges();
+
+            return result;
+        }
+
+        public LunchMiscellaneous RemoveMiscellaneousInstance(int lunchId, int miscellaneousId)
+        {
+            var lunch = GetLunch(lunchId);
+            var result = lunch.Miscellanea.First(x => x.LunchMiscellaneousId == miscellaneousId);
+
+            result.Quantity -= result.Quantity > 1 ? 1 : 0;
+            _appDbContext.LunchMiscellanea.Update(result);
+            _appDbContext.SaveChanges();
+            return result;
+        }
+
+        public void RemoveMiscellaneous(int lunchId, int miscellaneousId)
+        {
+            var lunch = GetLunch(lunchId);
+            var result = lunch.Miscellanea.First(x => x.LunchMiscellaneousId == miscellaneousId);
+            _appDbContext.LunchMiscellanea.Remove(result);
+            _appDbContext.SaveChanges();
+        }
+
+        public int GetBites(Lunch lunch)
+        {
+            if (lunch == null || lunch.Items == null)
+                return 0;
+            return lunch.Items.Sum(x => x.Product.MinOrderAmount * x.Quantity);
+        }
+
+        public int GetConvitees(Lunch lunch)
+        {
+            if (lunch == null || lunch.Items == null)
+                return 0;
+            var result = lunch.Items.Sum(x => x.Product.MinOrderAmount * x.Quantity);
+            return result / 10;
+        }
+
+        public decimal GetTotal(Lunch lunch)
+        {
+            if (lunch == null || lunch.Items == null)
+                return 0;
+            var itemsPrice = lunch.Items.Sum(x => x.Product.MinOrderAmount * x.Quantity * x.Product.Price);
+            var miscellaneaPrice = lunch.Miscellanea.Sum(x => x.Price * x.Quantity);
+            return itemsPrice + miscellaneaPrice;
+        }
+
+        public LunchMiscellaneous GetMiscellaneous(int id)
+        {
+            return _appDbContext.LunchMiscellanea.First(x => x.LunchMiscellaneousId == id);
+        }
+
+        public IEnumerable<Lunch> GetAllLunches()
+        {
+            return _appDbContext.Lunch
+                .Include(x => x.Miscellanea)
+                .Include(x => x.Items)
+                .ThenInclude(x => x.Product).OrderByDescending(x => x.LunchId).ToList();
         }
     }
 }

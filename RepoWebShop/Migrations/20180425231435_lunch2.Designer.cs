@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180425231435_lunch2")]
+    partial class lunch2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -237,6 +238,44 @@ namespace RepoWebShop.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("RepoWebShop.Models.CustomLunch", b =>
+                {
+                    b.Property<int>("CustomLunchId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("BookingId");
+
+                    b.Property<string>("Comments");
+
+                    b.Property<string>("MiscellaneousDescription");
+
+                    b.Property<decimal>("MiscellaneousPrice");
+
+                    b.HasKey("CustomLunchId");
+
+                    b.ToTable("CustomLunch");
+                });
+
+            modelBuilder.Entity("RepoWebShop.Models.CustomLunchItem", b =>
+                {
+                    b.Property<int>("CustomLunchItemId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("LunchCustomLunchId");
+
+                    b.Property<int?>("ProductId");
+
+                    b.Property<int>("Quantity");
+
+                    b.HasKey("CustomLunchItemId");
+
+                    b.HasIndex("LunchCustomLunchId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CustomLunchItems");
+                });
+
             modelBuilder.Entity("RepoWebShop.Models.DeliveryAddress", b =>
                 {
                     b.Property<int>("DeliveryAddressId")
@@ -347,58 +386,6 @@ namespace RepoWebShop.Migrations
                     b.HasKey("GalleryFlickrAlbumId");
 
                     b.ToTable("GalleryFlickrAlbums");
-                });
-
-            modelBuilder.Entity("RepoWebShop.Models.Lunch", b =>
-                {
-                    b.Property<int>("LunchId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Comments");
-
-                    b.HasKey("LunchId");
-
-                    b.ToTable("Lunch");
-                });
-
-            modelBuilder.Entity("RepoWebShop.Models.LunchItem", b =>
-                {
-                    b.Property<int>("LunchItemId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("LunchId");
-
-                    b.Property<int?>("ProductId");
-
-                    b.Property<int>("Quantity");
-
-                    b.HasKey("LunchItemId");
-
-                    b.HasIndex("LunchId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("LunchItems");
-                });
-
-            modelBuilder.Entity("RepoWebShop.Models.LunchMiscellaneous", b =>
-                {
-                    b.Property<int>("LunchMiscellaneousId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Description");
-
-                    b.Property<int?>("LunchId");
-
-                    b.Property<decimal>("Price");
-
-                    b.Property<int>("Quantity");
-
-                    b.HasKey("LunchMiscellaneousId");
-
-                    b.HasIndex("LunchId");
-
-                    b.ToTable("LunchMiscellanea");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.OpenHours", b =>
@@ -784,13 +771,35 @@ namespace RepoWebShop.Migrations
 
                     b.Property<string>("BookingId");
 
-                    b.Property<int?>("LunchId");
+                    b.Property<string>("Comments");
+
+                    b.Property<string>("MiscellaneousDescription");
+
+                    b.Property<decimal>("MiscellaneousPrice");
 
                     b.HasKey("ShoppingCartLunchId");
 
-                    b.HasIndex("LunchId");
-
                     b.ToTable("ShoppingCartLunch");
+                });
+
+            modelBuilder.Entity("RepoWebShop.Models.ShoppingCartLunchItem", b =>
+                {
+                    b.Property<int>("ShoppingCartLunchItemId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("LunchShoppingCartLunchId");
+
+                    b.Property<int?>("ProductId");
+
+                    b.Property<int>("Quantity");
+
+                    b.HasKey("ShoppingCartLunchItemId");
+
+                    b.HasIndex("LunchShoppingCartLunchId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ShoppingCartLunchItems");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.Vacation", b =>
@@ -852,29 +861,22 @@ namespace RepoWebShop.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("RepoWebShop.Models.DeliveryAddress", b =>
+            modelBuilder.Entity("RepoWebShop.Models.CustomLunchItem", b =>
                 {
-                    b.HasOne("RepoWebShop.Models.ApplicationUser", "User")
-                        .WithMany("DeliveryAddresses")
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("RepoWebShop.Models.LunchItem", b =>
-                {
-                    b.HasOne("RepoWebShop.Models.Lunch", "Lunch")
+                    b.HasOne("RepoWebShop.Models.CustomLunch", "Lunch")
                         .WithMany("Items")
-                        .HasForeignKey("LunchId");
+                        .HasForeignKey("LunchCustomLunchId");
 
                     b.HasOne("RepoWebShop.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId");
                 });
 
-            modelBuilder.Entity("RepoWebShop.Models.LunchMiscellaneous", b =>
+            modelBuilder.Entity("RepoWebShop.Models.DeliveryAddress", b =>
                 {
-                    b.HasOne("RepoWebShop.Models.Lunch", "Lunch")
-                        .WithMany("Miscellanea")
-                        .HasForeignKey("LunchId");
+                    b.HasOne("RepoWebShop.Models.ApplicationUser", "User")
+                        .WithMany("DeliveryAddresses")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.Order", b =>
@@ -954,11 +956,15 @@ namespace RepoWebShop.Migrations
                         .HasForeignKey("PieId");
                 });
 
-            modelBuilder.Entity("RepoWebShop.Models.ShoppingCartLunch", b =>
+            modelBuilder.Entity("RepoWebShop.Models.ShoppingCartLunchItem", b =>
                 {
-                    b.HasOne("RepoWebShop.Models.Lunch", "Lunch")
+                    b.HasOne("RepoWebShop.Models.ShoppingCartLunch", "Lunch")
+                        .WithMany("Items")
+                        .HasForeignKey("LunchShoppingCartLunchId");
+
+                    b.HasOne("RepoWebShop.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("LunchId");
+                        .HasForeignKey("ProductId");
                 });
 #pragma warning restore 612, 618
         }

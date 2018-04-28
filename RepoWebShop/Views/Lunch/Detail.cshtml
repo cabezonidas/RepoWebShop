@@ -1,0 +1,73 @@
+﻿@model Lunch
+@inject ILunchRepository _lunchRepository
+
+<div class="container">
+    <br />
+    <div class="row text-center" style="border-top-left-radius: 5px; border-top-right-radius: 5px; max-width: 600px; margin: auto; background-color: #883636; color:papayawhip">
+        <br />
+            <img style="max-width:50%;" src="~/Pictures/LogoRepo.png" />
+            <h2>Servicio de Catering</h2>
+        <div class="col-xs-6 col-sm-8 col-md-8 col-lg-8 text-left">
+        </div>
+
+        <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4 text-center">
+            <div >
+            </div>
+        </div>
+
+        <br />
+    </div>
+    @{
+        foreach (var item in Model.Items)
+        {
+            <div class="row" style="max-width: 600px; margin: auto; padding: 10px; background-color: papayawhip;">
+                <div>
+                    <div class="col-xs-6 col-sm-8 col-md-8 col-lg-8 text-left">
+                        <div style="font-size: large" class="text-capitalize">@item.Product.Name </div>
+                        <div>
+                            @{
+                                var quantity = item.Product.MinOrderAmount * item.Quantity;
+                                var quantityLable = " unidad" + (quantity > 1 ? "es" : "");
+                            }
+                            <span class="text-capitalize">@Html.Raw(quantity + quantityLable)</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+                        <div style="font-size: x-large; color:#883636" class=" text-right itemprice">@Html.Raw((item.Product.MinOrderAmount * item.Quantity * item.Product.Price).ToString("c"))</div>
+                        <div class=" text-right">@item.Product.Price.ToString("c")  c/u</div>
+                    </div>
+                </div>
+            </div>
+        }
+        foreach (var item in Model.Miscellanea)
+        {
+            <div class="row" style="max-width: 600px; margin: auto; padding: 10px; background-color: papayawhip;">
+                <div>
+                    <div class="col-xs-6 col-sm-8 col-md-8 col-lg-8 text-left">
+                        <div style="font-size: large" class="text-capitalize">@item.Description </div>
+                        <div>
+                            @{
+                                var quantity = item.Quantity;
+                                var quantityLable = " unidad" + (quantity > 1 ? "es" : "");
+                            }
+                            <span class="text-capitalize">@Html.Raw(quantity + quantityLable)</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+                        <div style="font-size: x-large; color:#883636" class=" text-right itemprice">@Html.Raw((item.Quantity * item.Price).ToString("c"))</div>
+                        <div class=" text-right">@item.Price.ToString("c")  c/u</div>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="row " style="padding: 10px; border-bottom-left-radius:5px; border-bottom-right-radius:5px; max-width: 600px; margin: auto; background-color: #883636; color:papayawhip">
+            <div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+                    <h2>Total @Html.Raw(_lunchRepository.GetTotal(Model).ToString("c"))</h2>
+                    <br />
+
+                </div>
+            </div>
+        </div>
+    }
+</div>

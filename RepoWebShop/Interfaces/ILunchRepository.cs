@@ -8,14 +8,24 @@ namespace RepoWebShop.Interfaces
 {
     public interface ILunchRepository
     {
-        ShoppingCartLunch GetLunch(string bookingId);
-        decimal GetCost(string bookingId);
-        int GetBites(string bookingId);
-        void AddMiscellaneous(string bookingId, string desc, decimal price);
-        void RemoveMiscellaneous(string bookingId);
-        ShoppingCartLunchItem AddItemInstance(string bookingId, int productId);
-        ShoppingCartLunchItem RemoveItemInstance(string bookingId, int productId);
-        ShoppingCartLunchItem RemoveItem(string bookingId, int productId);
-        ShoppingCartLunchItem AddItem(string bookingId, int productId);
+        int GetBites(Lunch lunch);
+        int GetConvitees(Lunch lunch);
+        decimal GetTotal(Lunch lunch);
+
+        ShoppingCartLunch GetSessionLunch(string bookingId = null);
+        int SaveLunch();
+        Lunch GetLunch(int id);
+
+        LunchItem AddItemInstance(int lunchId, int productId);
+        LunchItem RemoveItemInstance(int lunchId, int productId);
+        LunchItem RemoveItem(int lunchId, int productId);
+        LunchItem AddItem(int lunchId, int productId);
+
+        LunchMiscellaneous AddMiscellaneous(int lunchId, string description, decimal price);
+        IEnumerable<Lunch> GetAllLunches();
+        LunchMiscellaneous AddMiscellaneousInstance(int lunchId, int miscellaneousId);
+        LunchMiscellaneous RemoveMiscellaneousInstance(int lunchId, int miscellaneousId);
+        void RemoveMiscellaneous(int lunchId, int miscellaneousId);
+        LunchMiscellaneous GetMiscellaneous(int id);
     }
 }

@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180427040407_lunch3")]
+    partial class lunch3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -872,7 +873,7 @@ namespace RepoWebShop.Migrations
 
             modelBuilder.Entity("RepoWebShop.Models.LunchMiscellaneous", b =>
                 {
-                    b.HasOne("RepoWebShop.Models.Lunch", "Lunch")
+                    b.HasOne("RepoWebShop.Models.Lunch")
                         .WithMany("Miscellanea")
                         .HasForeignKey("LunchId");
                 });

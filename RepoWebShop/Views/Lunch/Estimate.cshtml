@@ -1,7 +1,7 @@
-﻿@model ShoppingCartLunch
+﻿@model Lunch
 
 <style>
-    .fa, .remove:hover{
+    .handy:hover {
         cursor: pointer;
     }
     div.selecteItem{
@@ -12,18 +12,22 @@
     }
 </style>
 
-<div class="container text-center" >
+<div class="container text-center">
     <br />
-    <div class="row" style="max-width: 500px; margin: auto; background-color: #883636; color:papayawhip">
+    <div class="row" style="border-top-left-radius: 5px; border-top-right-radius: 5px; max-width: 500px; margin: auto; background-color: #883636; color:papayawhip">
         <h2>Presupuesto</h2>
     </div>
 
     <div id="lunchbox">
-        @if(Model != null && Model.Items != null)
+        @if (Model != null && Model.Items != null)
         {
-            foreach(var item in Model.Items)
+            foreach (var item in Model.Items)
             {
                 @Html.Partial("~/Views/Lunch/ItemDetail.cshtml", item)
+            }
+            foreach (var item in Model.Miscellanea)
+            {
+                @Html.Partial("~/Views/Lunch/MiscellaneousDetail.cshtml", item)
             }
         }
     </div>
@@ -31,41 +35,49 @@
     <div class="row" style="max-width: 500px; margin: auto;background-color: papayawhip; ">
         <div class="selecteItem">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-left">
-                <div>Agregar</div>
+                <div>Buscar</div>
                 <div style="max-width: 500px; margin: auto">
                     <select name="state" id="items"></select>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="row " style="max-width: 500px; margin: auto; background-color: #883636; color:papayawhip">
-        <div class="selecteItem">
+    </div>    
+    
+    <div class="row" style="max-width: 500px; margin: auto;background-color: papayawhip; ">
+        <div class="">
             <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-left">
-                <div>Bocados: 36</div>
-                <div>Invitados: 3/4 personas</div>
+                <div>Agregar Manual</div>
+                <input type="text" class="form-control" id="miscDesc" placeholder="Torta de 1 kg..." />
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-right">
-                <h4>Total $384</h4>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-left">
+                <div>Precio $</div>
+                <input type="number" class="form-control" id="miscPrice" placeholder="300" />
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
+                <span style="margin:auto;" class="handy" onclick="addMiscellaneous()">Agregar</span>
             </div>
         </div>
-
-
     </div>
-
-    <div class="row" style="max-width: 500px; margin: auto; ">
+    <div class="row" style="max-width: 500px; margin: auto;background-color: papayawhip;  ">
         <div class="selecteItem">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-left">
-                <a class="btn btn-primary">Guardar</a>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+                <a class="btn btn-primary" onclick="save()">Guardar</a>
             </div>
         </div>
+        <br />
     </div>
-    <br />
+
+    <div id="totals">
+        @Html.Partial("~/Views/Lunch/LunchTotals.cshtml", Model)
+    </div>
+
 </div>
 
 <script>
-    $.get('/api/LunchData/GetProducts/').then((data) => {
-        initializeSelector(data);
+    $(document).ready(() => {
+        $.get('/api/LunchData/GetProducts/').then((data) => {
+            initializeSelector(data);
+        });
     });
 
     function initializeSelector(data) {
@@ -98,21 +110,34 @@
         });
     };
 
-    function appendItem(id) {
-        $.post('/api/LunchData/AddProduct/' + id).then((data) => {
-            pasteItem(data, id);
-
-        }).fail(() => console.log('No se pudo traer el producto'));
+    function save() {
+        $.post('/api/LunchData/SaveLunch/').then((data) => {
+            window.location = '/Lunch/Detail/' + data;
+        });
     }
 
-    function pasteItem(data, id) {
-        if ($('#product-' + id).length > 0) {
-            $('#product-' + id).replaceWith(data);
-            $('#product-' + id).find(".itemprice").addClass("animated jackInTheBox");
+
+    function getTotals() {
+        $.get('/api/LunchData/GetTotals/').then((data) => {
+            $('#totals').empty().append(data);
+        });
+    }
+
+    function appendItem(id) {
+        $.post('/api/LunchData/AddProduct/' + id).then((data) => {
+            pasteItem('product', data, id);
+        });
+    }
+
+    function pasteItem(type, data, id) {
+        if ($('#' + type + '-' + id).length > 0) {
+            $('#' + type + '-' + id).replaceWith(data);
+            $('#' + type + '-' + id).find(".itemprice").addClass("animated jackInTheBox");
         } else {
             $('#lunchbox').append(data);
-            $('#product-' + id).find(".itemprice").addClass("animated jackInTheBox");
+            $('#' + type + '-' + id).find(".itemprice").addClass("animated jackInTheBox");
         }
+        getTotals();
     }
 
     function removeLunchItemInstance(id) {
@@ -120,7 +145,7 @@
             url: '/api/LunchData/RemoveProductInstance/' + id,
             type: 'DELETE',
             success: function (data) {
-                pasteItem(data, id);
+                pasteItem('product', data, id);
             }
         });
     }
@@ -130,7 +155,7 @@
             url: '/api/LunchData/RemoveProduct/' + id,
             type: 'DELETE',
             success: function (data) {
-                pasteItem(data, id);
+                pasteItem('product', data, id);
             }
         });
     }
@@ -140,9 +165,54 @@
             url: '/api/LunchData/AddProductInstance/' + id,
             type: 'POST',
             success: function (data) {
-                pasteItem(data, id);
+                pasteItem('product', data, id);
             }
         });
+    }
+
+    function removeMiscellaneousInstance(lunchMiscellaneousId) {
+        $.ajax({
+            url: '/api/LunchData/RemoveMiscellaneousInstance/' + lunchMiscellaneousId,
+            type: 'DELETE',
+            success: function (data) {
+                pasteItem('miscellaneous', data, lunchMiscellaneousId);
+            }
+        });
+    }
+
+    function addMiscellaneousInstance(lunchMiscellaneousId) {
+        $.ajax({
+            url: '/api/LunchData/AddMiscellaneousInstance/' + lunchMiscellaneousId,
+            type: 'POST',
+            success: function (data) {
+                pasteItem('miscellaneous', data, lunchMiscellaneousId);
+            }
+        });
+    }
+
+    function removeMiscellaneous(lunchMiscellaneousId) {
+        $.ajax({
+            url: '/api/LunchData/RemoveMiscellaneous/' + lunchMiscellaneousId,
+            type: 'DELETE',
+            success: function (data) {
+                pasteItem('miscellaneous', data, lunchMiscellaneousId);
+            }
+        });
+    }
+
+    function addMiscellaneous() {
+        $.ajax({
+            url: '/api/LunchData/AddMiscellaneous/' + $('#miscDesc').val() + '/' + $('#miscPrice').val(),
+            type: 'POST',
+            success: function (id) {
+                console.log(id);
+                $.get('/api/LunchData/GetMiscellaneous/' + id).then((data) => {
+                    pasteItem('miscellaneous', data, id);
+                    $('#miscDesc').val('');
+                    $('#miscPrice').val('');
+                });
+            }
+        });        
     }
 </script>
 
