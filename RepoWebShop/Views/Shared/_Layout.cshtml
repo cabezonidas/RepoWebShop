@@ -127,7 +127,22 @@
         </div>
     </nav>
 
+    @if(env.IsStaging() || env.IsDevelopment())
+    {
+        <style>
+            .test {
+                position: fixed;
+                left: 50px;
+                z-index: 99999999999999999999999;
+                opacity: 0.5;
+            }
+        </style>
 
+        <div class="text-center test" >
+            <span class="alert alert-danger " style="font-size: 30px;">ESTO ES TEST</span>       
+        </div>
+
+    }
 
     <script src="~/CommonJs/Formatting.js"></script>
     <script type="text/javascript">
