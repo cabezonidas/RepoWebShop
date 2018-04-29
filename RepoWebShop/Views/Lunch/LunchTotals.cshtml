@@ -17,4 +17,18 @@ else
             </div>
         </div>
     </div>
+    <script>
+    @if (_lunchRepository.GetTotal(Model) > 0)
+    {
+        <text>
+            $('.saveLunch').removeClass('hidden');
+        </text>
+    }
+    else
+    {
+        <text>
+            $('.saveLunch').addClass('hidden');
+        </text>
+    }
+    </script>
 }

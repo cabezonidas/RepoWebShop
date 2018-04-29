@@ -1,4 +1,5 @@
-﻿@model string
+﻿@model IEnumerable<Product>
+
 @section metatags {
     <title>Catering</title>
 }
@@ -13,11 +14,11 @@
         <h4>Normalmente nosotros recomendamos entre 10 y 12 bocados por adulto.</h4>
         <h4>Acercate a nuestra sucursal, o llamanos para que te podamos asesorar con un catering súper rico y novedoso.</h4>
 
-        <img src="~/Pictures/Loader.gif" id="loading" style="margin: auto;" />
+        @*<img src="~/Pictures/Loader.gif" id="loading" style="margin: auto;" />*@
     </div>
 
     <div class="container">
-        <table class="hidden" id="table">
+        <table class="" id="table">
             <thead>
                 <tr>
                     <th>
@@ -31,12 +32,29 @@
                     </th>
                 </tr>
             </thead>
-            <tbody id="tbody"></tbody>
+            <tbody id="tbody">
+                @{ 
+                    foreach(var item in Model)
+                        {
+                    <tr>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            @item.MinOrderAmount
+                        </td>
+                        <td>
+                            @item.Price.ToString("c")
+                        </td>
+                    </tr>
+                    }
+                }
+            </tbody>
         </table>
     </div>
 </div>
 <script>
-    $.ajax({
+    @*$.ajax({
         url: "https://lareposteria.sharepoint.com/_api/Web/Lists(guid'b10fac5f-d656-49ca-bb9a-589b9362bb94')/items?$select=Title,Precio,CantidadMinima&$filter=Categoria eq 'Lunch'&$orderby=Title asc",
         headers: { "Authorization": "Bearer " + '@Model', "Accept": "application/json;odata=verbose"}
     }).done(function (data) {
@@ -58,5 +76,13 @@
         });
         $('#loading').addClass('hidden');
         $('#table').removeClass('hidden');
+    });*@
+    $('#table').DataTable({
+        pageLength: 50,
+        searching: false,
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": true,
+        "bInfo": false,
     });
 </script>

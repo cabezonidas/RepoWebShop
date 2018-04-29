@@ -26,6 +26,25 @@ namespace RepoWebShop.Controllers
             return View(lunches);
         }
 
+
+
+        [HttpGet]
+        [Route("[controller]/CopyLunch/{id}")]
+        public IActionResult CopyLunch(int id)
+        {
+            _lunchRepository.CopyLunch(id);
+            return RedirectToAction("Estimate");
+        }
+
+
+        [HttpGet]
+        [Route("[controller]/ModifyLunch/{id}")]
+        public IActionResult ModifyLunch(int id)
+        {
+            _lunchRepository.ModifyLunch(id);
+            return RedirectToAction("Estimate");
+        }
+
         public IActionResult Estimate()
         {
             var result = _lunchRepository.GetSessionLunch().Lunch;

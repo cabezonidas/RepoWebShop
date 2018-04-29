@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Net;
 
 namespace RepoWebShop.Controllers
 {
@@ -103,6 +101,7 @@ namespace RepoWebShop.Controllers
         [Route("AddMiscellaneous/{description}/{price}")]
         public IActionResult AddMiscellaneous(string description, decimal price)
         {
+            description = description.Replace("__", "/");
             var lunch = _lunchRepository.GetSessionLunch();
             var result = _lunchRepository.AddMiscellaneous(lunch.Lunch.LunchId, description, price);
             return Ok(result.LunchMiscellaneousId);

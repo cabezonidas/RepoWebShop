@@ -1,4 +1,5 @@
-﻿@model string
+﻿@model IEnumerable<Product>
+
 @section metatags {
     <title>Catálogo Completo</title>
 }
@@ -10,11 +11,11 @@
     <div class="text-center">
         <h4>Además de lo que vendemos por internet, en sucursal podés encontrar cualquiera de los siguientes productos.</h4>
         <h4>Si querés alguno en particular, contactate con nosotros, y lo hacemos.</h4>
-        <img src="~/Pictures/Loader.gif" id="loading" style="margin: auto;" />
+        @*<img src="~/Pictures/Loader.gif" id="loading" style="margin: auto;" />*@
     </div>
 
     <div class="container">
-        <table class="hidden" id="table">
+        <table class="" id="table">
             <thead>
                 <tr>
                     <th>
@@ -28,12 +29,29 @@
                     </th>
                 </tr>
             </thead>
-            <tbody id="tbody"></tbody>
+            <tbody id="tbody">
+                @{
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Category
+                </td>
+                <td>
+                    @item.Price.ToString("c")
+                </td>
+            </tr>
+}
+                }
+            </tbody>
         </table>
     </div>
 </div>
 <script>
-    $.ajax({
+    @*$.ajax({
         url: "https://lareposteria.sharepoint.com/_api/Web/Lists(guid'b10fac5f-d656-49ca-bb9a-589b9362bb94')/items?$select=Title,Precio,Categoria,Temperatura&$filter=Categoria ne 'Lunch'&$orderby=Title asc&$top=500",
         headers: { "Authorization": "Bearer " + '@Model', "Accept": "application/json;odata=verbose"}
     }).done(function (data) {
@@ -58,5 +76,16 @@
         });
         $('#loading').addClass('hidden');
         $('#table').removeClass('hidden');
+    });*@
+    $('#table').DataTable({
+        pageLength: 50,
+        searching: false,
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": true,
+        "bInfo": false,
+        language: {
+            searchPlaceholder: "Buscar..."
+        }
     });
 </script>

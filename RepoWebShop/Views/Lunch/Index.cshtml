@@ -5,6 +5,9 @@
     th, td {
         text-align: center;
     }
+    .handy:hover {
+        cursor: pointer;
+    }
 </style>
 
 <div class="container">
@@ -47,10 +50,10 @@
                             <a asp-controller="Lunch" asp-action="Detail" asp-route-id="@lunch.LunchId">Ver</a>
                         </td>
                         <td>
-                            <a href="#">Modificar</a>
+                            <span class="handy" onclick="copy(@lunch.LunchId)">Crear Similar</span>
                         </td>
                         <td>
-                            <a href="#">Crear similar</a>
+                            <span class="handy" onclick="modify(@lunch.LunchId)">Modificar</span>
                         </td>
                     </tr>
                 }
@@ -58,3 +61,11 @@
         </tbody>
     </table>
 </div>
+<script>
+    function copy(id) {
+        window.location = '/Lunch/CopyLunch/' + id;
+    }
+    function modify(id) {
+        window.location = '/Lunch/ModifyLunch/' + id;
+    }
+</script>

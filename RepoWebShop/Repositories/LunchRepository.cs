@@ -141,6 +141,10 @@ namespace RepoWebShop.Repositories
             ShoppingCartLunch lunch = GetSessionLunch();
             var result = lunch.Lunch.LunchId;
             _appDbContext.ShoppingCartLunch.Remove(lunch);
+            if(GetTotal(lunch.Lunch) == 0)
+            {
+                _appDbContext.Lunch.Remove(lunch.Lunch);
+            }
             _appDbContext.SaveChanges();
             return result;
         }
@@ -220,7 +224,33 @@ namespace RepoWebShop.Repositories
             return _appDbContext.Lunch
                 .Include(x => x.Miscellanea)
                 .Include(x => x.Items)
-                .ThenInclude(x => x.Product).OrderByDescending(x => x.LunchId).ToList();
+                .ThenInclude(x => x.Product).OrderByDescending(x => x.LunchId)
+                .ToList().Where(x => GetTotal(x) > 0);
+        }
+
+        public void CopyLunch(int id)
+        {
+            SaveLunch();
+            var lunch = GetLunch(id);
+            var newSessionLunch = GetSessionLunch();
+            var items = lunch.Items.Select(x => new LunchItem { Lunch = newSessionLunch.Lunch, Product = x.Product, Quantity = x.Quantity }).ToList();
+            var miscellanea = lunch.Miscellanea.Select(x => new LunchMiscellaneous { Lunch = newSessionLunch.Lunch, Description = x.Description, Price = x.Price, Quantity = x.Quantity }).ToList();
+            _appDbContext.LunchItems.AddRange(items);
+            _appDbContext.LunchMiscellanea.AddRange(miscellanea);
+            _appDbContext.SaveChanges();
+        }
+
+        public void ModifyLunch(int id)
+        {
+            SaveLunch();
+            var lunch = GetLunch(id);
+            var result = new ShoppingCartLunch
+            {
+                BookingId = _cartRepository.GetSessionCartId(),
+                Lunch = lunch
+            };
+            _appDbContext.ShoppingCartLunch.Add(result);
+            _appDbContext.SaveChanges();
         }
     }
 }

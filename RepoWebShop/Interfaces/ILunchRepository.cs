@@ -25,6 +25,8 @@ namespace RepoWebShop.Interfaces
         IEnumerable<Lunch> GetAllLunches();
         LunchMiscellaneous AddMiscellaneousInstance(int lunchId, int miscellaneousId);
         LunchMiscellaneous RemoveMiscellaneousInstance(int lunchId, int miscellaneousId);
+        void CopyLunch(int id);
+        void ModifyLunch(int id);
         void RemoveMiscellaneous(int lunchId, int miscellaneousId);
         LunchMiscellaneous GetMiscellaneous(int id);
     }

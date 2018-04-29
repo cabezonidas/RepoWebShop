@@ -1,4 +1,5 @@
 ﻿@model Lunch
+@inject ILunchRepository _lunchRepository
 
 <style>
     .handy:hover {
@@ -41,8 +42,8 @@
                 </div>
             </div>
         </div>
-    </div>    
-    
+    </div>
+
     <div class="row" style="max-width: 500px; margin: auto;background-color: papayawhip; ">
         <div class="">
             <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-left">
@@ -58,7 +59,8 @@
             </div>
         </div>
     </div>
-    <div class="row" style="max-width: 500px; margin: auto;background-color: papayawhip;  ">
+    @{var hidden = _lunchRepository.GetTotal(Model) > 0 ? "" : "hidden";}
+    <div class="row @hidden saveLunch" style="max-width: 500px; margin: auto;background-color: papayawhip;  ">
         <div class="selecteItem">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
                 <a class="btn btn-primary" onclick="save()">Guardar</a>
@@ -121,6 +123,7 @@
         $.get('/api/LunchData/GetTotals/').then((data) => {
             $('#totals').empty().append(data);
         });
+
     }
 
     function appendItem(id) {
@@ -202,10 +205,9 @@
 
     function addMiscellaneous() {
         $.ajax({
-            url: '/api/LunchData/AddMiscellaneous/' + $('#miscDesc').val() + '/' + $('#miscPrice').val(),
+            url: '/api/LunchData/AddMiscellaneous/' + ($('#miscDesc').val()).replace("/", "__") + '/' + $('#miscPrice').val(),
             type: 'POST',
             success: function (id) {
-                console.log(id);
                 $.get('/api/LunchData/GetMiscellaneous/' + id).then((data) => {
                     pasteItem('miscellaneous', data, id);
                     $('#miscDesc').val('');

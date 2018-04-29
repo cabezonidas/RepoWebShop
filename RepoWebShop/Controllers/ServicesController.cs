@@ -18,14 +18,16 @@ namespace RepoWebShop.Controllers
     public class ServicesController : Controller
     {
         private readonly IGalleryRepository _photosRepository;
+        private readonly AppDbContext _appDbContext;
         private readonly IFlickrRepository _photosetAlbums;
         private readonly IConfiguration _config;
 
-        public ServicesController(IGalleryRepository photosRepository, IFlickrRepository photosetAlbums, IConfiguration config)
+        public ServicesController(AppDbContext appDbContext, IGalleryRepository photosRepository, IFlickrRepository photosetAlbums, IConfiguration config)
         {
             _config = config;
             _photosRepository = photosRepository;
             _photosetAlbums = photosetAlbums;
+            _appDbContext = appDbContext;
         }
 
 
@@ -73,17 +75,15 @@ namespace RepoWebShop.Controllers
             //var requestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
             //requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", access_token);
             //requestMessage.Headers.Add("Accept", "application/json;odata=verbose");
-            
 
             //var result = await new HttpClient().SendAsync(requestMessage);
-
             //var body = await result.Content.ReadAsStreamAsync();
-
             //var Response = (new JsonSerializer().Deserialize<Object>((new JsonTextReader(new StreamReader(body)))));
+            //return View("Catering", access_token);
 
+            var result = _appDbContext.Products.Where(x => x.IsActive && x.Category.ToLower().Trim() == "lunch").ToList();
 
-
-            return View("Catering", access_token);
+            return View("Catering", result);
         }
 
         public ViewResult SpecialCakes()
@@ -93,8 +93,11 @@ namespace RepoWebShop.Controllers
 
         public async Task<ViewResult> FullCatalog()
         {
-            var access_token = await GetSharePointAccessTokenAsync();
-            return View("FullCatalog", access_token);
+            //var access_token = await GetSharePointAccessTokenAsync();
+            //return View("FullCatalog", access_token);
+
+            var result = _appDbContext.Products.Where(x => x.IsActive && x.Category.ToLower().Trim() != "lunch").ToList();
+            return View("FullCatalog", result);
         }
 
         public ViewResult SweetTable()

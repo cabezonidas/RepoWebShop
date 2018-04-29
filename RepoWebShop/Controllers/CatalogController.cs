@@ -69,7 +69,7 @@ namespace RepoWebShop.Controllers
             var vm = new InflationEstimateViewModel
             {
                 Products = _catalogRepo.InflationEstimate(percentage, roundTo),
-                Inflation = 10,
+                Inflation = percentage,
                 RoundTo = roundTo
             };
             return View(vm);
