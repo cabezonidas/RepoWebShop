@@ -15,6 +15,7 @@
                 <th>Categoría</th>
                 <th>Temperatura</th>
                 <th>Cantidad Mínima</th>
+                <th>Bocados</th>
                 <th></th>
             </tr>
         </thead>
@@ -23,38 +24,41 @@
                 {
                     var showDelete = prod.IsActive ? "" : "hidden";
                     var showRestore = prod.IsActive ? "hidden" : "";
-                    <tr>
-                        <td>
-                            <a href="/Catalog/Edit/@prod.ProductId">
-                                @prod.Name
-                            </a>
-                            
-                            <div id="state-@prod.ProductId" class="text-muted">
-                                @if(!prod.IsActive)
-                                { <div>Inactivo</div> }
-                            </div>
-                        </td>
-                        <td>
-                            @prod.Price.ToString("c")
-                            @if (prod.OldPrice.HasValue)
-                            {
-                                <div style="font-size:smaller; text-decoration: line-through">@prod.OldPrice.Value.ToString("c")</div>
-                            }
-                        </td>
-                        <td>
-                            @prod.Category
-                        </td>
-                        <td>
-                            @prod.Temperature
-                        </td>
-                        <td>
-                            @prod.MinOrderAmount
-                        </td>
-                        <td>
-                            <input id="delete-@prod.ProductId" type="submit" class="btn btn-danger @showDelete" value="Eliminar" onclick="deleteProduct(@prod.ProductId)" />
-                            <input id="restore-@prod.ProductId" type="submit" class="btn btn-success @showRestore" value="Restaurar" onclick="restoreProduct(@prod.ProductId)" />
-                        </td>
-                    </tr>
+            <tr>
+                <td>
+                    <a href="/Catalog/Edit/@prod.ProductId">
+                        @prod.Name
+                    </a>
+
+                    <div id="state-@prod.ProductId" class="text-muted">
+                        @if (!prod.IsActive)
+            {<div>Inactivo</div>}
+                    </div>
+                </td>
+                <td>
+                    @prod.Price.ToString("c")
+                    @if (prod.OldPrice.HasValue)
+        {
+            <div style="font-size:smaller; text-decoration: line-through">@prod.OldPrice.Value.ToString("c")</div>
+}
+                </td>
+                <td>
+                    @prod.Category
+                </td>
+                <td>
+                    @prod.Temperature
+                </td>
+                <td>
+                    @prod.MinOrderAmount
+                </td>
+                <td>
+                    @prod.Portions
+                </td>
+                <td>
+                    <input id="delete-@prod.ProductId" type="submit" class="btn btn-danger @showDelete" value="Eliminar" onclick="deleteProduct(@prod.ProductId)" />
+                    <input id="restore-@prod.ProductId" type="submit" class="btn btn-success @showRestore" value="Restaurar" onclick="restoreProduct(@prod.ProductId)" />
+                </td>
+            </tr>
                 }
             }
         </tbody>

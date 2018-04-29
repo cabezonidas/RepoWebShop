@@ -32,6 +32,10 @@ namespace RepoWebShop.Models
         [Range(1, int.MaxValue)]
         public int MinOrderAmount { get; set; }
 
+        [Display(Name = "Bocados por unidad")]
+        [Range(1, int.MaxValue)]
+        public int? Portions { get; set; }
+
         public bool IsActive { get; set; }
     }
 }
