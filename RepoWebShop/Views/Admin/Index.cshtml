@@ -13,82 +13,96 @@
 
 <div class="container">
     <h2 class="text-center">Tareas administrativas</h2>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <table >
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="2" class=""><h4>Pedidos por internet</h4></td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Order" asp-action="InProgress" class="btn btn-primary action" style="margin: 5px;">Pedidos</a></td>
+                        <td class="text-muted description">Ver pedidos en proceso, o históricos.</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class=""><h4>Productos Online</h4></td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Admin" asp-action="AllProducts" class="btn btn-primary action" style="margin: 5px;">Productos</a></td>
+                        <td class="text-muted description">Administrar productos que se venden por internet. Crear nuevos, modificar, editar (cambiar precio individual / título / descripción) o borrar.</td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Admin" asp-action="Prices" class="btn btn-primary action" style="margin: 5px;">Precios</a></td>
+                        <td class="text-muted description">Modificar precios online de manera conjunta.</td>
+                    </tr>
 
-    <table style="max-width:600px; margin: auto;">
-        <thead>
-            <tr>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td colspan="2" class=""><h4>Pedidos por internet</h4></td>
-            </tr>
-            <tr>
-                <td><a asp-controller="Order" asp-action="InProgress" class="btn btn-primary action" style="margin: 5px;">Pedidos</a></td>
-                <td class="text-muted description">Ver pedidos en proceso, o históricos.</td>
-            </tr>
-            <tr>
-                <td colspan="2" class=""><h4>Productos Online</h4></td>
-            </tr>
-            <tr>
-                <td><a asp-controller="Admin" asp-action="AllProducts" class="btn btn-primary action" style="margin: 5px;">Productos</a></td>
-                <td class="text-muted description">Administrar productos que se venden por internet. Crear nuevos, modificar, editar (cambiar precio individual / título / descripción) o borrar.</td>
-            </tr>
-            <tr>
-                <td><a asp-controller="Admin" asp-action="Prices" class="btn btn-primary action" style="margin: 5px;">Precios</a></td>
-                <td class="text-muted description">Modificar precios online de manera conjunta.</td>
-            </tr>
+                    <tr>
+                        <td colspan="2" class=""><h4>Herramientas</h4></td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Discounts" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Descuentos</a></td>
+                        <td class="text-muted description">Herramienta para crear descuentos personalizados, por día, fecha, usuario, etc..</td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Lunch" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Lunch</a></td>
+                        <td class="text-muted description">Crear presupuestos de servicio de catering.</td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Catalog" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Catálogo</a></td>
+                        <td class="text-muted description">Administrar catálogo de productos y precios por inflación.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <table >
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="2" class=""><h4>Configuración</h4></td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Calendar" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Horarios</a></td>
+                        <td class="text-muted description">Administrar horarios de producción y de atención al público.</td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Calendar" asp-action="SpecialDates" class="btn btn-primary action" style="margin: 5px;">Feriados</a></td>
+                        <td class="text-muted description">Gestionar feriados, vacaciones y horarios de atención y producción especiales.</td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Admin" asp-action="Galleries" class="btn btn-primary action" style="margin: 5px;">Fotos</a></td>
+                        <td class="text-muted description">Administrar galería de fotos.</td>
+                    </tr>
 
-            <tr>
-                <td colspan="2" class=""><h4>Herramientas</h4></td>
-            </tr>
-            <tr>
-                <td><a asp-controller="Discounts" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Descuentos</a></td>
-                <td class="text-muted description">Herramienta para crear descuentos personalizados, por día, fecha, usuario, etc..</td>
-            </tr>
-            <tr>
-                <td><a asp-controller="Lunch" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Lunch</a></td>
-                <td class="text-muted description">Crear presupuestos de servicio de catering.</td>
-            </tr>
-            <tr>
-                <td><a asp-controller="Catalog" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Catálogo</a></td>
-                <td class="text-muted description">Administrar catálogo de productos y precios por inflación.</td>
-            </tr>
+                    <tr>
+                        <td colspan="2" class=""><h4>Información</h4></td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Payment" asp-action="Payments" class="btn btn-primary action" style="margin: 5px;">Pagos</a></td>
+                        <td class="text-muted description">Ver historial de pagos a través de MercadoPago.</td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Users" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Usuarios</a></td>
+                        <td class="text-muted description">Ver interacción de compras y reservas de usuarios registrados.</td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Stats" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Estadísticas</a></td>
+                        <td class="text-muted description">Ver datos estadísticos de compras y reservas.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-            <tr>
-                <td colspan="2" class=""><h4>Configuración</h4></td>
-            </tr>
-            <tr>
-                <td><a asp-controller="Calendar" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Horarios</a></td>
-                <td class="text-muted description">Administrar horarios de producción y de atención al público.</td>
-            </tr>
-            <tr>
-                <td><a asp-controller="Calendar" asp-action="SpecialDates" class="btn btn-primary action" style="margin: 5px;">Feriados</a></td>
-                <td class="text-muted description">Gestionar feriados, vacaciones y horarios de atención y producción especiales.</td>
-            </tr>
-            <tr>
-                <td><a asp-controller="Admin" asp-action="Galleries" class="btn btn-primary action" style="margin: 5px;">Fotos</a></td>
-                <td class="text-muted description">Administrar galería de fotos.</td>
-            </tr>
-
-            <tr>
-                <td colspan="2" class=""><h4>Información</h4></td>
-            </tr>
-            <tr>
-                <td><a asp-controller="Payment" asp-action="Payments" class="btn btn-primary action" style="margin: 5px;">Pagos</a></td>
-                <td class="text-muted description">Ver historial de pagos a través de MercadoPago.</td>
-            </tr>
-            <tr>
-                <td><a asp-controller="Users" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Usuarios</a></td>
-                <td class="text-muted description">Ver interacción de compras y reservas de usuarios registrados.</td>
-            </tr>
-            <tr>
-                <td><a asp-controller="Stats" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Estadísticas</a></td>
-                <td class="text-muted description">Ver datos estadísticos de compras y reservas.</td>
-            </tr>
-
-        </tbody>
-    </table>
 </div>

@@ -16,6 +16,7 @@
                 <th>Temperatura</th>
                 <th>Cantidad Mínima</th>
                 <th>Bocados</th>
+                <th>Preparación (hs)</th>
                 <th></th>
             </tr>
         </thead>
@@ -53,6 +54,9 @@
                 </td>
                 <td>
                     @prod.Portions
+                </td>
+                <td>
+                    @prod.PreparationTime
                 </td>
                 <td>
                     <input id="delete-@prod.ProductId" type="submit" class="btn btn-danger @showDelete" value="Eliminar" onclick="deleteProduct(@prod.ProductId)" />

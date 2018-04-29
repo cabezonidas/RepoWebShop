@@ -34,7 +34,17 @@ namespace RepoWebShop.Models
 
         [Display(Name = "Bocados por unidad")]
         [Range(1, int.MaxValue)]
-        public int? Portions { get; set; }
+        [Required]
+        public int Portions { get; set; }
+
+        [Display(Name = "Tiempo de preparación")]
+        [Range(1, int.MaxValue)]
+        [Required]
+        public int PreparationTime { get; set; }
+
+        [Display(Name = "Descripción")]
+        [Required]
+        public string Description { get; set; }
 
         public bool IsActive { get; set; }
     }

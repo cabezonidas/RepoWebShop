@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180429062750_productbites")]
+    partial class productbites
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -671,9 +672,6 @@ namespace RepoWebShop.Migrations
                     b.Property<string>("Category")
                         .IsRequired();
 
-                    b.Property<string>("Description")
-                        .IsRequired();
-
                     b.Property<bool>("IsActive");
 
                     b.Property<int>("MinOrderAmount");
@@ -683,9 +681,7 @@ namespace RepoWebShop.Migrations
 
                     b.Property<decimal?>("OldPrice");
 
-                    b.Property<int>("Portions");
-
-                    b.Property<int>("PreparationTime");
+                    b.Property<int?>("Portions");
 
                     b.Property<decimal>("Price");
 
