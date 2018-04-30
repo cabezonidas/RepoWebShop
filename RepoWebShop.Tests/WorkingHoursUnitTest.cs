@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoWebShop.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RepoWebShop.Tests
 {
@@ -10,6 +11,73 @@ namespace RepoWebShop.Tests
     {        
         public WorkingHoursUnitTest()
         {
+        }
+
+        [TestMethod]
+        public void GetOpenSlots()
+        {
+            var _openHours = new List<OpenHours>()
+            {
+                new OpenHours() { DayId = 2, StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(4, 0, 0) },
+                new OpenHours() { DayId = 2, StartingAt = new TimeSpan(16, 00, 0), Duration = new TimeSpan(4, 0, 0) },
+                new OpenHours() { DayId = 3, StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(4, 0, 0) },
+                new OpenHours() { DayId = 3, StartingAt = new TimeSpan(16, 00, 0), Duration = new TimeSpan(4, 0, 0) },
+                new OpenHours() { DayId = 4, StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(4, 0, 0) },
+                new OpenHours() { DayId = 4, StartingAt = new TimeSpan(16, 00, 0), Duration = new TimeSpan(4, 0, 0) },
+                new OpenHours() { DayId = 5, StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(4, 0, 0) },
+                new OpenHours() { DayId = 5, StartingAt = new TimeSpan(16, 00, 0), Duration = new TimeSpan(4, 0, 0) },
+                new OpenHours() { DayId = 6, StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(11, 30, 0) },
+                new OpenHours() { DayId = 0, StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(4, 30, 0) }
+            };
+
+            List<PublicHoliday> _publicHolidays = new List<PublicHoliday>()
+            {
+                new PublicHoliday() {
+                    Date = new DateTime(2018, 5, 1), //Martes
+                    OpenHours = new OpenHours()
+                    {
+                        StartingAt = new TimeSpan(8, 0, 0),
+                        Duration = new TimeSpan(4, 0, 0)
+                    },
+                    ProcessingHours = new ProcessingHours()
+                    {
+                        StartingAt = new TimeSpan(6, 0, 0),
+                        Duration = new TimeSpan(4, 0, 0)
+                    }
+                }
+            };
+
+            List<Vacation> _vacations = new List<Vacation>()
+            {
+                new Vacation() {
+                    StartDate = new DateTime(2018, 5, 3), //mierc
+                    EndDate = new DateTime(2018, 5, 4) //lunes
+                }
+            };
+
+            var today = new DateTime(2018, 4, 28, 18, 45, 0);
+
+            var result = WorkingHours.GetOpenSlots(today, _openHours, _publicHolidays, _vacations);
+
+            var asserts = result.ToArray();
+
+            Assert.IsTrue(asserts[0].Key == new DateTime(2018, 4, 28, 18, 45, 0));
+            Assert.IsTrue(asserts[0].Value == new TimeSpan(1, 15, 0));
+
+            Assert.IsTrue(asserts[1].Key == new DateTime(2018, 4, 29, 8, 30, 0));
+            Assert.IsTrue(asserts[1].Value == new TimeSpan(4, 30, 0));
+
+            Assert.IsTrue(asserts[2].Key == new DateTime(2018, 5, 1, 8, 0, 0));
+            Assert.IsTrue(asserts[2].Value == new TimeSpan(4, 0, 0));
+
+            Assert.IsTrue(asserts[3].Key == new DateTime(2018, 5, 2, 8, 30, 0));
+            Assert.IsTrue(asserts[3].Value == new TimeSpan(4, 0, 0));
+
+            Assert.IsTrue(asserts[4].Key == new DateTime(2018, 5, 2, 16, 0, 0));
+            Assert.IsTrue(asserts[4].Value == new TimeSpan(4, 0, 0));
+            
+            Assert.IsTrue(asserts[5].Key == new DateTime(2018, 5, 5, 8, 30, 0));
+            Assert.IsTrue(asserts[5].Value == new TimeSpan(11, 30, 0));
         }
 
         [TestMethod]
