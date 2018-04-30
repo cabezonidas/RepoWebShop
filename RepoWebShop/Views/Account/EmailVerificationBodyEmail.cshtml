@@ -1,38 +1,51 @@
 ﻿@model HashValidationViewModel
 @{Layout = string.Empty;}
 
-<div style="text-align:center; font-family: 'Arial', Georgia, Serif; ">
-    <section style='padding: 20px; max-width:600px; min-width:400px;' id='body'>
-        <h2 style="font-family: 'Times New Roman'; font-style: italic;color: green; ">
-            <a href="@Model.HostUrl" target="_blank"
-               style="  padding: 15px;
-                            color: white;
-                            text-decoration: none;
-                            border-radius: 50%;
-                            background: green;">
-                <strong>De las Artes</strong>
+<div style="text-align:center; font-family: 'Trebuchet MS'">
+    <section style='padding: 20px; width:90%; min-width:300px; ' id='body'>
+        <div style=" background-color: #883636; color: papayawhip; border-top-left-radius: 10px;border-top-right-radius: 10px;">
+            <br />
+            <a href="@Model.HostUrl" target="_blank" style="text-decoration: none; ">
+                <div style="padding-left: 20px; padding-right: 20px;">
+                    <img src="@Model.HostUrl/Pictures/LogoRepo.png" width="250" />
+                </div>
             </a>
-        </h2>
-        <br>
-        <h2><strong>¡Gracias @Model.FirstName por registrarte con De las Artes!</strong></h2>
-        <p>
-            Para que puedas operar con nosotros, necesitamos que nos confirmes tu email.
-        </p>
-
-        <p style="font-size:10px;">Link para Activar</p>
-
-        <div style="background-color: white; width: 120px; margin: auto; ">
-            <a href="@Model.HostUrl/Account/EmailVerification/@Model.UserName/@Model.Hash" target="_blank" style="color: black; text-decoration: none; ">
-                <h1 style="padding: 5px; font-size: 20px;background-color:coral; border-radius: 3px;">Activar</h1>
-            </a>
+            <br />
         </div>
-        <br />
+        <div style=" background-color: papayawhip; ">
+            <div style="width: 90%; margin: auto;">
+                <br>
+                <h2><strong>¡Gracias @Model.FirstName por registrarte con De las Artes!</strong></h2>
+                <div>
+                    Para que puedas operar con nosotros, necesitamos que nos confirmes tu email.
+                </div>
+                <br />
+                <div style="font-size:10px;">Link para Activar</div>
 
-        <p>Si el link no te funcionó, probá directamente con copiar y pegar en el navegador la siguente URL:</p>
-        <p><a style="overflow-wrap:break-word;"
-              href="@Model.HostUrl/Account/EmailVerification/@Model.UserName/@Model.Hash">@Model.HostUrl/Account/EmailVerification/@Model.UserName/@Model.Hash</a></p>
+                <div style="background-color: white; width: 120px; margin: auto; ">
+                    <a href="@Model.HostUrl/Account/EmailVerification/@Model.UserName/@Model.Hash" target="_blank" style="color: black; text-decoration: none; ">
+                        <h1 style="padding: 10px; font-size: 20px;background-color:#883636; border-radius: 3px; color: papayawhip">Activar</h1>
+                    </a>
+                </div>
+                <br />
 
-        <p>Si recibiste este correo por equivocación, podés olvidarte de este mail, o podés informarnos a <email address="info@@lareposteria.com.ar" content="info@@lareposteria.com.ar"></email></p>
+                <div>Si el link no te funcionó, probá directamente con copiar y pegar en el navegador la siguente URL:</div>
+                <p>
+                    <a style="overflow-wrap:break-word;"
+                       href="@Model.HostUrl/Account/EmailVerification/@Model.UserName/@Model.Hash">@Model.HostUrl/Account/EmailVerification/@Model.UserName/@Model.Hash</a>
+                </p>
+
+                <div>Si recibiste este correo por equivocación, podés olvidarte de este mail, o podés informarnos a <email address="info@@lareposteria.com.ar" content="info@@lareposteria.com.ar"></email></div>
+                <br />
+            </div>
+        </div>
+            <div style=" background-color: #883636; color: papayawhip; text-align:center; border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+                <div style="text-align: center;">
+                    <br />
+                    <a href='@Model.HostUrl' target="_blank" style="color: papayawhip">@Model.HostUrl</a>
+            </div>
+            <br />
+        </div>
     </section>
 
 </div>

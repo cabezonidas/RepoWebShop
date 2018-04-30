@@ -36,6 +36,12 @@ namespace RepoWebShop
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddAuthentication().Services.ConfigureApplicationCookie(options =>
+            {
+                options.SlidingExpiration = true;
+                options.ExpireTimeSpan = TimeSpan.FromDays(90);
+            });
+
             services.AddAuthentication().AddFacebook(facebookOptions =>
             {
                 facebookOptions.AppId = _configurationRoot["FacebookAppId"];
@@ -97,8 +103,10 @@ namespace RepoWebShop
 
             services.AddAutoMapper();
             services.AddMemoryCache();
+            services.AddDistributedMemoryCache();
+
             services.AddSession();
-            
+
             return services.BuildServiceProvider();
         }
 

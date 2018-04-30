@@ -26,10 +26,11 @@ namespace RepoWebShop.Controllers
         private readonly ICalendarRepository _calendarRepository;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _config;
+        private readonly ISmsRepository _smsRepository;
         private int _minimumArsForOrderDelivery;
         private int _maxArsForReservation;
 
-        public OrderController(IConfiguration config, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ICalendarRepository calendarRepository, IMapper mp, IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, IShoppingCartRepository shoppingCart, IAccountRepository accountRepository)
+        public OrderController(ISmsRepository smsRepository, IConfiguration config, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ICalendarRepository calendarRepository, IMapper mp, IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, IShoppingCartRepository shoppingCart, IAccountRepository accountRepository)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -43,6 +44,7 @@ namespace RepoWebShop.Controllers
             _config = config;
             _minimumArsForOrderDelivery = _config.GetValue<int>("MinimumArsForOrderDelivery");
             _maxArsForReservation = _config.GetValue<int>("MaxArsForReservation");
+            _smsRepository = smsRepository;
         }
 
         public IActionResult EmailNotification(int id)
@@ -281,7 +283,9 @@ namespace RepoWebShop.Controllers
                 order.Registration = _currentUser;
                 order = _orderRepository.CreateOrder(order);
 
-                await _emailRespository.SendOrderConfirmationAsync(order);
+                await _emailRespository.SendOrderConfirmationAsync(order,
+                    () => _smsRepository.NotifyAdmins($"¡Nueva reserva! Código {order.FriendlyBookingId}")
+                );
                 return Redirect($"/Order/Status/{order.FriendlyBookingId}");
             }
             return View(_currentUser);

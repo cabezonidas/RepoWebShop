@@ -338,7 +338,8 @@ namespace RepoWebShop.Models
                 order.Payout = _calendarRepository.LocalTime();
                 _appDbContext.Orders.Update(order);
                 _appDbContext.SaveChanges();
-                await _emailRepository.SendOrderConfirmationAsync(order);
+                await _emailRepository.SendOrderConfirmationAsync(order,
+                () => _smsRepository.NotifyAdmins($"¡Pedido nuevo! Código {order.FriendlyBookingId}"));
             }
 
             return order;

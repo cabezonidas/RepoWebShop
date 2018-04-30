@@ -195,7 +195,7 @@ namespace RepoWebShop.Controllers
             var hasLogin = await _accountRepository.EnsureUserHasLoginAsync(info, infoVm.Email);
             if (hasLogin.Succeeded)
             {
-                var loggedIn = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+                var loggedIn = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: true, bypassTwoFactor: true);
                 if (loggedIn.Succeeded)
                     return RedirectToAction("List", "PieDetail");
             }
@@ -219,7 +219,7 @@ namespace RepoWebShop.Controllers
                     //var result = await _signInManager.PasswordSignInAsync(loginViewModel.UserName, user.Password, true, lockoutOnFailure: false);
                     user.Email = user.NormalizedEmail;
                     user.UserName = loginViewModel.UserName;
-                    var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false);
+                    var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, true, false);
 
                     if (result.Succeeded)
                     {
@@ -259,7 +259,7 @@ namespace RepoWebShop.Controllers
                 if (result.Succeeded)
                 {
                     await _emailRepository.SendEmailActivationAsync(user);
-                    await _signInManager.PasswordSignInAsync(user, registration.Password, false, false);
+                    await _signInManager.PasswordSignInAsync(user, registration.Password, true, false);
                     return RedirectToAction("Index", "Home");
                 }
                 foreach (var error in result.Errors)
@@ -458,7 +458,7 @@ namespace RepoWebShop.Controllers
             var result = await _accountRepository.EnsureUserHasLoginAsync(info, null);
             if (result.Succeeded)
             {
-                var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+                var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: true, bypassTwoFactor: true);
                 if (signInResult.Succeeded)
                 {
                     if(!string.IsNullOrEmpty(loginViewModel.ReturnUrl))
