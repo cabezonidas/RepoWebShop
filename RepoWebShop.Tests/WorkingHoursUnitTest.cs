@@ -14,6 +14,58 @@ namespace RepoWebShop.Tests
         }
 
         [TestMethod]
+        public void CompatibleSlotsContainsLaterDateFrame()
+        {
+            var compatibleOpenSlots = new List<KeyValuePair<DateTime, TimeSpan>>()
+            {
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 4, 29, 11, 0, 0), new TimeSpan(2, 0, 0)), //Domingo
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 1, 8, 30, 0), new TimeSpan(4, 0, 0)), //Martes
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 1, 16, 0, 0), new TimeSpan(4, 0, 0)), //Martes
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 2, 8, 30, 0), new TimeSpan(4, 0, 0)), //Miercoles
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 2, 16, 0, 0), new TimeSpan(4, 0, 0)) //Miercoles
+            };
+            var selectedtimeframe = new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 4, 29, 9, 0, 0), new TimeSpan(4, 0, 0)); //Domingo, pero mas temprano
+            var result = WorkingHours.ContainsDateFrame(compatibleOpenSlots, selectedtimeframe);
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void CompatibleSlotsContainsDateFrame()
+        {
+            var compatibleOpenSlots = new List<KeyValuePair<DateTime, TimeSpan>>()
+            {
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 4, 29, 9, 0, 0), new TimeSpan(4, 0, 0)), //Domingo
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 1, 8, 30, 0), new TimeSpan(4, 0, 0)), //Martes
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 1, 16, 0, 0), new TimeSpan(4, 0, 0)), //Martes
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 2, 8, 30, 0), new TimeSpan(4, 0, 0)), //Miercoles
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 2, 16, 0, 0), new TimeSpan(4, 0, 0)) //Miercoles
+            };
+            var selectedtimeframe = new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 4, 29, 9, 0, 0), new TimeSpan(4, 0, 0)); //Domingo, pero mas temprano
+            var result = WorkingHours.ContainsDateFrame(compatibleOpenSlots, selectedtimeframe);
+
+            Assert.IsTrue(result);
+        }
+
+
+        [TestMethod]
+        public void CompatibleSlotsDoesntContainsDateFrame()
+        {
+            var compatibleOpenSlots = new List<KeyValuePair<DateTime, TimeSpan>>()
+            {
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 4, 29, 9, 0, 0), new TimeSpan(4, 0, 0)), //Domingo
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 1, 8, 30, 0), new TimeSpan(4, 0, 0)), //Martes
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 1, 16, 0, 0), new TimeSpan(4, 0, 0)), //Martes
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 2, 8, 30, 0), new TimeSpan(4, 0, 0)), //Miercoles
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 2, 16, 0, 0), new TimeSpan(4, 0, 0)) //Miercoles
+            };
+            var selectedtimeframe = new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 4, 29, 13, 1, 0), new TimeSpan(1, 0, 0)); //Domingo, pero fuera de horario de trabajo
+            var result = WorkingHours.ContainsDateFrame(compatibleOpenSlots, selectedtimeframe);
+
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
         public void GetOpenSlots()
         {
             var _openHours = new List<OpenHours>()
@@ -78,6 +130,67 @@ namespace RepoWebShop.Tests
             
             Assert.IsTrue(asserts[5].Key == new DateTime(2018, 5, 5, 8, 30, 0));
             Assert.IsTrue(asserts[5].Value == new TimeSpan(11, 30, 0));
+        }
+
+        [TestMethod]
+        public void CalculateCompatibleDaysDiscountSameDayButFirstDeliverableDate()
+        {
+            var openSlots = new List<KeyValuePair<DateTime, TimeSpan>>()
+            {
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 4, 29, 9, 0, 0), new TimeSpan(4, 0, 0)), //Domingo
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 1, 8, 30, 0), new TimeSpan(4, 0, 0)), //Martes
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 1, 16, 0, 0), new TimeSpan(4, 0, 0)), //Martes
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 2, 8, 30, 0), new TimeSpan(4, 0, 0)), //Miercoles
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 2, 16, 0, 0), new TimeSpan(4, 0, 0)) //Miercoles
+            };
+            var discount = new Discount
+            {
+                ValidFrom = new DateTime(2016, 11, 5), //Sabado
+                DurationDays = 1,
+                InstancesLeft = null,
+                Loop = 7,
+                Percentage = 15,
+                Phrase = "SABADO15REPO",
+                Roof = 200,
+                IsActive = true
+            };
+            var today = new DateTime(2018, 4, 28); //Sabado
+
+            var result = WorkingHours.GetCompatibleOpenSlots(openSlots, discount, today);
+
+            Assert.AreEqual(result.Count(), 1);
+            Assert.AreEqual(result.First(), new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 4, 29, 9, 0, 0), new TimeSpan(4, 0, 0))); //El desc es del sabado, y se usa un sabado, pero la primera hora disponible de entrega es domingo,new DateTime(2018, 4, 29, 9, 0, 0), new TimeSpan(4, 0, 0)
+        }
+
+        [TestMethod]
+        public void CalculateCompatibleDays()
+        {
+            var openSlots = new List<KeyValuePair<DateTime, TimeSpan>>()
+            {
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 4, 28, 18, 45, 0), new TimeSpan(1, 15, 0)), //Sabado
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 4, 29, 9, 0, 0), new TimeSpan(4, 0, 0)), //Domingo
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 1, 8, 30, 0), new TimeSpan(4, 0, 0)), //Martes
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 1, 16, 0, 0), new TimeSpan(4, 0, 0)), //Martes
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 2, 8, 30, 0), new TimeSpan(4, 0, 0)), //Miercoles
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 2, 16, 0, 0), new TimeSpan(4, 0, 0)) //Miercoles
+            };
+            var discount = new Discount
+            {
+                ValidFrom = new DateTime(2016, 11, 5), //Sabado
+                DurationDays = 1,
+                InstancesLeft = null,
+                Loop = 7,
+                Percentage = 15,
+                Phrase = "SABADO15REPO",
+                Roof = 200,
+                IsActive = true
+            };
+            var today = new DateTime(2018, 4, 28); //Sabado
+
+            var result = WorkingHours.GetCompatibleOpenSlots(openSlots, discount, today);
+
+            Assert.AreEqual(result.Count(), 1);
+            Assert.AreEqual(result.First(), new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 4, 28, 18, 45, 0), new TimeSpan(1, 15, 0)));
         }
 
         [TestMethod]

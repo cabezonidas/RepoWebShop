@@ -60,6 +60,35 @@ namespace RepoWebShop.Models
             return results;
         }
 
+        public static IEnumerable<KeyValuePair<DateTime, TimeSpan>> GetCompatibleOpenSlots(IEnumerable<KeyValuePair<DateTime, TimeSpan>> openSlots, Discount discount, DateTime today)
+        {
+            var slots = openSlots.ToArray();
+            var results = new List<KeyValuePair<DateTime, TimeSpan>>();
+            for(int i = 0; i < slots.Length; i++)
+            {
+                DateTime result = slots[i].Key;
+                if (i == 0 && slots[i].Key > today.Date) //Esto es por si alguien usa un descuento a ultima hora, para que lo pueda usar, aunque se entregue al dia sgte.
+                    result = today;
+
+                if(Discount.ApplyDiscount(result, 1, discount) < 0)
+                    results.Add(slots[i]);
+            }
+
+            return results;
+        }
+
+        public static bool ContainsDateFrame(IEnumerable<KeyValuePair<DateTime, TimeSpan>> compatibleSlots, KeyValuePair<DateTime, TimeSpan> timeframe)
+        {
+            foreach(var compatibleSlot in compatibleSlots)
+            {
+                var slotEndsAfterTimeframe = compatibleSlot.Key.Add(compatibleSlot.Value) >= timeframe.Key.Add(timeframe.Value);
+                var slotAndTimeframeAreSamedate = compatibleSlot.Key.Date == timeframe.Key.Date;
+                if (slotEndsAfterTimeframe && slotAndTimeframeAreSamedate)
+                    return true;
+            }
+            return false;
+        }
+
         public static DateTime GetPickUpDate(DateTime orderAccredited, int estimationHs, IEnumerable<IWorkingHours> processingHours, IEnumerable<IWorkingHours> openHours, IEnumerable<PublicHoliday> holidays, IEnumerable<Vacation> vacations)
         {
             var orderFinished = GetOrderReady(orderAccredited, estimationHs, processingHours, holidays, vacations, true);
