@@ -22,6 +22,9 @@ namespace RepoWebShop.Models
         //}
 
 
+        public DbSet<PageVisit> PageVisits { get; set; }
+        public DbSet<ShoppingCartByIp> ShoppingCartByIp { get; set; }
+
         public DbSet<ShoppingCartLunch> ShoppingCartLunch { get; set; }
         public DbSet<ShoppingCartPickUpDate> ShoppingCartPickUpDates { get; set; }
 

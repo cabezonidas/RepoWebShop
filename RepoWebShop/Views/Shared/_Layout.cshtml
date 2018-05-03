@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 @inject IHostingEnvironment env
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 <html lang="es-ar">
 <head>
     @Html.Partial("~/Views/Shared/Favicon.cshtml")
@@ -127,7 +128,7 @@
         </div>
     </nav>
 
-    @if(env.IsStaging())
+    @if (env.IsStaging() || env.IsDevelopment())
     {
         <style>
             .test {
@@ -137,9 +138,12 @@
                 opacity: 0.5;
             }
         </style>
-
-        <div class="text-center test" >
-            <span class="alert alert-danger " style="font-size: 30px;">ESTO ES TEST</span>       
+        var environment = env.IsStaging() ? "PRUEBAS" : "DESARROLLO";
+        <div class="text-center test">
+            <div class="alert alert-warning " style="font-size: 20px; margin: 10px;">
+                <div>@environment</div>
+                <div>Cliente IP: @HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()</div>
+            </div>
         </div>
 
     }
@@ -193,15 +197,15 @@ new MediaViewModel() { Icon = "fa-whatsapp", Class = "social-whatsapp", Ref = "h
 
     @RenderSection("scripts", required: false)
     @*@if (env.IsProduction())
-    {
-        <script src="~/lib/react/react.production.min.js"></script>
-        <script src="~/lib/react/react-dom.production.min.js"></script>
-    }
-    else
-    {
-        <script src="~/lib/react/react.development.js"></script>
-        <script src="~/lib/react/react-dom.development.js"></script>
-    }
-    @Html.ReactInitJavaScript()*@
+        {
+            <script src="~/lib/react/react.production.min.js"></script>
+            <script src="~/lib/react/react-dom.production.min.js"></script>
+        }
+        else
+        {
+            <script src="~/lib/react/react.development.js"></script>
+            <script src="~/lib/react/react-dom.development.js"></script>
+        }
+        @Html.ReactInitJavaScript()*@
 </body>
 </html>

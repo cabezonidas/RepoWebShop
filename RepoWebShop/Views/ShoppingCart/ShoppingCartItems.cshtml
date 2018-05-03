@@ -66,6 +66,21 @@
                     </td>
                 </tr>
             }
+            @if (Model.DeliveryAddress == null && Model.ShoppingCartTotal >= Model.MinArsForDelivery && Model.ShoppingCartTotal >= Model.MinArsForDelivery)
+            {
+                <tr >
+                    <td class=""></td>
+                    <td class=""></td>
+                    <td class="text-left">
+                        <div class="animated bounceInLeft">
+                            <a  style="color:#883636;" asp-action="Index" asp-controller="Delivery"><span style="color:#883636; margin-right: 10px;" class="fa fa-map-marker"></span>Agregar envío </a>
+                        </div>
+                    </td>
+                    <td class=""></td>
+                    <td class=""></td>
+                </tr>
+
+            }
             @if(Model.Discount != null)
             {
                 <tr style="color: darkgreen">

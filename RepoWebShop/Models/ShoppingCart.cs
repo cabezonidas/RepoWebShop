@@ -74,13 +74,30 @@ namespace RepoWebShop.Models
 
         public void RenewId()
         {
+            string remoteIp = _ctx?.Connection?.RemoteIpAddress?.ToString() ?? string.Empty;
+            var existingBooking = _appDbContext.ShoppingCartByIp.First(x => x.Ip == remoteIp);
+
             _shoppingCartId = Guid.NewGuid().ToString("D").ToUpper();
             _ctx.Session.SetString("CartId", _shoppingCartId);
+
+            existingBooking.BookingId = _shoppingCartId;
+            _appDbContext.ShoppingCartByIp.Update(existingBooking);
+            _appDbContext.SaveChanges();
         }
 
         private void InitializeId()
         {
-            _shoppingCartId = _ctx.Session.GetString("CartId") ?? Guid.NewGuid().ToString("D").ToUpper();
+            string remoteIp = _ctx?.Connection?.RemoteIpAddress?.ToString() ?? string.Empty;
+            var existingBooking = _appDbContext.ShoppingCartByIp.FirstOrDefault(x => x.Ip == remoteIp);
+            if (existingBooking != null)
+                _shoppingCartId = existingBooking.BookingId;
+            else
+            {
+                _shoppingCartId = _ctx.Session.GetString("CartId") ?? Guid.NewGuid().ToString("D").ToUpper();
+                var newBooking = new ShoppingCartByIp { BookingId = _shoppingCartId, Ip = remoteIp };
+                _appDbContext.ShoppingCartByIp.Add(newBooking);
+                _appDbContext.SaveChanges();
+            }
             _ctx.Session.SetString("CartId", _shoppingCartId);
         }
     }

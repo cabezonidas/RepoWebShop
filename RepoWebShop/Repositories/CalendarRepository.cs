@@ -127,6 +127,10 @@ namespace RepoWebShop.Repositories
 
         public IEnumerable<KeyValuePair<DateTime, TimeSpan>> GetPickUpOption(int preparationTime, Discount discount)
         {
+            var validDiscount = Discount.ApplyDiscount(LocalTime(), 1, discount) < 0;
+            if (!validDiscount)
+                discount = null;
+
             var pickUpTime = GetPickupEstimate(preparationTime);
             var openHours = _appDbContext.OpenHours.ToList();
             var holidays = _appDbContext.Holidays.ToList();

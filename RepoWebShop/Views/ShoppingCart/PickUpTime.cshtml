@@ -54,6 +54,22 @@
             <table style="width:100%;max-width:400px; margin: auto;">
                 <tbody>
                     <tr>
+                        <td>
+                            <div style="font-size: 20px;" class="text-muted">
+                                <div>
+                                    <strong>Día</strong>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="timepickup animated text-muted">
+                                <div style="font-size: 20px;">
+                                    <strong>Horario</strong>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
                         <td style="width: 1%; white-space: nowrap; ">
                             <div id="pickupDate" class="text-center">
                                 <div class="full-date animated bounceIn">
@@ -68,9 +84,9 @@
                         </td>
                         <td style="width: auto; vertical-align: top; padding: 10px; text-align: center; ">
                             <div class="text-muted">
-                                <div class="timepickup animated ">
-                                    <div><strong>Horario</strong></div>
-                                    Entre las @string.Format("{0:HH:mm} hs", Model.SelectedTime.Key).ToLower() y las @string.Format("{0:HH:mm} hs", Model.SelectedTime.Key.Add(Model.SelectedTime.Value)).ToLower()
+                                <div class="animated bounceIn" >
+                                    <div style="color: green; font-size: larger;"><span>A partir de las @string.Format("{0:HH:mm} hs", Model.SelectedTime.Key).ToLower()</span></div>
+                                    <div style="color:#883636"><strong >Cerramos</strong> a las <strong>@string.Format("{0:HH:mm} hs", Model.SelectedTime.Key.Add(Model.SelectedTime.Value)).ToLower()</strong></div>
                                 </div>
                                 <br />
                                 <div style="">
@@ -106,11 +122,17 @@
                                 <div>
                                 @if(Model.UserSubmitted)
                                 {
-                                    <div class="alert alert-info">@Model.Message</div>
+                                    <div class="alert alert-info">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close" onclick="alert()">&times;</a>
+                                        @Model.Message
+                                    </div>
                                 }
                                 else
                                 {
-                                    <div class="alert alert-warning">@Model.Message</div>
+                                    <div class="alert alert-warning">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close" onclick="alert()">&times;</a>
+                                        @Model.Message
+                                    </div>
                                 }
                                 </div>
                             </td>
@@ -124,7 +146,7 @@
                             </td>
                             <td>
                                 <div>
-                                    <a asp-action="OpenHours" asp-controller="Calendar" class="text-muted">Ver Horarios de Atención</a>
+                                    <a asp-action="OpenHours" asp-controller="Calendar" class="text-muted" >Ver Horarios de Atención</a>
                                 </div>
                             </td>
                         }
@@ -164,17 +186,6 @@
                 });
             }).fail(() => alert('failure'));
         }
-    });
-
-    $(document).ready(function () {
-        setInterval(function () {
-            setTimeout(function () {
-                $('.timepickup').addClass('pulse');
-            }, 2000);
-            setTimeout(function () {
-                $('.timepickup').removeClass('pulse');
-            }, 1000);
-        }, 1000)
     });
 
     $(function () {

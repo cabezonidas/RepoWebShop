@@ -18,7 +18,7 @@
         }
         else
         {
-            <div class="alert alert-success animated" style="margin-left: 30px; margin-right: 30px;">
+            <div class="sms alert alert-success animated" style="margin-left: 30px; margin-right: 30px;">
                 @if (!Model.User.PhoneNumberConfirmed)
                 {
                     <p class="mobile-msg">@Model.User.FirstName, para recibir SMS cuando terminemos tu pedido por favor, <a asp-action="VerifyNumber" asp-controller="Account" asp-route-actionName="Index" asp-route-controllerName="ShoppingCart"><strong>ingresa tu número aquí.</strong></a></p>
