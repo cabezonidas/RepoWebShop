@@ -17,6 +17,7 @@ namespace RepoWebShop.ViewModels
         public string FriendlyBookingId { get; set; }
         public string Comments { get; set; }
         public DateTime PickupDate { get; set; }
+        public PickUpTimeViewModel PickupTime { get; set; }
         public string MercadoPagoId { get; set; }
         public ApplicationUser User { get; set; }
         public DeliveryAddress DeliveryAddress { get; set; }

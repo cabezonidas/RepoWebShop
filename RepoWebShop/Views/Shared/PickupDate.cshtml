@@ -102,16 +102,6 @@
                                 Tu pedido estará listo esta fecha <br /><br />
                                 <strong style="font-size: 15px;">SI QUERÉS MODIFICAR LA FECHA, ESCRIBILO EN COMENTARIOS</strong>
                                 <br />
-                                <select name="state" id="hours">
-                                    <optgroup label="Martes 23 de Mayo" class="text-left">
-                                        <option value="0">09:00 y 12:00</option>
-                                        <option value="1">16:00 y 20:00</option>
-                                    </optgroup>
-                                    <optgroup label="Miércoles 24 de Mayo" style="text-align: left">
-                                        <option value="2">09:00 y 12:00</option>
-                                        <option value="3">16:00 y 20:00</option>
-                                    </optgroup>
-                                </select>
                             </div>
                         </td>
                     </tr>
@@ -132,27 +122,6 @@
         </div>
     </div>
 </div>
-<script>
-    $selectize = $('select#hours').selectize({
-        placeholder: "Cambiar...",
-        render: {
-            optgroup_header: function (item, escape) {
-                return '<div style="text-align: left; margin-left: 5px; "><strong>' + escape(item.label) + '</strong></div>';
-            },
-            option: function (item, escape) {
-                console.log(item);
-                return '<div style="text-align: left; margin-left: 15px;">Entre ' + escape(item.text) + '</div>';
-            },
-            item: function (item, escape) {
-                return '<div class="text-muted" style="text-align: left;">' +
-                    //'<div>' + item.optgroup + '</div>' +
-                    //'<div>Entre ' + item.text + '</div>' +
-                    'Cambiar...' +
-                '</div>';
-            }
-        }
-    });
-</script>
 
 
 

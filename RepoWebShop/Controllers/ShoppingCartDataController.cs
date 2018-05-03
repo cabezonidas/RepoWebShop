@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
+using RepoWebShop.ViewModels;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,19 +15,43 @@ namespace RepoWebShop.Controllers
     [Route("api/[controller]")]
     public class ShoppingCartDataController : Controller
     {
+        private readonly ICalendarRepository _calendarRepository;
         private readonly IShoppingCartRepository _cartRepository;
         private readonly IMercadoPago _mp;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly AppDbContext _appDbContext;
 
-        public ShoppingCartDataController(AppDbContext appDbContext, IShoppingCartRepository shoppingCart, IMercadoPago mp, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public ShoppingCartDataController(ICalendarRepository calendarRepository, AppDbContext appDbContext, IShoppingCartRepository shoppingCart, IMercadoPago mp, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
+            _calendarRepository = calendarRepository;
             _appDbContext = appDbContext;
             _mp = mp;
             _userManager = userManager;
             _signInManager = signInManager;
             _cartRepository = shoppingCart;
+        }
+
+        [HttpPost]
+        [Route("SetPickUpTime/{datefrom}")]
+        public IActionResult SetPickUpTime(long datefrom)
+        {
+            var pickUpDate = new DateTime(datefrom);
+            string error = "";
+            bool validPickUpDate = _cartRepository.TrySetPickUpDate(null, pickUpDate, out error);
+            if(validPickUpDate)
+                return Ok();
+            else
+                return BadRequest(new { error });
+        }
+
+        [HttpGet]
+        [Route("GetTimeSlots")]
+        public IActionResult GetTimeSlots()
+        {
+            PickUpTimeViewModel result = _cartRepository.GetTimeSlots(null);
+            var route = "~/Views/ShoppingCart/PickUpTime.cshtml";
+            return PartialView(route, result);
         }
 
         [HttpGet]
@@ -49,14 +75,14 @@ namespace RepoWebShop.Controllers
         [Route("GetComments")]
         public IActionResult GetComments()
         {
-            return Ok(new { comments = _cartRepository.GetComments()?.Comments ?? string.Empty });
+            return Ok(new { comments = _cartRepository.GetComments(null)?.Comments ?? string.Empty });
         }
 
         [HttpGet]
         [Route("GetItemsCount")]
         public IActionResult GetItemsCount()
         {
-            return Ok(new { items = _cartRepository.GetItems().Count() });
+            return Ok(new { items = _cartRepository.GetItems(null).Count() });
         }
 
         [HttpGet]

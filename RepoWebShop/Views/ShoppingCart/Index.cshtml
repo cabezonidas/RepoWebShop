@@ -29,10 +29,20 @@ else
                 @if (Model.Discount == null)
                 {
                     @Html.Partial("~/Views/Discounts/ApplyDiscount.cshtml", new AddDiscountViewModel())
-                }
+                }                
             </div>
             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                @Html.Partial("~/Views/Shared/PickupDate.cshtml", Model.PickupDate)
+                @*@Html.Partial("~/Views/Shared/PickupDate.cshtml", Model.PickupDate)*@
+                <div id="pickUpTime">
+                    @Html.Partial("~/Views/ShoppingCart/PickupTime.cshtml", Model.PickupTime)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             </div>
         </div>
         <div class="row">
@@ -74,27 +84,15 @@ else
             }
         }
     }
-    var myVar = setInterval(getEstimate, 60000);
-    function getEstimate() {
-        $.get('api/CalendarData/GetPickupDate/', function (data) {
-            $('#calendarView').replaceWith(data);
 
-            $('a#moreinfo[href *=\\#]:not([href =\\#])').click(smoothScroll);
-            //$('#pickupDate').append(data);
-        });
-    }
+    //var myVar = setInterval(getEstimate, 60000);
+    //function getEstimate() {
+    //    $.get('api/CalendarData/GetPickupDate/', function (data) {
+    //        $('#calendarView').replaceWith(data);
+    //        $('a#moreinfo[href *=\\#]:not([href =\\#])').click(smoothScroll);
+    //    });
+    //}
 
-    //$.ajax({
-    //    type: 'GET',
-    //    url: 'api/ShoppingCartData/GetComments/',
-    //    dataType: 'json',
-    //    success: function (data) {
-    //        if (data.comments != 'undefined')
-    //            $('#comments').append(data.comments);
-    //        else
-    //            $('#comments').append('');
-    //    }
-    //});
     $("a").on('click', function () {
         $.ajax({
             type: 'GET',

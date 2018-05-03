@@ -1,4 +1,7 @@
-﻿using System;
+﻿using RepoWebShop.Models;
+using System;
+using System.Collections.Generic;
+
 namespace RepoWebShop.Interfaces
 {
     public interface ICalendarRepository
@@ -8,5 +11,6 @@ namespace RepoWebShop.Interfaces
         string LocalTimeAsString();
         string SuperFriendlyDate(DateTime? date);
         string FriendlyDate(DateTime? date);
+        IEnumerable<KeyValuePair<DateTime, TimeSpan>> GetPickUpOption(int preparationTime, Discount discount);
     }
 }

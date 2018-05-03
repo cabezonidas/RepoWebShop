@@ -36,7 +36,7 @@ namespace RepoWebShop.Controllers
 
         public IActionResult Index()
         {
-            var model = _cartRepository.GetDelivery();
+            var model = _cartRepository.GetDelivery(null);
 
             var viewModel = _mapper.Map<DeliveryAddress, DeliveryAddressViewModel>(model);
 

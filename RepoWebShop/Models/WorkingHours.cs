@@ -70,8 +70,11 @@ namespace RepoWebShop.Models
                 if (i == 0 && slots[i].Key > today.Date) //Esto es por si alguien usa un descuento a ultima hora, para que lo pueda usar, aunque se entregue al dia sgte.
                     result = today;
 
-                if(Discount.ApplyDiscount(result, 1, discount) < 0)
+                if(discount == null || Discount.ApplyDiscount(result, 1, discount) < 0)
                     results.Add(slots[i]);
+
+                if (discount != null && Discount.ApplyDiscount(result, 1, discount) == 0)
+                    break;
             }
 
             return results;

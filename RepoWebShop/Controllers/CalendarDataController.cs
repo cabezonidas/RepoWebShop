@@ -31,7 +31,7 @@ namespace RepoWebShop.Controllers
         [Route("GetPickupDate")]
         public IActionResult GetPickupDate()
         {
-            var hours = _cartRepository.GetPreparationTime();
+            var hours = _cartRepository.GetPreparationTime(null);
             DateTime result = _calendarRepository.GetPickupEstimate(hours);
             
             return PartialView("PickupDate", result);

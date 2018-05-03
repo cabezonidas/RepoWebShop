@@ -241,7 +241,7 @@ namespace RepoWebShop.Controllers
         public async Task<IActionResult> Checkout()
         {
             var user = await _userManager.GetUser(_signInManager);
-            if ((_cartRepository.GetItems()).Count() > 0)
+            if ((_cartRepository.GetItems(null)).Count() > 0)
                 if(user.PhoneNumberConfirmed)
                     return View(user);
                 else
@@ -255,12 +255,12 @@ namespace RepoWebShop.Controllers
         public async Task<IActionResult> Checkout(Order order)
         {
  
-            if (_cartRepository.GetItems().Count() == 0)
+            if (_cartRepository.GetItems(null).Count() == 0)
             {
                 ModelState.AddModelError("EmptyTrolley", "Tu carrito no puede estar vacío, agrega algunos productos.");
             }
 
-            if (_cartRepository.GetTotal() > _maxArsForReservation)
+            if (_cartRepository.GetTotal(null) > _maxArsForReservation)
                 ModelState.AddModelError("MaxValueReached", "El monto de la reserva supera el límite admitido. Deberás usar Mercado Pago.");
 
             var _currentUser = await _userManager.GetUser(_signInManager);

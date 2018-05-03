@@ -17,14 +17,14 @@ namespace RepoWebShop.Components
 
         public IViewComponentResult Invoke()
         {
-            var items = _cartRepository.GetItems();
+            var items = _cartRepository.GetItems(null);
             //_shoppingCart.ShoppingCartItems = items;
 
             var shoppingCartViewModel = new ShoppingCartViewModel
             {
                 //ShoppingCart = _shoppingCart,
-                Items = _cartRepository.GetItems().ToList(),
-                ShoppingCartTotal = _cartRepository.GetItemsTotal()
+                Items = _cartRepository.GetItems(null).ToList(),
+                ShoppingCartTotal = _cartRepository.GetItemsTotal(null)
             };
             return View(shoppingCartViewModel);
         }

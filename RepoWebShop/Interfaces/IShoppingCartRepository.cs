@@ -1,4 +1,6 @@
 ﻿using RepoWebShop.Models;
+using RepoWebShop.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,15 +8,15 @@ namespace RepoWebShop.Interfaces
 {
     public interface IShoppingCartRepository
     {
-        IEnumerable<ShoppingCartItem> GetItems(string bookingId = null);     
-        ShoppingCartComment GetComments(string bookingId = null);
-        DeliveryAddress GetDelivery(string bookingId = null);
-        Discount GetDiscount(string bookingId = null);
-        decimal GetItemsTotal(string bookingId = null);
-        decimal GetTotalWithoutDiscount(string bookingId = null);
-        int GetPreparationTime(string bookingId = null);
-        void ClearCart(string bookingId = null);
-        decimal GetTotal(string bookingId = null);
+        IEnumerable<ShoppingCartItem> GetItems(string bookingId);     
+        ShoppingCartComment GetComments(string bookingId);
+        DeliveryAddress GetDelivery(string bookingId);
+        Discount GetDiscount(string bookingId);
+        decimal GetItemsTotal(string bookingId);
+        decimal GetTotalWithoutDiscount(string bookingId);
+        int GetPreparationTime(string bookingId);
+        void ClearCart(string bookingId);
+        decimal GetTotal(string bookingId);
 
         void AddComments(string comments);
         void ClearFromCart(int pieId);
@@ -28,5 +30,8 @@ namespace RepoWebShop.Interfaces
         string GetSessionCartId();
         string GetMpPreference(string bookingId);
         void SetMpPreference(string preferenceId);
+        bool TrySetPickUpDate(string bookingId, DateTime pickUpDate, out string error);
+        ShoppingCartPickUpDate GetPickUpDate(string bookingId);
+        PickUpTimeViewModel GetTimeSlots(string bookingId);
     }
 }

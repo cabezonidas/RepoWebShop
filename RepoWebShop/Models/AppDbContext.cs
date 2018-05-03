@@ -23,6 +23,7 @@ namespace RepoWebShop.Models
 
 
         public DbSet<ShoppingCartLunch> ShoppingCartLunch { get; set; }
+        public DbSet<ShoppingCartPickUpDate> ShoppingCartPickUpDates { get; set; }
 
         public DbSet<LunchMiscellaneous> LunchMiscellanea { get; set; }
         public DbSet<LunchItem> LunchItems  { get; set; }

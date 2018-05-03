@@ -1,0 +1,169 @@
+﻿@model PickUpTimeViewModel
+
+<style>
+    .full-date {
+        margin: 1px auto;
+        width: 110px;
+        text-align: center;
+        padding: 5px;
+        z-index: 1;
+    }
+
+        .full-date .calendar {
+            border-color: #878787;
+            border-style: solid;
+            border-width: 1.2px;
+            border-radius: 3px;
+            background: linear-gradient(to bottom right, #fcffc9 0%, #fff6e4 100%);
+            box-shadow: 2px 2px #888888;
+        }
+
+            .full-date .calendar .month {
+                background: linear-gradient(to bottom right, #f98d8d 10%, #A00 100%);
+                color: white;
+                font-size: larger;
+                padding-top: 2px;
+                padding-bottom: 2px;
+            }
+
+            .full-date .calendar .day {
+                font-size: xx-large;
+                padding: 2px;
+            }
+
+        .time {
+            margin-top: 5px;
+            font-size: larger;
+            background-color: white;
+            background: #188f00;
+            background: linear-gradient(to bottom right, #fff 0%, #ffebeb 100%);
+            padding: 2px;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 5px;
+            box-shadow: 2px 2px #888888;
+        }
+
+    /*****************************/
+
+</style>
+<div id="pickuptime-webpart">
+    <div class="">
+        <h1 class="text-center" style="font-family: Noto serif; margin-top:0px;">Entrega</h1>
+        <div class="text-center">
+            <table style="width:100%;max-width:400px; margin: auto;">
+                <tbody>
+                    <tr>
+                        <td style="width: 1%; white-space: nowrap; ">
+                            <div id="pickupDate" class="text-center">
+                                <div class="full-date animated bounceIn">
+                                    <div class="calendar">
+                                        <div class="month">@PickUpTimeViewModel.SelectedMonth(Model.SelectedTime.Key)</div>
+                                        <div class="weekday">@PickUpTimeViewModel.SelectedDay(Model.SelectedTime.Key)</div>
+                                        <div class="day">@Model.SelectedTime.Key.Day</div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </td>
+                        <td style="width: auto; vertical-align: top; padding: 10px; text-align: center; ">
+                            <div class="text-muted">
+                                <div class="">
+                                    <div><strong>Horario</strong></div>
+                                    Entre las @string.Format("{0:HH:mm} hs", Model.SelectedTime.Key).ToLower() y las @string.Format("{0:HH:mm} hs", Model.SelectedTime.Key.Add(Model.SelectedTime.Value)).ToLower()
+                                </div>
+                                <br />
+                                <select name="state" id="hours">
+                                    <option value="__blank__"></option> 
+                                    @{
+                                        List<DateTime> dates = Model.TimeSlots.GroupBy(x => x.Key.Date).Select(group => group.Key).ToList();
+                                        foreach(var date in dates)
+                                        {
+                                            var group = $"{PickUpTimeViewModel.SelectedDay(date)} {date.Day} de {PickUpTimeViewModel.SelectedMonth(date)}";
+                                            <optgroup label="@group" class="text-left">
+                                                @foreach(var slot in Model.TimeSlots){
+                                                    if(slot.Key.Date == date.Date)
+                                                    {
+                                                        <option value="@slot.Key.Ticks">
+                                                            @string.Format("{0:hh:mm tt}", slot.Key).ToLower() y @string.Format("{0:hh:mm tt}", slot.Key.Add(slot.Value)).ToLower()
+                                                        </option>
+                                                    }
+                                                }
+                                            </optgroup>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        @if(!String.IsNullOrEmpty(Model.Message))
+                        {
+                            <td colspan="2">
+                                <div>
+                                @if(Model.UserSubmitted)
+                                {
+                                    <div class="alert alert-info">@Model.Message</div>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-warning">@Model.Message</div>
+                                }
+                                </div>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <div>
+                                    <a class="text-muted" id="moreinfo" href="#estimation-time">¿Por qué?</a>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <a asp-action="OpenHours" asp-controller="Calendar" class="text-muted">Ver Horarios de Atención</a>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                    <tr>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    $selectize = $('select#hours').selectize({
+        placeholder: "Cambiar...",
+        allowEmptyOption: true,
+        render: {
+            optgroup_header: function (item, escape) {
+                return '<div style="text-align: left; margin-left: 5px; "><strong>' + escape(item.label) + '</strong></div>';
+            },
+            option: function (item, escape) {
+                if (item.value === '__blank__')
+                    return '<div style="display: none;"></div>';
+                return '<div style="text-align: left; margin-left: 15px;">Entre ' + escape(item.text) + '</div>';
+            },
+            item: function (item, escape) {
+                return '<div class="text-muted" style="text-align: left;">' +
+                    //'<div>' + item.optgroup + '</div>' +
+                    //'<div>Entre ' + item.text + '</div>' +
+                    'Cambiar...' +
+                '</div>';
+            }
+        },
+        onChange: function (event) {
+            $.post("/api/ShoppingCartData/SetPickUpTime/" + event).then((data) => {
+                $.get('api/ShoppingCartData/GetTimeSlots/', function (data) {
+                    $('#pickuptime-webpart').replaceWith(data);
+                });
+            }).fail(() => alert('failure'));
+        }
+    });
+    $selectize.on('change', function () {
+        if ($selectize.val() === '__blank__') { $selectize.val(''); }
+    });
+</script>

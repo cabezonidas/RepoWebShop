@@ -4,6 +4,7 @@ using RepoWebShop.Models;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Extensions;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 
 namespace RepoWebShop.Repositories
 {
@@ -122,6 +123,19 @@ namespace RepoWebShop.Repositories
                 return $"{dia} {date.Value.Day} de {mes}";
             }
             return string.Empty;
+        }
+
+        public IEnumerable<KeyValuePair<DateTime, TimeSpan>> GetPickUpOption(int preparationTime, Discount discount)
+        {
+            var pickUpTime = GetPickupEstimate(preparationTime);
+            var openHours = _appDbContext.OpenHours.ToList();
+            var holidays = _appDbContext.Holidays.ToList();
+            var vacations = _appDbContext.Vacations.ToList();
+
+            var openSlots = WorkingHours.GetOpenSlots(pickUpTime, openHours, holidays, vacations);
+            var pickUpOptions = WorkingHours.GetCompatibleOpenSlots(openSlots, discount, LocalTime());
+
+            return pickUpOptions;
         }
     }
 }

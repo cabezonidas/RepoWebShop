@@ -55,7 +55,7 @@ namespace RepoWebShop.Controllers
         {
             var result = new ShoppingCartViewModel
             {
-                Items = _cartRepository.GetItems().ToList()
+                Items = _cartRepository.GetItems(null).ToList()
             };
             return View(result);
         }
@@ -63,26 +63,27 @@ namespace RepoWebShop.Controllers
         public async Task<ViewResult> Index()
         {
 
-            var highestPrepTime = _cartRepository.GetPreparationTime();
+            var highestPrepTime = _cartRepository.GetPreparationTime(null);
 
             var shoppingCartViewModel = new ShoppingCartViewModel
             {
-                Items = _cartRepository.GetItems().ToList(),
+                Items = _cartRepository.GetItems(null).ToList(),
                 PickupDate = _calendarRepository.GetPickupEstimate(highestPrepTime),
-                ShoppingCartTotal = _cartRepository.GetTotal(),
+                ShoppingCartTotal = _cartRepository.GetTotal(null),
                 PreparationTime = highestPrepTime,
                 FriendlyBookingId = _friendlyBookingId,
-                ShopingCartTotalWithoutDiscount = _cartRepository.GetTotalWithoutDiscount(),
-                Comments = _cartRepository.GetComments()?.Comments,
+                ShopingCartTotalWithoutDiscount = _cartRepository.GetTotalWithoutDiscount(null),
+                Comments = _cartRepository.GetComments(null)?.Comments,
                 MercadoPagoId = _config.GetSection("MercadoPagoClientId").Value,
                 User = await _userManager.GetUser(_signInManager),
-                DeliveryAddress = _cartRepository.GetDelivery(),
+                DeliveryAddress = _cartRepository.GetDelivery(null),
                 MaxArsForReservation = _maxArsForReservation,
                 MinArsForDelivery = _minimumArsForOrderDelivery,
                 MinimumDeliveryCharge = _minimumCharge,
                 DeliveryCostByBlock = _costByBlock,
                 DeliveryRadius = _deliveryRadius,
-                Discount = _cartRepository.GetDiscount()
+                PickupTime = _cartRepository.GetTimeSlots(null),
+                Discount = _cartRepository.GetDiscount(null)
         };
             
             return View(shoppingCartViewModel);

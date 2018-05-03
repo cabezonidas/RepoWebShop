@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Microsoft.AspNetCore.Http;
+using RepoWebShop.ViewModels;
 
 namespace RepoWebShop.Repositories
 {
@@ -38,32 +39,32 @@ namespace RepoWebShop.Repositories
             _maxArsForReservation = _config.GetValue<int>("MaxArsForReservation");
         }
 
-        public IEnumerable<ShoppingCartItem> GetItems(string bookingId = null)
+        public IEnumerable<ShoppingCartItem> GetItems(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
             return _appDbContext.ShoppingCartItems.Include(x => x.Pie).ThenInclude(x => x.PieDetail).Where(x => x.ShoppingCartId == bookingId).ToList();
         }
 
-        public ShoppingCartComment GetComments(string bookingId = null)
+        public ShoppingCartComment GetComments(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
             return _appDbContext.ShoppingCartComments.Where(c => c.ShoppingCartId == bookingId).OrderByDescending(c => c.Created).FirstOrDefault();
         }
 
-        public Discount GetDiscount(string bookingId = null)
+        public Discount GetDiscount(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
             return _appDbContext.ShoppingCartDiscount.Include(x => x.Discount).FirstOrDefault(c => c.ShoppingCartId == bookingId)?.Discount;
         }
 
-        public int GetPreparationTime(string bookingId = null)
+        public int GetPreparationTime(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
             var items = GetItems(bookingId);
             return items.Count() == 0 ? 0 : items.OrderByDescending(x => x.Pie.PieDetail.PreparationTime).First().Pie.PieDetail.PreparationTime;
         }
 
-        public void ClearCart(string bookingId = null)
+        public void ClearCart(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
 
@@ -109,13 +110,13 @@ namespace RepoWebShop.Repositories
             }
         }
 
-        public decimal GetItemsTotal(string bookingId = null)
+        public decimal GetItemsTotal(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
             return _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == bookingId).Select(c => c.Pie.Price * c.Amount).Sum();
         }
 
-        public decimal GetTotal(string bookingId = null)
+        public decimal GetTotal(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
             var subtotal = GetTotalWithoutDiscount(bookingId);
@@ -123,7 +124,7 @@ namespace RepoWebShop.Repositories
             return subtotal + discount;
         }
 
-        public decimal GetTotalWithoutDiscount(string bookingId = null)
+        public decimal GetTotalWithoutDiscount(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
             var items = GetItemsTotal(bookingId);
@@ -131,7 +132,7 @@ namespace RepoWebShop.Repositories
             return items + delivery;
         }
 
-        public DeliveryAddress GetDelivery(string bookingId = null)
+        public DeliveryAddress GetDelivery(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
             return GetItemsTotal(bookingId) >= _minimumArsForOrderDelivery ? _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.ShoppingCartId == bookingId) : null;
@@ -269,6 +270,104 @@ namespace RepoWebShop.Repositories
             _appDbContext.SaveChanges();
         }
 
+        public bool TrySetPickUpDate(string bookingId, DateTime pickUpDate, out string error)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            error = "";
+            var preparationTime = GetPreparationTime(bookingId);
+            var discount = GetDiscount(bookingId);
+            var pickUpOptions = _calendarRepository.GetPickUpOption(preparationTime, discount);
+            var validSelectedSlots = pickUpOptions.Where(x => x.Key <= pickUpDate && x.Key.Add(x.Value) >= pickUpDate);
+            var validSlot = validSelectedSlots.Any();
+            
+            if(validSlot)
+            {
+                var pickUp = new ShoppingCartPickUpDate
+                {
+                    BookingId = bookingId,
+                    From = validSelectedSlots.First().Key,
+                    To = validSelectedSlots.First().Value,
+                    UserSubmitted = true
+                };
+                _appDbContext.ShoppingCartPickUpDates.Add(pickUp);
+                _appDbContext.SaveChanges();
+                return true;
+            }
+            else
+            {
+                error = "La fecha seleccionada no es válida.";
+                return false;
+            }
+        }
 
+        public ShoppingCartPickUpDate GetPickUpDate(string bookingId)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            var result = _appDbContext.ShoppingCartPickUpDates.LastOrDefault(x => x.BookingId == bookingId);
+            var prepTime = GetPreparationTime(bookingId);
+            var discount = GetDiscount(bookingId);
+            var openSlots = _calendarRepository.GetPickUpOption(prepTime, discount);
+            var defaultOption = openSlots.First();
+
+            if (result == null)
+                return InsertPickUpDate(bookingId, defaultOption, true, "");
+            else
+            {
+                var validDate = WorkingHours.ContainsDateFrame(openSlots, new KeyValuePair<DateTime, TimeSpan>(result.From, result.To));
+                if(!validDate)
+                {
+                    if(result.UserSubmitted)
+                    {
+                        var message = defaultOption.Key.Date == result.From.Date ?
+                            "Se ajustó la hora de entrega." :
+                            "La fecha que elegiste ya no es válida y fue cambiada.";
+
+                        var userSubmitted = defaultOption.Key.Date == result.From.Date;
+                        return InsertPickUpDate(bookingId, defaultOption, userSubmitted, message);
+                    }
+                    else
+                    {
+                        result.From = defaultOption.Key;
+                        result.To = defaultOption.Value;
+                        _appDbContext.ShoppingCartPickUpDates.Update(result);
+                        _appDbContext.SaveChanges();
+                        return result;
+                    }
+                }
+            }
+            return result;
+        }
+
+        private ShoppingCartPickUpDate InsertPickUpDate(string bookingId, KeyValuePair<DateTime, TimeSpan> defaultOption, bool userSubmitted, string message)
+        {
+            var pickUp = new ShoppingCartPickUpDate
+            {
+                BookingId = bookingId,
+                From = defaultOption.Key,
+                To = defaultOption.Value,
+                UserSubmitted = userSubmitted,
+                Message = message
+            };
+            _appDbContext.ShoppingCartPickUpDates.Add(pickUp);
+            _appDbContext.SaveChanges();
+            return pickUp;
+        }
+
+        public PickUpTimeViewModel GetTimeSlots(string bookingId)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            var prepTime = GetPreparationTime(bookingId);
+            var discount = GetDiscount(bookingId);
+            var model = _calendarRepository.GetPickUpOption(prepTime, discount).Take(10);
+            var selectedTime = GetPickUpDate(bookingId);
+            var result = new PickUpTimeViewModel
+            {
+                TimeSlots = model,
+                SelectedTime = new KeyValuePair<DateTime, TimeSpan>(selectedTime.From, selectedTime.To),
+                Message = selectedTime.Message,
+                UserSubmitted = selectedTime.UserSubmitted
+            };
+            return result;
+        }
     }
 }
