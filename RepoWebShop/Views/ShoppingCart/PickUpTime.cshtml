@@ -68,31 +68,33 @@
                         </td>
                         <td style="width: auto; vertical-align: top; padding: 10px; text-align: center; ">
                             <div class="text-muted">
-                                <div class="">
+                                <div class="timepickup animated ">
                                     <div><strong>Horario</strong></div>
                                     Entre las @string.Format("{0:HH:mm} hs", Model.SelectedTime.Key).ToLower() y las @string.Format("{0:HH:mm} hs", Model.SelectedTime.Key.Add(Model.SelectedTime.Value)).ToLower()
                                 </div>
                                 <br />
-                                <select name="state" id="hours">
-                                    <option value="__blank__"></option> 
-                                    @{
-                                        List<DateTime> dates = Model.TimeSlots.GroupBy(x => x.Key.Date).Select(group => group.Key).ToList();
-                                        foreach(var date in dates)
-                                        {
-                                            var group = $"{PickUpTimeViewModel.SelectedDay(date)} {date.Day} de {PickUpTimeViewModel.SelectedMonth(date)}";
-                                            <optgroup label="@group" class="text-left">
-                                                @foreach(var slot in Model.TimeSlots){
-                                                    if(slot.Key.Date == date.Date)
-                                                    {
-                                                        <option value="@slot.Key.Ticks">
-                                                            @string.Format("{0:hh:mm tt}", slot.Key).ToLower() y @string.Format("{0:hh:mm tt}", slot.Key.Add(slot.Value)).ToLower()
-                                                        </option>
+                                <div style="">
+                                    <select name="state" id="hours">
+                                        <option value="__blank__"></option> 
+                                        @{
+                                            List<DateTime> dates = Model.TimeSlots.GroupBy(x => x.Key.Date).Select(group => group.Key).ToList();
+                                            foreach(var date in dates)
+                                            {
+                                                var group = $"{PickUpTimeViewModel.SelectedDay(date)} {date.Day} de {PickUpTimeViewModel.SelectedMonth(date)}";
+                                                <optgroup label="@group" class="text-left">
+                                                    @foreach(var slot in Model.TimeSlots){
+                                                        if(slot.Key.Date == date.Date)
+                                                        {
+                                                            <option value="@slot.Key.Ticks">
+                                                                @string.Format("{0:hh:mm tt}", slot.Key).ToLower() y @string.Format("{0:hh:mm tt}", slot.Key.Add(slot.Value)).ToLower()
+                                                            </option>
+                                                        }
                                                     }
-                                                }
-                                            </optgroup>
+                                                </optgroup>
+                                            }
                                         }
-                                    }
-                                </select>
+                                    </select>
+                                </div>
                             </div>
 
                         </td>
@@ -136,7 +138,6 @@
 </div>
 <script>
     $selectize = $('select#hours').selectize({
-        placeholder: "Cambiar...",
         allowEmptyOption: true,
         render: {
             optgroup_header: function (item, escape) {
@@ -148,14 +149,15 @@
                 return '<div style="text-align: left; margin-left: 15px;">Entre ' + escape(item.text) + '</div>';
             },
             item: function (item, escape) {
+                if (item.value === '__blank__')
+                    return '<div>Cambiar...</div>';
                 return '<div class="text-muted" style="text-align: left;">' +
-                    //'<div>' + item.optgroup + '</div>' +
-                    //'<div>Entre ' + item.text + '</div>' +
-                    'Cambiar...' +
+                    '<div>' + item.optgroup + '</div>' +
                 '</div>';
             }
         },
         onChange: function (event) {
+            $selectize[0].selectize.disable();
             $.post("/api/ShoppingCartData/SetPickUpTime/" + event).then((data) => {
                 $.get('api/ShoppingCartData/GetTimeSlots/', function (data) {
                     $('#pickuptime-webpart').replaceWith(data);
@@ -163,7 +165,19 @@
             }).fail(() => alert('failure'));
         }
     });
-    $selectize.on('change', function () {
-        if ($selectize.val() === '__blank__') { $selectize.val(''); }
+
+    $(document).ready(function () {
+        setInterval(function () {
+            setTimeout(function () {
+                $('.timepickup').addClass('pulse');
+            }, 2000);
+            setTimeout(function () {
+                $('.timepickup').removeClass('pulse');
+            }, 1000);
+        }, 1000)
+    });
+
+    $(function () {
+        $('a#moreinfo[href *=\\#]:not([href =\\#])').click(smoothScroll);
     });
 </script>

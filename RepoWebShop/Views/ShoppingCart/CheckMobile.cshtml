@@ -12,7 +12,7 @@
 
         @if (Model.User == null)
         {
-            <div class="alert alert-warning animated" style="margin-left: 30px; margin-right: 30px;">
+            <div class="sms alert alert-warning animated" style="margin-left: 30px; margin-right: 30px;">
                 <p class="mobile-msg">¿Querés recibir un SMS cuando la orden esté lista? <a asp-action="Login" asp-controller="Account" asp-route-returnUrl="/ShoppingCart"><strong>Click aquí</strong></a></p>
             </div>
         }
@@ -37,10 +37,10 @@
     $(document).ready(function () {
         setInterval(function () {
             setTimeout(function () {
-                $('.alert').addClass('tada');
+                $('.sms').addClass('tada');
             }, 2000);
             setTimeout(function () {
-                $('.alert').removeClass('tada');
+                $('.sms').removeClass('tada');
             }, 1000);
         }, 5000)
     });
