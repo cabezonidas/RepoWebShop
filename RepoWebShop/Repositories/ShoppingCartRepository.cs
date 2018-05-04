@@ -363,7 +363,7 @@ namespace RepoWebShop.Repositories
             var selectedTime = GetPickUpDate(bookingId);
             var result = new PickUpTimeViewModel
             {
-                TimeSlots = model.Where(x => x.Key != selectedTime.From && x.Value != selectedTime.To),
+                TimeSlots = model.Where(x => !(x.Key == selectedTime.From && x.Value == selectedTime.To)),
                 SelectedTime = new KeyValuePair<DateTime, TimeSpan>(selectedTime.From, selectedTime.To),
                 Message = selectedTime.Message,
                 UserSubmitted = selectedTime.UserSubmitted
