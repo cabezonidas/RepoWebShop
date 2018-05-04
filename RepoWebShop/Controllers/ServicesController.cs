@@ -12,9 +12,11 @@ using System.Net.Http.Headers;
 using RepoWebShop.Models;
 using System.Collections;
 using Microsoft.Extensions.Configuration;
+using RepoWebShop.Filters;
 
 namespace RepoWebShop.Controllers
 {
+    [PageVisitAsync]
     public class ServicesController : Controller
     {
         private readonly IGalleryRepository _photosRepository;

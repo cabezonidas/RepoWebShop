@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RepoWebShop.Extensions;
+using RepoWebShop.Filters;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
@@ -15,6 +16,7 @@ using System.Threading.Tasks;
 
 namespace RepoWebShop.Controllers
 {
+    [PageVisitAsync]
     public class DeliveryController : Controller
     {
         private readonly IDeliveryRepository _deliveryRepository;

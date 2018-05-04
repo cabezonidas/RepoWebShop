@@ -9,9 +9,11 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Extensions;
+using RepoWebShop.Filters;
 
 namespace RepoWebShop.Controllers
 {
+    [PageVisitAsync]
     public class PieDetailController : Controller
     {
         private readonly IPieDetailRepository _pieDetailRepository;
@@ -51,17 +53,6 @@ namespace RepoWebShop.Controllers
                 currentCategory = _categoryRepository.Categories.FirstOrDefault(c => c.CategoryName == category).CategoryName;
             }
             var viewProducts = pieDetails.Select(x => (MapDbPieDetailToPieDetailViewModel(x)));
-            //var PieDetailsVM = new List<PieDetailViewModel>();
-            //foreach (var pieDetail in pieDetails)
-            //{
-            //    PieDetailsVM.Add(
-            //        new PieDetailViewModel()
-            //        {
-            //            PieDetail = pieDetail,
-            //            Pies = _pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == pieDetail.PieDetailId)
-            //        }
-            //    );
-            //}
 
             return View(new PieDetailsListViewModel
             {

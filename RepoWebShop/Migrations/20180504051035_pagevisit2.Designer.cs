@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180504051035_pagevisit2")]
+    partial class pagevisit2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -461,8 +462,6 @@ namespace RepoWebShop.Migrations
 
                     b.Property<DateTime?>("PickUpTime");
 
-                    b.Property<DateTime?>("PickUpTimeFrom");
-
                     b.Property<bool>("PickedUp");
 
                     b.Property<int>("PreparationTime");
@@ -474,8 +473,6 @@ namespace RepoWebShop.Migrations
                     b.Property<bool>("Returned");
 
                     b.Property<string>("Status");
-
-                    b.Property<TimeSpan?>("TimeLeftUntilStoreCloses");
 
                     b.HasKey("OrderId");
 
@@ -858,30 +855,6 @@ namespace RepoWebShop.Migrations
                     b.ToTable("ShoppingCartPickUpDates");
                 });
 
-            modelBuilder.Entity("RepoWebShop.Models.SiteException", b =>
-                {
-                    b.Property<int>("SiteExceptionId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("BookingId");
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<string>("Error");
-
-                    b.Property<string>("Ip");
-
-                    b.Property<string>("Path");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("SiteExceptionId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Exceptions");
-                });
-
             modelBuilder.Entity("RepoWebShop.Models.Vacation", b =>
                 {
                     b.Property<int>("VacationId")
@@ -1055,13 +1028,6 @@ namespace RepoWebShop.Migrations
                     b.HasOne("RepoWebShop.Models.Lunch", "Lunch")
                         .WithMany()
                         .HasForeignKey("LunchId");
-                });
-
-            modelBuilder.Entity("RepoWebShop.Models.SiteException", b =>
-                {
-                    b.HasOne("RepoWebShop.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

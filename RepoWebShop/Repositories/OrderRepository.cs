@@ -49,7 +49,10 @@ namespace RepoWebShop.Models
 
         public void UpdatePickUpDate(int orderId, DateTime pickUp)
         {
-            _appDbContext.Orders.First(x => x.OrderId == orderId).PickUpTime = pickUp;
+            var result = _appDbContext.Orders.First(x => x.OrderId == orderId);
+            result.PickUpTime = pickUp;
+            result.PickUpTimeFrom = pickUp;
+            _appDbContext.Orders.Update(result);
             _appDbContext.SaveChanges();
         }
 
@@ -147,6 +150,10 @@ namespace RepoWebShop.Models
             order.OrderPlaced = _calendarRepository.LocalTime();
             order.PickedUp = false;
 
+            var pickUpTime = _cartRepository.GetPickUpDate(order.BookingId);
+            order.PickUpTimeFrom = pickUpTime.From;
+            order.TimeLeftUntilStoreCloses = pickUpTime.To;
+
             _appDbContext.Orders.Add(order);
             _appDbContext.SaveChanges();
          
@@ -184,7 +191,8 @@ namespace RepoWebShop.Models
             emailData.Comments = order.CustomerComments;
             emailData.MercadoPagoTransaction = order.MercadoPagoTransaction;
             emailData.OrderItems = orderDetails;
-            emailData.OrderReady = order.PickUpTime;
+            emailData.OrderReady = order.PickUpTimeFrom ?? order.PickUpTime;
+            emailData.TimeLeftUntilStoreCloses = order.TimeLeftUntilStoreCloses;
             emailData.OrderTotal = order.OrderTotal; //Without MP interests
             emailData.OrderType = String.IsNullOrEmpty(order.MercadoPagoTransaction) ? "Reserva" : "Compra";
             emailData.PreparationTime = order.PreparationTime;

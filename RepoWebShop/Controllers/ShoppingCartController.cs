@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using RepoWebShop.Models;
 using Microsoft.AspNetCore.Identity;
 using RepoWebShop.Extensions;
+using RepoWebShop.Filters;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
@@ -60,6 +61,7 @@ namespace RepoWebShop.Controllers
             return View(result);
         }
 
+        [PageVisitAsync]
         public async Task<ViewResult> Index()
         {
 
@@ -84,8 +86,7 @@ namespace RepoWebShop.Controllers
                 DeliveryRadius = _deliveryRadius,
                 PickupTime = _cartRepository.GetTimeSlots(null),
                 Discount = _cartRepository.GetDiscount(null)
-        };
-            
+            };
             return View(shoppingCartViewModel);
         }
 

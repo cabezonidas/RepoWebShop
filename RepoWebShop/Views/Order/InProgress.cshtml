@@ -63,11 +63,23 @@
                     </td>
                     <td style="color: grey;">@Html.Raw(order.ContactDataAsHtml)</td>
                     <td>
-                        @if (order.PickUpTime.HasValue)
-                        {
-                            <div>
-                                @Html.Raw(_calendarRepository.SuperFriendlyDate(order.PickUpTime))
-                            </div>
+                        @{
+                            var pickUp = order.PickUpTimeFrom ?? order.PickUpTime;
+
+
+                            if (pickUp != null)
+                            {
+                                <div>
+                                    @if(!order.PickUpTime.HasValue)
+                                    {
+                                        @Html.Raw(_calendarRepository.SuperFriendlyDate(order.PickUpTimeFrom))
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(_calendarRepository.SuperFriendlyDate(order.PickUpTime))
+                                    }
+                                </div>
+                            }
                         }
                     </td>
                     <td style="text-align:center;">

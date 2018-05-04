@@ -12,6 +12,7 @@ using AutoMapper;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Repositories;
 using React.AspNet;
+using RepoWebShop.Filters;
 
 namespace RepoWebShop
 {
@@ -99,7 +100,7 @@ namespace RepoWebShop
 
             services.AddReact();
 
-            services.AddMvc();
+            services.AddMvc(o => { o.Filters.Add<GlobalExceptionFilter>(); });
 
             services.AddAutoMapper();
             services.AddMemoryCache();

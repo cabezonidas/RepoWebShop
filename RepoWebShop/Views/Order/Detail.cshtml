@@ -27,9 +27,7 @@
     }
 </style>
 
-@{
-    var pickUp = Model.Order.PickUpTime?.ToString("dd'/'MM'/'yyyy") ?? string.Empty;
-}
+
 
 <div class="container order-detail">
     <h3>Detalles: @Model.Order.FriendlyBookingId - <a class="btn btn-info" href="/Order/InProgress">Pedidos</a></h3>
@@ -227,10 +225,23 @@
     </div>
 </div>
 <script type="text/javascript">
-
     @{
-        var defaultDate = Model.Order.PickUpTime.HasValue ? Model.Order.PickUpTime.Value.ToString("s") : "false";
+        var pickUp = Model.Order.PickUpTimeFrom ?? Model.Order.PickUpTime;
+        string defaultDate = "false";
+
+        if (pickUp != null)
+        {
+            if(!Model.Order.PickUpTime.HasValue)
+            {
+                defaultDate = Model.Order.PickUpTimeFrom.Value.ToString("s");
+            }
+            else
+            {
+                defaultDate = Model.Order.PickUpTime.Value.ToString("s");
+            }
+        }
     }
+
     var datetimepickertemp;
     $(function () {
         datetimepickertemp = $('#pickupdate').datetimepicker({
@@ -286,7 +297,7 @@
 
     function updatePickUpDate() {
         var date = $("input#pickUpDate").val().replace(" ", "/").replace(":", "/");
-        
+
 
         $.ajax({
             type: 'POST',

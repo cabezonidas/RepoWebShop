@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180504060819_orderpickuptime")]
+    partial class orderpickuptime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -461,7 +462,7 @@ namespace RepoWebShop.Migrations
 
                     b.Property<DateTime?>("PickUpTime");
 
-                    b.Property<DateTime?>("PickUpTimeFrom");
+                    b.Property<DateTime>("PickUpTimeFrom");
 
                     b.Property<bool>("PickedUp");
 
@@ -475,7 +476,7 @@ namespace RepoWebShop.Migrations
 
                     b.Property<string>("Status");
 
-                    b.Property<TimeSpan?>("TimeLeftUntilStoreCloses");
+                    b.Property<TimeSpan>("TimeLeftUntilStoreCloses");
 
                     b.HasKey("OrderId");
 

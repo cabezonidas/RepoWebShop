@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RepoWebShop.Filters;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace RepoWebShop.Controllers
 {
+    [PageVisitAsync]
     [Authorize(Roles = "Administrator")]
     public class PaymentController : Controller
     {

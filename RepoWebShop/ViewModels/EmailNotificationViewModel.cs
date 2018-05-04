@@ -21,5 +21,6 @@ namespace RepoWebShop.ViewModels
         public string CustomarAlias { get; set; }
         public DeliveryAddress Delivery { get; internal set; }
         public Discount Discount { get; internal set; }
+        public TimeSpan? TimeLeftUntilStoreCloses { get; internal set; }
     }
 }

@@ -9,9 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using RepoWebShop.Filters;
 
 namespace RepoWebShop.Controllers
 {
+    [PageVisitAsync]
     [Authorize(Roles = "Administrator")]
     public class AdminController : Controller
     {

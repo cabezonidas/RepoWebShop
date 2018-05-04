@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RepoWebShop.Filters;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 
@@ -11,6 +12,7 @@ using RepoWebShop.Models;
 
 namespace RepoWebShop.Controllers
 {
+    [PageVisitAsync]
     [Authorize(Roles = "Administrator")]
     public class LunchController : Controller
     {

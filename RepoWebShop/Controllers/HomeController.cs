@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.ViewModels;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Extensions;
+using RepoWebShop.Filters;
 
 namespace RepoWebShop.Controllers
 {
+    [PageVisitAsync]
     public class HomeController : Controller
     {
         private readonly IPieRepository _pieRepository;

@@ -85,13 +85,9 @@ else
         }
     }
 
-    //var myVar = setInterval(getEstimate, 60000);
-    //function getEstimate() {
-    //    $.get('api/CalendarData/GetPickupDate/', function (data) {
-    //        $('#calendarView').replaceWith(data);
-    //        $('a#moreinfo[href *=\\#]:not([href =\\#])').click(smoothScroll);
-    //    });
-    //}
+    function ackowledgetime() {
+        $.post('/api/ShoppingCartData/AcknowledgeSystemTime');
+    }
 
     $("a").on('click', function () {
         $.ajax({

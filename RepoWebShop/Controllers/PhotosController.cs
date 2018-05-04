@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RepoWebShop.Filters;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
@@ -10,6 +11,7 @@ using System.Net;
 
 namespace RepoWebShop.Controllers
 {
+    [PageVisitAsync]
     public class PhotosController : Controller
     {
         private readonly IFlickrRepository _photosetAlbums;

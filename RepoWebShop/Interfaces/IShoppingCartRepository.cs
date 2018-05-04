@@ -33,5 +33,6 @@ namespace RepoWebShop.Interfaces
         bool TrySetPickUpDate(string bookingId, DateTime pickUpDate, out string error);
         ShoppingCartPickUpDate GetPickUpDate(string bookingId);
         PickUpTimeViewModel GetTimeSlots(string bookingId);
+        void AcknowledgeSystemTime(string bookingId);
     }
 }

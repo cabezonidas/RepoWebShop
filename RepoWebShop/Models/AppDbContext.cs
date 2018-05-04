@@ -21,6 +21,7 @@ namespace RepoWebShop.Models
         //        .IsUnique(true);
         //}
 
+        public DbSet<SiteException> Exceptions { get; set; }
 
         public DbSet<PageVisit> PageVisits { get; set; }
         public DbSet<ShoppingCartByIp> ShoppingCartByIp { get; set; }

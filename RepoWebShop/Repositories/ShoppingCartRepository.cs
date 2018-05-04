@@ -68,6 +68,7 @@ namespace RepoWebShop.Repositories
         {
             bookingId = bookingId ?? _cartSession.BookingId;
 
+            _appDbContext.ShoppingCartPickUpDates.RemoveRange(_appDbContext.ShoppingCartPickUpDates.Where(cart => cart.BookingId == bookingId));
             _appDbContext.ShoppingCartItems.RemoveRange(_appDbContext.ShoppingCartItems.Where(cart => cart.ShoppingCartId == bookingId));
             _appDbContext.ShoppingCartComments.RemoveRange(_appDbContext.ShoppingCartComments.Where(cart => cart.ShoppingCartId == bookingId));
             _appDbContext.ShoppingCartData.RemoveRange(_appDbContext.ShoppingCartData.Where(cart => cart.BookingId == bookingId));
@@ -362,12 +363,24 @@ namespace RepoWebShop.Repositories
             var selectedTime = GetPickUpDate(bookingId);
             var result = new PickUpTimeViewModel
             {
-                TimeSlots = model,
+                TimeSlots = model.Where(x => x.Key != selectedTime.From && x.Value != selectedTime.To),
                 SelectedTime = new KeyValuePair<DateTime, TimeSpan>(selectedTime.From, selectedTime.To),
                 Message = selectedTime.Message,
                 UserSubmitted = selectedTime.UserSubmitted
             };
             return result;
+        }
+
+        public void AcknowledgeSystemTime(string bookingId)
+        {
+            var pickUpDate = GetPickUpDate(bookingId);
+            if (pickUpDate != null)
+            {
+                pickUpDate.UserSubmitted = true;
+                pickUpDate.Message = string.Empty;
+                _appDbContext.ShoppingCartPickUpDates.Update(pickUpDate);
+                _appDbContext.SaveChanges();
+            }
         }
     }
 }

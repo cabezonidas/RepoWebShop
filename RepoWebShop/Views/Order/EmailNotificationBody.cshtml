@@ -31,7 +31,14 @@
                     {
                         <div>
                             <br />
-                            Disponible: @_calendar.FriendlyDate(Model.OrderReady) a las @Model.OrderReady.Value.ToString("hh\\:mm tt").ToLower() @Html.Raw((String.IsNullOrEmpty(Model.Comments) ? "" : "*"))
+                            El pedido estará listo el @_calendar.FriendlyDate(Model.OrderReady) a las @Model.OrderReady.Value.ToString("hh\\:mm tt").ToLower()
+                            @if(Model.TimeLeftUntilStoreCloses.HasValue)
+                            {
+                                <br />
+                                <div>
+                                    Recordá que a las @Model.OrderReady.Value.Add(Model.TimeLeftUntilStoreCloses.Value).ToString("hh\\:mm tt").ToLower() cerramos.
+                                </div>
+                            }
                         </div>
                     }
                     <br />
@@ -160,11 +167,6 @@
                         <div style="font-size: larger"><strong>Comentarios</strong></div>
                         <div style="font-style:italic">
                             "@Model.Comments"
-                        </div>
-                        <div style="text-align: left">
-                            <br />
-                            * La disponibilidad del pedido es calculada por el sistema. Si nos especificaste otra fecha, el pedido se completará para esa fecha, garantizando que los productos sean frescos.
-                            <br />
                         </div>
                     }
                     <br />

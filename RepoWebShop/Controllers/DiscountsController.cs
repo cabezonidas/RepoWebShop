@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RepoWebShop.Filters;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
@@ -61,7 +62,8 @@ namespace RepoWebShop.Controllers
             _discountRepository.Delete(id);
             return RedirectToAction("Index");
         }
-
+        
+        [PageVisitAsync]
         [AllowAnonymous]
         public IActionResult ApplyDiscount() => View();
     }

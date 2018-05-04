@@ -33,13 +33,22 @@ namespace RepoWebShop.Controllers
         }
 
         [HttpPost]
+        [Route("AcknowledgeSystemTime")]
+        public IActionResult AcknowledgeSystemTime()
+        {
+            _cartRepository.AcknowledgeSystemTime(null);
+            
+            return Ok();
+        }
+
+        [HttpPost]
         [Route("SetPickUpTime/{datefrom}")]
         public IActionResult SetPickUpTime(long datefrom)
         {
             var pickUpDate = new DateTime(datefrom);
             string error = "";
             bool validPickUpDate = _cartRepository.TrySetPickUpDate(null, pickUpDate, out error);
-            if(validPickUpDate)
+            if (validPickUpDate)
                 return Ok();
             else
                 return BadRequest(new { error });

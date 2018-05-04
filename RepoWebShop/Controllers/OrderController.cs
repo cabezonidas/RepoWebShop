@@ -11,9 +11,11 @@ using System.Threading.Tasks;
 using RepoWebShop.States;
 using System.Net.Http;
 using Microsoft.Extensions.Configuration;
+using RepoWebShop.Filters;
 
 namespace RepoWebShop.Controllers
 {
+    [PageVisitAsync]
     public class OrderController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
