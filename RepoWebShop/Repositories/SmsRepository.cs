@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using RepoWebShop.Interfaces;
+using RepoWebShop.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,11 @@ namespace RepoWebShop.Repositories
         private readonly string _authToken;
         private readonly string _sender;
         private readonly IConfiguration _config;
+        private readonly AppDbContext _appDbContext;
 
-        public SmsRepository(IConfiguration config)
+        public SmsRepository(IConfiguration config, AppDbContext appDbContext)
         {
+            _appDbContext = appDbContext;
             _accountSid = config.GetSection("TwilioAccoundSid").Value;
             _authToken = config.GetSection("TwilioAuthToken").Value;
             _sender = config.GetSection("TwilioSender").Value;
@@ -28,7 +31,8 @@ namespace RepoWebShop.Repositories
 
         public void NotifyAdmins(string v)
         {
-            var numbers = _config.GetSection("AdminMobiles").GetChildren().Select(x => x.Value);
+            //var numbers = _config.GetSection("AdminMobiles").GetChildren().Select(x => x.Value);
+            var numbers = _appDbContext.AdminNotifications.Select(x => x.Phone);
             foreach(var number in numbers)
                 SendSms(number, v);
         }

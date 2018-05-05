@@ -20,24 +20,19 @@ namespace RepoWebShop.Models
         //        .HasIndex(p => new { p.BookingId })
         //        .IsUnique(true);
         //}
-
+        public DbSet<Contact> Contacts { get; set; }
+        public DbSet<AdminNotification> AdminNotifications { get; set; }
         public DbSet<SiteException> Exceptions { get; set; }
-
         public DbSet<PageVisit> PageVisits { get; set; }
         public DbSet<ShoppingCartByIp> ShoppingCartByIp { get; set; }
-
         public DbSet<ShoppingCartLunch> ShoppingCartLunch { get; set; }
         public DbSet<ShoppingCartPickUpDate> ShoppingCartPickUpDates { get; set; }
-
         public DbSet<LunchMiscellaneous> LunchMiscellanea { get; set; }
         public DbSet<LunchItem> LunchItems  { get; set; }
         public DbSet<Lunch> Lunch { get; set; }
-
         public DbSet<Product> Products { get; set; }
-
         public DbSet<ProcessingHours> ProcessingHours { get; set; }
         public DbSet<OpenHours> OpenHours { get; set; }
-
         public DbSet<Category> Categories { get; set; }
         public DbSet<DeliveryAddress> DeliveryAddresses { get; set; }
         public DbSet<GalleryFlickrAlbum> GalleryFlickrAlbums { get; set; }

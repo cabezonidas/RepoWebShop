@@ -28,6 +28,35 @@ namespace RepoWebShop.Controllers
             _photosetAlbums = photosetAlbums;
         }
 
+        [HttpPost]
+        [Route("SaveAdminNumber/{number}/{username}")]
+        public IActionResult SaveAdminNumber(string number, string username)
+        {
+            _appDbContext.AdminNotifications.Add(new AdminNotification { AdminUser = username, Phone = number });
+            _appDbContext.SaveChanges();
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("DeleteAdminNumber/{id}")]
+        public IActionResult DeleteNumber(int id)
+        {
+            var result = _appDbContext.AdminNotifications.Where(x => x.AdminNotificationId == id);
+            _appDbContext.AdminNotifications.RemoveRange(result);
+            _appDbContext.SaveChanges();
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("DeleteContact/{id}")]
+        public IActionResult DeleteContact(int id)
+        {
+            var result = _appDbContext.Contacts.Where(x => x.ContactId == id);
+            _appDbContext.Contacts.RemoveRange(result);
+            _appDbContext.SaveChanges();
+            return Ok();
+        }
+
         [HttpGet]
         [Route("GetProducts")]
         public IActionResult GetProducts()

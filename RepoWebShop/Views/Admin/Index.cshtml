@@ -41,34 +41,6 @@
                         <td><a asp-controller="Admin" asp-action="Prices" class="btn btn-primary action" style="margin: 5px;">Precios</a></td>
                         <td class="text-muted description">Modificar precios online de manera conjunta.</td>
                     </tr>
-
-                    <tr>
-                        <td colspan="2" class=""><h4>Herramientas</h4></td>
-                    </tr>
-                    <tr>
-                        <td><a asp-controller="Discounts" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Descuentos</a></td>
-                        <td class="text-muted description">Herramienta para crear descuentos personalizados, por día, fecha, usuario, etc..</td>
-                    </tr>
-                    <tr>
-                        <td><a asp-controller="Lunch" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Lunch</a></td>
-                        <td class="text-muted description">Crear presupuestos de servicio de catering.</td>
-                    </tr>
-                    <tr>
-                        <td><a asp-controller="Catalog" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Catálogo</a></td>
-                        <td class="text-muted description">Administrar catálogo de productos y precios por inflación.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-            <table >
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
                     <tr>
                         <td colspan="2" class=""><h4>Configuración</h4></td>
                     </tr>
@@ -84,6 +56,43 @@
                         <td><a asp-controller="Admin" asp-action="Galleries" class="btn btn-primary action" style="margin: 5px;">Fotos</a></td>
                         <td class="text-muted description">Administrar galería de fotos.</td>
                     </tr>
+                    <tr>
+                        <td><a asp-controller="Admin" asp-action="Notifications" class="btn btn-primary action" style="margin: 5px;">Notificaciones</a></td>
+                        <td class="text-muted description">Administrar usuarios que reciben alertas cuando hay movimientos en el sitio.</td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Admin" asp-action="Contacts" class="btn btn-primary action" style="margin: 5px;">Contactos</a></td>
+                        <td class="text-muted description">Administrar contactos importantes, proveedores, clientes, etc...</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <table >
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="2" class=""><h4>Herramientas</h4></td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Discounts" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Descuentos</a></td>
+                        <td class="text-muted description">Herramienta para crear descuentos personalizados, por día, fecha, usuario, etc..</td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Lunch" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Lunch</a></td>
+                        <td class="text-muted description">Crear presupuestos de servicio de catering.</td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Catalog" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Catálogo</a></td>
+                        <td class="text-muted description">Administrar catálogo de productos y precios por inflación.</td>
+                    </tr>
+
 
                     <tr>
                         <td colspan="2" class=""><h4>Información</h4></td>
@@ -99,6 +108,14 @@
                     <tr>
                         <td><a asp-controller="Stats" asp-action="Index" class="btn btn-primary action" style="margin: 5px;">Estadísticas</a></td>
                         <td class="text-muted description">Ver datos estadísticos de compras y reservas.</td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Admin" asp-action="Visits" class="btn btn-primary action" style="margin: 5px;">Visitas</a></td>
+                        <td class="text-muted description">Ver datos estadísticos de visitas.</td>
+                    </tr>
+                    <tr>
+                        <td><a asp-controller="Admin" asp-action="Errors" class="btn btn-primary action" style="margin: 5px;">Errores</a></td>
+                        <td class="text-muted description">Ver operaciones que fallaron.</td>
                     </tr>
                 </tbody>
             </table>

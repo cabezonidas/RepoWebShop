@@ -1,0 +1,102 @@
+﻿@model IEnumerable<AdminNotification>
+
+@section styles {
+
+    <link rel="stylesheet" href="~/lib/intl-tel-input/build/css/intlTelInput.css">
+}
+    <div class="container">
+        <h2 class="text-center">Notificaciones administrativas</h2>
+
+        <br />
+        <table class="table table-striped" style="max-width:600px; margin: auto;">
+            <thead>
+                <tr>
+                    <th>
+                        Número
+                    </th>
+                    <th>
+                        Usuario
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.Phone
+                    </td>
+                    <td>
+                        @item.AdminUser
+                    </td>
+                    <td>
+                        <span style="cursor: pointer; text-decoration: underline;" onclick="deletePhone(@item.AdminNotificationId)">Eliminar</span>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>    
+        <br />
+        <div class="row" style="max-width: 600px; margin:auto;">
+            <div class="col-md-5">
+                <div>
+                    <input class="form-control " type="tel" id="phone" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <input class="form-control" type="text" id="adminname" placeholder="Nombre..." />
+            </div>
+            <div class="col-md-3">
+                <a class="btn btn-primary" onclick="save()">Agregar</a>
+            </div>
+        </div>
+    </div>
+<script src="~/lib/intl-tel-input/build/js/intlTelInput.min.js"></script>
+<script type="text/javascript">
+    $("#phone").intlTelInput({
+        initialCountry: "ar",
+        geoIpLookup: function (callback) {
+            $.get("http://ipinfo.io", function () { }, "jsonp").always(function (resp) {
+                var countryCode = (resp && resp.country) ? resp.country : "";
+                callback(countryCode);
+            });
+        },
+        preferredCountries: ['ar', 'nz'],
+        separateDialCode: true,
+        utilsScript: "/lib/intl-tel-input/build/js/utils.js"
+    });
+
+    function save() {
+        if (!$('#phone').val()) {
+            alert('Por favor, agregar un número válido.')
+            return;
+        }
+        if (!$('#adminname').val()) {
+            alert('Por favor, agregar un nombre válido.')
+            return;
+        }
+
+        var phone = $("#phone").intlTelInput("getNumber").replace('+', '');
+        var username = $('#adminname').val();
+
+        $.post('/api/AdminData/SaveAdminNumber/' + phone + '/' + username).then(
+            () => {
+                window.location.reload();
+            }
+        ).fail(() => alert('No se pudo guardar el teléfono.'));
+    }
+
+    function deletePhone(id){
+        $.ajax({
+            method: "DELETE",
+            url: "/api/AdminData/DeleteAdminNumber/" + id
+        }).then(
+            () => {
+                window.location.reload();
+            }
+        ).fail(() => alert('No se pudo borrar el teléfono.'));
+    }
+</script>

@@ -1,6 +1,5 @@
 ﻿<!DOCTYPE html>
 @inject IHostingEnvironment env
-@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 <html lang="es-ar">
 <head>
     @Html.Partial("~/Views/Shared/Favicon.cshtml")
@@ -133,7 +132,7 @@
         <style>
             .test {
                 position: fixed;
-                left: 50px;
+                right: 50px;
                 z-index: 99999999999999999999999;
                 opacity: 0.5;
             }
@@ -142,7 +141,6 @@
         <div class="text-center test">
             <div class="alert alert-warning " style="font-size: 20px; margin: 10px;">
                 <div>@environment</div>
-                <div>Cliente IP: @HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()</div>
             </div>
         </div>
 

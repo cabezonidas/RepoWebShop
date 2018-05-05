@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Contact>
+
+<div class="container">
+    <h2 class="text-center">Contactos</h2>
+    <div>
+        <a asp-action="NewContact" asp-controller="Admin" class="btn btn-primary">Crear Nuevo</a>
+    </div>
+    <br />
+    <table id="contacts" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Apellido</th>
+                <th>Nombre</th>
+                <th>Empresa</th>
+                <th>Tel. de Trabajo</th>
+                <th>Tel. Particular</th>
+                <th>Email</th>
+                <th>Palabras Clave</th>
+                <th>Dirección</th>
+                <th>Vínculo</th>
+                <th>Info Extra</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var contact in Model)
+            {
+                <tr>
+                    <td>@contact.Lastname</td>
+                    <td>@contact.Name</td>
+                    <td>@contact.Company</td>
+                    <td>@contact.WorkPhone</td>
+                    <td>@contact.PrivatePhone</td>
+                    <td>@contact.Email</td>
+                    <td>@contact.Keywords</td>
+                    <td>@contact.Address</td>
+                    <td>@contact.Connection</td>
+                    <td>@contact.Description</td>
+                    <td>
+                        <a asp-action="EditContact" asp-controller="Admin" asp-route-id="@contact.ContactId">Editar</a>
+                    </td>
+                    <td>
+                        <span style="cursor: pointer" onclick="deleteContact(@contact.ContactId)">Eliminar</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $('#contacts').DataTable();
+
+    function deleteContact(id) {
+        $.ajax({
+            method: "DELETE",
+            url: "/api/AdminData/DeleteContact/" + id
+        }).then(
+            () => {
+                window.location.reload();
+            }
+        ).fail(() => alert('No se pudo borrar el teléfono.'));
+    }
+</script>

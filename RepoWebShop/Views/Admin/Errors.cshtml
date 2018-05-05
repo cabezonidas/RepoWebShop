@@ -1,0 +1,76 @@
+﻿@model IEnumerable<SiteException>
+@inject ICalendarRepository calendar
+<div class="container">
+    <h3>Errores del sitio</h3>
+    <br />
+    <table class="table table-condensed" id="exceptions">
+        <thead>
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Sesión
+                </th>
+                <th>
+                    Fecha
+                </th>
+                <th>
+                    Ip
+                </th>
+                <th>
+                    Path
+                </th>
+                <th>
+                    Usuario
+                </th>
+                <th>
+                    Error
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @item.SiteExceptionId
+                </td>
+                <td>
+                    <div title="@item.BookingId">
+                        @{ 
+                            if(!string.IsNullOrEmpty(item.BookingId) && item.BookingId.Length > 10)
+                            {
+                                var friendlybooking = item.BookingId.Substring(item.BookingId.Length - 7, 6);
+                                <span>
+                                    @friendlybooking
+                                </span>
+                            }
+                        }
+                    </div>
+                </td>
+                <td>
+                    @Html.Raw(calendar.SuperFriendlyDate(item.Date))
+                </td>
+                <td>
+                    @item.Ip
+                </td>
+                <td>
+                    @item.Path
+                </td>
+                <td>
+                    @Html.Raw(item.User?.Email ?? "")
+                </td>
+                <td>
+                    @item.Error
+                </td>
+              </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $('#exceptions').DataTable(({
+        "order": [[0, "desc"]]
+    }));
+</script>

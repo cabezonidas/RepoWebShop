@@ -45,9 +45,85 @@ namespace RepoWebShop.Controllers
             return View();
         }
 
+        public IActionResult Contacts()
+        {
+            var result = _appDbContext.Contacts.ToList();
+            return View(result);
+        }
+
+        [HttpGet]
+        public IActionResult NewContact()
+        {
+            var result = new Contact();
+            return View(result);
+        }
+
+        [HttpPost]
+        public IActionResult NewContact(Contact contact)
+        {
+            if(ModelState.IsValid)
+            {
+                _appDbContext.Contacts.Add(contact);
+                _appDbContext.SaveChanges();
+                return RedirectToAction("Contacts");
+            }
+            return View(contact);
+        }
+
+        [HttpGet]
+        public IActionResult EditContact(int id)
+        {
+            var result = _appDbContext.Contacts.FirstOrDefault(x => x.ContactId == id);
+            if (result == null)
+                return NotFound();
+            return View(result);
+        }
+
+        [HttpPost]
+        public IActionResult EditContact(Contact contact)
+        {
+            if (ModelState.IsValid)
+            {
+                _appDbContext.Contacts.Update(contact);
+                _appDbContext.SaveChanges();
+                return RedirectToAction("Contacts");
+            }
+            return View(contact);
+        }
+
+        public IActionResult Visits()
+        {
+            var visits = _appDbContext.PageVisits.OrderByDescending(x => x.PageVisitId).ToList();
+
+            var visitsByPath = visits.GroupBy(x => x.Path).Select(group => new KeyValuePair<string, int>(group.Key, group.Count())).OrderByDescending(x => x.Value).ToList();
+
+            var visitsByIp = visits.GroupBy(x => x.Ip).Select(group => new KeyValuePair<string, int>(group.Key, group.Count())).OrderByDescending(x => x.Value).ToList();
+
+            VisitsViewModel model = new VisitsViewModel
+            {
+                Visits = visits,
+                ByPath = visitsByPath,
+                ByIp = visitsByIp
+            };
+
+            return View(model);
+        }
+
+        public IActionResult Notifications()
+        {
+            var result = _appDbContext.AdminNotifications.ToList();
+            return View(result);
+        }
+
         public IActionResult Prices()
         {
             return View();
+        }
+
+        public IActionResult Errors()
+        {
+            var result = _appDbContext.Exceptions.OrderByDescending(x => x.SiteExceptionId).ToList();
+            return View(result);
         }
 
         public IActionResult AllProducts()
