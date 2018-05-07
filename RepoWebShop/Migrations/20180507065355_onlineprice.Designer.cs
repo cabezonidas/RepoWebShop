@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180507065355_onlineprice")]
+    partial class onlineprice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -235,22 +236,6 @@ namespace RepoWebShop.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("RepoWebShop.Models.BookingRecord", b =>
-                {
-                    b.Property<int>("BookingRecordId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("BookingId");
-
-                    b.Property<DateTime>("Created");
-
-                    b.Property<string>("Ip");
-
-                    b.HasKey("BookingRecordId");
-
-                    b.ToTable("BookingRecords");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.Category", b =>
@@ -576,8 +561,6 @@ namespace RepoWebShop.Migrations
                 {
                     b.Property<int>("PageVisitId")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("BookingId");
 
                     b.Property<string>("Ip");
 
@@ -940,8 +923,6 @@ namespace RepoWebShop.Migrations
                     b.Property<string>("Ip");
 
                     b.Property<string>("Path");
-
-                    b.Property<string>("StuckTrace");
 
                     b.Property<string>("UserId");
 

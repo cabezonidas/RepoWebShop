@@ -11,6 +11,7 @@ namespace RepoWebShop.Models
         public string Ip { get; set; }
         public DateTime Visited { get; set; }
         public string Path { get; set; }
+        public string BookingId { get; set; }
         public ApplicationUser User { get; internal set; }
     }
 }

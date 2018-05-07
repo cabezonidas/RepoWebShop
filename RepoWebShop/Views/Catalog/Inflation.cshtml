@@ -45,7 +45,8 @@
                     <td >
                         <a class="btn btn-default" onclick="previewPrices()">Vista previa</a>
                     </td>
-                    <td></td>
+                    <td>
+                    </td>
                 <tr>
             </tbody>
         </table>
@@ -56,9 +57,12 @@
             <tr>
                 <th>Producto</th>
                 <th>Categoría</th>
-                <th>Precio Anterior</th>
-                <th>Precio Actual</th>
-                <th>Precio Nuevo</th>
+                <th>Precio en Tienda Anterior</th>
+                <th>Precio en Tienda Actual</th>
+                <th>Precio en Tienda Nuevo</th>
+                <th>Precio Online Anterior</th>
+                <th>Precio Online Actual</th>
+                <th>Precio Online Nuevo</th>
             </tr>
         </thead>
         <tbody>
@@ -74,7 +78,10 @@
                 <td>@p.Product.Category</td>
                 <td>@p.Product.OldPrice?.ToString("c")</td>
                 <td>@p.Product.Price.ToString("c")</td>
-                <td>@p.Estimate.ToString("c")</td>
+                <td>@p.EstimateOnline.ToString("c")</td>
+                <td>@p.Product.OldPriceInStore?.ToString("c")</td>
+                <td>@p.Product.PriceInStore.ToString("c")</td>
+                <td>@p.EstimateInStore.ToString("c")</td>
             </tr>
             }
         </tbody>
@@ -82,7 +89,8 @@
 </div>
 <script>
     $('#prices').dataTable({
-        "paging": false
+        "paging": false,
+        pageLength: 250
     });
 
     function previewPrices() {

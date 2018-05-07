@@ -14,11 +14,17 @@ namespace RepoWebShop.Models
         [Required]
         public string Name { get; set; }
         public decimal? OldPrice { get; set; }
+        public decimal? OldPriceInStore { get; set; }
 
-        [Display(Name = "Precio")]
+        [Display(Name = "Precio Online")]
         [Required]
         [Range(0, double.MaxValue)]
         public decimal Price { get; set; }
+
+        [Display(Name = "Precio en Tienda")]
+        [Required]
+        [Range(0, double.MaxValue)]
+        public decimal PriceInStore { get; set; }
 
         [Display(Name = "Categoría")]
         [Required]
@@ -47,5 +53,9 @@ namespace RepoWebShop.Models
         public string Description { get; set; }
 
         public bool IsActive { get; set; }
+
+        [Display(Name = "¿Se vende por internet?")]
+        [Required]
+        public bool IsOnSale { get; set; }
     }
 }

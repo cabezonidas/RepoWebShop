@@ -64,6 +64,7 @@ namespace RepoWebShop.Models
                 var isIdObsolete = _appDbContext.Orders.Count(x => x.BookingId == _shoppingCartId) > 0;
                 if (isIdObsolete)
                     RenewId();
+                LogBooking(_shoppingCartId);
                 return _shoppingCartId;
             }
             private set
@@ -83,6 +84,8 @@ namespace RepoWebShop.Models
             existingBooking.BookingId = _shoppingCartId;
             _appDbContext.ShoppingCartByIp.Update(existingBooking);
             _appDbContext.SaveChanges();
+
+            LogBooking(_shoppingCartId);
         }
 
         private void InitializeId()
@@ -99,6 +102,24 @@ namespace RepoWebShop.Models
                 _appDbContext.SaveChanges();
             }
             _ctx.Session.SetString("CartId", _shoppingCartId);
+            LogBooking(_shoppingCartId);
+        }
+
+        private void LogBooking(string bookingId)
+        {
+            var bookingDetails = new BookingRecord
+            {
+                BookingId = bookingId,
+                Ip = _ctx?.Connection?.RemoteIpAddress?.ToString() ?? string.Empty,
+                Created = _calendarRepository.LocalTime()
+            };
+
+            var detailCounts = _appDbContext.BookingRecords.Count(x => x.BookingId == bookingId && x.Ip == bookingDetails.Ip);
+            if(detailCounts == 0)
+            {
+                _appDbContext.BookingRecords.Add(bookingDetails);
+                _appDbContext.SaveChanges();
+            }
         }
     }
 }

@@ -1,0 +1,181 @@
+﻿@model SessionDetailsViewModel
+
+<div class="container">
+    <h3>Comentarios</h3>
+    <br />
+    <table class="table table-striped activities">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Sesión</th>
+                <th>Comentario</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Comments)
+            {
+
+                <tr>
+                    <td>@item.ShoppingCartCommentId</td>
+                    <td>
+                        <div title="@item.ShoppingCartId">
+                            @{
+                                if (!string.IsNullOrEmpty(item.ShoppingCartId) && item.ShoppingCartId.Length > 10)
+                                {
+                                    var friendlybooking = item.ShoppingCartId.Substring(item.ShoppingCartId.Length - 7, 6);
+                                    <span>
+                                        @friendlybooking
+                                    </span>
+                                }
+                            }
+                        </div>
+                    </td>
+                    <td>@item.Comments</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    <h3>Items del sitio</h3>
+    <br />
+    <table class="table table-striped activities">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Sesión</th>
+                <th>Item</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.ShoppingCartItemId</td>
+                    <td>
+                        <div title="@item.ShoppingCartId">
+                            @{
+                                if (!string.IsNullOrEmpty(item.ShoppingCartId) && item.ShoppingCartId.Length > 10)
+                                {
+                                    var friendlybooking = item.ShoppingCartId.Substring(item.ShoppingCartId.Length - 7, 6);
+                                    <span>
+                                        @friendlybooking
+                                    </span>
+                                }
+                            }
+                        </div>
+                    </td>
+                    <td>@item.Pie.PieDetail.Name @item.Pie.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    <h3>Fechas de Entrega</h3>
+    <br />
+    <table class="table table-striped activities">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Sesión</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.PickUpDates)
+            {
+                <tr>
+                    <td>@item.ShoppingCartPickUpDateId</td>
+                    <td>
+                        <div title="@item.BookingId">
+                            @{
+                                if (!string.IsNullOrEmpty(item.BookingId) && item.BookingId.Length > 10)
+                                {
+                                    var friendlybooking = item.BookingId.Substring(item.BookingId.Length - 7, 6);
+                                    <span>
+                                        @friendlybooking
+                                    </span>
+                                }
+                            }
+                        </div>
+                    </td>
+                    <td>@item.From.ToString("s")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>Lunches</h3>
+    <br />
+    <table class="table table-striped activities">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Sesión</th>
+                <th>Lunch Id</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Lunches)
+            {
+                <tr>
+                    <td>@item.ShoppingCartLunchId</td>
+                    <td>
+                        <div title="@item.BookingId">
+                            @{
+                                if (!string.IsNullOrEmpty(item.BookingId) && item.BookingId.Length > 10)
+                                {
+                                    var friendlybooking = item.BookingId.Substring(item.BookingId.Length - 7, 6);
+                                    <span>
+                                        @friendlybooking
+                                    </span>
+                                }
+                            }
+                        </div>
+                    </td>
+                    <td>@item.Lunch.LunchId</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>Descuentos</h3>
+    <br />
+    <table class="table table-striped activities">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Sesión</th>
+                <th>Descuento</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Discounts)
+            {
+                <tr>
+                    <td>@item.ShoppingCartDiscountId</td>
+                    <td>
+                        <div title="@item.ShoppingCartId">
+                            @{
+                                if (!string.IsNullOrEmpty(item.ShoppingCartId) && item.ShoppingCartId.Length > 10)
+                                {
+                                    var friendlybooking = item.ShoppingCartId.Substring(item.ShoppingCartId.Length - 7, 6);
+                                    <span>
+                                        @friendlybooking
+                                    </span>
+                                }
+                            }
+                        </div>
+                    </td>
+                    <td>@item.Discount.Phrase</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $('.activities').DataTable(({
+        "order": [[0, "desc"]]
+    }));
+</script>

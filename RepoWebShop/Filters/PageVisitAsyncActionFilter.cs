@@ -18,13 +18,15 @@ namespace RepoWebShop.Filters
         private class PageVisitAsyncActionFilter : IAsyncActionFilter
         {
             private readonly ICalendarRepository _calendar;
+            private readonly IShoppingCartRepository _cart;
             private readonly IHttpContextAccessor _httpContextAccessor;
             private readonly UserManager<ApplicationUser> _userManager;
             private readonly SignInManager<ApplicationUser> _signInManager;
             private readonly AppDbContext _appDbContext;
 
-            public PageVisitAsyncActionFilter(ICalendarRepository calendar, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, AppDbContext context)
+            public PageVisitAsyncActionFilter(IShoppingCartRepository cart, ICalendarRepository calendar, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, AppDbContext context)
             {
+                _cart = cart;
                 _calendar = calendar;
                 _httpContextAccessor = httpContextAccessor;
                 _userManager = userManager;
@@ -52,7 +54,8 @@ namespace RepoWebShop.Filters
                     Ip = ip,
                     Path = path.Value,
                     Visited = _calendar.LocalTime(),
-                    User = user
+                    User = user,
+                    BookingId = _cart.GetSessionCartId()
                 };
                 await _appDbContext.PageVisits.AddAsync(record);
                 await _appDbContext.SaveChangesAsync();

@@ -13,6 +13,7 @@ namespace RepoWebShop.Models
         public string BookingId { get; set; }
         public string Ip { get; set; }
         public string Error { get; set; }
+        public string StuckTrace { get; set; }
         public ApplicationUser User { get; set; }
     }
 }

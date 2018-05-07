@@ -9,6 +9,7 @@ namespace RepoWebShop.ViewModels
     public class ProductInflationEstimateViewModel
     {
         public Product Product { get; internal set; }
-        public decimal Estimate { get; internal set; }
+        public decimal EstimateOnline { get; internal set; }
+        public decimal EstimateInStore { get; internal set; }
     }
 }

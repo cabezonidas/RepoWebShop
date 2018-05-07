@@ -19,6 +19,7 @@ namespace RepoWebShop.Controllers
     {
         private readonly IPieDetailRepository _pieDetailRepository;
         private readonly IGalleryRepository _galleryRepository;
+        private readonly IShoppingCartRepository _cart;
         private readonly IFlickrRepository _flickrRepository;
         private readonly IPieRepository _pieRepository;
         private readonly ICategoryRepository _categoryRepository;
@@ -28,8 +29,9 @@ namespace RepoWebShop.Controllers
 
         
 
-        public AdminController(IGalleryRepository galleryRepository, IFlickrRepository flickrRepository, IMapper mapper, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
+        public AdminController(IShoppingCartRepository cart, IGalleryRepository galleryRepository, IFlickrRepository flickrRepository, IMapper mapper, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
         {
+            _cart = cart;
             _galleryRepository = galleryRepository;
             _flickrRepository = flickrRepository;
             _pieDetailRepository = pieDetailRepository;
@@ -122,9 +124,29 @@ namespace RepoWebShop.Controllers
 
         public IActionResult Errors()
         {
-            var result = _appDbContext.Exceptions.OrderByDescending(x => x.SiteExceptionId).ToList();
+            var exceptions = _appDbContext.Exceptions.OrderByDescending(x => x.SiteExceptionId).ToList();
+            var bookingRecords = _appDbContext.BookingRecords.ToList();
+
+            SessionDetailsViewModel sessionDetails = _cart.SessionsDetails();
+
+            ErrorsViewModel result = new ErrorsViewModel()
+            {
+                Exceptions = exceptions,
+                SessionDetails = sessionDetails,
+                BookingRecords = bookingRecords
+            };
+
             return View(result);
         }
+
+        public IActionResult SessionsActivities()
+        {
+            SessionDetailsViewModel sessionDetails = _cart.SessionsDetails();
+
+            return View(sessionDetails);
+        }
+
+
 
         public IActionResult AllProducts()
         {

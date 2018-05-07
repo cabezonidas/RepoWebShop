@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180507074143_errorhandling")]
+    partial class errorhandling
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -235,22 +236,6 @@ namespace RepoWebShop.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("RepoWebShop.Models.BookingRecord", b =>
-                {
-                    b.Property<int>("BookingRecordId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("BookingId");
-
-                    b.Property<DateTime>("Created");
-
-                    b.Property<string>("Ip");
-
-                    b.HasKey("BookingRecordId");
-
-                    b.ToTable("BookingRecords");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.Category", b =>

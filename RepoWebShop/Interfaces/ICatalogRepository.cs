@@ -9,6 +9,7 @@ namespace RepoWebShop.Interfaces
     public interface ICatalogRepository
     {
         IEnumerable<Product> GetAll();
+        IEnumerable<Product> GetAvailableToBuyOnline();
         Product GetById(int id);
         IEnumerable<Product> GetActive();
         void Deactivate(int productId);

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SiteException>
+﻿@model ErrorsViewModel
 @inject ICalendarRepository calendar
 <div class="container">
     <h3>Errores del sitio</h3>
@@ -30,44 +30,95 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Exceptions)
             {
-            <tr>
-                <td>
-                    @item.SiteExceptionId
-                </td>
-                <td>
-                    <div title="@item.BookingId">
-                        @{ 
-                            if(!string.IsNullOrEmpty(item.BookingId) && item.BookingId.Length > 10)
-                            {
-                                var friendlybooking = item.BookingId.Substring(item.BookingId.Length - 7, 6);
-                                <span>
-                                    @friendlybooking
-                                </span>
+                <tr>
+                    <td>
+                        @item.SiteExceptionId
+                    </td>
+                    <td>
+                        <div title="@item.BookingId">
+                            @{
+                                if (!string.IsNullOrEmpty(item.BookingId) && item.BookingId.Length > 10)
+                                {
+                                    var friendlybooking = item.BookingId.Substring(item.BookingId.Length - 7, 6);
+                                    <span>
+                                        @friendlybooking
+                                    </span>
+                                }
                             }
-                        }
-                    </div>
-                </td>
-                <td>
-                    @Html.Raw(calendar.SuperFriendlyDate(item.Date))
-                </td>
-                <td>
-                    @item.Ip
-                </td>
-                <td>
-                    @item.Path
-                </td>
-                <td>
-                    @Html.Raw(item.User?.Email ?? "")
-                </td>
-                <td>
-                    @item.Error
-                </td>
-              </tr>
+                        </div>
+                    </td>
+                    <td>
+                        @Html.Raw(calendar.SuperFriendlyDate(item.Date))
+                    </td>
+                    <td>
+                        @item.Ip
+                    </td>
+                    <td>
+                        @item.Path
+                    </td>
+                    <td>
+                        @Html.Raw(item.User?.Email ?? "")
+                    </td>
+                    <td title="@item.StuckTrace">
+                        @item.Error
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
+    <h3>Sesiones</h3>
+    <br />
+    <table class="table table-condensed" id="bookings">
+        <thead>
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Sesión
+                </th>
+                <th>
+                    Creado
+                </th>
+                <th>
+                    Ip
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.BookingRecords)
+            {
+                <tr>
+                    <td>
+                        @item.BookingRecordId
+                    </td>
+                    <td>
+                        <div title="@item.BookingId">
+                            @{
+                                if (!string.IsNullOrEmpty(item.BookingId) && item.BookingId.Length > 10)
+                                {
+                                    var friendlybooking = item.BookingId.Substring(item.BookingId.Length - 7, 6);
+                                    <span>
+                                        @friendlybooking
+                                    </span>
+                                }
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        @item.Created.ToString("s")
+                    </td>
+                    <td>
+                        @item.Ip
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @Html.Partial("~/Views/Admin/SessionsActivities.cshtml", Model.SessionDetails)
 </div>
 <script>
     $('#exceptions').DataTable(({

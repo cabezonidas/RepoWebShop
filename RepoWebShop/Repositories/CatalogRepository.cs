@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
-using RepoWebShop.States;
 using RepoWebShop.ViewModels;
 
 namespace RepoWebShop.Models
@@ -44,7 +34,9 @@ namespace RepoWebShop.Models
             foreach (var product in products)
             {
                 product.OldPrice = product.Price;
+                product.OldPriceInStore = product.PriceInStore;
                 product.Price = product.Price.ApplyPercentage(percentage).RoundTo(5);
+                product.PriceInStore = product.PriceInStore.ApplyPercentage(percentage).RoundTo(5);
             }
 
             _appDbContext.Products.UpdateRange(products);
@@ -81,6 +73,11 @@ namespace RepoWebShop.Models
             return _appDbContext.Products.Where(x => x.IsActive).ToList();
         }
 
+        public IEnumerable<Product> GetAvailableToBuyOnline()
+        {
+            return _appDbContext.Products.Where(x => x.IsActive && x.IsOnSale).ToList();
+        }
+
         public IEnumerable<Product> GetAll()
         {
             return _appDbContext.Products.ToList();
@@ -93,7 +90,7 @@ namespace RepoWebShop.Models
 
         public IEnumerable<ProductInflationEstimateViewModel> InflationEstimate(decimal percentage, int roundTo)
         {
-            var result = GetAll().Select(x => new ProductInflationEstimateViewModel { Product = x, Estimate = x.Price.ApplyPercentage(percentage).RoundTo(roundTo) }).ToList();
+            var result = GetAll().Select(x => new ProductInflationEstimateViewModel { Product = x, EstimateOnline = x.Price.ApplyPercentage(percentage).RoundTo(roundTo), EstimateInStore = x.PriceInStore.ApplyPercentage(percentage).RoundTo(roundTo) }).ToList();
             return result;
         }
 

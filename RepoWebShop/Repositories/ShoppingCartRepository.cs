@@ -382,5 +382,24 @@ namespace RepoWebShop.Repositories
                 _appDbContext.SaveChanges();
             }
         }
+
+        public SessionDetailsViewModel SessionsDetails()
+        {
+            var items = _appDbContext.ShoppingCartItems.Include(x => x.Pie).ThenInclude(x => x.PieDetail).ToList();
+            var comments = _appDbContext.ShoppingCartComments.Where(x => !String.IsNullOrEmpty(x.Comments)).ToList();
+            var discounts = _appDbContext.ShoppingCartDiscount.Include(x => x.Discount).ToList();
+            var dates = _appDbContext.ShoppingCartPickUpDates.ToList();
+            var lunches = _appDbContext.ShoppingCartLunch.Include(x => x.Lunch).ToList();
+
+            SessionDetailsViewModel sessionDetails = new SessionDetailsViewModel()
+            {
+                Items = items,
+                Comments = comments,
+                Discounts = discounts,
+                PickUpDates = dates,
+                Lunches = lunches
+            };
+            return sessionDetails;
+        }
     }
 }

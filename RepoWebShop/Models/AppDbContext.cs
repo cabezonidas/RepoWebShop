@@ -20,6 +20,7 @@ namespace RepoWebShop.Models
         //        .HasIndex(p => new { p.BookingId })
         //        .IsUnique(true);
         //}
+        public DbSet<BookingRecord> BookingRecords { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<AdminNotification> AdminNotifications { get; set; }
         public DbSet<SiteException> Exceptions { get; set; }

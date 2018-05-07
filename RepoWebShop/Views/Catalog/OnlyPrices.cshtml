@@ -1,0 +1,97 @@
+﻿@{Layout = string.Empty;}
+@model IEnumerable<Product>
+@inject ICalendarRepository calendar
+<link href="https://fonts.googleapis.com/css?family=Noto+Serif" rel="stylesheet">
+    <style>
+        .container {
+        }
+        td {
+            padding-left: 5px;
+            padding-right: 5px;
+            font-family: 'Noto Serif';
+            font-size: 15px;
+            text-align: right;
+            padding-bottom: 8px;
+        }
+        th {
+            padding-left: 5px;
+            padding-right: 5px;
+            font-family: 'Noto Serif';
+            font-size: 12px;
+            text-align: right;
+        }
+        .product {
+            text-align: left;
+        }
+        .pagebreak {
+            page-break-before: always;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        th {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            text-align: right;
+            background-color: white;
+            color: dimgrey;
+        }
+        table {
+            width: 100%;
+        }
+    </style>
+    <div class="container">
+    @{
+        var categories = Model.Select(x => x.Category.ToLower()).Distinct().ToArray();
+        for(int i = 0; i < categories.Length; i++)
+        {
+            <br />
+            <table class="table table-striped" id="lunch" >
+                <thead>
+                    <tr>
+                        <th class="product" colspan="2">
+                            @categories[i].ToUpper()
+                        </th>
+                        <th>@calendar.FriendlyDate(calendar.LocalTime()) de @calendar.LocalTime().Year</th>
+                    </tr>
+                    <tr>
+                        <th class="product">Producto</th>
+                        <th>Precio Online</th>
+                        <th>Precio en Tienda</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{  foreach (var prod in Model.Where(x => x.Category.ToLower() == categories[i]).OrderBy(x => x.Name))
+                        {
+                        <tr>
+                            <td class="product">
+                                @prod.Name
+                            </td>
+                            <td>
+                                @prod.Price.ToString("c")
+                            </td>
+
+                            <td>
+                                @prod.PriceInStore.ToString("c")
+                            </td>
+                        </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            @if(i != categories.Length - 1)
+            {
+                <div class="pagebreak"> </div>
+            }
+        }
+    }
+
+    </div>
+    <script>
+    window.print();
+    </script>

@@ -24,6 +24,11 @@ namespace RepoWebShop.Controllers
             return View(_catalogRepo.GetAll());
         }
 
+        public IActionResult OnlyPrices()
+        {
+            return View(_catalogRepo.GetAll());
+        }
+
         [HttpGet]
         public IActionResult New()
         {

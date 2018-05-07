@@ -40,8 +40,14 @@ namespace RepoWebShop.Filters
 
             var ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
             var path = context.HttpContext.Request.Path;
-            var user = _userManager.GetUser(_signInManager);
-            user.Wait();
+            var userTask = _userManager.GetUser(_signInManager);
+            ApplicationUser user = null;
+            try
+            {
+                userTask.Wait();
+                user = userTask.Result;
+            }
+            catch { }
 
             var exception = new SiteException
             {
@@ -50,7 +56,8 @@ namespace RepoWebShop.Filters
                 Error = context.Exception.Message,
                 Ip = ip,
                 Path = path.HasValue ? path.Value : "",
-                User = user.Result
+                User = user,
+                StuckTrace = context.Exception.StackTrace
             };
             _appDbContext.Exceptions.Add(exception);
             _appDbContext.SaveChanges();
