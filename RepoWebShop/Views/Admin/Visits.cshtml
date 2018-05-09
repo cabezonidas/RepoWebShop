@@ -27,14 +27,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.Visits)
-            {
+                @foreach (var item in Model.Visits)
+                {
                     <tr>
                         <td>
                             <a href="@item.Path">@Html.Raw("delasartes.com.ar" + item.Path)</a>
                         </td>
                         <td>
-                            @item.Ip
+                            @{ var href = "https://tools.keycdn.com/geo?host=" + item.Ip; }
+                            <a href="@href" target="_blank">@item.Ip</a>
                         </td>
                         <td>
                             <div title="@item.BookingId">
@@ -56,7 +57,7 @@
                             @Html.Raw(calendar.SuperFriendlyDate(item.Visited).Replace("<br/>", ""))
                         </td>
                     </tr>
-    }
+                }
                 </tbody>
             </table>
         </div>
@@ -109,7 +110,8 @@
             {
                 <tr>
                     <td>
-                        @item.Key
+                        @{ var href = "https://tools.keycdn.com/geo?host=" + item.Key; }
+                        <a href="@href" target="_blank">@item.Key</a>
                     </td>
                     <td>
                         @item.Value

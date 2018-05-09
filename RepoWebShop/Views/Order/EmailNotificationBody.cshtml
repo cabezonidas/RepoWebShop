@@ -96,6 +96,24 @@
                                     @{totalItems += subtotal;}
                                 </tr>
                             }
+                            @foreach (var item in Model.OrderCatalogItems)
+                            {
+                                <tr>
+                                    <td style='padding:10px; padding-left:2px; text-align:center;'>
+
+                                    </td>
+                                    <td style='padding:2px; text-align:left; '>
+                                        <div>
+                                            @item.Product.Name<br />
+                                            Precio: $@item.Price<br />
+                                            Cantidad: @item.Amount
+                                        </div>
+                                    </td>
+                                    @{var subtotal = item.Price * item.Amount;}
+                                    <td style='padding:2px; text-align:right; font-size: large; '>$@subtotal</td>
+                                    @{totalItems += subtotal;}
+                                </tr>
+                            }
                             @if (Model.Delivery != null)
                             {
                                 <tr>

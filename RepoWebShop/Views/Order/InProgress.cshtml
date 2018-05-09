@@ -94,6 +94,13 @@
 
                             items.Add(line);
                         }
+                        @foreach (var ol in order.OrderCatalogItems)
+                        {
+                            var line = ol.Amount == 1 ? "" : ol.Amount + "x ";
+                            line += $"{ol.Product.Name}";
+
+                            items.Add(line);
+                        }
                         @if (order.DeliveryAddress != null)
                         {
                             items.Add("Envío: " + order.DeliveryAddress.AddressLine1?.Split(",")?.FirstOrDefault() ?? "");

@@ -15,6 +15,8 @@ namespace RepoWebShop.Models
         //Puedo usar esto mismo en PieDetail, en vez de traer siempre un producto, y despues traer los relacionados
         public ICollection<OrderDetail> OrderLines { get; set; }
 
+        public ICollection<OrderCatalogItem> OrderCatalogItems { get; set; }
+
         //[Required(ErrorMessage = "Por favor complete el número de teléfono")]
         [StringLength(25)]
         [Display(Name = "Teléfono")]

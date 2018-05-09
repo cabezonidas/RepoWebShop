@@ -92,11 +92,17 @@ namespace RepoWebShop.Models
             return _appDbContext.OrderDetails.Include(x => x.Order.Email).Include(x => x.Pie).ThenInclude(x => x.PieDetail).Where(x => x.OrderId == id);
         }
 
+        public IEnumerable<OrderCatalogItem> GetOrderCatalogItems(int id)
+        {
+            return _appDbContext.OrderCatalogItems.Include(x => x.Order).Include(x => x.Product).Where(x => x.Order.OrderId == id);
+        }
+
         public IEnumerable<Order> GetAll()
         {
             var orders = _appDbContext.Orders
                 .Include(x => x.Registration)
                 .Include(x => x.OrderLines)
+                .Include(x => x.OrderCatalogItems)
                 .Include(x => x.DeliveryAddress)
                 .Include(x => x.Discount)
                 .Where(o => o.Status != "draft").ToList();
@@ -107,6 +113,10 @@ namespace RepoWebShop.Models
                 {
                     orderLine.Pie = _appDbContext.Pies.First(x => x.PieId == orderLine.PieId);
                     orderLine.Pie.PieDetail = _appDbContext.PieDetails.First(x => x.PieDetailId == orderLine.Pie.PieDetailId);
+                }
+                foreach (var orderLine in order.OrderCatalogItems)
+                {
+                    orderLine.Product = _appDbContext.Products.First(x => x.ProductId == orderLine.ProductId);
                 }
             }
 
@@ -171,6 +181,19 @@ namespace RepoWebShop.Models
 
             /**********************/
 
+            var shoppingProductItems = _cartRepository.GetCatalogItems(order.BookingId);
+            _appDbContext.OrderCatalogItems.AddRange(shoppingProductItems.Select(x => new OrderCatalogItem()
+            {
+                Amount = x.Amount,
+                Price = x.Product.Price,
+                Order = order,
+                ProductId = x.Product.ProductId,
+                Product = x.Product
+            }));
+            _appDbContext.SaveChanges();
+
+            /**********************/
+
             _cartRepository.ClearCart(order.BookingId);
 
             return order;
@@ -186,11 +209,13 @@ namespace RepoWebShop.Models
         public EmailNotificationViewModel ToEmailNotification(Order order)
         {
             var orderDetails = GetOrderDetails(order.OrderId);
+            var orderCatalogItems = GetOrderCatalogItems(order.OrderId);
             var emailData = new EmailNotificationViewModel();
             emailData.AbsoluteUrl = host;
             emailData.Comments = order.CustomerComments;
             emailData.MercadoPagoTransaction = order.MercadoPagoTransaction;
             emailData.OrderItems = orderDetails;
+            emailData.OrderCatalogItems = orderCatalogItems;
             emailData.OrderReady = order.PickUpTimeFrom ?? order.PickUpTime;
             emailData.TimeLeftUntilStoreCloses = order.TimeLeftUntilStoreCloses;
             emailData.OrderTotal = order.OrderTotal; //Without MP interests

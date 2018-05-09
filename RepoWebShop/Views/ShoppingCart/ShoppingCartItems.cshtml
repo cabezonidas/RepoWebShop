@@ -35,12 +35,41 @@
                     </td>
                     <td class="text-left">
                         <a href="/PieDetail/Details/@line.Pie.PieDetailId" class="text-muted">
-                            @line.Pie.PieDetail.Name [@line.Pie.Name] - @Model.PreparationTime hs
+                            @line.Pie.PieDetail.Name (@line.Pie.Name) - @Model.PreparationTime hs
                         </a>
                     </td>
                     <td class="text-right">@line.Pie.Price.ToString("c")</td>
                     <td class="text-right">
                         @((line.Amount * line.Pie.Price).ToString("c"))
+                    </td>
+                </tr>
+            }
+            @foreach (var line in Model.CatalogItems)
+            {
+                <tr>
+                    <td class="text-center">
+                        <a asp-controller="ShoppingCart" asp-action="ClearCatalogProductFromShoppingCart"
+                           asp-route-productId="@line.Product.ProductId" class="text-muted">
+                            <span class="glyphicon glyphicon-remove remove-item"></span>
+                        </a>
+                    </td>
+                    <td class="text-center quantity">
+                        <a asp-controller="ShoppingCart" asp-action="RemoveCatalogProductFromShoppingCart"
+                           asp-route-productId="@line.Product.ProductId" class="text-muted">
+                            <span class="fa fa-caret-left"></span>
+                        </a>
+                        @line.Amount
+                        <a asp-controller="ShoppingCart" asp-action="AddProductToShoppingCart"
+                           asp-route-id="@line.Product.ProductId" class="text-muted">
+                            <span class="fa fa-caret-right"></span>
+                        </a>
+                    </td>
+                    <td class="text-left text-muted">
+                        @line.Product.Name - @Model.PreparationTime hs
+                    </td>
+                    <td class="text-right">@line.Product.Price.ToString("c")</td>
+                    <td class="text-right">
+                        @((line.Amount * line.Product.Price).ToString("c"))
                     </td>
                 </tr>
             }

@@ -19,6 +19,7 @@ namespace RepoWebShop.Controllers
         private readonly IShoppingCartRepository _cartRepository;
         private readonly IMercadoPago _mp;
         private readonly ICalendarRepository _calendarRepository;
+        private readonly ICatalogRepository _catalogRepository;
         private readonly IConfiguration _config;
         private readonly string _bookingId;
         private readonly string _friendlyBookingId;
@@ -33,13 +34,14 @@ namespace RepoWebShop.Controllers
         private readonly IHttpContextAccessor _contextAccessor;
 
 
-        public ShoppingCartController(IHttpContextAccessor contextAccessor, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration config, ICalendarRepository calendarRepository, IPieRepository pieRepository, IShoppingCartRepository shoppingCart, IMercadoPago mp)
+        public ShoppingCartController(ICatalogRepository catalogRepository, IHttpContextAccessor contextAccessor, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration config, ICalendarRepository calendarRepository, IPieRepository pieRepository, IShoppingCartRepository shoppingCart, IMercadoPago mp)
         {
             _contextAccessor = contextAccessor;
             _userManager = userManager;
             _signInManager = signInManager;
             _config = config;
             _pieRepository = pieRepository;
+            _catalogRepository = catalogRepository;
             _cartRepository = shoppingCart;
             _bookingId = shoppingCart.GetSessionCartId();
             _friendlyBookingId = _bookingId.Length >= 6 ? _bookingId?.Substring(_bookingId.Length - 6, 6) ?? string.Empty : String.Empty;
@@ -70,6 +72,7 @@ namespace RepoWebShop.Controllers
             var shoppingCartViewModel = new ShoppingCartViewModel
             {
                 Items = _cartRepository.GetItems(null).ToList(),
+                CatalogItems = _cartRepository.GetCatalogItems(null).ToList(),
                 PickupDate = _calendarRepository.GetPickupEstimate(highestPrepTime),
                 ShoppingCartTotal = _cartRepository.GetTotal(null),
                 PreparationTime = highestPrepTime,
@@ -101,6 +104,17 @@ namespace RepoWebShop.Controllers
             return RedirectToAction("Index");
         }
 
+        public RedirectToActionResult AddProductToShoppingCart(int id)
+        {
+            var product = _catalogRepository.GetAvailableToBuyOnline().FirstOrDefault(p => p.ProductId == id);
+
+            if (product != null)
+            {
+                _cartRepository.AddCatalogItemToCart(product, 1);
+            }
+            return RedirectToAction("Index");
+        }
+
         public RedirectToActionResult RemoveDelivery()
         {
             _cartRepository.RemoveDelivery();
@@ -124,10 +138,23 @@ namespace RepoWebShop.Controllers
             return RedirectToAction("Index");
         }
 
+        public RedirectToActionResult RemoveCatalogProductFromShoppingCart(int productId)
+        {
+            var selectedProduct = _catalogRepository.GetById(productId);
+            _cartRepository.RemoveProductFromCart(selectedProduct);
+            return RedirectToAction("Index");
+        }
+
         public RedirectToActionResult ClearFromShoppingCart(int pieId)
         {
             _cartRepository.ClearFromCart(pieId);
 
+            return RedirectToAction("Index");
+        }
+
+        public RedirectToActionResult ClearCatalogProductFromShoppingCart(int productId)
+        {
+            _cartRepository.ClearCatalogItemFromCart(productId);
             return RedirectToAction("Index");
         }
 

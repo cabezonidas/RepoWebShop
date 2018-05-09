@@ -19,12 +19,14 @@ namespace RepoWebShop.Controllers
         private readonly IPieDetailRepository _pieDetailRepository;
         private readonly IPieRepository _pieRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ICatalogRepository _catalogRepository;
         private readonly IFlickrRepository _flickrRepository;
         private readonly AppDbContext _appDbContext;
         private readonly IMapper _mapper;
 
-        public PieDetailController(IMapper mapper, IFlickrRepository flickrRepository, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
+        public PieDetailController(ICatalogRepository catalogRepository, IMapper mapper, IFlickrRepository flickrRepository, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
         {
+            _catalogRepository = catalogRepository;
             _pieDetailRepository = pieDetailRepository;
             _categoryRepository = categoryRepository;
             _pieRepository = pieRepository;
@@ -58,7 +60,7 @@ namespace RepoWebShop.Controllers
             {
                 PieDetails = viewProducts,
                 CurrentCategory = currentCategory,
-
+                CatalogProducts = _catalogRepository.GetAvailableToBuyOnline().Where(x => x.Category.ToLower() != "lunch")
             });
         }
 

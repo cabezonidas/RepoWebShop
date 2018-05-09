@@ -11,6 +11,7 @@
 </style>
 
 
+<link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css" rel="stylesheet" />
 
 <div class="container" id="container">
     <div class="title-container">
@@ -23,9 +24,14 @@
         }
     </div>
 </div>
-<div class="container text-center">
-    <h3><a asp-action="FullCatalog" asp-controller="Services" style="color:black">Ver catálogo completo</a></h3>
+
+<div class="" style="max-width: 800px; min-height: 800px; margin: auto">
+    @Html.Partial("~/Views/PieDetail/Catalog.cshtml", Model.CatalogProducts)
 </div>
+
+@*<div class="container text-center">
+        <h3><a asp-action="FullCatalog" asp-controller="Services" style="color:black">Ver catálogo completo</a></h3>
+    </div>*@
 
 <script type="text/javascript">
     $(function () {
@@ -34,11 +40,11 @@
         });
     });
 
-    function getParameterByName(name){
+    function getParameterByName(name) {
         var regexS = "[\\?&]" + name + "=([^&#]*)",
-        regex = new RegExp(regexS),
-        results = regex.exec(window.location.search);
-        if( results == null ){
+            regex = new RegExp(regexS),
+            results = regex.exec(window.location.search);
+        if (results == null) {
             return "";
         } else {
             return decodeURIComponent(results[1].replace(/\+/g, " "));
@@ -47,7 +53,7 @@
 
     var category = getParameterByName("category");
 
-    if(category)
+    if (category)
         $('#category-title').append(category);
     else
         $('#category-title').append("Productos");

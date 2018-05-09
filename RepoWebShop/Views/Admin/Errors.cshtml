@@ -53,7 +53,8 @@
                         @Html.Raw(calendar.SuperFriendlyDate(item.Date))
                     </td>
                     <td>
-                        @item.Ip
+                        @{ var href = "https://tools.keycdn.com/geo?host=" + item.Ip; }
+                        <a href="@href" target="_blank">@item.Ip</a>
                     </td>
                     <td>
                         @item.Path
@@ -111,7 +112,8 @@
                         @item.Created.ToString("s")
                     </td>
                     <td>
-                        @item.Ip
+                        @{ var href = "https://tools.keycdn.com/geo?host=" + item.Ip; }
+                        <a href="@href" target="_blank">@item.Ip</a>
                     </td>
                 </tr>
             }

@@ -11,5 +11,6 @@ namespace RepoWebShop.ViewModels
     {
         public IEnumerable<PieDetailViewModel> PieDetails { get; set; }
         public string CurrentCategory { get; set; }
+        public IEnumerable<Product> CatalogProducts { get; internal set; }
     }
 }

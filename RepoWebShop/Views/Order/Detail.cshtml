@@ -50,6 +50,14 @@
                         <td> @item.Pie.Price</td>
                     </tr>
                 }
+                @foreach (var item in Model.CatalogItems)
+                {
+                    <tr>
+                        <td> @item.Amount </td>
+                        <td> @item.Product.Name </td>
+                        <td> @item.Product.Price</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

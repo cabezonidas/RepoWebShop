@@ -28,5 +28,6 @@ namespace RepoWebShop.ViewModels
         public int DeliveryRadius { get; internal set; }
         public Discount Discount { get; internal set; }
         public decimal ShopingCartTotalWithoutDiscount { get; internal set; }
+        public List<ShoppingCartCatalogItem> CatalogItems { get; internal set; }
     }
 }
