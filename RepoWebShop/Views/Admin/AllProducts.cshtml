@@ -49,6 +49,9 @@
             $('#allProducts-tbody').append(getRow(item));
         });
         $('#allProducts').DataTable({
+            "language": {
+                "url": "/Scripts/SpanishDatatables.json"
+            },
             "order": [[0, "asc"]],
             "pageLength": 50
         });

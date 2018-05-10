@@ -107,7 +107,7 @@
                     <td class="text-center quantity"></td>
                     <td class="text-left text-success">
                         <strong>
-                            Descuento: @Model.Discount.Phrase.ToUpper()
+                            Descuento @Model.Discount.Percentage % [Hasta @Model.Discount.Roof.ToString("s")]
                         </strong>
                         @{
                             string error = "";

@@ -1,0 +1,81 @@
+﻿@model LunchComboViewModel
+@inject ILunchRepository _lunchRepository
+
+<div class="container">
+    <h2>Combo Nuevo para Lunch #@Model.LunchId</h2>
+
+    <form asp-controller="Lunch" asp-action="CreateCombo" method="post" class="form-horizontal" role="form">
+        <hr />
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="form-group" hidden="hidden">
+            <label asp-for="LunchId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="LunchId" class="form-control" />
+                <span asp-validation-for="LunchId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="IsCombo" class="col-md-2 control-label"></label>
+            <div class="col-md-2">
+                <input asp-for="IsCombo" class="form-control" checked="checked" />
+                <span asp-validation-for="IsCombo" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Title" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Title" class="form-control" placeholder="" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ComboPrice" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="ComboPrice" class="form-control" />
+                <span asp-validation-for="ComboPrice" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PreparationTime" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PreparationTime" class="form-control" />
+                <span asp-validation-for="PreparationTime" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="EventDuration" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="EventDuration" class="form-control" checked="checked" />
+                <span asp-validation-for="EventDuration" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Attendants" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Attendants" class="form-control" checked="checked" />
+                <span asp-validation-for="Attendants" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-primary" value="Guardar" />
+            </div>
+        </div>
+    </form>
+</div>
+<hr />
+@Html.Partial("~/Views/Lunch/Detail.cshtml", _lunchRepository.GetLunch(Model.LunchId))

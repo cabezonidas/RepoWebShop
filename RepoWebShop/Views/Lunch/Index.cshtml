@@ -14,7 +14,8 @@
     <br />
     <div>
         <span style="font-size: xx-large; margin-right: 10px;">Servicios de Lunch</span>
-        <span ><a style="margin-bottom: 15px;" asp-controller="Lunch" asp-action="Estimate" class="btn btn-primary">Crear</a></span>
+        <span><a style="margin-bottom: 15px;" asp-controller="Lunch" asp-action="Estimate" class="btn btn-primary">Crear</a></span>
+        <span><a style="margin-bottom: 15px;" asp-controller="Lunch" asp-action="Combos" class="btn btn-primary">Combos</a></span>
     </div>
 
     <table class="table">
@@ -24,6 +25,7 @@
                 <th>Total</th>
                 <th>Bocados</th>
                 <th>Invitados</th>
+                <th>Combo</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -46,6 +48,27 @@
                         <td>
                             @_lunchRepository.GetConvitees(lunch)
                         </td>
+                        <td>
+                            @if(lunch.IsCombo)
+                            {
+                                <span class="fa fa-check" style="color: green;"></span>
+                            }
+                            else
+                            {
+                                <span class="fa fa-times"></span>
+                            } 
+                        </td>                           
+                        <td>
+                        @if(lunch.IsCombo)
+                        {
+                            <a asp-controller="Lunch" asp-action="EditCombo" asp-route-lunchId="@lunch.LunchId">Editar Combo</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Lunch" asp-action="CreateCombo" asp-route-lunchId="@lunch.LunchId">Crear Combo</a>
+                        }
+                        </td>
+
                         <td>
                             <a asp-controller="Lunch" asp-action="Detail" asp-route-id="@lunch.LunchId">Ver</a>
                         </td>

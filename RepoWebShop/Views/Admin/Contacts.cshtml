@@ -50,7 +50,11 @@
 </div>
 
 <script>
-    $('#contacts').DataTable();
+    $('#contacts').DataTable({
+        "language": {
+            "url": "/Scripts/SpanishDatatables.json"
+        }
+    });
 
     function deleteContact(id) {
         $.ajax({

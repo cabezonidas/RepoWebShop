@@ -64,6 +64,9 @@
                 '</tr>');
         }
         $('#table').DataTable({
+            "language": {
+                "url": "/Scripts/SpanishDatatables.json"
+            },
             pageLength: 50,
             searching: false,
             "bPaginate": false,
@@ -84,8 +87,8 @@
         "bLengthChange": false,
         "bFilter": true,
         "bInfo": false,
-        language: {
-            searchPlaceholder: "Buscar..."
+        "language": {
+            "url": "/Scripts/SpanishDatatables.json"
         }
     });
 </script>

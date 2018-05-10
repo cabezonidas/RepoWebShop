@@ -57,29 +57,33 @@
                         <th class="product" colspan="2">
                             @categories[i].ToUpper()
                         </th>
-                        <th>@calendar.FriendlyDate(calendar.LocalTime()) de @calendar.LocalTime().Year</th>
+                        <th colspan="2">@calendar.FriendlyDate(calendar.LocalTime()) de @calendar.LocalTime().Year</th>
                     </tr>
                     <tr>
                         <th class="product">Producto</th>
                         <th>Precio Online</th>
                         <th>Precio en Tienda</th>
+                        <th>Tienda en Efectivo</th>
                     </tr>
                 </thead>
                 <tbody>
                     @{  foreach (var prod in Model.Where(x => x.Category.ToLower() == categories[i]).OrderBy(x => x.Name))
                         {
-                        <tr>
-                            <td class="product">
-                                @prod.Name
-                            </td>
-                            <td>
-                                @prod.Price.ToString("c")
-                            </td>
+                    <tr>
+                        <td class="product">
+                            @prod.Name
+                        </td>
+                        <td>
+                            @prod.Price.ToString("c")
+                        </td>
 
-                            <td>
-                                @prod.PriceInStore.ToString("c")
-                            </td>
-                        </tr>
+                        <td>
+                            @prod.PriceInStore.ToString("c")
+                        </td>
+                        <td>
+                            @Html.Raw((prod.PriceInStore * 0.9m).ToString("c"))
+                        </td>
+                    </tr>
                         }
                     }
                 </tbody>

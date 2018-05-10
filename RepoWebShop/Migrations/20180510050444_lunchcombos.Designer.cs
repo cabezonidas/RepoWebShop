@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180510050444_lunchcombos")]
+    partial class lunchcombos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -416,7 +417,7 @@ namespace RepoWebShop.Migrations
 
                     b.Property<int>("Attendants");
 
-                    b.Property<decimal>("ComboPrice");
+                    b.Property<string>("ComboPrice");
 
                     b.Property<string>("Comments");
 

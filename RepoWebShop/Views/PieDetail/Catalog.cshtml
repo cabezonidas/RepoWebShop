@@ -3,13 +3,15 @@
     th {
         text-align: center;
     }
+
     .filterscake {
         font-size: larger;
         color: #883636;
     }
-    .filterscake label {
-        color: #883636;
-    }
+
+        .filterscake label {
+            color: #883636;
+        }
 </style>
 
 <div>
@@ -32,80 +34,59 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(var item in Model)
+        @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                <div style="font-size: large; color: #883636">
-                    @item.Name
-                </div>
-                <div>
-                    Prociones: @item.Portions <span class="fa fa-pie-chart"></span>
-                </div>
-                <div>
-                    Preparación: @item.PreparationTime hs
-                </div>
-            </td>
-            <td>
-                <div class="text-center">
-                    @if (item.PriceInStore > item.Price)
-                    {
-                        var perc = Decimal.Floor(100 - (item.Price / item.PriceInStore * 100));
-
-                        <div style="font-size: larger; ">
-                            <div>
-                                <strong>$@item.Price </strong>
-                                <strong style="color: green;">-@perc% Online</strong>
-                            </div>
-                        </div>
-                        <div style="font-size: smaller;">
-                            <div>
-                                <strong style="color: red;">$@item.PriceInStore </strong>
-                                <strong>En sucursal</strong>
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div style="font-size: larger; ">$@item.Price</div>
-                    }
-                    <div style="margin: 5px;">
-                        <a title="Comprar" asp-controller="ShoppingCart" asp-action="AddProductToShoppingCart"
-                           asp-route-id="@item.ProductId" class="btn btn-primary">
-                            Comprar
-                        </a>
+            <tr>
+                <td>
+                    <div style="font-size: large; color: #883636">
+                        @item.Name
                     </div>
-                </div>
-            </td>
-        </tr>
+                    <div>
+                        Prociones: @item.Portions <span class="fa fa-pie-chart"></span>
+                    </div>
+                    <div>
+                        Preparación: @item.PreparationTime hs
+                    </div>
+                </td>
+                <td>
+                    <div class="text-center">
+                        @if (item.PriceInStore > item.Price)
+                        {
+                            var perc = Decimal.Floor(100 - (item.Price / item.PriceInStore * 100));
+
+                            <div style="font-size: larger; ">
+                                <div>
+                                    <strong>$@item.Price </strong>
+                                    <strong style="color: green;">-@perc% Online</strong>
+                                </div>
+                            </div>
+                            <div style="font-size: smaller;">
+                                <div>
+                                    <strong style="color: red;">$@item.PriceInStore </strong>
+                                    <strong>En sucursal</strong>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="font-size: larger; ">$@item.Price</div>
+                        }
+                        <div style="margin: 5px;">
+                            <a title="Comprar" asp-controller="ShoppingCart" asp-action="AddProductToShoppingCart"
+                               asp-route-id="@item.ProductId" class="btn btn-primary">
+                                Comprar
+                            </a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
 <script>
     $('table#full-catalog').DataTable({
         "language": {
-            "sProcessing": "Procesando...",
-            "sLengthMenu": "Mostrar _MENU_ registros",
-            "sZeroRecords": "No se encontraron resultados",
-            "sEmptyTable": "Ningún dato disponible en esta tabla",
-            "sInfo": "Registros del _START_ al _END_ de _TOTAL_",
-            "sInfoEmpty": "Registros del 0 al 0 de 0",
-            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-            "sInfoPostFix": "",
-            "sSearch": "Buscar:",
-            "sUrl": "",
-            "sInfoThousands": ",",
-            "sLoadingRecords": "Cargando...",
-            "oPaginate": {
-                "sFirst": "Primero",
-                "sLast": "Último",
-                "sNext": "Siguiente",
-                "sPrevious": "Anterior"
-            },
-            "oAria": {
-                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-            }
+            "url": "/Scripts/SpanishDatatables.json"
         },
         "paging": false,
         "columnDefs": [{

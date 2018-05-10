@@ -12,6 +12,8 @@ namespace RepoWebShop.Models
     {
         public MappingProfile()
         {
+            CreateMap<LunchComboViewModel, Lunch>();
+            CreateMap<Lunch, LunchComboViewModel>();
             CreateMap<DeliveryAddress, DeliveryAddressViewModel>();
             CreateMap<DeliveryAddress, DeliveryAddressViewModel>();
 

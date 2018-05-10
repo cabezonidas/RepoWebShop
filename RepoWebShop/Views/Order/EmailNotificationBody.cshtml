@@ -137,7 +137,7 @@
                                             var discount = deliveryCost + totalItems - Model.OrderTotal;
                                         }
                                         <div style="color: green;">
-                                            <strong>@Model.Discount.Phrase</strong>
+                                            <strong>Descuento @Model.Discount.Percentage % [Hasta @Model.Discount.Roof.ToString("s")]</strong>
                                         </div>
                                     </td>
                                     <td style='padding:2px; text-align:right; color: green; '>-$@discount</td>

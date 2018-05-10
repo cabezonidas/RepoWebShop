@@ -67,6 +67,9 @@
                 '</tr>');
         }
         $('#table').DataTable({
+            "language": {
+                "url": "/Scripts/SpanishDatatables.json"
+            },
             pageLength: 50,
             searching: false,
             "bPaginate": false,
@@ -78,6 +81,9 @@
         $('#table').removeClass('hidden');
     });*@
     $('#table').DataTable({
+        "language": {
+            "url": "/Scripts/SpanishDatatables.json"
+        },
         pageLength: 50,
         searching: false,
         "bPaginate": false,
