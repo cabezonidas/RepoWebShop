@@ -7,7 +7,6 @@
         -moz-column-gap: 1em;
         -webkit-column-gap: 1em;
     }
-
         .row.make-columns > div {
             display: inline-block;
             padding: .5rem;
@@ -20,138 +19,20 @@
         height: 100%;
         width: 100%;
     }
-    .col-price {
-        padding-right: 10px;
-    }
-    .col-item {
-        padding-left: 10px;
-    }
 </style>
-<div class="container">
-    <h2>Promos Lunch</h2>
-</div>
-<div class="container">
-    <div class="row make-columns">
-        @foreach (var lunch in Model)
-        {
+@if (Model.Any())
+{
+    <div class="container">
+        <h3>¿Qué tal estas opciones?</h3>
+        <div class="row make-columns">
+            @foreach (var lunch in Model.OrderBy(x => !x.IsGeneric).OrderBy(x => _lunchRepository.GetTotal(x)))
+            {
             <div class="col-xs-6 col-md-4">
                 <div class="panel">
-                    @*panel panel-default*@
-                <div class="">
-                    @*panel-body*@
-                <div class="text-center " style="padding: 10px; background-color:#883636; color:papayawhip; border-top-left-radius: 5px; border-top-right-radius: 5px;">
-                    <div style="font-size: larger">@lunch.Title</div>
-                    <div style="font-size: smaller">Combo #@lunch.LunchId</div>
+                    @Html.Partial("~/Views/Lunch/ComboDetail.cshtml", lunch)
                 </div>
-                <div class="text-center" style="background-color:papayawhip; color:#883636; padding-top: 10px;">
-                    @foreach (var item in lunch.Items)
-                    {
-                    <div class="row">
-                        <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 text-left">
-                            <div class="col-item">
-                                <div class="text-capitalize">
-                                    @item.Product.Name
-                                </div>
-                                <div style="font-size: smaller;">
-                                    Cantidad: @Html.Raw(item.Quantity * item.Product.MinOrderAmount)
-                                </div>
-                                <div style="height: 5px;"></div>
-                            </div>
-                        </div>
-                        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 text-right">
-                            <div class="col-price">
-                                <div style="font-size: large;">
-                                    @Html.Raw((item.Quantity * item.Product.MinOrderAmount * item.Product.Price).ToString("c"))
-                                </div>
-
-                                @if(item.Product.Price < item.Product.PriceInStore)
-                                {   
-                                <div style="font-size: smaller; color: green;">
-                                    @item.Product.Price.ToString("c") c/u
-                                </div>
-                                <div style="font-size: x-small; text-decoration-line: line-through; color: red;">
-                                    @item.Product.PriceInStore.ToString("c") c/u
-                                </div>
-                                }
-                                else
-                                {
-                                <div style="font-size: smaller;">
-                                    @item.Product.Price.ToString("c") c/u
-                                </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                    }
-                    @foreach (var miscellaneous in lunch.Miscellanea)
-                    {
-                    <div class="row">
-                        <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 text-left">
-                            <div class="col-item">
-                                <div class="text-capitalize" >
-                                    @miscellaneous.Description
-                                </div>
-                                <div style="font-size: smaller;">
-                                    Cantidad: @Html.Raw(miscellaneous.Quantity)
-                                </div>
-                                <div style="height: 5px;"></div>
-                            </div>
-                        </div>
-                        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 text-right">
-                            <div class="col-price">
-                                <div style="font-size: large;" >
-                                    @Html.Raw((miscellaneous.Quantity * miscellaneous.Price).ToString("c"))
-                                </div>
-                                <div style="font-size: smaller;"  >
-                                    @miscellaneous.Price.ToString("c") c/u
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    }
-                    <div style="padding: 10px;">
-                        <div style="border-bottom-color: #883636; border-bottom-style: solid; padding-top: 15px; margin-bottom: 10px; border-bottom-width: 1px; ">
-                        </div>
-                    </div>
-                    <div style="font-size: large;">
-                        <span>
-                            Total
-                        </span>
-                        <span style="text-decoration-line: line-through; color: red;">
-                            @Html.Raw(_lunchRepository.GetTotal(lunch).ToString("c"))
-                        </span>
-                    </div>
-                    <div style="color: green;">
-                        <div style="font-size: x-large">
-                            @lunch.ComboPrice.ToString("c")
-                        </div>
-                        <div>
-                            @{ 
-                                var total = _lunchRepository.GetTotal(lunch);
-                                var percentage = 100 - (lunch.ComboPrice / total * 100);
-                            }
-                            Precio Online @Html.Raw(Decimal.ToInt32(percentage)) % Off
-                        </div>
-                    </div>
-                    <div style="padding: 10px;">
-                        <a class="btn btn-primary">¡Comprar!</a>
-                    </div>
-                </div>
-                <div class="text-left" style="padding: 10px; background-color:#883636; color:papayawhip; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
-                    <div class="text-center" style="font-size: larger; padding-bottom: 10px; text-decoration-line: underline;">Recomendación</div>
-                    <div>
-                        <span class="fa fa-clock-o"></span>
-                        Duración - Hasta @lunch.EventDuration horas
-                    </div>
-                    <div>
-                        <span class="fa fa-users"></span>
-                        Invitad@@s - Hasta @lunch.Attendants adultos
-                    </div>
-                </div>
-
             </div>
+            }
         </div>
     </div>
 }
-    </div>
-</div>

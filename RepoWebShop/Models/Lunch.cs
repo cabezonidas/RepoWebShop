@@ -18,7 +18,9 @@ namespace RepoWebShop.Models
         public string Comments { get; set; }
 
         public bool IsCombo { get; set; }
-        
+
+        public bool IsGeneric { get; set; }
+
         public string Title { get; set; }
         
         public string Description { get; set; }

@@ -113,7 +113,9 @@
                 </div>
 
                 <div class="col-xs-12 col-sm-5 col-md-5 col-lg-6" id="pictures5">
-                    @Html.Partial("~/Views/Photos/AlbumFullScreen.cshtml", Model.AlbumPitures)
+                    <div style="margin-top: 25px;">
+                        @Html.Partial("~/Views/Photos/AlbumFullScreen.cshtml", Model.AlbumPitures)
+                    </div>
                 </div>
             </div>
             @Html.Partial("~/Views/ShoppingCart/Faq.cshtml")

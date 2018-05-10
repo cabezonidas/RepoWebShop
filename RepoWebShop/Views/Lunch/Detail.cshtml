@@ -1,18 +1,23 @@
 ﻿@model Lunch
 @inject ILunchRepository _lunchRepository
-
+<style>
+    .handy:hover {
+        cursor: pointer;
+    }
+</style>
 <div class="container">
     <br />
     <div class="row text-center" style="border-top-left-radius: 5px; border-top-right-radius: 5px; max-width: 600px; margin: auto; background-color: #883636; color:papayawhip">
         <br />
-            <img style="max-width:50%;" src="~/Pictures/LogoRepo.png" />
+            @*<img style="max-width:50%;" src="~/Pictures/LogoRepo.png" />*@
             <h2>Servicio de Catering</h2>
+            <div >
+                <span class="handy" onclick="modify(@Model.LunchId)">Modificar</span>
+            </div>
         <div class="col-xs-6 col-sm-8 col-md-8 col-lg-8 text-left">
         </div>
 
         <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4 text-center">
-            <div >
-            </div>
         </div>
 
         <br />
@@ -71,3 +76,8 @@
         </div>
     }
 </div>
+<script>
+    function modify(id) {
+        window.location = '/Lunch/ModifyLunch/' + id;
+    }
+</script>

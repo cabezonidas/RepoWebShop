@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
@@ -18,9 +19,11 @@ namespace RepoWebShop.Repositories
         private readonly string _sender;
         private readonly IConfiguration _config;
         private readonly AppDbContext _appDbContext;
+        private readonly IHostingEnvironment _env;
 
-        public SmsRepository(IConfiguration config, AppDbContext appDbContext)
+        public SmsRepository(IHostingEnvironment env, IConfiguration config, AppDbContext appDbContext)
         {
+            _env = env;
             _appDbContext = appDbContext;
             _accountSid = config.GetSection("TwilioAccoundSid").Value;
             _authToken = config.GetSection("TwilioAuthToken").Value;
@@ -32,9 +35,12 @@ namespace RepoWebShop.Repositories
         public void NotifyAdmins(string v)
         {
             //var numbers = _config.GetSection("AdminMobiles").GetChildren().Select(x => x.Value);
-            var numbers = _appDbContext.AdminNotifications.Select(x => x.Phone);
-            foreach(var number in numbers)
-                SendSms(number, v);
+            if(_env.IsProduction())
+            {
+                var numbers = _appDbContext.AdminNotifications.Select(x => x.Phone);
+                foreach(var number in numbers)
+                    SendSms(number, v);
+            }
         }
 
         public MessageResource SendSms(string phone, string body) =>

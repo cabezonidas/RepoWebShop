@@ -15,7 +15,7 @@
     <div>
         <span style="font-size: xx-large; margin-right: 10px;">Servicios de Lunch</span>
         <span><a style="margin-bottom: 15px;" asp-controller="Lunch" asp-action="Estimate" class="btn btn-primary">Crear</a></span>
-        <span><a style="margin-bottom: 15px;" asp-controller="Lunch" asp-action="Combos" class="btn btn-primary">Combos</a></span>
+        <span><a style="margin-bottom: 15px;" asp-controller="Services" asp-action="Catering" class="btn btn-primary">Ver todos</a></span>
     </div>
 
     <table class="table">
@@ -25,7 +25,9 @@
                 <th>Total</th>
                 <th>Bocados</th>
                 <th>Invitados</th>
-                <th>Combo</th>
+                <th>Compra Online</th>
+                <th>Genérico</th>
+                <th>Nombre</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -37,7 +39,7 @@
                 {
                     <tr>
                         <td>
-                            <a asp-controller="Lunch" asp-action="Detail" asp-route-id="@lunch.LunchId">Lunch #@lunch.LunchId</a>
+                            <a asp-controller="Lunch" asp-action="Detail" asp-route-id="@lunch.LunchId">@lunch.LunchId</a>
                         </td>
                         <td>
                             @_lunchRepository.GetTotal(lunch).ToString("c")
@@ -57,26 +59,29 @@
                             {
                                 <span class="fa fa-times"></span>
                             } 
-                        </td>                           
+                        </td>  
                         <td>
-                        @if(lunch.IsCombo)
-                        {
-                            <a asp-controller="Lunch" asp-action="EditCombo" asp-route-lunchId="@lunch.LunchId">Editar Combo</a>
-                        }
-                        else
-                        {
-                            <a asp-controller="Lunch" asp-action="CreateCombo" asp-route-lunchId="@lunch.LunchId">Crear Combo</a>
-                        }
+                            @if(lunch.IsGeneric)
+                            {
+                                <span class="fa fa-check" style="color: green;"></span>
+                            }
+                            else
+                            {
+                                <span class="fa fa-times"></span>
+                            } 
+                        </td>     
+                        <td>
+                            @lunch.Title
+                        </td>
+                        <td>
+                            <a asp-controller="Lunch" asp-action="EditCombo" asp-route-lunchId="@lunch.LunchId">Editar</a>
                         </td>
 
                         <td>
-                            <a asp-controller="Lunch" asp-action="Detail" asp-route-id="@lunch.LunchId">Ver</a>
+                            <a asp-controller="Lunch" asp-action="Special" asp-route-id="@lunch.LunchId">Ver</a>
                         </td>
                         <td>
                             <span class="handy" onclick="copy(@lunch.LunchId)">Crear Similar</span>
-                        </td>
-                        <td>
-                            <span class="handy" onclick="modify(@lunch.LunchId)">Modificar</span>
                         </td>
                     </tr>
                 }
@@ -87,8 +92,5 @@
 <script>
     function copy(id) {
         window.location = '/Lunch/CopyLunch/' + id;
-    }
-    function modify(id) {
-        window.location = '/Lunch/ModifyLunch/' + id;
     }
 </script>

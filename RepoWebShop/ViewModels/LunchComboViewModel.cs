@@ -10,9 +10,13 @@ namespace RepoWebShop.ViewModels
     {
         public int LunchId { get; set; }
 
-        [Display(Name = "Combo Activo")]
+        [Display(Name = "¿Se puede comprar por internet?")]
         [Required]
         public bool IsCombo { get; set; }
+
+        [Display(Name = "Tipo")]
+        [Required]
+        public bool IsGeneric { get; set; }
 
         [Display(Name = "Título")]
         [Required]

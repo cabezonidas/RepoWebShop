@@ -24,6 +24,17 @@
         </div>
 
         <div class="form-group">
+            <label asp-for="IsGeneric" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="IsGeneric" class="form-control">
+                    <option value="true">Genérico</option>
+                    <option value="false">Cliente Particular</option>
+                </select>
+                <span asp-validation-for="IsGeneric" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
             <label asp-for="Title" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <input asp-for="Title" class="form-control" placeholder="" />

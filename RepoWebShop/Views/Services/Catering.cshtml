@@ -1,58 +1,60 @@
 ﻿@model IEnumerable<Product>
+@inject ILunchRepository _lunch;
 
 @section metatags {
     <title>Catering</title>
 }
-<div class="container">
-    <div class="title-container">
-        <h1 class="title-logo">Catering</h1>
-    </div>
-
-    <div class="text-center">
-        <h2>Sobre nuestros caterings</h2>
-        <h4>Echale un vistazo a nuestros deliciosos bocaditos que podemos preparar para tu servico.</h4>
-        <h4>Normalmente nosotros recomendamos entre 10 y 12 bocados por adulto.</h4>
-        <h4>Acercate a nuestra sucursal, o llamanos para que te podamos asesorar con un catering súper rico y novedoso.</h4>
-
-        @*<img src="~/Pictures/Loader.gif" id="loading" style="margin: auto;" />*@
-    </div>
-
     <div class="container">
-        <table class="" id="table">
-            <thead>
-                <tr>
-                    <th>
-                        Producto
-                    </th>
-                    <th>
-                        Cantidad mínima (múltiplos)
-                    </th>
-                    <th>
-                        Precio U.
-                    </th>
-                </tr>
-            </thead>
-            <tbody id="tbody">
-                @{ 
-                    foreach(var item in Model)
-                        {
+        <div class="title-container">
+            <h1 class="title-logo">Catering</h1>
+        </div>
+
+        <div class="text-center">
+            <h4>Echale un vistazo a nuestros deliciosos menúes que podemos preparar para tu evento.</h4>
+            <h4>Normalmente nosotros recomendamos entre 10 y 12 bocados por adulto, dependiendo de cuánto dure la celebración.</h4>
+            <h4>Acercate a nuestra sucursal, o llamanos para que te podamos asesorar con un catering súper rico y novedoso.</h4>
+
+            @*<img src="~/Pictures/Loader.gif" id="loading" style="margin: auto;" />*@
+        </div>
+        @Html.Partial("~/Views/Lunch/Combos.cshtml", _lunch.GetAllLunches().Where(x => x.IsCombo))
+        <div class="container">
+            <h3>¿Querés uno a medida?</h3>
+            <h5>Acá podes ver nuestras opciones más clásicas. Contactate con nosotros y te ayudamos a elegir, sobre todo con opciones que no están en esta lista.</h5>
+            <table class="" id="table">
+                <thead>
                     <tr>
-                        <td>
-                            @item.Name
-                        </td>
-                        <td>
-                            @item.MinOrderAmount
-                        </td>
-                        <td>
-                            @item.Price.ToString("c")
-                        </td>
+                        <th>
+                            Producto
+                        </th>
+                        <th>
+                            Cantidad mínima (múltiplos)
+                        </th>
+                        <th>
+                            Precio U. (Sucursal)
+                        </th>
                     </tr>
-                    }
+                </thead>
+                <tbody id="tbody">
+                    @{
+                        foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>
+                                @item.Name
+                            </td>
+                            <td>
+                                @item.MinOrderAmount
+                            </td>
+                            <td>
+                                @item.PriceInStore.ToString("c")
+                            </td>
+                        </tr>
                 }
-            </tbody>
-        </table>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 <script>
     @*$.ajax({
         url: "https://lareposteria.sharepoint.com/_api/Web/Lists(guid'b10fac5f-d656-49ca-bb9a-589b9362bb94')/items?$select=Title,Precio,CantidadMinima&$filter=Categoria eq 'Lunch'&$orderby=Title asc",

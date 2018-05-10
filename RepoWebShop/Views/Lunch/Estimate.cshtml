@@ -114,7 +114,7 @@
 
     function save() {
         $.post('/api/LunchData/SaveLunch/').then((data) => {
-            window.location = '/Lunch/Detail/' + data;
+            window.location = '/Lunch/EditCombo/' + data;
         });
     }
 

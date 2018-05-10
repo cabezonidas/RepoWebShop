@@ -1,0 +1,12 @@
+﻿@model Lunch
+
+<div class="container">
+    <h2 class="text-center">@Html.Raw("Presupuesto " + (Model.IsGeneric ? "Genérico" : "Especial"))</h2>
+    <div style="max-width: 500px; margin:auto;">
+        @Html.Partial("~/Views/Lunch/ComboDetail.cshtml", Model)
+    </div>
+    <div class="text-center hidden-print" style="margin: 20px auto;">
+        <a class="btn btn-primary" asp-action="Catering" asp-controller="Services">Ver más</a>
+        <a class="btn btn-primary" onclick="window.print()">Imprimir</a>
+    </div>
+</div>

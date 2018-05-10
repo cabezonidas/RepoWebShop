@@ -91,12 +91,27 @@
                 </button>
                 <div id="navbrand">
                     <ul class="nav navbar-nav">
-                        <li>
+                        @*<li class="hidden-sm hidden-md hidden-lg hidden-print">
+                            <div style="font-size: smaller; color: white; margin: 4px auto;">
+                                <div>
+                                    <a class="phone" href="https://api.whatsapp.com/send?phone=5491127778899" target='_blank' style="color: white;">
+                                        <span class="fa fa-whatsapp" style="margin-right: 5px;"></span> 911 2777 8899
+                                    </a>
+                                </div>
+                                <div>
+                                    <a class="phone" href="tel:+5491149250262" style="color: white;">
+                                        <span class="fa fa-phone" style="margin-right: 5px;"></span> 4925-0262
+                                    </a>
+                                </div>
+                            </div>
+                        </li>*@
+
+                        <li class="">
                             <a class="phone" href="tel:+5491149250262">
                                 <span class="fa fa-phone"></span>
                             </a>
                         </li>
-                        <li>
+                        <li class="">
                             <a asp-controller="Home" asp-action="Index">De las Artes</a>
                         </li>
                         <li>
@@ -138,7 +153,7 @@
             }
         </style>
         var environment = env.IsStaging() ? "PRUEBAS" : "DESARROLLO";
-        <div class="text-center test">
+        <div class="text-center test hidden-print">
             <div class="alert alert-warning " style="font-size: 20px; margin: 10px;">
                 <div>@environment</div>
             </div>
@@ -173,7 +188,7 @@ new MediaViewModel() { Icon = "fa-whatsapp", Class = "social-whatsapp", Ref = "h
     }
     @*<media-footer media="@SocialMedia" ></media-footer>*@
 
-    <div class="media-icons" id="media-footer" style="display:none;">
+    <div class="media-icons hidden-print" id="media-footer" style="display:none;">
         <a href="https://www.facebook.com/ReposteriaDeLasArtes/" target='_blank'>
             <img src="~/Pictures/MediaIcons/Facebook.png" />
         </a>
