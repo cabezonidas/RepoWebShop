@@ -28,6 +28,7 @@
                 <th>Compra Online</th>
                 <th>Genérico</th>
                 <th>Nombre</th>
+                <th>Preparación</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -72,6 +73,9 @@
                         </td>     
                         <td>
                             @lunch.Title
+                        </td>  
+                        <td>
+                            @lunch.PreparationTime hs
                         </td>
                         <td>
                             <a asp-controller="Lunch" asp-action="EditCombo" asp-route-lunchId="@lunch.LunchId">Editar</a>

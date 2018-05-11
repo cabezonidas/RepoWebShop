@@ -101,6 +101,10 @@
 
                             items.Add(line);
                         }
+                        @if (order.OrderCaterings.Any())
+                        {
+                            items.Add("Catering" + (order.OrderCaterings.Count() == 1 ? "" : $" x{order.OrderCaterings.Count()}"));
+                        }
                         @if (order.DeliveryAddress != null)
                         {
                             items.Add("Envío: " + order.DeliveryAddress.AddressLine1?.Split(",")?.FirstOrDefault() ?? "");

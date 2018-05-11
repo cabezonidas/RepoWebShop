@@ -12,12 +12,14 @@ namespace RepoWebShop.ViewModels
         private Order _order;
         private IEnumerable<OrderDetail> _items;
         private IEnumerable<OrderCatalogItem> _catalogItems;
+        private IEnumerable<OrderCatering> _cateringItems;
 
-        public OrderDetailsViewModel(Order order, IEnumerable<OrderDetail> items, IEnumerable<OrderCatalogItem> catalogItems)
+        public OrderDetailsViewModel(Order order, IEnumerable<OrderDetail> items, IEnumerable<OrderCatalogItem> catalogItems, IEnumerable<OrderCatering> cateringItems)
         {
             _order = order;
             _items = items;
             _catalogItems = catalogItems;
+            _cateringItems = cateringItems;
         }
 
         public Order Order
@@ -39,6 +41,13 @@ namespace RepoWebShop.ViewModels
             get
             {
                 return _catalogItems;
+            }
+        }
+        public IEnumerable<OrderCatering> Caterings
+        {
+            get
+            {
+                return _cateringItems;
             }
         }
 

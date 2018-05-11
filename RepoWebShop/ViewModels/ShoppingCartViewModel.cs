@@ -12,6 +12,7 @@ namespace RepoWebShop.ViewModels
     {
         public List<ShoppingCartItem> Items { get; set; }
         public decimal ShoppingCartTotal { get; set; }
+        public int CountTrolleyObjects { get; set; }
         public string Mercadolink { get; set; }
         public int PreparationTime { get; set; }
         public string FriendlyBookingId { get; set; }
@@ -29,5 +30,6 @@ namespace RepoWebShop.ViewModels
         public Discount Discount { get; internal set; }
         public decimal ShopingCartTotalWithoutDiscount { get; internal set; }
         public List<ShoppingCartCatalogItem> CatalogItems { get; internal set; }
+        public List<ShoppingCartComboCatering> Caterings { get; internal set; }
     }
 }

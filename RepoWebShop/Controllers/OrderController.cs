@@ -233,7 +233,8 @@ namespace RepoWebShop.Controllers
             {
                 var items = _orderRepository.GetOrderDetails(order.OrderId);
                 var catalogItems = _orderRepository.GetOrderCatalogItems(order.OrderId);
-                var orderDetails = new OrderDetailsViewModel(order, items, catalogItems);
+                var caterings = _orderRepository.GetOrderCaterings(order.OrderId);
+                var orderDetails = new OrderDetailsViewModel(order, items, catalogItems, caterings);
                 return View(orderDetails);
             }
             else

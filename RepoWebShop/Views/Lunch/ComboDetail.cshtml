@@ -121,7 +121,7 @@
                 <div style="padding: 10px;">
                 @if (Model.IsCombo)
                 {
-                    <a class="btn btn-primary hidden-print">¡Comprar!</a>
+                    <a  asp-controller="ShoppingCart" asp-action="AddCateringToShoppingCart" asp-route-id="@Model.LunchId" class="btn btn-primary hidden-print">¡Comprar!</a>
                 }
                 </div>
             </div>

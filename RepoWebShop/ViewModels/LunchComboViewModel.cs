@@ -23,7 +23,6 @@ namespace RepoWebShop.ViewModels
         public string Title { get; set; }
 
         [Display(Name = "Descripción")]
-        [Required]
         public string Description { get; set; }
 
         [Display(Name = "Precio del combo")]

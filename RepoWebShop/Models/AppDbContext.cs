@@ -21,16 +21,28 @@ namespace RepoWebShop.Models
         //        .IsUnique(true);
         //}
         
+
+        public DbSet<OrderCatering> OrderCaterings { get; set; }
+        public DbSet<ShoppingCartComboCatering> ShoppingCartCaterings { get; set; }
+        public DbSet<ShoppingCartLunch> ShoppingCartCustomLunch { get; set; }
+
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
+
+        public DbSet<ShoppingCartComment> ShoppingCartComments { get; set; }
+        public DbSet<ShoppingCartDiscount> ShoppingCartDiscount { get; set; }
+
         public DbSet<OrderCatalogItem> OrderCatalogItems { get; set; }
         public DbSet<ShoppingCartCatalogItem> ShoppingCartCatalogProducts { get; set; }
+
+        public DbSet<ShoppingCartPickUpDate> ShoppingCartPickUpDates { get; set; }
+        public DbSet<ShoppingCartData> ShoppingCartData { get; set; }
+        public DbSet<ShoppingCartByIp> ShoppingCartByIp { get; set; }
         public DbSet<BookingRecord> BookingRecords { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<AdminNotification> AdminNotifications { get; set; }
         public DbSet<SiteException> Exceptions { get; set; }
         public DbSet<PageVisit> PageVisits { get; set; }
-        public DbSet<ShoppingCartByIp> ShoppingCartByIp { get; set; }
-        public DbSet<ShoppingCartLunch> ShoppingCartLunch { get; set; }
-        public DbSet<ShoppingCartPickUpDate> ShoppingCartPickUpDates { get; set; }
         public DbSet<LunchMiscellaneous> LunchMiscellanea { get; set; }
         public DbSet<LunchItem> LunchItems  { get; set; }
         public DbSet<Lunch> Lunch { get; set; }
@@ -42,17 +54,12 @@ namespace RepoWebShop.Models
         public DbSet<GalleryFlickrAlbum> GalleryFlickrAlbums { get; set; }
         public DbSet<Pie> Pies { get; set; }
         public DbSet<PieDetail> PieDetails { get; set; }
-        public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
-        public DbSet<ShoppingCartComment> ShoppingCartComments { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Email> Emails { get; set; }
         public DbSet<PaymentNotice> PaymentNotices { get; set; }
         public DbSet<ApplicationUser> Registrations { get; set; }
         public DbSet<Vacation> Vacations { get; set; }
         public DbSet<PublicHoliday> Holidays { get; set; }
         public DbSet<Discount> Discounts { get; set; }
-        public DbSet<ShoppingCartData> ShoppingCartData { get; set; }
-        public DbSet<ShoppingCartDiscount> ShoppingCartDiscount { get; set; }
     }
 }

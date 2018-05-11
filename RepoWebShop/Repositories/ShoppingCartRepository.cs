@@ -62,9 +62,16 @@ namespace RepoWebShop.Repositories
             bookingId = bookingId ?? _cartSession.BookingId;
             var items = GetItems(bookingId);
             var catalogItems = GetCatalogItems(bookingId);
+            var caterings = GetShoppingCaterings(bookingId);
+            var hours = new List<int>();
+            hours.Add(0);
             var itemsPrepTime = items.Count() == 0 ? 0 : items.OrderByDescending(x => x.Pie.PieDetail.PreparationTime).First().Pie.PieDetail.PreparationTime;
+            var cateringsPrepTime = caterings.Count() == 0 ? 0 : caterings.OrderByDescending(x => x.Lunch.PreparationTime).First().Lunch.PreparationTime;
             var catalogItemsPrepTime = catalogItems.Count() == 0 ? 0 : catalogItems.OrderByDescending(x => x.Product.PreparationTime).First().Product.PreparationTime;
-            return itemsPrepTime > catalogItemsPrepTime ? itemsPrepTime : catalogItemsPrepTime;
+            hours.Add(itemsPrepTime);
+            hours.Add(cateringsPrepTime);
+            hours.Add(catalogItemsPrepTime);
+            return hours.OrderByDescending(x => x).First();
         }
 
         public IEnumerable<ShoppingCartCatalogItem> GetCatalogItems(string bookingId)
@@ -83,6 +90,9 @@ namespace RepoWebShop.Repositories
             _appDbContext.ShoppingCartComments.RemoveRange(_appDbContext.ShoppingCartComments.Where(cart => cart.ShoppingCartId == bookingId));
             _appDbContext.ShoppingCartData.RemoveRange(_appDbContext.ShoppingCartData.Where(cart => cart.BookingId == bookingId));
 
+            _appDbContext.ShoppingCartCaterings.RemoveRange(_appDbContext.ShoppingCartCaterings.Where(cart => cart.BookingId == bookingId));
+            _appDbContext.ShoppingCartCustomLunch.RemoveRange(_appDbContext.ShoppingCartCustomLunch.Where(cart => cart.BookingId == bookingId));
+
             var cartDiscount = _appDbContext.ShoppingCartDiscount.Include(x => x.Discount).FirstOrDefault(cart => cart.ShoppingCartId == bookingId);
             if (cartDiscount != null)
             {
@@ -93,7 +103,6 @@ namespace RepoWebShop.Repositories
             _appDbContext.SaveChanges();
 
             UpdateMPPreferencesWithDiscount(cartDiscount);
-
         }
 
         private void UpdateMPPreferencesWithDiscount(ShoppingCartDiscount cartDiscount)
@@ -142,8 +151,25 @@ namespace RepoWebShop.Repositories
         {
             bookingId = bookingId ?? _cartSession.BookingId;
             var items = GetItemsAndCatalogProductsTotal(bookingId);
+            var caterings = GetCateringsTotal(bookingId);
             var delivery = GetDelivery(bookingId)?.DeliveryCost ?? 0;
-            return items + delivery;
+            return items + delivery + caterings;
+        }
+
+        public decimal GetCateringsTotal(string bookingId)
+        {
+            var caterings = GetShoppingCaterings(bookingId);
+            var total = caterings.Select(x => (x.Lunch.ComboPrice == 0 ? GetLunchTotal(x.Lunch) : x.Lunch.ComboPrice) * x.Amount).Sum();
+            return total;
+        }
+
+        public decimal GetLunchTotal(Lunch lunch)
+        {
+            if (lunch == null || (lunch.Items == null && lunch.Miscellanea == null))
+                return 0;
+            var itemsPrice = lunch.Items.Sum(x => x.Product.MinOrderAmount * x.Quantity * x.Product.Price);
+            var miscellaneaPrice = lunch.Miscellanea.Sum(x => x.Price * x.Quantity);
+            return itemsPrice + miscellaneaPrice;
         }
 
         public DeliveryAddress GetDelivery(string bookingId)
@@ -372,7 +398,7 @@ namespace RepoWebShop.Repositories
             bookingId = bookingId ?? _cartSession.BookingId;
             var prepTime = GetPreparationTime(bookingId);
             var discount = GetDiscount(bookingId);
-            var model = _calendarRepository.GetPickUpOption(prepTime, discount).Take(10);
+            var model = _calendarRepository.GetPickUpOption(prepTime, discount).Take(50);
             var selectedTime = GetPickUpDate(bookingId);
             var result = new PickUpTimeViewModel
             {
@@ -402,7 +428,7 @@ namespace RepoWebShop.Repositories
             var comments = _appDbContext.ShoppingCartComments.Where(x => !String.IsNullOrEmpty(x.Comments)).ToList();
             var discounts = _appDbContext.ShoppingCartDiscount.Include(x => x.Discount).ToList();
             var dates = _appDbContext.ShoppingCartPickUpDates.ToList();
-            var lunches = _appDbContext.ShoppingCartLunch.Include(x => x.Lunch).ToList();
+            var lunches = _appDbContext.ShoppingCartCustomLunch.Include(x => x.Lunch).ToList();
 
             SessionDetailsViewModel sessionDetails = new SessionDetailsViewModel()
             {
@@ -472,6 +498,80 @@ namespace RepoWebShop.Repositories
                     s => s.Product.ProductId == productId && s.ShoppingCartId == _cartSession.BookingId);
             _appDbContext.ShoppingCartCatalogProducts.Remove(shoppingCartCatalogItem);
             _appDbContext.SaveChanges();
+        }
+
+        public IEnumerable<ShoppingCartComboCatering> GetShoppingCaterings(string bookingId)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            var result = AllShoppingCartCaterings().Where(x => x.BookingId == bookingId).ToList();
+            return result;
+        }
+
+        public void ClearCateringFromCart(int cateringId)
+        {
+            var shoppingCartCatering =
+                AllShoppingCartCaterings().FirstOrDefault(
+                    s => s.LunchId == cateringId && s.BookingId == _cartSession.BookingId);
+            _appDbContext.ShoppingCartCaterings.Remove(shoppingCartCatering);
+            _appDbContext.SaveChanges();
+        }
+
+        public void RemoveLunchFromCart(Lunch lunch)
+        {
+            if (lunch == null)
+                return;
+            var shoppingCartCatering =
+                    AllShoppingCartCaterings().FirstOrDefault(
+                        s => s.Lunch == lunch && s.BookingId == _cartSession.BookingId);
+
+            var localAmount = 0;
+
+            if (shoppingCartCatering != null)
+            {
+                if (shoppingCartCatering.Amount > 1)
+                {
+                    shoppingCartCatering.Amount--;
+                    localAmount = shoppingCartCatering.Amount;
+                }
+                else
+                {
+                    _appDbContext.ShoppingCartCaterings.Remove(shoppingCartCatering);
+                }
+            }
+            _appDbContext.SaveChanges();
+            return;
+        }
+
+        public void AddCateringToCart(Lunch catering, int amount)
+        {
+            var shoppingCartCatering = AllShoppingCartCaterings().FirstOrDefault(
+                        s => s.Lunch == catering && s.BookingId == _cartSession.BookingId);
+
+            if (shoppingCartCatering == null)
+            {
+                shoppingCartCatering = new ShoppingCartComboCatering
+                {
+                    BookingId = _cartSession.BookingId,
+                    Lunch = catering,
+                    LunchId = catering.LunchId,
+                    Created = _calendarRepository.LocalTime(),
+                    Amount = amount
+                };
+                _appDbContext.ShoppingCartCaterings.Add(shoppingCartCatering);
+            }
+            else
+                shoppingCartCatering.Amount = amount + shoppingCartCatering.Amount;
+            _appDbContext.SaveChanges();
+        }
+
+        public IEnumerable<ShoppingCartComboCatering> AllShoppingCartCaterings() => _appDbContext.ShoppingCartCaterings.Include(x => x.Lunch)
+            .Include(x => x.Lunch.Miscellanea)
+            .Include(x => x.Lunch.Items).ToList();
+
+        public int CountTrolleyObjects(string bookingId)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            return GetItems(bookingId).Count() + GetCatalogItems(bookingId).Count() + GetShoppingCaterings(bookingId).Count();
         }
     }
 }

@@ -88,10 +88,10 @@ namespace RepoWebShop.Controllers
         }
 
         [HttpGet]
-        [Route("GetItemsCount")]
-        public IActionResult GetItemsCount()
+        [Route("CountTrolleyObjects")]
+        public IActionResult CountTrolleyObjects()
         {
-            return Ok(new { items = _cartRepository.GetItems(null).Count() });
+            return Ok(new { items = _cartRepository.CountTrolleyObjects(null) });
         }
 
         [HttpGet]

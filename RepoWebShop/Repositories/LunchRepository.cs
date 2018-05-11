@@ -21,10 +21,9 @@ namespace RepoWebShop.Repositories
         }
 
         public ShoppingCartLunch GetSessionLunch(string bookingId = null)
-
         {
             bookingId = bookingId ?? _cartRepository.GetSessionCartId();
-            ShoppingCartLunch result = _appDbContext.ShoppingCartLunch
+            ShoppingCartLunch result = _appDbContext.ShoppingCartCustomLunch
                 .Include(x => x.Lunch)
                 .Include(x => x.Lunch.Miscellanea)
                 .Include(x => x.Lunch.Items)
@@ -37,8 +36,11 @@ namespace RepoWebShop.Repositories
                 {
                     BookingId = bookingId,
                     Lunch = new Lunch()
+                    {
+                        PreparationTime = 24,
+                    }
                 };
-                _appDbContext.ShoppingCartLunch.Add(result);
+                _appDbContext.ShoppingCartCustomLunch.Add(result);
                 _appDbContext.SaveChanges();
             }
 
@@ -140,7 +142,7 @@ namespace RepoWebShop.Repositories
         {
             ShoppingCartLunch lunch = GetSessionLunch();
             var result = lunch.Lunch.LunchId;
-            _appDbContext.ShoppingCartLunch.Remove(lunch);
+            _appDbContext.ShoppingCartCustomLunch.Remove(lunch);
             if(GetTotal(lunch.Lunch) == 0)
             {
                 _appDbContext.Lunch.Remove(lunch.Lunch);
@@ -205,14 +207,7 @@ namespace RepoWebShop.Repositories
             return result / 10;
         }
 
-        public decimal GetTotal(Lunch lunch)
-        {
-            if (lunch == null || lunch.Items == null)
-                return 0;
-            var itemsPrice = lunch.Items.Sum(x => x.Product.MinOrderAmount * x.Quantity * x.Product.Price);
-            var miscellaneaPrice = lunch.Miscellanea.Sum(x => x.Price * x.Quantity);
-            return itemsPrice + miscellaneaPrice;
-        }
+        public decimal GetTotal(Lunch lunch) => _cartRepository.GetLunchTotal(lunch);
 
         public LunchMiscellaneous GetMiscellaneous(int id)
         {
@@ -249,7 +244,7 @@ namespace RepoWebShop.Repositories
                 BookingId = _cartRepository.GetSessionCartId(),
                 Lunch = lunch
             };
-            _appDbContext.ShoppingCartLunch.Add(result);
+            _appDbContext.ShoppingCartCustomLunch.Add(result);
             _appDbContext.SaveChanges();
         }
     }

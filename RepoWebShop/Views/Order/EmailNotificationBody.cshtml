@@ -1,6 +1,7 @@
 ﻿@model EmailNotificationViewModel
 @inject ICalendarRepository _calendar
 @inject IFlickrRepository _flickr
+@inject ILunchRepository _lunch
 <div style="max-width: 750px;margin: auto;">
     <div style="text-align:center; font-family: 'Trebuchet MS'; ">
         <section style='padding: 20px; width:90%; min-width:300px; ' id='body'>
@@ -31,12 +32,12 @@
                     {
                         <div>
                             <br />
-                            El pedido estará listo el @_calendar.FriendlyDate(Model.OrderReady) a las @Model.OrderReady.Value.ToString("hh\\:mm tt").ToLower()
-                            @if(Model.TimeLeftUntilStoreCloses.HasValue)
+                            El pedido estará listo el @_calendar.FriendlyDate(Model.OrderReady) a las @Model.OrderReady.Value.ToString("HH\\:mm").ToLower()
+                            @if (Model.TimeLeftUntilStoreCloses.HasValue)
                             {
                                 <br />
                                 <div>
-                                    Recordá que a las @Model.OrderReady.Value.Add(Model.TimeLeftUntilStoreCloses.Value).ToString("hh\\:mm tt").ToLower() cerramos.
+                                    Recordá que a las @Model.OrderReady.Value.Add(Model.TimeLeftUntilStoreCloses.Value).ToString("HH\\:mm").ToLower() cerramos.
                                 </div>
                             }
                         </div>
@@ -99,15 +100,34 @@
                             @foreach (var item in Model.OrderCatalogItems)
                             {
                                 <tr>
-                                    <td style='padding:10px; padding-left:2px; text-align:center;'>
-
-                                    </td>
+                                    <td style='padding:10px; padding-left:2px; text-align:center;'></td>
                                     <td style='padding:2px; text-align:left; '>
                                         <div>
                                             @item.Product.Name<br />
                                             Precio: $@item.Price<br />
                                             Cantidad: @item.Amount
                                         </div>
+                                    </td>
+                                    @{var subtotal = item.Price * item.Amount;}
+                                    <td style='padding:2px; text-align:right; font-size: large; '>$@subtotal</td>
+                                    @{totalItems += subtotal;}
+                                </tr>
+                            }
+                            @foreach (var item in Model.OrderCaterings)
+                            {
+                                <tr>
+                                    <td style='padding:10px; padding-left:2px; text-align:center;'></td>
+                                    <td style='padding:2px; text-align:left; '>
+                                        @{
+                                            var itemref = Model.AbsoluteUrl + $"/Lunch/Special/{item.Lunch.LunchId}";
+                                        }
+                                        <a href="@itemref" style="text-decoration: none; color: black">
+                                            <div>
+                                                @Html.Raw(string.IsNullOrEmpty(item.Lunch.Title) ? $"Catering #{item.Lunch.LunchId}" : item.Lunch.Title)<br />
+                                                Precio: $@item.Price<br />
+                                                Cantidad: @item.Amount
+                                            </div>
+                                        </a>
                                     </td>
                                     @{var subtotal = item.Price * item.Amount;}
                                     <td style='padding:2px; text-align:right; font-size: large; '>$@subtotal</td>
@@ -149,9 +169,7 @@
                                 </td>
                             </tr>
                             <tr style="font-size: 30px;">
-                                <td colspan="1"></td>
-                                <td colspan="1" style="text-align: center">Total $@Model.OrderTotal</td>
-                                <td style='padding:2px; text-align:right; '></td>
+                                <td colspan="3" style="text-align: center">Total $@Model.OrderTotal</td>
                             </tr>
                         </tbody>
                     </table>
@@ -191,7 +209,7 @@
                 </div>
                 <div style="margin: auto; width: 90%; text-align: left">
                     <div style="font-size: larger; text-align: left"><strong style="">Importante</strong></div>
-                    <div >
+                    <div>
                         <br />
                         Si querés retirar o recibir tu pedido en otro momento, ponete en contacto con nosotros y vamos a tratar de hacer lo posible por adaptarnos. A veces podemos hacer las entregas antes del tiempo calculado, pero no siempre podremos.
                     </div>
@@ -204,11 +222,11 @@
                 </div>
             </div>
             <div style=" background-color: #883636; color: papayawhip; text-align:left; border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
-                    <div style="text-align: center;">
-                        <br />
-                        <a href='@Model.AbsoluteUrl' target="_blank" style="color: papayawhip">@Model.AbsoluteUrl</a>
-                    </div>
+                <div style="text-align: center;">
                     <br />
+                    <a href='@Model.AbsoluteUrl' target="_blank" style="color: papayawhip">@Model.AbsoluteUrl</a>
+                </div>
+                <br />
             </div>
         </section>
     </div>

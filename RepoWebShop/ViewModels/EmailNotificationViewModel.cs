@@ -23,5 +23,6 @@ namespace RepoWebShop.ViewModels
         public Discount Discount { get; internal set; }
         public TimeSpan? TimeLeftUntilStoreCloses { get; internal set; }
         public IEnumerable<OrderCatalogItem> OrderCatalogItems { get; internal set; }
+        public IEnumerable<OrderCatering> OrderCaterings { get; internal set; }
     }
 }

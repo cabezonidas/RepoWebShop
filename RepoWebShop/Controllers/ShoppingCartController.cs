@@ -21,6 +21,7 @@ namespace RepoWebShop.Controllers
         private readonly ICalendarRepository _calendarRepository;
         private readonly ICatalogRepository _catalogRepository;
         private readonly IConfiguration _config;
+        private readonly ILunchRepository _lunchRep;
         private readonly string _bookingId;
         private readonly string _friendlyBookingId;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -34,8 +35,9 @@ namespace RepoWebShop.Controllers
         private readonly IHttpContextAccessor _contextAccessor;
 
 
-        public ShoppingCartController(ICatalogRepository catalogRepository, IHttpContextAccessor contextAccessor, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration config, ICalendarRepository calendarRepository, IPieRepository pieRepository, IShoppingCartRepository shoppingCart, IMercadoPago mp)
+        public ShoppingCartController(ILunchRepository lunchRep, ICatalogRepository catalogRepository, IHttpContextAccessor contextAccessor, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration config, ICalendarRepository calendarRepository, IPieRepository pieRepository, IShoppingCartRepository shoppingCart, IMercadoPago mp)
         {
+            _lunchRep = lunchRep;
             _contextAccessor = contextAccessor;
             _userManager = userManager;
             _signInManager = signInManager;
@@ -73,6 +75,7 @@ namespace RepoWebShop.Controllers
             {
                 Items = _cartRepository.GetItems(null).ToList(),
                 CatalogItems = _cartRepository.GetCatalogItems(null).ToList(),
+                Caterings = _cartRepository.GetShoppingCaterings(null).ToList(),
                 PickupDate = _calendarRepository.GetPickupEstimate(highestPrepTime),
                 ShoppingCartTotal = _cartRepository.GetTotal(null),
                 PreparationTime = highestPrepTime,
@@ -115,6 +118,14 @@ namespace RepoWebShop.Controllers
             return RedirectToAction("Index");
         }
 
+        public RedirectToActionResult AddCateringToShoppingCart(int id)
+        {
+            var catering = _lunchRep.GetLunch(id);
+            if (catering != null)
+                _cartRepository.AddCateringToCart(catering, amount: 1);
+            return RedirectToAction("Index");
+        }
+
         public RedirectToActionResult RemoveDelivery()
         {
             _cartRepository.RemoveDelivery();
@@ -145,6 +156,13 @@ namespace RepoWebShop.Controllers
             return RedirectToAction("Index");
         }
 
+        public RedirectToActionResult RemoveCateringFromCart(int lunchId)
+        {
+            var lunch = _lunchRep.GetLunch(lunchId);
+            _cartRepository.RemoveLunchFromCart(lunch);
+            return RedirectToAction("Index");
+        }
+
         public RedirectToActionResult ClearFromShoppingCart(int pieId)
         {
             _cartRepository.ClearFromCart(pieId);
@@ -155,6 +173,12 @@ namespace RepoWebShop.Controllers
         public RedirectToActionResult ClearCatalogProductFromShoppingCart(int productId)
         {
             _cartRepository.ClearCatalogItemFromCart(productId);
+            return RedirectToAction("Index");
+        }
+
+        public RedirectToActionResult ClearCateringFromCart(int cateringId)
+        {
+            _cartRepository.ClearCateringFromCart(cateringId);
             return RedirectToAction("Index");
         }
 

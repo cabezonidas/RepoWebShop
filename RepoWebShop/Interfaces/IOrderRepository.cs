@@ -16,6 +16,7 @@ namespace RepoWebShop.Interfaces
         IEnumerable<Order> GetAll();
         Order GetOrder(int id);
         IEnumerable<OrderDetail> GetOrderDetails(int id);
+        IEnumerable<OrderCatering> GetOrderCaterings(int id);
         IEnumerable<OrderCatalogItem> GetOrderCatalogItems(int id);
         void UpdateManagementComments(int orderId, string comments);
         void UpdatePickUpDate(int orderId, DateTime pickUp);

@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180511021349_shoppingcartcaterings6")]
+    partial class shoppingcartcaterings6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -609,7 +610,7 @@ namespace RepoWebShop.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderCaterings");
+                    b.ToTable("OrderCatering");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.OrderDetail", b =>
@@ -902,26 +903,6 @@ namespace RepoWebShop.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ShoppingCartCatalogProducts");
-                });
-
-            modelBuilder.Entity("RepoWebShop.Models.ShoppingCartComboCatering", b =>
-                {
-                    b.Property<int>("ShoppingCartComboCateringId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("Amount");
-
-                    b.Property<string>("BookingId");
-
-                    b.Property<DateTime>("Created");
-
-                    b.Property<int>("LunchId");
-
-                    b.HasKey("ShoppingCartComboCateringId");
-
-                    b.HasIndex("LunchId");
-
-                    b.ToTable("ShoppingCartCaterings");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.ShoppingCartComment", b =>
@@ -1239,14 +1220,6 @@ namespace RepoWebShop.Migrations
                     b.HasOne("RepoWebShop.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId");
-                });
-
-            modelBuilder.Entity("RepoWebShop.Models.ShoppingCartComboCatering", b =>
-                {
-                    b.HasOne("RepoWebShop.Models.Lunch", "Lunch")
-                        .WithMany()
-                        .HasForeignKey("LunchId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.ShoppingCartDiscount", b =>

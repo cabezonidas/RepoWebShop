@@ -1,6 +1,15 @@
 ﻿@model ShoppingCartViewModel
 @inject ICalendarRepository calendar
-    <h1 class="text-center" style="font-family: Noto serif; margin-top:0px;">Items</h1>
+@inject ILunchRepository lunch
+
+@{ 
+    var sessionLunch = lunch.GetSessionLunch();
+}
+    <h1 class="text-center" style="font-family: Noto serif; margin-top:0px; margin-bottom:0px;">Items</h1>
+    <div style="font-size:small;" class="text-center text-muted">
+        <div>Necesitamos sólo @Model.PreparationTime hs de producción para completar tu pedido.</div>
+        <div>Elegí en el calendario la fecha y hora de entrega que más te convenga.</div>
+    </div>
     <table class="table table-striped table-condensed">
 
         <thead>
@@ -35,12 +44,55 @@
                     </td>
                     <td class="text-left">
                         <a href="/PieDetail/Details/@line.Pie.PieDetailId" class="text-muted">
-                            @line.Pie.PieDetail.Name (@line.Pie.Name) - @Model.PreparationTime hs
+                            @line.Pie.PieDetail.Name (@line.Pie.Name) - @line.Pie.PieDetail.PreparationTime hs
                         </a>
                     </td>
                     <td class="text-right">@line.Pie.Price.ToString("c")</td>
                     <td class="text-right">
                         @((line.Amount * line.Pie.Price).ToString("c"))
+                    </td>
+                </tr>
+            }
+            @foreach (var line in Model.Caterings)
+            {
+                <tr>
+                    <td class="text-center">
+                        <a asp-controller="ShoppingCart" asp-action="ClearCateringFromCart"
+                           asp-route-cateringId="@line.Lunch.LunchId" class="text-muted">
+                            <span class="glyphicon glyphicon-remove remove-item"></span>
+                        </a>
+                    </td>
+                    <td class="text-center quantity">
+                        <a asp-controller="ShoppingCart" asp-action="RemoveCateringFromCart"
+                           asp-route-lunchId="@line.Lunch.LunchId" class="text-muted">
+                            <span class="fa fa-caret-left"></span>
+                        </a>
+                        @line.Amount
+                        <a asp-controller="ShoppingCart" asp-action="AddCateringToShoppingCart"
+                           asp-route-id="@line.Lunch.LunchId" class="text-muted">
+                            <span class="fa fa-caret-right"></span>
+                        </a>
+                    </td>
+                    <td class="text-left text-muted">
+                        @{
+                            var label = (string.IsNullOrEmpty(line.Lunch.Title) ? $"Catering #{line.Lunch.LunchId}" : line.Lunch.Title) + $" - {line.Lunch.PreparationTime} hs";
+                        }
+                        @if(sessionLunch.Lunch != line.Lunch)
+                        {
+                            <a class="text-muted" asp-action="Special" asp-route-id="@line.Lunch.LunchId" asp-controller="Lunch">
+                                @label
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="text-muted" asp-action="Estimate" asp-controller="Lunch">
+                                @label
+                            </a>
+                        }
+                    </td>
+                    <td class="text-right">@line.Price.ToString("c")</td>
+                    <td class="text-right">
+                        @((line.Amount * line.Price).ToString("c"))
                     </td>
                 </tr>
             }
@@ -65,7 +117,7 @@
                         </a>
                     </td>
                     <td class="text-left text-muted">
-                        @line.Product.Name - @Model.PreparationTime hs
+                        @line.Product.Name - @line.Product.PreparationTime hs
                     </td>
                     <td class="text-right">@line.Product.Price.ToString("c")</td>
                     <td class="text-right">
@@ -75,7 +127,7 @@
             }
             @if (Model.ShoppingCartTotal >= Model.MinArsForDelivery && Model.DeliveryAddress != null)
             {
-                <tr >
+                <tr>
                     <td class="text-center">
                         <a asp-controller="ShoppingCart" asp-action="RemoveDelivery">
                             <span class="glyphicon glyphicon-remove remove-item"></span>
@@ -96,7 +148,7 @@
                 </tr>
             }
 
-            @if(Model.Discount != null)
+            @if (Model.Discount != null)
             {
                 <tr style="color: darkgreen">
                     <td class="text-center">
@@ -113,17 +165,17 @@
                             string error = "";
                             var discount = Discount.ApplyDiscount(calendar.LocalTime(), Model.ShopingCartTotalWithoutDiscount, Model.Discount, out error);
                         }
-                        @if(!string.IsNullOrEmpty(error))
-                        { <div>@error</div>}
+                        @if (!string.IsNullOrEmpty(error))
+                        {<div>@error</div>}
                     </td>
                     <td class="text-right">
                         <strong>
-                        @discount.ToString("c")
+                            @discount.ToString("c")
                         </strong>
                     </td>
                     <td class="text-right">
                         <strong>
-                        @discount.ToString("c")
+                            @discount.ToString("c")
                         </strong>
                     </td>
                 </tr>
@@ -131,12 +183,12 @@
             }
             @if (Model.DeliveryAddress == null && Model.ShoppingCartTotal >= Model.MinArsForDelivery && Model.ShoppingCartTotal >= Model.MinArsForDelivery)
             {
-                <tr >
+                <tr>
                     <td class=""></td>
                     <td class=""></td>
                     <td class="text-left">
                         <div class="animated bounceInLeft">
-                            <a  style="color:#883636;" asp-action="Index" asp-controller="Delivery"><span style="color:#883636; margin-right: 10px;" class="fa fa-map-marker"></span>Agregar envío </a>
+                            <a style="color:#883636;" asp-action="Index" asp-controller="Delivery"><span style="color:#883636; margin-right: 10px;" class="fa fa-map-marker"></span>Agregar envío </a>
                         </div>
                     </td>
                     <td class=""></td>
@@ -158,7 +210,7 @@
                     </strong>
                 </td>
             </tr>
-            <tr >
+            <tr>
                 <td colspan="5" style="text-align: right;">
                     <a class="btn btn-primary" asp-controller="PieDetail" asp-action="List" style="margin-bottom: 5px;">Seguir Comprando</a>
                     <a class="btn btn-primary" href="#sms-container" id="tocheckout" style="margin-bottom: 5px;"> <span class="fa fa-arrow-down"></span> Finalizar</a>

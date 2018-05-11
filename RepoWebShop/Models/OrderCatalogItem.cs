@@ -13,5 +13,6 @@ namespace RepoWebShop.Models
         public Product Product { get; set; }
         public Order Order { get; set; }
         public int ProductId { get; internal set; }
+        public int OrderId { get; internal set; }
     }
 }

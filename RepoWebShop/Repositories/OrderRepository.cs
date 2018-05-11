@@ -21,6 +21,7 @@ namespace RepoWebShop.Models
         private readonly AppDbContext _appDbContext;
         private readonly IShoppingCartRepository _cartRepository;
         private readonly ICalendarRepository _calendarRepository;
+        private readonly ILunchRepository _lunchRep;
         private readonly IEmailRepository _emailRepository;
         private readonly ISmsRepository _smsRepository;
         private readonly IMercadoPago _mp;
@@ -28,8 +29,9 @@ namespace RepoWebShop.Models
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly string host;
 
-        public OrderRepository(UserManager<ApplicationUser> userManager, IHttpContextAccessor contextAccessor, IEmailRepository emailRepository, ISmsRepository smsRepository, AppDbContext appDbContext, IMercadoPago mp, ICalendarRepository calendarRepository, IShoppingCartRepository shoppingCartRepository, IMapper mapper)
+        public OrderRepository(ILunchRepository lunchRep, UserManager<ApplicationUser> userManager, IHttpContextAccessor contextAccessor, IEmailRepository emailRepository, ISmsRepository smsRepository, AppDbContext appDbContext, IMercadoPago mp, ICalendarRepository calendarRepository, IShoppingCartRepository shoppingCartRepository, IMapper mapper)
         {
+            _lunchRep = lunchRep;
             host = "http://" + contextAccessor.HttpContext?.Request.Host.ToString();
             _userManager = userManager;
             _emailRepository = emailRepository;
@@ -97,12 +99,18 @@ namespace RepoWebShop.Models
             return _appDbContext.OrderCatalogItems.Include(x => x.Order).Include(x => x.Product).Where(x => x.Order.OrderId == id);
         }
 
+        public IEnumerable<OrderCatering> GetOrderCaterings(int id)
+        {
+            return _appDbContext.OrderCaterings.Include(x => x.Order).Include(x => x.Lunch).Where(x => x.Order.OrderId == id);
+        }
+
         public IEnumerable<Order> GetAll()
         {
             var orders = _appDbContext.Orders
                 .Include(x => x.Registration)
                 .Include(x => x.OrderLines)
                 .Include(x => x.OrderCatalogItems)
+                .Include(x => x.OrderCaterings)
                 .Include(x => x.DeliveryAddress)
                 .Include(x => x.Discount)
                 .Where(o => o.Status != "draft").ToList();
@@ -117,6 +125,10 @@ namespace RepoWebShop.Models
                 foreach (var orderLine in order.OrderCatalogItems)
                 {
                     orderLine.Product = _appDbContext.Products.First(x => x.ProductId == orderLine.ProductId);
+                }
+                foreach (var catering in order.OrderCaterings)
+                {
+                    catering.Lunch = _appDbContext.Lunch.First(x => x.LunchId == catering.LunchId);
                 }
             }
 
@@ -186,10 +198,21 @@ namespace RepoWebShop.Models
             {
                 Amount = x.Amount,
                 Price = x.Product.Price,
-                Order = order,
+                OrderId = order.OrderId,
                 ProductId = x.Product.ProductId,
                 Product = x.Product
             }));
+            _appDbContext.SaveChanges();
+
+            /**********************/
+
+            var shoppingLunches = _cartRepository.GetShoppingCaterings(order.BookingId).Select(x => _mapper.Map<ShoppingCartComboCatering, OrderCatering>(x)).ToList();
+            foreach(var lunch in shoppingLunches)
+            {
+                lunch.Order = order;
+                lunch.OrderId = order.OrderId;
+            }
+            _appDbContext.OrderCaterings.AddRange(shoppingLunches);
             _appDbContext.SaveChanges();
 
             /**********************/
@@ -210,12 +233,14 @@ namespace RepoWebShop.Models
         {
             var orderDetails = GetOrderDetails(order.OrderId);
             var orderCatalogItems = GetOrderCatalogItems(order.OrderId);
+            var orderCaterings = GetOrderCaterings(order.OrderId);
             var emailData = new EmailNotificationViewModel();
             emailData.AbsoluteUrl = host;
             emailData.Comments = order.CustomerComments;
             emailData.MercadoPagoTransaction = order.MercadoPagoTransaction;
             emailData.OrderItems = orderDetails;
             emailData.OrderCatalogItems = orderCatalogItems;
+            emailData.OrderCaterings = orderCaterings;
             emailData.OrderReady = order.PickUpTimeFrom ?? order.PickUpTime;
             emailData.TimeLeftUntilStoreCloses = order.TimeLeftUntilStoreCloses;
             emailData.OrderTotal = order.OrderTotal; //Without MP interests
@@ -388,6 +413,12 @@ namespace RepoWebShop.Models
 
         public IEnumerable<Order> GetByUserOrders(ApplicationUser user) => _appDbContext.Orders.Where(x => x.Registration == user).Include(x => x.Email);
 
-        public bool ValidBookingId(string bookingId) => _appDbContext.ShoppingCartItems.Any(x => x.ShoppingCartId == bookingId) || _appDbContext.Orders.Any(x => x.BookingId == bookingId);
+        public bool ValidBookingId(string bookingId)
+        {
+            return _appDbContext.ShoppingCartItems.Any(x => x.ShoppingCartId == bookingId)
+                || _appDbContext.ShoppingCartCaterings.Any(x => x.BookingId == bookingId)
+                || _appDbContext.ShoppingCartCatalogProducts.Any(x => x.ShoppingCartId == bookingId)
+                || _appDbContext.Orders.Any(x => x.BookingId == bookingId);
+        }
     }
 }

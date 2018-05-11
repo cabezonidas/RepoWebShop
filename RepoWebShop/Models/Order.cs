@@ -17,6 +17,8 @@ namespace RepoWebShop.Models
 
         public ICollection<OrderCatalogItem> OrderCatalogItems { get; set; }
 
+        public ICollection<OrderCatering> OrderCaterings { get; set; }
+
         //[Required(ErrorMessage = "Por favor complete el número de teléfono")]
         [StringLength(25)]
         [Display(Name = "Teléfono")]

@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180511022959_shoppingcartcaterings7")]
+    partial class shoppingcartcaterings7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -917,9 +918,13 @@ namespace RepoWebShop.Migrations
 
                     b.Property<int>("LunchId");
 
+                    b.Property<int>("OrderId");
+
                     b.HasKey("ShoppingCartComboCateringId");
 
                     b.HasIndex("LunchId");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("ShoppingCartCaterings");
                 });
@@ -1246,6 +1251,11 @@ namespace RepoWebShop.Migrations
                     b.HasOne("RepoWebShop.Models.Lunch", "Lunch")
                         .WithMany()
                         .HasForeignKey("LunchId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("RepoWebShop.Models.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -58,6 +58,18 @@
                         <td> @item.Product.Price</td>
                     </tr>
                 }
+                @foreach (var item in Model.Caterings)
+                {
+                    <tr>
+                        <td> @item.Amount </td>
+                        <td> 
+                            <a asp-action="Special" asp-controller="Lunch" asp-route-id="@item.Lunch.LunchId">
+                                @Html.Raw(string.IsNullOrEmpty(item.Lunch.Title) ? $"Catering #{item.LunchId}" : item.Lunch.Title) 
+                            </a>
+                        </td>
+                        <td> @item.Price</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
