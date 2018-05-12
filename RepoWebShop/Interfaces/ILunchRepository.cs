@@ -12,8 +12,7 @@ namespace RepoWebShop.Interfaces
         int GetConvitees(Lunch lunch);
         decimal GetTotal(Lunch lunch);
 
-        ShoppingCartLunch GetSessionLunch(string bookingId = null);
-        int SaveLunch();
+        int SaveLunch(string bookingId = null);
         Lunch GetLunch(int id);
 
         LunchItem AddItemInstance(int lunchId, int productId);

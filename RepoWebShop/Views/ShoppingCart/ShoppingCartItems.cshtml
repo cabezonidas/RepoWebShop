@@ -2,9 +2,6 @@
 @inject ICalendarRepository calendar
 @inject ILunchRepository lunch
 
-@{ 
-    var sessionLunch = lunch.GetSessionLunch();
-}
     <h1 class="text-center" style="font-family: Noto serif; margin-top:0px; margin-bottom:0px;">Items</h1>
     <div style="font-size:small;" class="text-center text-muted">
         <div>Necesitamos sólo @Model.PreparationTime hs de producción para completar tu pedido.</div>
@@ -74,26 +71,39 @@
                         </a>
                     </td>
                     <td class="text-left text-muted">
-                        @{
-                            var label = (string.IsNullOrEmpty(line.Lunch.Title) ? $"Catering #{line.Lunch.LunchId}" : line.Lunch.Title) + $" - {line.Lunch.PreparationTime} hs";
-                        }
-                        @if(sessionLunch.Lunch != line.Lunch)
-                        {
-                            <a class="text-muted" asp-action="Special" asp-route-id="@line.Lunch.LunchId" asp-controller="Lunch">
-                                @label
-                            </a>
-                        }
-                        else
-                        {
-                            <a class="text-muted" asp-action="Estimate" asp-controller="Lunch">
-                                @label
-                            </a>
-                        }
+                        <a class="text-muted" asp-action="Special" asp-route-id="@line.Lunch.LunchId" asp-controller="Lunch">
+                            @line.Lunch.Title - @line.Lunch.PreparationTime hs
+                        </a>
                     </td>
                     <td class="text-right">@line.Price.ToString("c")</td>
                     <td class="text-right">
                         @((line.Amount * line.Price).ToString("c"))
                     </td>
+                </tr>
+            }
+            @if(Model.CustomCatering != null)
+            {
+                <tr>
+                    <td class="text-center">
+                        <a asp-controller="ShoppingCart" asp-action="ClearCustomCateringFromCart" class="text-muted">
+                            <span class="glyphicon glyphicon-remove remove-item"></span>
+                        </a>
+                    </td>
+                    <td class="text-center quantity">
+                        @*<span class="fa fa-caret-left text-muted"></span>
+                        <span>1</span>
+                        <span class="fa fa-caret-right text-muted"></span>*@
+                    </td>
+                    <td class="text-left text-muted">
+                        <a class="text-muted" asp-action="Estimate" asp-controller="Lunch">
+                            @Html.Raw($"Catering Personalizado - {Model.CustomCatering.Lunch.PreparationTime} hs")
+                        </a>
+                    </td>
+                    @{ 
+                        var price = Model.CustomCatering.Lunch.Items.Sum(x => x.Product.Price * x.Quantity * x.Product.MinOrderAmount);
+                    }
+                    <td class="text-right">@price.ToString("c")</td>
+                    <td class="text-right">@price.ToString("c")</td>
                 </tr>
             }
             @foreach (var line in Model.CatalogItems)
@@ -159,7 +169,7 @@
                     <td class="text-center quantity"></td>
                     <td class="text-left text-success">
                         <strong>
-                            Descuento @Model.Discount.Percentage % [Hasta @Model.Discount.Roof.ToString("s")]
+                            Descuento @Model.Discount.Percentage % [Hasta @Model.Discount.Roof.ToString("c")]
                         </strong>
                         @{
                             string error = "";
@@ -188,7 +198,7 @@
                     <td class=""></td>
                     <td class="text-left">
                         <div class="animated bounceInLeft">
-                            <a style="color:#883636;" asp-action="Index" asp-controller="Delivery"><span style="color:#883636; margin-right: 10px;" class="fa fa-map-marker"></span>Agregar envío </a>
+                            <a style="color:#883636;" asp-action="Index" asp-controller="Delivery"><span style="color:#883636; margin-right: 10px;" class="fa fa-map-marker"></span>Envío </a>
                         </div>
                     </td>
                     <td class=""></td>

@@ -50,7 +50,8 @@ div.title-container {
     text-shadow: 0px 0px 10px rgba(31, 31, 33, 0.9);
 }
 
-h1.title-logo {
+.title-logo {
+    font-family: 'Playball', cursive;
     background-color: green;
     border-color: #4ca056;
     border-style: solid;

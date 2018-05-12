@@ -75,6 +75,7 @@ namespace RepoWebShop.Controllers
             {
                 Items = _cartRepository.GetItems(null).ToList(),
                 CatalogItems = _cartRepository.GetCatalogItems(null).ToList(),
+                CustomCatering = _cartRepository.GetSessionLunchIfNotEmpty(null),
                 Caterings = _cartRepository.GetShoppingCaterings(null).ToList(),
                 PickupDate = _calendarRepository.GetPickupEstimate(highestPrepTime),
                 ShoppingCartTotal = _cartRepository.GetTotal(null),
@@ -136,6 +137,11 @@ namespace RepoWebShop.Controllers
         {
             _cartRepository.RemoveShoppingDiscount();
 
+            return RedirectToAction("Index");
+        }
+        public RedirectToActionResult ClearCustomCateringFromCart()
+        {
+            _cartRepository.ClearCustomCateringFromCart();
             return RedirectToAction("Index");
         }
         public RedirectToActionResult RemoveFromShoppingCart(int pieId)

@@ -161,6 +161,13 @@ namespace RepoWebShop.Models
 
         public Order CreateOrder(Order order)
         {
+            var customLunch = _cartRepository.GetSessionLunchIfNotEmpty(order.BookingId);
+            if(customLunch != null)
+            {
+                _lunchRep.SaveLunch(order.BookingId);
+                _cartRepository.AddCateringToOrder(customLunch);
+            }
+
             order.BookingId = order.BookingId ?? _cartRepository.GetSessionCartId();
             order.PhoneNumber = order.Registration?.PhoneNumber;
             order.OrderTotal = _cartRepository.GetTotal(order.BookingId);
@@ -418,6 +425,7 @@ namespace RepoWebShop.Models
             return _appDbContext.ShoppingCartItems.Any(x => x.ShoppingCartId == bookingId)
                 || _appDbContext.ShoppingCartCaterings.Any(x => x.BookingId == bookingId)
                 || _appDbContext.ShoppingCartCatalogProducts.Any(x => x.ShoppingCartId == bookingId)
+                || _appDbContext.ShoppingCartCustomLunch.Any(x => x.BookingId == bookingId)
                 || _appDbContext.Orders.Any(x => x.BookingId == bookingId);
         }
     }

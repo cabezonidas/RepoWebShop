@@ -127,7 +127,10 @@ namespace RepoWebShop.Controllers
             if(String.IsNullOrEmpty(preferenceId) || !validPreference)
             {
                 response = ((await _mp.CreatePreferenceAsync(preference))["response"] as Hashtable);
-                _cartRepository.SetMpPreference(response["id"].ToString());
+                if (response != null && response["id"] != null)
+                    _cartRepository.SetMpPreference(response["id"].ToString());
+                else
+                    return BadRequest();
             }
             else
             {

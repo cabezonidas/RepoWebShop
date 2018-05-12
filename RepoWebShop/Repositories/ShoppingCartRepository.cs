@@ -39,6 +39,48 @@ namespace RepoWebShop.Repositories
             _maxArsForReservation = _config.GetValue<int>("MaxArsForReservation");
         }
 
+        public ShoppingCartLunch GetSessionLunchIfNotEmpty(string bookingId = null)
+        {
+            var lunchWithItems = GetSessionLunch(bookingId);
+            if (GetLunchTotal(lunchWithItems?.Lunch) > 0)
+                return lunchWithItems;
+            else
+                return null;
+        }
+
+        public ShoppingCartLunch GetSessionLunch(string bookingId = null)
+        {
+            bookingId = bookingId ?? GetSessionCartId();
+            ShoppingCartLunch result = _appDbContext.ShoppingCartCustomLunch
+                .Include(x => x.Lunch)
+                .Include(x => x.Lunch.Miscellanea)
+                .Include(x => x.Lunch.Items)
+                .ThenInclude(x => x.Product)
+                .FirstOrDefault(x => x.BookingId == bookingId);
+            return result;
+        }
+        public ShoppingCartLunch GetOrCreateSessionLunch(string bookingId = null)
+        {
+            bookingId = bookingId ?? GetSessionCartId();
+            var result = GetSessionLunch(bookingId);
+
+            if (result == null)
+            {
+                result = new ShoppingCartLunch
+                {
+                    BookingId = bookingId,
+                    Lunch = new Lunch()
+                    {
+                        PreparationTime = 24,
+                    }
+                };
+                _appDbContext.ShoppingCartCustomLunch.Add(result);
+                _appDbContext.SaveChanges();
+            }
+
+            return result;
+        }
+
         public IEnumerable<ShoppingCartItem> GetItems(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
@@ -63,14 +105,17 @@ namespace RepoWebShop.Repositories
             var items = GetItems(bookingId);
             var catalogItems = GetCatalogItems(bookingId);
             var caterings = GetShoppingCaterings(bookingId);
-            var hours = new List<int>();
-            hours.Add(0);
+            var customCatering = GetSessionLunchIfNotEmpty(bookingId);
             var itemsPrepTime = items.Count() == 0 ? 0 : items.OrderByDescending(x => x.Pie.PieDetail.PreparationTime).First().Pie.PieDetail.PreparationTime;
             var cateringsPrepTime = caterings.Count() == 0 ? 0 : caterings.OrderByDescending(x => x.Lunch.PreparationTime).First().Lunch.PreparationTime;
             var catalogItemsPrepTime = catalogItems.Count() == 0 ? 0 : catalogItems.OrderByDescending(x => x.Product.PreparationTime).First().Product.PreparationTime;
+            var customCateringPrepTime = customCatering?.Lunch?.PreparationTime ?? 0;
+            var hours = new List<int>();
+            hours.Add(0);
             hours.Add(itemsPrepTime);
             hours.Add(cateringsPrepTime);
             hours.Add(catalogItemsPrepTime);
+            hours.Add(customCateringPrepTime);
             return hours.OrderByDescending(x => x).First();
         }
 
@@ -151,9 +196,10 @@ namespace RepoWebShop.Repositories
         {
             bookingId = bookingId ?? _cartSession.BookingId;
             var items = GetItemsAndCatalogProductsTotal(bookingId);
+            var customLunch = GetLunchTotal(GetSessionLunch(bookingId)?.Lunch);
             var caterings = GetCateringsTotal(bookingId);
             var delivery = GetDelivery(bookingId)?.DeliveryCost ?? 0;
-            return items + delivery + caterings;
+            return items + delivery + caterings + customLunch;
         }
 
         public decimal GetCateringsTotal(string bookingId)
@@ -560,7 +606,10 @@ namespace RepoWebShop.Repositories
                 _appDbContext.ShoppingCartCaterings.Add(shoppingCartCatering);
             }
             else
+            {
                 shoppingCartCatering.Amount = amount + shoppingCartCatering.Amount;
+                _appDbContext.ShoppingCartCaterings.Update(shoppingCartCatering);
+            }
             _appDbContext.SaveChanges();
         }
 
@@ -571,7 +620,28 @@ namespace RepoWebShop.Repositories
         public int CountTrolleyObjects(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
-            return GetItems(bookingId).Count() + GetCatalogItems(bookingId).Count() + GetShoppingCaterings(bookingId).Count();
+            return GetItems(bookingId).Count() + GetCatalogItems(bookingId).Count() + GetShoppingCaterings(bookingId).Count() + (GetSessionLunchIfNotEmpty(bookingId) == null ? 0 : 1);
+        }
+
+        public void AddCateringToOrder(ShoppingCartLunch customLunch)
+        {
+            var result = new ShoppingCartComboCatering
+            {
+                BookingId = _cartSession.BookingId,
+                Lunch = customLunch.Lunch,
+                LunchId = customLunch.Lunch.LunchId,
+                Created = _calendarRepository.LocalTime(),
+                Amount = 1
+            };
+            _appDbContext.ShoppingCartCaterings.Add(result);
+            _appDbContext.SaveChanges();
+        }
+
+        public void ClearCustomCateringFromCart()
+        {
+            var bookingId = GetSessionCartId();
+            _appDbContext.ShoppingCartCustomLunch.RemoveRange(_appDbContext.ShoppingCartCustomLunch.Where(x => x.BookingId == bookingId));
+            _appDbContext.SaveChanges();
         }
     }
 }

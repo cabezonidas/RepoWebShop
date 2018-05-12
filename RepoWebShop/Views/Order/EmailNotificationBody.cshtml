@@ -83,8 +83,8 @@
                                             <img src=@pic width="75" style="border-radius:5px;" />
                                         </a>
                                     </td>
-                                    <td style='padding:2px; text-align:left; '>
-                                        <a href="@itemref" style="text-decoration: none; color: black">
+                                    <td style='padding:2px; text-align:left;  padding-left: 10px; padding-right: 10px;'>
+                                        <a href="@itemref" style="text-decoration: none; color: black; ">
                                             <div>
                                                 @item.Pie.PieDetail.Name @item.Pie.Name<br />
                                                 Precio: $@item.Price<br />
@@ -103,7 +103,7 @@
                                     <td style='padding:10px; padding-left:2px; text-align:center;'>
                                         <img src="@Model.AbsoluteUrl/Pictures/cake-2.png" width="75" />
                                     </td>
-                                    <td style='padding:2px; text-align:left; '>
+                                    <td style='padding:2px; text-align:left;  padding-left: 10px; padding-right: 10px;'>
                                         <div>
                                             @item.Product.Name<br />
                                             Precio: $@item.Price<br />
@@ -126,10 +126,10 @@
                                             <img src="@Model.AbsoluteUrl/Pictures/catering.png" width="75" />
                                         </a>
                                     </td>
-                                    <td style='padding:2px; text-align:left; '>
+                                    <td style='padding:2px; text-align:left; padding-left: 10px; padding-right: 10px;'>
                                         <a href="@itemref" style="text-decoration: none; color: black">
                                             <div>
-                                                @Html.Raw(string.IsNullOrEmpty(item.Lunch.Title) ? $"Catering #{item.Lunch.LunchId}" : item.Lunch.Title)<br />
+                                                @Html.Raw(string.IsNullOrEmpty(item.Lunch.Title) ? $"Catering Personalizado" : item.Lunch.Title)<br />
                                                 Precio: $@item.Price<br />
                                                 Cantidad: @item.Amount
                                             </div>
@@ -146,7 +146,7 @@
                                     <td style='padding:10px; padding-left:2px; text-align:center;'>
                                         <img src="@Model.AbsoluteUrl/Pictures/delivery3.png" width="75" />
                                     </td>
-                                    <td style='padding:2px; text-align:left;' colspan="1">@Model.Delivery.AddressLine1</td>
+                                    <td style='padding:2px; text-align:left;  padding-left: 10px; padding-right: 10px;' colspan="1">@Model.Delivery.AddressLine1</td>
                                     <td style='padding:2px; text-align:right; font-size: large'>$@Model.Delivery.DeliveryCost</td>
                                     @{deliveryCost = Model.Delivery.DeliveryCost;}
                                 </tr>
@@ -157,13 +157,14 @@
                                     <td style='padding:10px; padding-left:2px; text-align:center;'>
                                         <img src="@Model.AbsoluteUrl/Pictures/deal2.png" width="75" />
                                     </td>
-                                    <td style='padding:2px; text-align:left;' colspan="1">
+                                    <td style='padding:2px; text-align:left; padding-left: 10px; padding-right: 10px;' colspan="1">
                                         @{
                                             string error = string.Empty;
                                             var discount = deliveryCost + totalItems - Model.OrderTotal;
                                         }
                                         <div style="color: green;">
-                                            <strong>Descuento @Model.Discount.Percentage % [Hasta @Model.Discount.Roof.ToString("s")]</strong>
+                                            <strong>Descuento @Model.Discount.Percentage % </strong>
+                                            <div>[Hasta @Model.Discount.Roof.ToString("c")]</div>
                                         </div>
                                     </td>
                                     <td style='padding:2px; text-align:right; color: green; '>-$@discount</td>

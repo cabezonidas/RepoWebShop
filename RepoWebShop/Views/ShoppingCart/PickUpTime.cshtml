@@ -181,7 +181,7 @@
             onChange: function (event) {
                 $selectize[0].selectize.disable();
                 $.post("/api/ShoppingCartData/SetPickUpTime/" + event).then((data) => {
-                    $.get('api/ShoppingCartData/GetTimeSlots/', function (data) {
+                    $.get('/api/ShoppingCartData/GetTimeSlots/', function (data) {
                         $('#pickuptime-webpart').replaceWith(data);
                     });
                 }).fail(() => alert('failure'));

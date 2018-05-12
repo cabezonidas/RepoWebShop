@@ -1,5 +1,12 @@
 ﻿@model Lunch
 @inject ILunchRepository _lunchRepository
+@inject SignInManager<ApplicationUser> _signIn
+@inject UserManager<ApplicationUser> _userManager
+
+@{
+    var user = await _userManager.GetUser(_signIn);
+    var isAdmin = user != null && await _userManager.IsInRoleAsync(user, "Administrator");
+}
 @if (Model == null)
 {
     <div></div>
@@ -9,8 +16,11 @@ else
     <div class="row " style="border-bottom-left-radius:5px; border-bottom-right-radius:5px; max-width: 500px; margin: auto; background-color: #883636; color:papayawhip">
         <div class="selecteItem">
             <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-left">
+            @if(isAdmin)
+            {
                 <div>Bocados: @_lunchRepository.GetBites(Model)</div>
                 <div>Invitados: @_lunchRepository.GetConvitees(Model) personas</div>
+            }
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-right">
                 <h4>Total @Html.Raw(_lunchRepository.GetTotal(Model).ToString("c"))</h4>

@@ -10,7 +10,8 @@ namespace RepoWebShop.Interfaces
         IEnumerable<ShoppingCartItem> GetItems(string bookingId);
         IEnumerable<ShoppingCartCatalogItem> GetCatalogItems(string bookingId);
         IEnumerable<ShoppingCartComboCatering> GetShoppingCaterings(string bookingId);
-
+        ShoppingCartLunch GetSessionLunch(string bookingId = null);
+        ShoppingCartLunch GetOrCreateSessionLunch(string bookingId = null);
 
         ShoppingCartComment GetComments(string bookingId);
         DeliveryAddress GetDelivery(string bookingId);
@@ -52,5 +53,8 @@ namespace RepoWebShop.Interfaces
         SessionDetailsViewModel SessionsDetails();
         IEnumerable<ShoppingCartComboCatering> AllShoppingCartCaterings();
         int CountTrolleyObjects(string bookingId);
+        void AddCateringToOrder(ShoppingCartLunch customLunch);
+        ShoppingCartLunch GetSessionLunchIfNotEmpty(string bookingId = null);
+        void ClearCustomCateringFromCart();
     }
 }

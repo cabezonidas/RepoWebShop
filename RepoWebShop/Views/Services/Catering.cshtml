@@ -1,25 +1,54 @@
 ﻿@model IEnumerable<Product>
 @inject ILunchRepository _lunch;
+@inject IFlickrRepository _flickr;
 
 @section metatags {
     <title>Catering</title>
 }
+
     <div class="container">
         <div class="title-container">
             <h1 class="title-logo">Catering</h1>
         </div>
 
+        @{ long albumbId = 72157693586449552; }
+
+
+
+
         <div class="text-center">
-            <h4>Echale un vistazo a nuestros deliciosos menúes que podemos preparar para tu evento.</h4>
+            <h4>Echale un vistazo a nuestros deliciosos menúes que podemos preparar para tu evento o... <a class="alert-success" asp-action="Estimate" asp-controller="Lunch">¡Armátelo vos mism@@!</a></h4>
             <h4>Normalmente nosotros recomendamos entre 10 y 12 bocados por adulto, dependiendo de cuánto dure la celebración.</h4>
-            <h4>Acercate a nuestra sucursal, o llamanos para que te podamos asesorar con un catering súper rico y novedoso.</h4>
 
             @*<img src="~/Pictures/Loader.gif" id="loading" style="margin: auto;" />*@
         </div>
+        <div class="container">
+            <div class="slider-nav" id="nav-@albumbId">
+            @foreach (var picture in _flickr.GetAlbumPictures(albumbId).PicturesUrls)
+            {
+                var pic = picture + "s.jpg";
+                <div class="item" style="">
+                    <img src="@pic" alt="image" draggable="false" style="margin-right: 2px;" />
+                </div>
+            }
+            </div>
+        </div>
+        <script type="text/javascript">
+        $('#nav-@albumbId' + '.slider-nav').slick({
+            slidesToScroll: 1,
+            dots: false,
+            infinite: true,
+            focusOnSelect: true,
+            arrows: false,
+            centerMode: false,
+            variableWidth: true
+        });
+        </script>
         @Html.Partial("~/Views/Lunch/Combos.cshtml", _lunch.GetAllLunches().Where(x => x.IsCombo))
         <div class="container">
-            <h3>¿Querés uno a medida?</h3>
+            <h3>¿Querés uno a medida? </h3>
             <h5>Acá podes ver nuestras opciones más clásicas. Contactate con nosotros y te ayudamos a elegir, sobre todo con opciones que no están en esta lista.</h5>
+            <h5>Si querés armártelo por tu propia cuenta, hacé click <a class="alert-success" asp-action="Estimate" asp-controller="Lunch">aquí</a></h5>
             <table class="" id="table">
                 <thead>
                     <tr>
@@ -36,8 +65,8 @@
                 </thead>
                 <tbody id="tbody">
                     @{
-                        foreach (var item in Model)
-                        {
+                    foreach (var item in Model)
+                    {
                         <tr>
                             <td>
                                 @item.Name

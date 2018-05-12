@@ -31,5 +31,6 @@ namespace RepoWebShop.ViewModels
         public decimal ShopingCartTotalWithoutDiscount { get; internal set; }
         public List<ShoppingCartCatalogItem> CatalogItems { get; internal set; }
         public List<ShoppingCartComboCatering> Caterings { get; internal set; }
+        public ShoppingCartLunch CustomCatering { get; internal set; }
     }
 }

@@ -8,14 +8,14 @@
     <form asp-area="" asp-controller="Account" asp-action="Logout" id="logoutForm"
           method="post" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
-            <li class="hidden" id="user"><a href="/Account/Profile" id="username">Hola </a></li>
+            <li class="hidden user"><a href="/Account/Profile" class=""><span class="fa fa-user"></span> <span class="username hidden-md hidden-sm"></span></a></li>
             <li><a href="javascript:document.getElementById('logoutForm').submit()">Salir</a></li>
         </ul>
     </form>
     <script type="text/javascript">
         $.get('/api/AccountData/GetUserName', function (data) {
-            $('a#username').append(data.name);
-            $('li#user').removeClass('hidden');
+            $('span.username').append(data.name);
+            $('li.user').removeClass('hidden');
         });
     </script>
 }

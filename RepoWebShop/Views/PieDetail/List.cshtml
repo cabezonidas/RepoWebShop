@@ -11,11 +11,13 @@
 </style>
 
 
-<link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+
 
 <div class="container" id="container">
-    <div class="title-container">
-        <h1 id="category-title" class="title-logo" />
+    <div class="row">
+        <div class="title-container">
+            <h1 id="category-title" class="title-logo">Productos</h1>
+        </div>
     </div>
     <div id="products" class="">
         @foreach (var partialView in Model.PieDetails)
@@ -54,9 +56,8 @@
     var category = getParameterByName("category");
 
     if (category)
-        $('#category-title').append(category);
-    else
-        $('#category-title').append("Productos");
+        $('#category-title').replaceWith(category);
+
 
     //$('.pieOverviewImage').matchHeight();
 

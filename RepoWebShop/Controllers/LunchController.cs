@@ -21,9 +21,11 @@ namespace RepoWebShop.Controllers
         private readonly ILunchRepository _lunchRepository;
         private readonly IMapper _mapper;
         private readonly AppDbContext _appDbContext;
+        private readonly IShoppingCartRepository _cartRepository;
 
-        public LunchController(AppDbContext appDbContext, IMapper mapper, ILunchRepository lunchRepository)
+        public LunchController(IShoppingCartRepository cartRepository, AppDbContext appDbContext, IMapper mapper, ILunchRepository lunchRepository)
         {
+            _cartRepository = cartRepository;
             _appDbContext = appDbContext;
             _mapper = mapper;
             _lunchRepository = lunchRepository;
@@ -41,6 +43,7 @@ namespace RepoWebShop.Controllers
         public IActionResult ComboDetail(int id) => View(_lunchRepository.GetLunch(id));
 
         [HttpGet]
+        [AllowAnonymous]
         [Route("[controller]/CopyLunch/{id}")]
         public IActionResult CopyLunch(int id)
         {
@@ -84,9 +87,10 @@ namespace RepoWebShop.Controllers
             return RedirectToAction("Estimate");
         }
 
+        [AllowAnonymous]
         public IActionResult Estimate()
         {
-            var result = _lunchRepository.GetSessionLunch().Lunch;
+            var result = _cartRepository.GetOrCreateSessionLunch().Lunch;
             return View(result);
         }
 

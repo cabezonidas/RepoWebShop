@@ -20,33 +20,6 @@ namespace RepoWebShop.Repositories
             _cartRepository = cartRepository;
         }
 
-        public ShoppingCartLunch GetSessionLunch(string bookingId = null)
-        {
-            bookingId = bookingId ?? _cartRepository.GetSessionCartId();
-            ShoppingCartLunch result = _appDbContext.ShoppingCartCustomLunch
-                .Include(x => x.Lunch)
-                .Include(x => x.Lunch.Miscellanea)
-                .Include(x => x.Lunch.Items)
-                .ThenInclude(x => x.Product)
-                .FirstOrDefault(x => x.BookingId == bookingId);
-
-            if (result == null)
-            {
-                result = new ShoppingCartLunch
-                {
-                    BookingId = bookingId,
-                    Lunch = new Lunch()
-                    {
-                        PreparationTime = 24,
-                    }
-                };
-                _appDbContext.ShoppingCartCustomLunch.Add(result);
-                _appDbContext.SaveChanges();
-            }
-
-            return result;
-        }
-
         public Lunch GetLunch(int lunchId)
         {
             Lunch result = _appDbContext.Lunch
@@ -138,16 +111,28 @@ namespace RepoWebShop.Repositories
             return result;
         }
 
-        public int SaveLunch()
+        public int SaveLunch(string bookingId = null)
         {
-            ShoppingCartLunch lunch = GetSessionLunch();
-            var result = lunch.Lunch.LunchId;
-            _appDbContext.ShoppingCartCustomLunch.Remove(lunch);
-            if(GetTotal(lunch.Lunch) == 0)
+            var result = 0;
+            ShoppingCartLunch lunch = _cartRepository.GetSessionLunch(bookingId);
+            if(lunch != null)
             {
-                _appDbContext.Lunch.Remove(lunch.Lunch);
+                result = lunch.Lunch.LunchId;
+                _appDbContext.ShoppingCartCustomLunch.Remove(lunch);
+                if(GetTotal(lunch.Lunch) == 0)
+                {
+                    _appDbContext.Lunch.Remove(lunch.Lunch);
+                }
+                else
+                {
+                    if (lunch.Lunch.ComboPrice == 0)
+                    {
+                        lunch.Lunch.ComboPrice = GetTotal(lunch.Lunch);
+                        _appDbContext.Lunch.Update(lunch.Lunch);
+                    }
+                }
+                _appDbContext.SaveChanges();
             }
-            _appDbContext.SaveChanges();
             return result;
         }
 
@@ -225,9 +210,9 @@ namespace RepoWebShop.Repositories
 
         public void CopyLunch(int id)
         {
-            SaveLunch();
+            //SaveLunch();
             var lunch = GetLunch(id);
-            var newSessionLunch = GetSessionLunch();
+            var newSessionLunch = _cartRepository.GetOrCreateSessionLunch();
             var items = lunch.Items.Select(x => new LunchItem { Lunch = newSessionLunch.Lunch, Product = x.Product, Quantity = x.Quantity }).ToList();
             var miscellanea = lunch.Miscellanea.Select(x => new LunchMiscellaneous { Lunch = newSessionLunch.Lunch, Description = x.Description, Price = x.Price, Quantity = x.Quantity }).ToList();
             _appDbContext.LunchItems.AddRange(items);

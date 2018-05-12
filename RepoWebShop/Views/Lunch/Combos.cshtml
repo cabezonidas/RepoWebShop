@@ -24,6 +24,7 @@
 {
     <div class="container">
         <h3>¿Qué tal estas opciones?</h3>
+        <h5>Si alguno de estos te gusta mucho, pero quisieras cambiarle algo, probá la opción "Quiero armar uno similar" para que puedas adaptarlo a tu medida.</h5>
         <div class="row make-columns">
             @foreach (var lunch in Model.OrderBy(x => !x.IsGeneric).OrderBy(x => _lunchRepository.GetTotal(x)))
             {

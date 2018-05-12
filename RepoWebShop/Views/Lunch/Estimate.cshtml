@@ -1,14 +1,23 @@
 ﻿@model Lunch
 @inject ILunchRepository _lunchRepository
+@inject SignInManager<ApplicationUser> _signIn
+@inject UserManager<ApplicationUser> _userManager
+
+    @{ 
+        var user = await _userManager.GetUser(_signIn);
+        var isAdmin = user != null && await _userManager.IsInRoleAsync(user, "Administrator");
+    }
 
 <style>
     .handy:hover {
         cursor: pointer;
     }
-    div.selecteItem{
+
+    div.selecteItem {
         background-color: papayawhip
     }
-    .row{
+
+    .row {
         padding: 10px;
     }
 </style>
@@ -16,7 +25,7 @@
 <div class="container text-center">
     <br />
     <div class="row" style="border-top-left-radius: 5px; border-top-right-radius: 5px; max-width: 500px; margin: auto; background-color: #883636; color:papayawhip">
-        <h2>Presupuesto</h2>
+        <h2>Catering Personalizado</h2>
     </div>
 
     <div id="lunchbox">
@@ -43,7 +52,8 @@
             </div>
         </div>
     </div>
-
+    @if(isAdmin)
+    {
     <div class="row" style="max-width: 500px; margin: auto;background-color: papayawhip; ">
         <div class="">
             <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-left">
@@ -59,6 +69,7 @@
             </div>
         </div>
     </div>
+    }
     @{var hidden = _lunchRepository.GetTotal(Model) > 0 ? "" : "hidden";}
     <div class="row @hidden saveLunch" style="max-width: 500px; margin: auto;background-color: papayawhip;  ">
         <div class="selecteItem">
@@ -72,7 +83,10 @@
     <div id="totals">
         @Html.Partial("~/Views/Lunch/LunchTotals.cshtml", Model)
     </div>
-
+    <div>
+        <a class="btn btn-primary" style="margin-top: 5px;" asp-action="Catering" asp-controller="Services">Ver más opciones</a>
+        <a class="btn btn-primary" style="margin-top: 5px;" asp-action="ClearCustomCateringFromCart" asp-controller="ShoppingCart">Descartar</a>
+    </div>
 </div>
 
 <script>
@@ -95,7 +109,7 @@
                     return '<div>' +
                         (item.name ? '<div class="name" style="color:#883636"">' + escape(item.name) + ' $' + escape(item.minOrderAmount * item.price) + '</div>' : '') +
                         (item.price ? '<div class="price">Precio Unitario: $' + escape(item.price) + '</div>' : '') +
-                        (item.minOrderAmount ? '<div class="bites">Bocados: ' + escape(item.minOrderAmount) + '</div>' : '') +
+                        (item.minOrderAmount ? '<div class="bites">Unidades: ' + escape(item.minOrderAmount) + '</div>' : '') +
                         '</div>';
                 },
                 item: function (item, escape) {
@@ -114,7 +128,20 @@
 
     function save() {
         $.post('/api/LunchData/SaveLunch/').then((data) => {
-            window.location = '/Lunch/EditCombo/' + data;
+            @{
+                if(!isAdmin)
+                {
+                    <text>
+                        window.location = '/ShoppingCart/';
+                    </text>
+                }
+                else
+                {
+                    <text>
+                        window.location = '/Lunch/EditCombo/' + data;
+                    </text>
+                }
+            };
         });
     }
 
@@ -214,7 +241,7 @@
                     $('#miscPrice').val('');
                 });
             }
-        });        
+        });
     }
 </script>
 
