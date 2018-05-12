@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<Product>
+@if (Model.Any())
+{
 <style>
     th {
         text-align: center;
@@ -17,87 +19,88 @@
 <div>
     <hr />
 </div>
-<h2 style="text-align: center; color: #883636">Catálogo Completo</h2>
-<table class="table table-striped" id="full-catalog">
-    <thead>
-        <tr>
-            <th>
-                <h3 style="color: #883636; text-align: left;">
-                    Producto
-                </h3>
-            </th>
-            <th>
-                <h3 style="color: #883636; text-align: center;">
-                    Precio
-                </h3>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+    <h2 style="text-align: center; color: #883636">Catálogo Completo</h2>
+    <table class="table table-striped" id="full-catalog">
+        <thead>
             <tr>
-                <td>
-                    <div style="font-size: large; color: #883636">
-                        @item.Name
-                    </div>
-                    <div>
-                        Prociones: @item.Portions <span class="fa fa-pie-chart"></span>
-                    </div>
-                    <div>
-                        Preparación: @item.PreparationTime hs
-                    </div>
-                </td>
-                <td>
-                    <div class="text-center">
-                        @if (item.PriceInStore > item.Price)
-                        {
-                            var perc = Decimal.Floor(100 - (item.Price / item.PriceInStore * 100));
-
-                            <div style="font-size: larger; ">
-                                <div>
-                                    <strong>$@item.Price </strong>
-                                    <strong style="color: green;">-@perc% Online</strong>
-                                </div>
-                            </div>
-                            <div style="font-size: smaller;">
-                                <div>
-                                    <strong style="color: red;">$@item.PriceInStore </strong>
-                                    <strong>En sucursal</strong>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            <div style="font-size: larger; ">$@item.Price</div>
-                        }
-                        <div style="margin: 5px;">
-                            <a title="Comprar" asp-controller="ShoppingCart" asp-action="AddProductToShoppingCart"
-                               asp-route-id="@item.ProductId" class="btn btn-primary">
-                                Comprar
-                            </a>
-                        </div>
-                    </div>
-                </td>
+                <th>
+                    <h3 style="color: #883636; text-align: left;">
+                        Producto
+                    </h3>
+                </th>
+                <th>
+                    <h3 style="color: #883636; text-align: center;">
+                        Precio
+                    </h3>
+                </th>
             </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <div style="font-size: large; color: #883636">
+                            @item.Name
+                        </div>
+                        <div>
+                            Prociones: @item.Portions <span class="fa fa-pie-chart"></span>
+                        </div>
+                        <div>
+                            Preparación: @item.PreparationTime hs
+                        </div>
+                    </td>
+                    <td>
+                        <div class="text-center">
+                            @if (item.PriceInStore > item.Price)
+                            {
+                                var perc = Decimal.Floor(100 - (item.Price / item.PriceInStore * 100));
+
+                                <div style="font-size: larger; ">
+                                    <div>
+                                        <strong>$@item.Price </strong>
+                                        <strong style="color: green;">-@perc% Online</strong>
+                                    </div>
+                                </div>
+                                <div style="font-size: smaller;">
+                                    <div>
+                                        <strong style="color: red;">$@item.PriceInStore </strong>
+                                        <strong>En sucursal</strong>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="font-size: larger; ">$@item.Price</div>
+                            }
+                            <div style="margin: 5px;">
+                                <a title="Comprar" asp-controller="ShoppingCart" asp-action="AddProductToShoppingCart"
+                                   asp-route-id="@item.ProductId" class="btn btn-primary">
+                                    Comprar
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <script>
+        $('table#full-catalog').DataTable({
+            "language": {
+                "url": "/Scripts/SpanishDatatables.json"
+            },
+            "paging": false,
+            "columnDefs": [{
+                "targets": 1,
+                "orderable": false
+            }],
+            "fnInitComplete": styleTable,
+        });
+        function styleTable() {
+            $(".dataTables_length").addClass("hidden");
+            $(".dataTables_filter input").addClass("form-control")
+            $(".dataTables_filter").addClass("filterscake")
         }
-    </tbody>
-</table>
-<script>
-    $('table#full-catalog').DataTable({
-        "language": {
-            "url": "/Scripts/SpanishDatatables.json"
-        },
-        "paging": false,
-        "columnDefs": [{
-            "targets": 1,
-            "orderable": false
-        }],
-        "fnInitComplete": styleTable,
-    });
-    function styleTable() {
-        $(".dataTables_length").addClass("hidden");
-        $(".dataTables_filter input").addClass("form-control")
-        $(".dataTables_filter").addClass("filterscake")
-    }
-</script>
+    </script>
+}
