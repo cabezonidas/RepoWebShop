@@ -123,14 +123,14 @@
                                     <div>
                                         @if (Model.UserSubmitted)
                                         {
-                                            <div class="alert alert-info">
+                                            <div class="alert alert-warning">
                                                 <a href="#" class="close" data-dismiss="alert" aria-label="close" onclick="ackowledgetime()">&times;</a>
                                                 @Model.Message
                                             </div>
                                         }
                                         else
                                         {
-                                            <div class="alert alert-warning">
+                                            <div class="alert alert-info">
                                                 <a href="#" class="close" data-dismiss="alert" aria-label="close" onclick="ackowledgetime()">&times;</a>
                                                 @Model.Message
                                             </div>

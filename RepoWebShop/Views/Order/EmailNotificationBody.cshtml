@@ -16,7 +16,7 @@
                 <div style="font-size: 20px;">
                     <strong>¡Gracias @Model.CustomarAlias!</strong>
                 </div>
-                <div style="font-size: 15px;">
+                <div style="font-size: 15px; padding:5px;">
                     <div>
                         <br />
                         Tu pedido
@@ -32,7 +32,7 @@
                     {
                         <div>
                             <br />
-                            El pedido estará listo el @_calendar.FriendlyDate(Model.OrderReady) a las @Model.OrderReady.Value.ToString("HH\\:mm").ToLower()
+                            Entrega: @_calendar.FriendlyDate(Model.OrderReady) a las @Model.OrderReady.Value.ToString("HH\\:mm").ToLower()
                             @if (Model.TimeLeftUntilStoreCloses.HasValue)
                             {
                                 <br />
@@ -100,7 +100,9 @@
                             @foreach (var item in Model.OrderCatalogItems)
                             {
                                 <tr>
-                                    <td style='padding:10px; padding-left:2px; text-align:center;'></td>
+                                    <td style='padding:10px; padding-left:2px; text-align:center;'>
+                                        <img src="@Model.AbsoluteUrl/Pictures/cake-2.png" width="75" />
+                                    </td>
                                     <td style='padding:2px; text-align:left; '>
                                         <div>
                                             @item.Product.Name<br />
@@ -116,11 +118,15 @@
                             @foreach (var item in Model.OrderCaterings)
                             {
                                 <tr>
-                                    <td style='padding:10px; padding-left:2px; text-align:center;'></td>
+                                    @{
+                                        var itemref = Model.AbsoluteUrl + $"/Lunch/Special/{item.Lunch.LunchId}";
+                                    }
+                                    <td style='padding:10px; padding-left:2px; text-align:center;'>
+                                        <a href="@itemref">
+                                            <img src="@Model.AbsoluteUrl/Pictures/catering.png" width="75" />
+                                        </a>
+                                    </td>
                                     <td style='padding:2px; text-align:left; '>
-                                        @{
-                                            var itemref = Model.AbsoluteUrl + $"/Lunch/Special/{item.Lunch.LunchId}";
-                                        }
                                         <a href="@itemref" style="text-decoration: none; color: black">
                                             <div>
                                                 @Html.Raw(string.IsNullOrEmpty(item.Lunch.Title) ? $"Catering #{item.Lunch.LunchId}" : item.Lunch.Title)<br />
