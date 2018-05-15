@@ -119,7 +119,7 @@ namespace RepoWebShop.Controllers
 
         public IActionResult Prices()
         {
-            return View();
+            return View(_pieRepository.AllPies);
         }
 
         public IActionResult Errors()

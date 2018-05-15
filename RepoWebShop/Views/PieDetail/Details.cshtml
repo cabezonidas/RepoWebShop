@@ -75,7 +75,7 @@
                                                     <div style="font-size: larger; ">
                                                         <div>
                                                             <strong>$@pie.Price </strong>
-                                                            <strong style="color: green;">-@perc% Online</strong>
+                                                            <strong style="color: green;">@Html.Raw((perc >= 5 ? $"-{perc}% " : "") + "Online")</strong>
                                                         </div>
                                                     </div>
                                                     <div style="font-size: smaller;">

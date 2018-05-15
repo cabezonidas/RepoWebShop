@@ -15,7 +15,8 @@
                     @if (isPromo)
                     {
                         var perc = Decimal.Floor(100 - (Model.Price / Model.StorePrice.Value * 100));
-                        <strong style="color: green;">-@perc% Online</strong>
+
+                        <strong style="color: green;">@Html.Raw((perc >= 5 ? $"-{perc}% " : "") + "Online")</strong>
                     }
                 </div>
             </div>

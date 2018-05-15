@@ -26,7 +26,7 @@ namespace RepoWebShop.Controllers
 
         public IActionResult OnlyPrices()
         {
-            return View(_catalogRepo.GetAll());
+            return View(_catalogRepo.GetAll().Where(x => x.IsActive));
         }
 
         [HttpGet]

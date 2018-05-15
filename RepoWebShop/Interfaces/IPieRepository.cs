@@ -15,5 +15,6 @@ namespace RepoWebShop.Interfaces
         void Restore(int pieId);
         void UpdatePrice(int pieId, int price);
         Task<int> Update(Pie pie);
+        void SavePrice(int pieId, decimal onlinePrice, decimal storePrice);
     }
 }

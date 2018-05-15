@@ -75,7 +75,16 @@ namespace RepoWebShop.Repositories
             pie.IsActive = true;
             _appDbContext.SaveChanges();
         }
-        
+
+        public void SavePrice(int pieId, decimal onlinePrice, decimal storePrice)
+        {
+            var pie = _appDbContext.Pies.FirstOrDefault(x => x.PieId == pieId);
+            pie.Price = onlinePrice;
+            pie.StorePrice = storePrice;
+            _appDbContext.Update(pie);
+            _appDbContext.SaveChanges();
+        }
+
         public Task<int> Update(Pie pie)
         {
             Pie oldPieDetail = _appDbContext.Pies.First(x => x.PieId == pie.PieId);

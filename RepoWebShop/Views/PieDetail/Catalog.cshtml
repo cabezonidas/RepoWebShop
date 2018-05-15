@@ -39,18 +39,24 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>
+                    <td width="60">
                         <div style="font-size: large; color: #883636">
                             @item.Name
                         </div>
                         <div>
-                            Prociones: @item.Portions <span class="fa fa-pie-chart"></span>
+                            Prociones aprox.: @item.Portions <span class="fa fa-pie-chart"></span>
                         </div>
                         <div>
                             Preparación: @item.PreparationTime hs
                         </div>
+                        <div class="text-muted text-capitalize" style="font-style:italic;">
+                            @if(!string.IsNullOrEmpty(item.Description))
+                            {
+                            <div>@item.Description</div>
+                            }
+                        </div>
                     </td>
-                    <td>
+                    <td width="40">
                         <div class="text-center">
                             @if (item.PriceInStore > item.Price)
                             {
@@ -59,7 +65,8 @@
                                 <div style="font-size: larger; ">
                                     <div>
                                         <strong>$@item.Price </strong>
-                                        <strong style="color: green;">-@perc% Online</strong>
+
+                                        <strong style="color: green;">@Html.Raw((perc >= 5 ? $"-{perc}% " : "") + "Online")</strong>
                                     </div>
                                 </div>
                                 <div style="font-size: smaller;">

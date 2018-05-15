@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,10 +28,12 @@ namespace RepoWebShop.Models
         private readonly IMercadoPago _mp;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHostingEnvironment _env;
         private readonly string host;
 
-        public OrderRepository(ILunchRepository lunchRep, UserManager<ApplicationUser> userManager, IHttpContextAccessor contextAccessor, IEmailRepository emailRepository, ISmsRepository smsRepository, AppDbContext appDbContext, IMercadoPago mp, ICalendarRepository calendarRepository, IShoppingCartRepository shoppingCartRepository, IMapper mapper)
+        public OrderRepository(IHostingEnvironment env, ILunchRepository lunchRep, UserManager<ApplicationUser> userManager, IHttpContextAccessor contextAccessor, IEmailRepository emailRepository, ISmsRepository smsRepository, AppDbContext appDbContext, IMercadoPago mp, ICalendarRepository calendarRepository, IShoppingCartRepository shoppingCartRepository, IMapper mapper)
         {
+            _env = env;
             _lunchRep = lunchRep;
             host = "http://" + contextAccessor.HttpContext?.Request.Host.ToString();
             _userManager = userManager;
@@ -276,13 +279,16 @@ namespace RepoWebShop.Models
                 //Send mail
             },
             () => {
-                if (order.Registration != null && order.Registration.PhoneNumberConfirmed)
+                if(_env.IsProduction())
                 {
-                    var user = order.Registration;
-                    _smsRepository.SendSms(user.PhoneNumber,
-                        $"{user.FirstName}, ¡Tu pedido {order.FriendlyBookingId} ya está listo! De las Artes.");
+                    if (order.Registration != null && order.Registration.PhoneNumberConfirmed)
+                    {
+                        var user = order.Registration;
+                        _smsRepository.SendSms(user.PhoneNumber,
+                            $"{user.FirstName}, ¡Tu pedido {order.FriendlyBookingId} ya está listo! De las Artes.");
+                    }
+                    _emailRepository.NotifyOrderCompleteAsync(order);
                 }
-                _emailRepository.NotifyOrderCompleteAsync(order);
             });
         }
 
@@ -422,10 +428,11 @@ namespace RepoWebShop.Models
 
         public bool ValidBookingId(string bookingId)
         {
-            return _appDbContext.ShoppingCartItems.Any(x => x.ShoppingCartId == bookingId)
-                || _appDbContext.ShoppingCartCaterings.Any(x => x.BookingId == bookingId)
-                || _appDbContext.ShoppingCartCatalogProducts.Any(x => x.ShoppingCartId == bookingId)
-                || _appDbContext.ShoppingCartCustomLunch.Any(x => x.BookingId == bookingId)
+            return _cartRepository.GetTotal(bookingId) > 0
+                //_appDbContext.ShoppingCartItems.Any(x => x.ShoppingCartId == bookingId)
+                //|| _appDbContext.ShoppingCartCaterings.Any(x => x.BookingId == bookingId)
+                //|| _appDbContext.ShoppingCartCatalogProducts.Any(x => x.ShoppingCartId == bookingId)
+                //|| _appDbContext.ShoppingCartCustomLunch.Any(x => x.BookingId == bookingId)
                 || _appDbContext.Orders.Any(x => x.BookingId == bookingId);
         }
     }

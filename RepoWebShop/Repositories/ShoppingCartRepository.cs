@@ -178,8 +178,8 @@ namespace RepoWebShop.Repositories
         public decimal GetItemsAndCatalogProductsTotal(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
-            var items = _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == bookingId).Select(c => c.Pie.Price * c.Amount)?.Sum() ?? 0;
-            var catalogItems = _appDbContext.ShoppingCartCatalogProducts.Where(c => c.ShoppingCartId == bookingId).Select(c => c.Product.Price * c.Amount)?.Sum() ?? 0;
+            var items = _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == bookingId)?.Select(c => c.Pie.Price * c.Amount)?.Sum() ?? 0;
+            var catalogItems = _appDbContext.ShoppingCartCatalogProducts.Where(c => c.ShoppingCartId == bookingId)?.Select(c => c.Product.Price * c.Amount)?.Sum() ?? 0;
             var total = items + catalogItems;
             return total;
         }
@@ -195,11 +195,18 @@ namespace RepoWebShop.Repositories
         public decimal GetTotalWithoutDiscount(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
+            var subtotal = GetSubtotalWithoutDelivery(bookingId);
+            var delivery = GetDelivery(bookingId)?.DeliveryCost ?? 0;
+            return delivery + subtotal;
+        }
+
+        public decimal GetSubtotalWithoutDelivery(string bookingId)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
             var items = GetItemsAndCatalogProductsTotal(bookingId);
             var customLunch = GetLunchTotal(GetSessionLunch(bookingId)?.Lunch);
             var caterings = GetCateringsTotal(bookingId);
-            var delivery = GetDelivery(bookingId)?.DeliveryCost ?? 0;
-            return items + delivery + caterings + customLunch;
+            return items + caterings + customLunch;
         }
 
         public decimal GetCateringsTotal(string bookingId)
@@ -221,7 +228,7 @@ namespace RepoWebShop.Repositories
         public DeliveryAddress GetDelivery(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
-            return GetItemsAndCatalogProductsTotal(bookingId) >= _minimumArsForOrderDelivery ? _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.ShoppingCartId == bookingId) : null;
+            return GetSubtotalWithoutDelivery(bookingId) >= _minimumArsForOrderDelivery ? _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.ShoppingCartId == bookingId) : null;
         }
 
         /////////////////////////////////////////////////////////////////////////////

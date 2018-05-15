@@ -245,7 +245,7 @@ namespace RepoWebShop.Controllers
         public async Task<IActionResult> Checkout()
         {
             var user = await _userManager.GetUser(_signInManager);
-            if ((_cartRepository.GetItems(null)).Count() > 0)
+            if (_cartRepository.GetTotal(null) > 0)
                 if(user.PhoneNumberConfirmed)
                     return View(user);
                 else
@@ -259,7 +259,7 @@ namespace RepoWebShop.Controllers
         public async Task<IActionResult> Checkout(Order order)
         {
  
-            if (_cartRepository.GetItems(null).Count() == 0)
+            if (_cartRepository.GetTotal(null) <= 0)
             {
                 ModelState.AddModelError("EmptyTrolley", "Tu carrito no puede estar vacío, agrega algunos productos.");
             }

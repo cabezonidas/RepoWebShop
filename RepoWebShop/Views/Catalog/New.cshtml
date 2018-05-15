@@ -1,7 +1,7 @@
 ﻿@model Product
 
 <div class="container">
-    <h2>Producto Nuevo en Catálogo</h2>
+    <h2>Producto Nuevo en Catálogo SIN foto</h2>
 
     <form asp-controller="Catalog" asp-action="New" method="post" class="form-horizontal" role="form">
         <hr />
@@ -25,7 +25,7 @@
         <div class="form-group">
             <label asp-for="Name" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Name" class="form-control" maxlength="20" placeholder="" />
+                <input asp-for="Name" class="form-control" maxlength="50" placeholder="" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
         </div>
@@ -114,4 +114,8 @@
             </div>
         </div>
     </form>
+</div>
+<div class="container">
+
+    @Html.Partial("~/Views/Shared/OnlineProductsPreview.cshtml", "")
 </div>

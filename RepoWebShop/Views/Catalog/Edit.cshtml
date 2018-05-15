@@ -1,7 +1,7 @@
 ﻿@model Product
 
 <div class="container">
-    <h2>Editando @Model.Name</h2>
+    <h2>Editando @Model.Name SIN foto</h2>
 
     <form asp-controller="Catalog" asp-action="Edit" method="post" class="form-horizontal" role="form">
         <hr />
@@ -25,7 +25,7 @@
         <div class="form-group">
             <label asp-for="Name" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Name" class="form-control" maxlength="20" placeholder="" />
+                <input asp-for="Name" class="form-control" maxlength="50" placeholder="" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
         </div>
@@ -114,4 +114,12 @@
         </div>
 
     </form>
+</div>
+<div class="container">
+@{
+    var s = Model.Name;
+    var firstWord = s.IndexOf(" ") > -1 ? s.Substring(0, s.IndexOf(" ")) : s;
+}
+
+@Html.Partial("~/Views/Shared/OnlineProductsPreview.cshtml", firstWord)
 </div>

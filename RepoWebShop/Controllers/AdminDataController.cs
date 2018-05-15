@@ -86,6 +86,21 @@ namespace RepoWebShop.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("SavePrice/{pieId}/{onlinePrice}/{storePrice}")]
+        public IActionResult SavePrice(int pieId, decimal onlinePrice, decimal storePrice)
+        {
+            try
+            {
+                _pieRepository.SavePrice(pieId, onlinePrice, storePrice);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet]
         [Route("GetPies/{id}")]
         public IActionResult GetPies(int id)

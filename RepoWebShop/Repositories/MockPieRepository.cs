@@ -48,6 +48,11 @@ namespace RepoWebShop.Repositories
             throw new NotImplementedException();
         }
 
+        public void SavePrice(int pieId, decimal onlinePrice, decimal storePrice)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<int> Update(Pie pie)
         {
             throw new NotImplementedException();

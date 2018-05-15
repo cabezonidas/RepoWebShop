@@ -9,7 +9,7 @@
 
 
 <div class="container edit-pie-detail">
-    <h2>Editar @Model.Name </h2>
+    <h2>Editar @Model.Name con Foto</h2>
     <a asp-controller="Admin" asp-action="AllProducts" class="btn btn-primary">Productos</a>
     @{
         if (!Model.IsActive)
@@ -108,7 +108,8 @@
                 <thead>
                     <tr>
                         <th>Nombre</th>
-                        <th>Precio</th>
+                        <th>Precio Online</th>
+                        <th>Precio Sucursal</th>
                         <th>Descripcion de Tamaño</th>
                         <th>Estado</th>
                         <th></th>
@@ -228,6 +229,11 @@
         var row = $('<tr>');
         row.append('<td><a href="/Admin/EditPie/' + '@Model.PieDetailId' + "/" + item.pieId + '">' + item.name + '</a></td>');
         row.append('<td>' + item.price + '</td>');
+
+        if (item.storePrice)
+            row.append('<td>' + item.storePrice + '</td>');
+        else
+            row.append('<td></td>')
         row.append('<td>' + item.sizeDescription + '</td>');
         if (item.isActive){
             row.append('<td>Activo</td>');
@@ -241,3 +247,6 @@
         return row;
     }
 </script>
+<div class="container">
+    @Html.Partial("~/Views/Shared/CatalogPreview.cshtml", Model.Name)
+</div>
