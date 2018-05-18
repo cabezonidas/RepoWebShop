@@ -57,6 +57,8 @@ namespace RepoWebShop.Models
             var result = _appDbContext.Orders.First(x => x.OrderId == orderId);
             result.PickUpTime = pickUp;
             result.PickUpTimeFrom = pickUp;
+            result.TimeLeftUntilStoreCloses = null;
+
             _appDbContext.Orders.Update(result);
             _appDbContext.SaveChanges();
         }

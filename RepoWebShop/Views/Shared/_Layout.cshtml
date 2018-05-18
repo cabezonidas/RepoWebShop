@@ -1,5 +1,12 @@
-﻿<!DOCTYPE html>
-@inject IHostingEnvironment env
+﻿@inject IHostingEnvironment env
+@inject SignInManager<ApplicationUser> _signIn
+@inject UserManager<ApplicationUser> _userManager
+
+@{
+    var user = await _userManager.GetUser(_signIn);
+    var isAdmin = user != null && await _userManager.IsInRoleAsync(user, "Administrator");
+}
+<!DOCTYPE html>
 <html lang="es-ar">
 <head>
     @Html.Partial("~/Views/Shared/Favicon.cshtml")
@@ -31,7 +38,7 @@
     <script src="~/lib/Snap.svg/dist/snap.svg-min.js"></script>
     <script type="text/javascript" src="~/lib/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="~/lib/lodash/dist/lodash.min.js"></script>
-    @if (env.IsProduction())
+    @if (env.IsProduction() && !isAdmin)
     {
         <script type="text/javascript" src="~/CommonJs/ZopimChat.js"></script>
     }
@@ -39,7 +46,7 @@
     <script src="~/lib/slick-lightbox/dist/slick-lightbox.js"></script>
     <script src="~/lib/selectize/dist/js/standalone/selectize.min.js"></script>
 
-    @if (env.IsProduction())
+    @if (env.IsProduction() && !isAdmin)
     {
         <!-- Facebook Pixel Code -->
         <script>
@@ -91,19 +98,19 @@
                 <div id="navbrand">
                     <ul class="nav navbar-nav">
                         @*<li class="hidden-sm hidden-md hidden-lg hidden-print">
-                            <div style="font-size: smaller; color: white; margin: 4px auto;">
-                                <div>
-                                    <a class="phone" href="https://api.whatsapp.com/send?phone=5491127778899" target='_blank' style="color: white;">
-                                        <span class="fa fa-whatsapp" style="margin-right: 5px;"></span> 911 2777 8899
-                                    </a>
+                                <div style="font-size: smaller; color: white; margin: 4px auto;">
+                                    <div>
+                                        <a class="phone" href="https://api.whatsapp.com/send?phone=5491127778899" target='_blank' style="color: white;">
+                                            <span class="fa fa-whatsapp" style="margin-right: 5px;"></span> 911 2777 8899
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a class="phone" href="tel:+5491149250262" style="color: white;">
+                                            <span class="fa fa-phone" style="margin-right: 5px;"></span> 4925-0262
+                                        </a>
+                                    </div>
                                 </div>
-                                <div>
-                                    <a class="phone" href="tel:+5491149250262" style="color: white;">
-                                        <span class="fa fa-phone" style="margin-right: 5px;"></span> 4925-0262
-                                    </a>
-                                </div>
-                            </div>
-                        </li>*@
+                            </li>*@
 
                         <li class="">
                             <a class="phone" href="tel:+5491149250262">
@@ -179,12 +186,12 @@
 
     @{
         var SocialMedia = new List<MediaViewModel>()
-            {
-            //new MediaViewModel() { Icon = "fa-twitter", Class = "social-twitter", Ref = "#" },
-            //new MediaViewModel() { Icon = "fa-instagram", Class = "social-google-plus", Ref = "#" },
-            new MediaViewModel() { Icon = "fa-facebook", Class = "social-facebook", Ref = "https://www.facebook.com/ReposteriaDeLasArtes/" },
-            new MediaViewModel() { Icon = "fa-whatsapp", Class = "social-whatsapp", Ref = "https://api.whatsapp.com/send?phone=6421780906" }
-            };
+        {
+        //new MediaViewModel() { Icon = "fa-twitter", Class = "social-twitter", Ref = "#" },
+        //new MediaViewModel() { Icon = "fa-instagram", Class = "social-google-plus", Ref = "#" },
+        new MediaViewModel() { Icon = "fa-facebook", Class = "social-facebook", Ref = "https://www.facebook.com/ReposteriaDeLasArtes/" },
+        new MediaViewModel() { Icon = "fa-whatsapp", Class = "social-whatsapp", Ref = "https://api.whatsapp.com/send?phone=6421780906" }
+        };
     }
     @*<media-footer media="@SocialMedia" ></media-footer>*@
 

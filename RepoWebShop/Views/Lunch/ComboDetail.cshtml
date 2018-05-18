@@ -1,5 +1,6 @@
 ﻿@model Lunch
 @inject ILunchRepository _lunchRepository
+@inject ICalendarRepository _calendar
 <style>
     .col-price {
         padding-right: 10px;
@@ -23,12 +24,12 @@
             <div style="font-size: larger; color: silver"><span class="fa fa-star" style="color: silver"></span> Personalizado <span class="fa fa-star" style="color: silver"></span></div>
         }
         <div class="text-capitalize" style="font-size: large; text-decoration: underline;">@Model.Title</div>
-        @if(Model.IsCombo)
+        @if (Model.IsCombo)
         {
-        <div>
-            <span class="fa fa-users text-center" style="width: 15px; color: goldenrod"></span>
-            Hasta @Model.Attendants Comensales
-        </div>
+            <div>
+                <span class="fa fa-users text-center" style="width: 15px; color: goldenrod"></span>
+                Hasta @Model.Attendants Comensales
+            </div>
         }
         <div style="font-size: smaller">Combo #@Model.LunchId</div>
     </div>
@@ -116,7 +117,7 @@
                     @Model.ComboPrice.ToString("c")
                 </div>
                 <div>
-                    Precio Online @Html.Raw(percentage >= 5 ? $"{Decimal.ToInt32(percentage)} % Off" : "") 
+                    Precio Online @Html.Raw(percentage >= 5 ? $"{Decimal.ToInt32(percentage)} % Off" : "")
                 </div>
             </div>
         }
@@ -126,22 +127,31 @@
                 <a asp-controller="ShoppingCart" asp-action="AddCateringToShoppingCart" asp-route-id="@Model.LunchId" class="btn btn-primary hidden-print">Agregar al Carrito</a>
             }
         </div>
-        <div style="padding-bottom: 10px;">
-            <a class="alert-success" asp-action="CopyLunch" asp-controller="Lunch" asp-route-id="@Model.LunchId" >¡Quiero armar uno similar!</a>
+        <div style="padding-bottom: 10px;" class="hidden-print">
+            <a class="alert-success" asp-action="CopyLunch" asp-controller="Lunch" asp-route-id="@Model.LunchId">¡Quiero armar uno similar!</a>
         </div>
     </div>
     <div class="text-left hidden-print" style="padding: 10px; background-color:#883636; color:papayawhip; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
         <div class="text-center" style="font-size: larger; padding-bottom: 10px; text-decoration-line: underline;">Recomendación</div>
-        @if(Model.IsCombo)
+        @if (Model.IsCombo)
         {
-        <div>
-            <span class="fa fa-clock-o text-center" style="width: 15px;"></span>
-            Duración del evento - Hasta @Model.EventDuration hs
-        </div>
+            <div>
+                <span class="fa fa-clock-o text-center" style="width: 15px;"></span>
+                Duración del evento - Hasta @Model.EventDuration hs
+            </div>
         }
         <div>
             <span class="fa fa-cutlery text-center" style="width: 15px;"></span>
             Antelación - @Model.PreparationTime hs de elaboración
+            @{
+                var date = _calendar.GetPickupEstimate(Model.PreparationTime);
+                var datevalue = date.Date == _calendar.LocalTime().Date ? "HOY" : $"el {_calendar.FriendlyDate(date)}";
+                var text = $"Si comprás ahora, lo podés tener listo para {datevalue} a las {date.ToString("HH:ss")} hs. Si lo querés para más adelante, podés elegir otra fecha al finalizar la compra.";
+            }
+            <div style="border-bottom-style: solid; border-bottom-color: papayawhip; margin-top: 10px;"></div>
+            <div class="text-center small" style="margin-top: 10px;">
+                @Html.Raw(text)
+            </div>
         </div>
     </div>
 

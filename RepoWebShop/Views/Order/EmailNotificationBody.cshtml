@@ -25,14 +25,11 @@
                         </a>
                         está confirmado
                     </div>
-                    <div>
-                        <br />Tiempo de elaboración: <strong>@Model.PreparationTime hs</strong>
-                    </div>
                     @if (Model.OrderReady.HasValue)
                     {
                         <div>
                             <br />
-                            Entrega: @_calendar.FriendlyDate(Model.OrderReady) a las @Model.OrderReady.Value.ToString("HH\\:mm").ToLower()
+                            Entrega: A partir del @_calendar.FriendlyDate(Model.OrderReady) a las @Model.OrderReady.Value.ToString("HH\\:mm").ToLower()
                             @if (Model.TimeLeftUntilStoreCloses.HasValue)
                             {
                                 <br />

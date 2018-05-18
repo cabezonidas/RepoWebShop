@@ -12,6 +12,39 @@ namespace RepoWebShop.Tests
         public WorkingHoursUnitTest()
         {
         }
+        //            var openSlots = WorkingHours.GetOpenSlots(pickUpTime, openHours, holidays, vacations);
+        //var pickUpOptions = WorkingHours.GetCompatibleOpenSlots(openSlots, discount, LocalTime());
+        //WorkingHours.ContainsDateFrame(openSlots, new KeyValuePair<DateTime, TimeSpan>(result.From, result.To));
+        [TestMethod]
+        public void ContainsDateFrame()
+        {
+            var _openHours = new List<OpenHours>()
+            {
+                new OpenHours() { DayId = 2, StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(4, 0, 0) },
+                new OpenHours() { DayId = 2, StartingAt = new TimeSpan(16, 00, 0), Duration = new TimeSpan(4, 0, 0) },
+                new OpenHours() { DayId = 3, StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(4, 0, 0) },
+                new OpenHours() { DayId = 3, StartingAt = new TimeSpan(16, 00, 0), Duration = new TimeSpan(4, 0, 0) },
+                new OpenHours() { DayId = 4, StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(4, 0, 0) },
+                new OpenHours() { DayId = 4, StartingAt = new TimeSpan(16, 00, 0), Duration = new TimeSpan(4, 0, 0) },
+                new OpenHours() { DayId = 5, StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(4, 0, 0) },
+                new OpenHours() { DayId = 5, StartingAt = new TimeSpan(16, 00, 0), Duration = new TimeSpan(4, 0, 0) },
+                new OpenHours() { DayId = 6, StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(11, 30, 0) },
+                new OpenHours() { DayId = 0, StartingAt = new TimeSpan(8, 30, 0), Duration = new TimeSpan(4, 30, 0) }
+            };
+
+            var today = new DateTime(2018, 5, 17, 12, 11, 0); //Jueves Mediodia
+            var pickUpTime = new DateTime(2018, 5, 17, 19, 45, 0); //
+
+            /************* Get Pick Up Option *******************/
+            var openSlots = WorkingHours.GetOpenSlots(pickUpTime, _openHours, new List<PublicHoliday>(), new List<Vacation>());
+            var compatibleHours = WorkingHours.GetCompatibleOpenSlots(openSlots, null, today);
+            /************* Get Pick Up Option *******************/
+
+            var result = WorkingHours.ContainsDateFrame(compatibleHours, new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 17, 11, 15, 0), new TimeSpan(1, 15, 0)));
+            Assert.IsFalse(result);
+        }
+
+
 
         [TestMethod]
         public void CompatibleSlotsContainsLaterDateFrame()
@@ -19,6 +52,7 @@ namespace RepoWebShop.Tests
             var compatibleOpenSlots = new List<KeyValuePair<DateTime, TimeSpan>>()
             {
                 new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 4, 29, 11, 0, 0), new TimeSpan(2, 0, 0)), //Domingo
+                new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 4, 29, 9, 0, 0), new TimeSpan(4, 0, 0)), //Domingo
                 new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 1, 8, 30, 0), new TimeSpan(4, 0, 0)), //Martes
                 new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 1, 16, 0, 0), new TimeSpan(4, 0, 0)), //Martes
                 new KeyValuePair<DateTime, TimeSpan>(new DateTime(2018, 5, 2, 8, 30, 0), new TimeSpan(4, 0, 0)), //Miercoles
@@ -28,7 +62,7 @@ namespace RepoWebShop.Tests
             var result = WorkingHours.ContainsDateFrame(compatibleOpenSlots, selectedtimeframe);
 
             Assert.IsTrue(result);
-        }
+         }
 
         [TestMethod]
         public void CompatibleSlotsContainsDateFrame()

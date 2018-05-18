@@ -85,7 +85,7 @@ namespace RepoWebShop.Models
             foreach(var compatibleSlot in compatibleSlots)
             {
                 var slotEndsAfterTimeframe = compatibleSlot.Key.Add(compatibleSlot.Value) >= timeframe.Key.Add(timeframe.Value);
-                var slotAndTimeframeAreSamedate = compatibleSlot.Key.Date == timeframe.Key.Date;
+                var slotAndTimeframeAreSamedate = timeframe.Key >= compatibleSlot.Key;
                 if (slotEndsAfterTimeframe && slotAndTimeframeAreSamedate)
                     return true;
             }

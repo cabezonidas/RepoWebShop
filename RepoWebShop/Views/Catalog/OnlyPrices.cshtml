@@ -63,7 +63,6 @@
                         <th class="product">Producto</th>
                         <th>Precio Online</th>
                         <th>Precio en Tienda</th>
-                        <th>Tienda en Efectivo</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,17 +70,42 @@
                         {
                     <tr>
                         <td class="product">
+                            @if (prod.MinOrderAmount > 1)
+                            {
+                                <span style="">@prod.MinOrderAmount </span>
+                            }
                             @prod.Name
                         </td>
                         <td>
-                            @prod.Price.ToString("c")
+                            @if(prod.MinOrderAmount > 1)
+                            {
+                                <span style="">
+                                    @Html.Raw((prod.Price * prod.MinOrderAmount).ToString("c"))
+                                </span>
+                                <span style="font-size: small">
+                                    (@prod.Price.ToString("c") c/u)
+                                </span>
+                            }
+                            else
+                            {
+                                @prod.Price.ToString("c")
+                            }
                         </td>
 
                         <td>
-                            @prod.PriceInStore.ToString("c")
-                        </td>
-                        <td>
-                            @Html.Raw((prod.PriceInStore * 0.9m).ToString("c"))
+                            @if(prod.MinOrderAmount > 1)
+                            {
+                                <span style="">
+                                    @Html.Raw((prod.PriceInStore * 12).ToString("c"))
+                                </span>
+                                <span style="font-size: small">
+                                    (@prod.PriceInStore.ToString("c") c/u)
+                                </span>
+                            }
+                            else
+                            {
+                                @prod.PriceInStore.ToString("c")
+                            }
                         </td>
                     </tr>
                         }
