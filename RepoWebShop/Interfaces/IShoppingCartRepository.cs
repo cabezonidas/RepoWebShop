@@ -50,7 +50,7 @@ namespace RepoWebShop.Interfaces
         ShoppingCartPickUpDate GetPickUpDate(string bookingId);
         PickUpTimeViewModel GetTimeSlots(string bookingId);
         void AcknowledgeSystemTime(string bookingId);
-        SessionDetailsViewModel SessionsDetails();
+        SessionDetailsViewModel SessionsDetails(string friendlyBookingId = null);
         IEnumerable<ShoppingCartComboCatering> AllShoppingCartCaterings();
         int CountTrolleyObjects(string bookingId);
         void AddCateringToOrder(ShoppingCartLunch customLunch);

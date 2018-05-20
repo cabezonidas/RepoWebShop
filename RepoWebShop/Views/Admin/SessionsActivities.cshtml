@@ -1,178 +1,386 @@
 ﻿@model SessionDetailsViewModel
+@inject ICalendarRepository _calendar
 
 <div class="container">
-    <h3>Comentarios</h3>
-    <br />
-    <table class="table table-striped activities">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Sesión</th>
-                <th>Comentario</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Comments)
-            {
+    <h2 class="text-center text-muted">Soporte de Ventas</h2>
+    @if (Model.Orders.Any())
+    {
+        <div>
+            <h3>Pedidos</h3>
+            <br />
+            <table class="table table-striped activities">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Reserva</th>
+                        <th>Fecha Creación</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Orders)
+                    {
 
-                <tr>
-                    <td>@item.ShoppingCartCommentId</td>
-                    <td>
-                        <div title="@item.ShoppingCartId">
-                            @{
-                                if (!string.IsNullOrEmpty(item.ShoppingCartId) && item.ShoppingCartId.Length > 10)
-                                {
-                                    var friendlybooking = item.ShoppingCartId.Substring(item.ShoppingCartId.Length - 7, 6);
-                                    <span>
-                                        @friendlybooking
-                                    </span>
-                                }
+                        <tr>
+                            <td>@item.OrderId</td>
+                            <td>
+                                <a asp-action="Detail" asp-controller="Order" asp-route-id="@item.OrderId">
+                                    @item.FriendlyBookingId
+                                </a>
+                            </td>
+                            <td>
+                                @item.OrderPlaced
+                            </td>
+                            <td>
+                                @item.OrderTotal
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    @if (Model.Users.Any())
+    {
+        <div>
+            <h3>Información de usuario</h3>
+            <br />
+            <table class="table table-striped activities">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Teléfono</th>
+                        <th>Login</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Users)
+                    {
+                    <tr>
+                        <td>
+                            @item.UserName
+                        </td>
+                        <td>
+                            @item.FirstName
+                        </td>
+                        <td>
+                            @item.LastName
+                        </td>
+                        <td>
+                            @if(!item.PhoneNumberConfirmed)
+                            {
+                                @item.PhoneNumberDeclared <span class="fa fa-question"></span>
                             }
-                        </div>
-                    </td>
-                    <td>@item.Comments</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-
-    <h3>Items del sitio</h3>
-    <br />
-    <table class="table table-striped activities">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Sesión</th>
-                <th>Item</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Items)
-            {
-                <tr>
-                    <td>@item.ShoppingCartItemId</td>
-                    <td>
-                        <div title="@item.ShoppingCartId">
-                            @{
-                                if (!string.IsNullOrEmpty(item.ShoppingCartId) && item.ShoppingCartId.Length > 10)
-                                {
-                                    var friendlybooking = item.ShoppingCartId.Substring(item.ShoppingCartId.Length - 7, 6);
-                                    <span>
-                                        @friendlybooking
-                                    </span>
-                                }
+                            else
+                            {
+                                @item.PhoneNumber <span class="fa fa-check"></span>
                             }
-                        </div>
-                    </td>
-                    <td>@item.Pie.PieDetail.Name @item.Pie.Name</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                        </td>
+                        <td>
+                            <div>
+                                <span class="fa @Html.Raw(string.IsNullOrEmpty(item.FacebookNameIdentifier) ? "" : "fa-facebook")"></span>
+                                <span class="fa @Html.Raw(string.IsNullOrEmpty(item.GoogleNameIdentifier) ? "" : "fa-google")"></span>
+                            </div>
+                        </td>
+                        <td>
+                            @item.Email <span class="fa @Html.Raw(item.EmailConfirmed ? "fa-check" : "fa-times")"></span>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    @if (Model.Comments.Any())
+    {
+        <div>
+            <h3>Comentarios</h3>
+            <br />
+            <table class="table table-striped activities">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Sesión</th>
+                        <th>Comentario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Comments)
+                    {
 
+                        <tr>
+                            <td>@item.ShoppingCartCommentId</td>
+                            <td>
+                                <div title="@item.ShoppingCartId">
+                                    @item.ShoppingCartId.Ending(6)
+                                </div>
+                            </td>
+                            <td>@item.Comments</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    @if (Model.Items.Any())
+    {
+        <div>
+            <h3>Items del sitio con foto</h3>
+            <br />
+            <table class="table table-striped activities">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Sesión</th>
+                        <th>Item</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td>@item.ShoppingCartItemId</td>
+                            <td>
+                                <div title="@item.ShoppingCartId">
+                                    @item.ShoppingCartId.Ending(6)
+                                </div>
+                            </td>
+                            <td>@item.Pie.PieDetail.Name @item.Pie.Name</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    @if (Model.PickUpDates.Any())
+    {
+        <div>
+            <h3>Fechas de Entrega</h3>
+            <br />
+            <table class="table table-striped activities">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Sesión</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.PickUpDates)
+                    {
+                        <tr>
+                            <td>@item.ShoppingCartPickUpDateId</td>
+                            <td>
+                                <div title="@item.BookingId">
+                                    @item.BookingId.Ending(6)
+                                </div>
+                            </td>
+                            <td>@item.From.ToString("s")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    @if (Model.CustomLunches.Any())
+    {
+        <div>
+            <h3>Catering personalizados</h3>
+            <br />
+            <table class="table table-striped activities">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Sesión</th>
+                        <th>Lunch Id</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CustomLunches)
+                    {
+                        <tr>
+                            <td>@item.ShoppingCartLunchId</td>
+                            <td>
+                                <div title="@item.BookingId">
+                                    @item.BookingId.Ending(6)
+                                </div>
+                            </td>
+                            <td>@item.Lunch.LunchId</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    @if (Model.Discounts.Any())
+    {
+        <div>
+            <h3>Descuentos</h3>
+            <br />
+            <table class="table table-striped activities">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Sesión</th>
+                        <th>Descuento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Discounts)
+                    {
+                        <tr>
+                            <td>@item.ShoppingCartDiscountId</td>
+                            <td>
+                                <div title="@item.ShoppingCartId">
+                                    @item.ShoppingCartId.Ending(6)
+                                </div>
+                            </td>
+                            <td>@item.Discount.Phrase</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    @if (Model.Caterings.Any())
+    {
+        <div>
+            <h3>Catering Armados</h3>
+            <br />
+            <table class="table table-striped activities">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Sesión</th>
+                        <th>Catering Id</th>
+                        <th>Nombre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CustomLunches)
+                    {
+                        <tr>
+                            <td>@item.ShoppingCartLunchId</td>
+                            <td>
+                                <div title="@item.BookingId">
+                                    @item.BookingId.Ending(6)
+                                </div>
+                            </td>
+                            <td>@item.Lunch.LunchId</td>
+                            <td>@item.Lunch.Title</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    @if (Model.Products.Any())
+    {
+        <div>
+            <h3>Items de catálogo sin foto</h3>
+            <br />
+            <table class="table table-striped activities">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Sesión</th>
+                        <th>Item</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Products)
+                    {
+                        <tr>
+                            <td>@item.ShoppingCartCatalogItemId</td>
+                            <td>
+                                <div title="@item.ShoppingCartId">
+                                    @item.ShoppingCartId.Ending(6)
+                                </div>
+                            </td>
+                            <td>@item.Product.Name</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    @if (Model.Delivery.Any())
+    {
+        <div>
+            <h3>Envíos</h3>
+            <br />
+            <table class="table table-striped activities">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Sesión</th>
+                        <th>Dirección</th>
+                        <th>Instrucción</th>
+                        <th>Distancia</th>
+                        <th>Costo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Delivery)
+                    {
+                        <tr>
+                            <td>@item.DeliveryAddressId</td>
+                            <td>
+                                <div title="@item.ShoppingCartId">
+                                    @item.ShoppingCartId.Ending(6)
+                                </div>
+                            </td>
+                            <td>@item.AddressLine1</td>
+                            <td>@item.DeliveryInstructions</td>
+                            <td>@item.Distance mts</td>
+                            <td>@item.DeliveryCost</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 
-    <h3>Fechas de Entrega</h3>
-    <br />
-    <table class="table table-striped activities">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Sesión</th>
-                <th>Fecha</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.PickUpDates)
-            {
-                <tr>
-                    <td>@item.ShoppingCartPickUpDateId</td>
-                    <td>
-                        <div title="@item.BookingId">
-                            @{
-                                if (!string.IsNullOrEmpty(item.BookingId) && item.BookingId.Length > 10)
-                                {
-                                    var friendlybooking = item.BookingId.Substring(item.BookingId.Length - 7, 6);
-                                    <span>
-                                        @friendlybooking
-                                    </span>
-                                }
-                            }
-                        </div>
-                    </td>
-                    <td>@item.From.ToString("s")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <h3>Lunches</h3>
-    <br />
-    <table class="table table-striped activities">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Sesión</th>
-                <th>Lunch Id</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Lunches)
-            {
-                <tr>
-                    <td>@item.ShoppingCartLunchId</td>
-                    <td>
-                        <div title="@item.BookingId">
-                            @{
-                                if (!string.IsNullOrEmpty(item.BookingId) && item.BookingId.Length > 10)
-                                {
-                                    var friendlybooking = item.BookingId.Substring(item.BookingId.Length - 7, 6);
-                                    <span>
-                                        @friendlybooking
-                                    </span>
-                                }
-                            }
-                        </div>
-                    </td>
-                    <td>@item.Lunch.LunchId</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <h3>Descuentos</h3>
-    <br />
-    <table class="table table-striped activities">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Sesión</th>
-                <th>Descuento</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Discounts)
-            {
-                <tr>
-                    <td>@item.ShoppingCartDiscountId</td>
-                    <td>
-                        <div title="@item.ShoppingCartId">
-                            @{
-                                if (!string.IsNullOrEmpty(item.ShoppingCartId) && item.ShoppingCartId.Length > 10)
-                                {
-                                    var friendlybooking = item.ShoppingCartId.Substring(item.ShoppingCartId.Length - 7, 6);
-                                    <span>
-                                        @friendlybooking
-                                    </span>
-                                }
-                            }
-                        </div>
-                    </td>
-                    <td>@item.Discount.Phrase</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    @if (Model.Ips.Any())
+    {
+        <div>
+            <h3>Registros Ip</h3>
+            <br />
+            <table class="table table-striped activities">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Sesión</th>
+                        <th>Ip</th>
+                        <th>Hora</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Ips)
+                    {
+                        <tr>
+                            <td>@item.BookingRecordId</td>
+                            <td>
+                                <a asp-action="SessionsActivities" asp-controller="Admin" asp-route-bookingId="@item.BookingId">
+                                    <div title="@item.BookingId">
+                                        @item.BookingId.Ending(6)
+                                    </div>
+                                </a>
+                            </td>
+                            <td>
+                                @{ var href = "https://tools.keycdn.com/geo?host=" + item.Ip; }
+                                <a href="@href" target="_blank">@item.Ip</a>
+                            </td>
+                            <td>@item.Created.ToString("s")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 </div>
 <script>
     $('.activities').DataTable(({

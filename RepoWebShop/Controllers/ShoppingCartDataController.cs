@@ -107,7 +107,7 @@ namespace RepoWebShop.Controllers
 
             var _total = _cartRepository.GetTotal(bookingId);
             
-            var _friendlyBookingId = bookingId.Length >= 6 ? bookingId?.Substring(bookingId.Length - 6, 6) ?? String.Empty : String.Empty;
+            var _friendlyBookingId = bookingId.Ending(6);
 
             var preference = _mp.BuildPreference(_total, bookingId, _friendlyBookingId, Request.Host.ToString(), "De las Artes", _user?.Id);
 

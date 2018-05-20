@@ -25,12 +25,14 @@ namespace RepoWebShop.Controllers
         private readonly ICategoryRepository _categoryRepository;
         private readonly AppDbContext _appDbContext;
         private readonly IMapper _mapper;
+        private readonly ICalendarRepository _calendar;
         private readonly List<SelectListItem> _categories;
 
         
 
-        public AdminController(IShoppingCartRepository cart, IGalleryRepository galleryRepository, IFlickrRepository flickrRepository, IMapper mapper, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
+        public AdminController(ICalendarRepository calendar, IShoppingCartRepository cart, IGalleryRepository galleryRepository, IFlickrRepository flickrRepository, IMapper mapper, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
         {
+            _calendar = calendar;
             _cart = cart;
             _galleryRepository = galleryRepository;
             _flickrRepository = flickrRepository;
@@ -95,11 +97,11 @@ namespace RepoWebShop.Controllers
 
         public IActionResult Visits()
         {
-            var visits = _appDbContext.PageVisits.OrderByDescending(x => x.PageVisitId).ToList();
+            var visits = _appDbContext.PageVisits.OrderByDescending(x => x.PageVisitId).Take(100).ToList();
 
-            var visitsByPath = visits.GroupBy(x => x.Path).Select(group => new KeyValuePair<string, int>(group.Key, group.Count())).OrderByDescending(x => x.Value).ToList();
+            var visitsByPath = visits.GroupBy(x => x.Path).Select(group => new KeyValuePair<string, int>(group.Key, group.Count())).OrderByDescending(x => x.Value).Take(100).ToList();
 
-            var visitsByIp = visits.GroupBy(x => x.Ip).Select(group => new KeyValuePair<string, int>(group.Key, group.Count())).OrderByDescending(x => x.Value).ToList();
+            var visitsByIp = visits.GroupBy(x => x.Ip).Select(group => new KeyValuePair<string, int>(group.Key, group.Count())).OrderByDescending(x => x.Value).Take(100).ToList();
 
             VisitsViewModel model = new VisitsViewModel
             {
@@ -125,7 +127,7 @@ namespace RepoWebShop.Controllers
         public IActionResult Errors()
         {
             var exceptions = _appDbContext.Exceptions.OrderByDescending(x => x.SiteExceptionId).ToList();
-            var bookingRecords = _appDbContext.BookingRecords.ToList();
+            var bookingRecords = _appDbContext.BookingRecords.Where(x => x.Created > _calendar.LocalTime().AddDays(-7)).ToList();
 
             SessionDetailsViewModel sessionDetails = _cart.SessionsDetails();
 
@@ -139,9 +141,9 @@ namespace RepoWebShop.Controllers
             return View(result);
         }
 
-        public IActionResult SessionsActivities()
+        public IActionResult SessionsActivities(string bookingId)
         {
-            SessionDetailsViewModel sessionDetails = _cart.SessionsDetails();
+            SessionDetailsViewModel sessionDetails = _cart.SessionsDetails(bookingId);
 
             return View(sessionDetails);
         }

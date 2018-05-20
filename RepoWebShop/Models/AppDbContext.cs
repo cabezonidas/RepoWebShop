@@ -8,10 +8,7 @@ namespace RepoWebShop.Models
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            //Database.EnsureCreated();
             Database.Migrate();
-
-            
         }
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -20,7 +17,8 @@ namespace RepoWebShop.Models
         //        .HasIndex(p => new { p.BookingId })
         //        .IsUnique(true);
         //}
-        
+
+        public DbSet<Session> ServerCache { get; set; }
 
         public DbSet<OrderCatering> OrderCaterings { get; set; }
         public DbSet<ShoppingCartComboCatering> ShoppingCartCaterings { get; set; }

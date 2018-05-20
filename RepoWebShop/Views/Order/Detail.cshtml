@@ -76,43 +76,43 @@
     <br />
 
     <div>
-        @{ 
-            var paymentState = Model.Order.OrderPaymentStatus.GetType();
-            var progress = Model.Order.OrderProgressState.GetType();
+        @{
+        var paymentState = Model.Order.OrderPaymentStatus.GetType();
+        var progress = Model.Order.OrderProgressState.GetType();
 
-            
-            if (progress == typeof(OrderInProgress))
-            {
-                <a class="btn btn-info" onclick="completeOrder()">Orden Lista</a>
-                <a class="btn btn-warning" href="/Order/UpdateOrderWithReason/Cancel/@Model.Order.OrderId">Cancelar</a>
-            }
 
-            
-            if (progress == typeof(OrderComplete))
-            {
-                <a class="btn btn-success" onclick="pickUpOrder()">Orden Retirada</a>
-                <a class="btn btn-warning" href="/Order/UpdateOrderWithReason/Cancel/@Model.Order.OrderId">Cancelar</a>
-            }
+        if (progress == typeof(OrderInProgress))
+        {
+            <a class="btn btn-warning" onclick="completeOrder()" title="Comunica al cliente que la orden está lista para ser entregada">Notificar Cliente</a>
+            <a class="btn btn-danger" href="/Order/UpdateOrderWithReason/Cancel/@Model.Order.OrderId">Cancelar</a>
+    }
 
-            if (progress == typeof(OrderPickedUp))
-            {
-                <a class="btn btn-warning" href="/Order/UpdateOrderWithReason/Return/@Model.Order.OrderId">Pedido retornado</a>
-            }
 
-            if (paymentState == typeof(OrderReservationNotPaid))
-            {
-                <a class="btn btn-success" onclick="payOrder()">Pago recibido</a>
-            }
+    if (progress == typeof(OrderComplete))
+    {
+        <a class="btn btn-success" onclick="pickUpOrder()">Orden Retirada</a>
+        <a class="btn btn-warning" href="/Order/UpdateOrderWithReason/Cancel/@Model.Order.OrderId">Cancelar</a>
+}
 
-            if(paymentState == typeof(OrderReservationPaid) || paymentState == typeof(OrderMercadoPagoPaid))
-            {
-                <a class="btn btn-danger" href="/Order/UpdateOrderWithReason/Refund/@Model.Order.OrderId">Devolver dinero</a>
-            }
-            
-            if(paymentState == typeof(OrderMercadoPagoPaymentPending))
-            {
-                <a class="btn btn-danger" href="/Order/UpdateOrderWithReason/CancelPayment/@Model.Order.OrderId">Cancelar pago</a>
-            }
+if (progress == typeof(OrderPickedUp))
+{
+    <a class="btn btn-warning" href="/Order/UpdateOrderWithReason/Return/@Model.Order.OrderId">Pedido retornado</a>
+}
+
+if (paymentState == typeof(OrderReservationNotPaid))
+{
+    <a class="btn btn-success" onclick="payOrder()">Pago recibido</a>
+}
+
+if (paymentState == typeof(OrderReservationPaid) || paymentState == typeof(OrderMercadoPagoPaid))
+{
+    <a class="btn btn-danger" href="/Order/UpdateOrderWithReason/Refund/@Model.Order.OrderId">Devolver dinero</a>
+}
+
+if (paymentState == typeof(OrderMercadoPagoPaymentPending))
+{
+    <a class="btn btn-danger" href="/Order/UpdateOrderWithReason/CancelPayment/@Model.Order.OrderId">Cancelar pago</a>
+}
         }
     </div>
 

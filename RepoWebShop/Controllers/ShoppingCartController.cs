@@ -46,7 +46,7 @@ namespace RepoWebShop.Controllers
             _catalogRepository = catalogRepository;
             _cartRepository = shoppingCart;
             _bookingId = shoppingCart.GetSessionCartId();
-            _friendlyBookingId = _bookingId.Length >= 6 ? _bookingId?.Substring(_bookingId.Length - 6, 6) ?? string.Empty : String.Empty;
+            _friendlyBookingId = _bookingId.Ending(6);
             _calendarRepository = calendarRepository;
             _mp = mp;
             _minimumArsForOrderDelivery = _config.GetValue<int>("MinimumArsForOrderDelivery");
@@ -96,7 +96,8 @@ namespace RepoWebShop.Controllers
             };
             return View(shoppingCartViewModel);
         }
-
+        
+        [PageVisitAsync]
         public RedirectToActionResult AddToShoppingCart(int pieId)
         {
             var selectedPie = _pieRepository.ActivePies.FirstOrDefault(p => p.PieId == pieId);
@@ -108,6 +109,7 @@ namespace RepoWebShop.Controllers
             return RedirectToAction("Index");
         }
 
+        [PageVisitAsync]
         public RedirectToActionResult AddProductToShoppingCart(int id)
         {
             var product = _catalogRepository.GetAvailableToBuyOnline().FirstOrDefault(p => p.ProductId == id);
@@ -119,6 +121,7 @@ namespace RepoWebShop.Controllers
             return RedirectToAction("Index");
         }
 
+        [PageVisitAsync]
         public RedirectToActionResult AddCateringToShoppingCart(int id)
         {
             var catering = _lunchRep.GetLunch(id);
@@ -127,23 +130,31 @@ namespace RepoWebShop.Controllers
             return RedirectToAction("Index");
         }
 
+        [PageVisitAsync]
         public RedirectToActionResult RemoveDelivery()
         {
             _cartRepository.RemoveDelivery();
 
             return RedirectToAction("Index");
         }
+
+        [PageVisitAsync]
         public RedirectToActionResult RemoveDiscount()
         {
             _cartRepository.RemoveShoppingDiscount();
 
             return RedirectToAction("Index");
         }
+
+
+        [PageVisitAsync]
         public RedirectToActionResult ClearCustomCateringFromCart()
         {
             _cartRepository.ClearCustomCateringFromCart();
             return RedirectToAction("Index");
         }
+
+        [PageVisitAsync]
         public RedirectToActionResult RemoveFromShoppingCart(int pieId)
         {
             var selectedPie = _pieRepository.AllPies.FirstOrDefault(p => p.PieId == pieId);
@@ -155,6 +166,7 @@ namespace RepoWebShop.Controllers
             return RedirectToAction("Index");
         }
 
+        [PageVisitAsync]
         public RedirectToActionResult RemoveCatalogProductFromShoppingCart(int productId)
         {
             var selectedProduct = _catalogRepository.GetById(productId);
@@ -162,6 +174,7 @@ namespace RepoWebShop.Controllers
             return RedirectToAction("Index");
         }
 
+        [PageVisitAsync]
         public RedirectToActionResult RemoveCateringFromCart(int lunchId)
         {
             var lunch = _lunchRep.GetLunch(lunchId);
@@ -169,6 +182,7 @@ namespace RepoWebShop.Controllers
             return RedirectToAction("Index");
         }
 
+        [PageVisitAsync]
         public RedirectToActionResult ClearFromShoppingCart(int pieId)
         {
             _cartRepository.ClearFromCart(pieId);
@@ -176,12 +190,14 @@ namespace RepoWebShop.Controllers
             return RedirectToAction("Index");
         }
 
+        [PageVisitAsync]
         public RedirectToActionResult ClearCatalogProductFromShoppingCart(int productId)
         {
             _cartRepository.ClearCatalogItemFromCart(productId);
             return RedirectToAction("Index");
         }
 
+        [PageVisitAsync]
         public RedirectToActionResult ClearCateringFromCart(int cateringId)
         {
             _cartRepository.ClearCateringFromCart(cateringId);

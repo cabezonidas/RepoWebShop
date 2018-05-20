@@ -58,7 +58,7 @@ namespace RepoWebShop.Controllers
 
         [AllowAnonymous]
         [Route("[Controller]/EmailVerification/{user}/{hash}")]
-        public IActionResult EmailVerification(string user, string hash)
+        public async Task<IActionResult> EmailVerification(string user, string hash)
         {
             ApplicationUser appUser = _userManager.Users.FirstOrDefault(x => x.UserName.ToLower() == user.ToLower());
             if(appUser == null)
@@ -71,7 +71,7 @@ namespace RepoWebShop.Controllers
             if (savedHash == hash)
             {
                 appUser.EmailConfirmed = true;
-                _userManager.UpdateAsync(appUser);
+                await _userManager.UpdateAsync(appUser);
             }
             var result = _mapper.Map<ApplicationUser, HashValidationViewModel>(appUser);
 
@@ -397,7 +397,7 @@ namespace RepoWebShop.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult ResetPassword(ResetPasswordViewModel vm)
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel vm)
         {
             if (ModelState.IsValid)
             {
@@ -411,7 +411,7 @@ namespace RepoWebShop.Controllers
                 }
                 else
                 {
-                    _emailRepository.SendEmailResetPasswordAsync(foundUser);
+                    await _emailRepository.SendEmailResetPasswordAsync(foundUser);
                     return RedirectToAction(nameof(PieDetailController.List), "PieDetail");
                 }
             }

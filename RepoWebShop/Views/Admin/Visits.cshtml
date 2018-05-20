@@ -38,17 +38,11 @@
                             <a href="@href" target="_blank">@item.Ip</a>
                         </td>
                         <td>
-                            <div title="@item.BookingId">
-                                @{ 
-                                    if(!string.IsNullOrEmpty(item.BookingId) && item.BookingId.Length > 10)
-                                    {
-                                        var friendlybooking = item.BookingId.Substring(item.BookingId.Length - 7, 6);
-                                        <span>
-                                            @friendlybooking
-                                        </span>
-                                    }
-                                }
-                            </div>
+                            <a asp-action="SessionsActivities" asp-controller="Admin" asp-route-bookingId="@item.BookingId">
+                                <div title="@item.BookingId">
+                                    @item.BookingId.Ending(6)
+                                </div>
+                            </a>
                         </td>
                         <td>
                             @Html.Raw(item.User?.Email ?? "")
@@ -78,8 +72,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.ByPath)
-            {
+                @foreach (var item in Model.ByPath)
+                {
                 <tr>
                     <td>
                         <a href="@item.Key">@Html.Raw("delasartes.com.ar" + item.Key)</a>
@@ -88,7 +82,7 @@
                         @item.Value
                     </td>
                 </tr>
-    }
+                }
                 </tbody>
             </table>
         </div>

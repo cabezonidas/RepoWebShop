@@ -105,6 +105,12 @@ namespace RepoWebShop
             services.AddAutoMapper();
             services.AddMemoryCache();
             services.AddDistributedMemoryCache();
+            services.AddDistributedSqlServerCache(o =>
+            {
+                o.ConnectionString = _configurationRoot.GetConnectionString("DefaultConnection");
+                o.SchemaName = "dbo";
+                o.TableName = "ServerCache";
+            });
 
             services.AddSession();
 

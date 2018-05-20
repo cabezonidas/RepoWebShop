@@ -178,8 +178,17 @@ namespace RepoWebShop.Repositories
 
         private void GetOrderEmails(Order order, out string principalEmail, out string secondaryEmail)
         {
-            principalEmail = order.Registration?.Email ?? order.MercadoPagoMail;
-            secondaryEmail = principalEmail == order.MercadoPagoMail ? null : order.MercadoPagoMail;
+            if(_env.IsProduction())
+            {
+                principalEmail = order.Registration?.Email ?? order.MercadoPagoMail;
+                secondaryEmail = principalEmail == order.MercadoPagoMail ? null : order.MercadoPagoMail;
+            }
+            else
+            {
+                var mpMail = _config.GetSection("MercadoPagoTestEmail").Value;
+                principalEmail = order.Registration?.Email ?? mpMail;
+                secondaryEmail = principalEmail == mpMail ? null : mpMail;
+            }
         }
         private MimeMessage GetMimeMessage(Email email, string secondaryEmail = null)
         {

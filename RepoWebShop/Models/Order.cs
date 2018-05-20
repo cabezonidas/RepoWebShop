@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
 using RepoWebShop.States;
 using System;
@@ -78,14 +79,7 @@ namespace RepoWebShop.Models
         {
             get
             {
-                try
-                {
-                    return BookingId?.Substring(BookingId.Length - 6, 6) ?? string.Empty;
-                }
-                catch
-                {
-                    return String.Empty;
-                }
+                return BookingId.Ending(6);
             }
         }
 

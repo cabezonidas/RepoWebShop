@@ -1,6 +1,7 @@
 ﻿@inject IHostingEnvironment env
 @inject SignInManager<ApplicationUser> _signIn
 @inject UserManager<ApplicationUser> _userManager
+@inject ShoppingCart sc
 
 @{
     var user = await _userManager.GetUser(_signIn);
@@ -186,12 +187,12 @@
 
     @{
         var SocialMedia = new List<MediaViewModel>()
-        {
-        //new MediaViewModel() { Icon = "fa-twitter", Class = "social-twitter", Ref = "#" },
-        //new MediaViewModel() { Icon = "fa-instagram", Class = "social-google-plus", Ref = "#" },
-        new MediaViewModel() { Icon = "fa-facebook", Class = "social-facebook", Ref = "https://www.facebook.com/ReposteriaDeLasArtes/" },
-        new MediaViewModel() { Icon = "fa-whatsapp", Class = "social-whatsapp", Ref = "https://api.whatsapp.com/send?phone=6421780906" }
-        };
+{
+//new MediaViewModel() { Icon = "fa-twitter", Class = "social-twitter", Ref = "#" },
+//new MediaViewModel() { Icon = "fa-instagram", Class = "social-google-plus", Ref = "#" },
+new MediaViewModel() { Icon = "fa-facebook", Class = "social-facebook", Ref = "https://www.facebook.com/ReposteriaDeLasArtes/" },
+new MediaViewModel() { Icon = "fa-whatsapp", Class = "social-whatsapp", Ref = "https://api.whatsapp.com/send?phone=6421780906" }
+};
     }
     @*<media-footer media="@SocialMedia" ></media-footer>*@
 
@@ -227,5 +228,9 @@
             <script src="~/lib/react/react-dom.development.js"></script>
         }
         @Html.ReactInitJavaScript()*@
+    <br />
+    <div class="text-center text-muted hidden-print">
+        Sesión #@sc.BookingId.Ending(6)
+    </div>
 </body>
 </html>

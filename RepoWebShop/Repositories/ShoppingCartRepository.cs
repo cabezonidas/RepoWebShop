@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using Microsoft.AspNetCore.Http;
 using RepoWebShop.ViewModels;
+using RepoWebShop.Extensions;
 
 namespace RepoWebShop.Repositories
 {
@@ -252,9 +253,9 @@ namespace RepoWebShop.Repositories
         public void ClearFromCart(int pieId)
         {
             var shoppingCartItem =
-                _appDbContext.ShoppingCartItems.SingleOrDefault(
+                _appDbContext.ShoppingCartItems.Where(
                     s => s.Pie.PieId == pieId && s.ShoppingCartId == _cartSession.BookingId);
-            _appDbContext.ShoppingCartItems.Remove(shoppingCartItem);
+            _appDbContext.ShoppingCartItems.RemoveRange(shoppingCartItem);
             _appDbContext.SaveChanges();
         }
 
@@ -475,13 +476,43 @@ namespace RepoWebShop.Repositories
             }
         }
 
-        public SessionDetailsViewModel SessionsDetails()
+        public SessionDetailsViewModel SessionsDetails(string friendlyBookingId = null)
         {
-            var items = _appDbContext.ShoppingCartItems.Include(x => x.Pie).ThenInclude(x => x.PieDetail).ToList();
-            var comments = _appDbContext.ShoppingCartComments.Where(x => !String.IsNullOrEmpty(x.Comments)).ToList();
-            var discounts = _appDbContext.ShoppingCartDiscount.Include(x => x.Discount).ToList();
-            var dates = _appDbContext.ShoppingCartPickUpDates.ToList();
-            var lunches = _appDbContext.ShoppingCartCustomLunch.Include(x => x.Lunch).ToList();
+            var items = _appDbContext.ShoppingCartItems
+                .Where(x => x.ShoppingCartId.ContainsSubstring(friendlyBookingId, true))
+                .Include(x => x.Pie)
+                .ThenInclude(x => x.PieDetail).ToList();
+            var comments = _appDbContext.ShoppingCartComments
+                .Where(x => x.ShoppingCartId.ContainsSubstring(friendlyBookingId, true))
+                .Where(x => !String.IsNullOrEmpty(x.Comments)).ToList();
+            var discounts = _appDbContext.ShoppingCartDiscount
+                .Where(x => x.ShoppingCartId.ContainsSubstring(friendlyBookingId, true))
+                .Include(x => x.Discount).ToList();
+            var dates = _appDbContext.ShoppingCartPickUpDates
+                .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true))
+                .ToList();
+            var customLunches = _appDbContext.ShoppingCartCustomLunch
+                .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true))
+                .Include(x => x.Lunch).ToList();
+            var caterings = _appDbContext.ShoppingCartCaterings
+                .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true))
+                .Include(x => x.Lunch).ToList();
+            var products = _appDbContext.ShoppingCartCatalogProducts
+                .Where(x => x.ShoppingCartId.ContainsSubstring(friendlyBookingId, true))
+                .Include(x => x.Product).ToList();
+            var delivery = _appDbContext.DeliveryAddresses
+                .Where(x => x.ShoppingCartId.ContainsSubstring(friendlyBookingId, true)).ToList();
+            var visits = _appDbContext.PageVisits
+                .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true))
+                .OrderByDescending(x => x.Visited)
+                .Include(x => x.User).ToList();
+            var ips = _appDbContext.BookingRecords
+                .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true)).ToList();
+            var repeatedIps = _appDbContext.BookingRecords
+                .Where(x => ips.Select(y => y.Ip).Contains(x.Ip)).ToList();
+            var orders = _appDbContext.Orders
+                .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true)).ToList();
+            var users = visits.Where(x => x.User != null).Select(x => x.User).Distinct().ToList();
 
             SessionDetailsViewModel sessionDetails = new SessionDetailsViewModel()
             {
@@ -489,7 +520,15 @@ namespace RepoWebShop.Repositories
                 Comments = comments,
                 Discounts = discounts,
                 PickUpDates = dates,
-                Lunches = lunches
+                CustomLunches = customLunches,
+                Caterings = caterings,
+                Products = products,
+                FriendlyBookingId = friendlyBookingId,
+                Delivery = delivery,
+                Visits = visits,
+                Ips = ips.Union(repeatedIps).OrderByDescending(x => x.Created),
+                Orders = orders,
+                Users = users
             };
             return sessionDetails;
         }
@@ -547,9 +586,9 @@ namespace RepoWebShop.Repositories
         public void ClearCatalogItemFromCart(int productId)
         {
             var shoppingCartCatalogItem =
-                _appDbContext.ShoppingCartCatalogProducts.FirstOrDefault(
+                _appDbContext.ShoppingCartCatalogProducts.Where(
                     s => s.Product.ProductId == productId && s.ShoppingCartId == _cartSession.BookingId);
-            _appDbContext.ShoppingCartCatalogProducts.Remove(shoppingCartCatalogItem);
+            _appDbContext.ShoppingCartCatalogProducts.RemoveRange(shoppingCartCatalogItem);
             _appDbContext.SaveChanges();
         }
 
@@ -563,9 +602,9 @@ namespace RepoWebShop.Repositories
         public void ClearCateringFromCart(int cateringId)
         {
             var shoppingCartCatering =
-                AllShoppingCartCaterings().FirstOrDefault(
+                AllShoppingCartCaterings().Where(
                     s => s.LunchId == cateringId && s.BookingId == _cartSession.BookingId);
-            _appDbContext.ShoppingCartCaterings.Remove(shoppingCartCatering);
+            _appDbContext.ShoppingCartCaterings.RemoveRange(shoppingCartCatering);
             _appDbContext.SaveChanges();
         }
 
