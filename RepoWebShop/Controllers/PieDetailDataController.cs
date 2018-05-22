@@ -5,8 +5,11 @@ using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Controllers
 {
@@ -40,6 +43,23 @@ namespace RepoWebShop.Controllers
         }
 
         [HttpPost]
+        [Route("AddPieDetail/{name}")]
+        public async Task<IActionResult> AddPieDetail(string name)
+        {
+            var result = new PieDetail { Name = name.ToTitleCase() };
+            try
+            {
+                var pieDetail = await _pieDetailRepository.Add(result);
+                return Ok(new { pieDetail } );
+            }
+            catch(Exception ex)
+            {
+
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
         [Route("AddPieOfTheWeek/{pieDetailId}")]
         public IActionResult AddPieOfTheWeek(int pieDetailId)
         {
@@ -58,13 +78,13 @@ namespace RepoWebShop.Controllers
 
         [HttpPost]
         [Route("RemovePieOfTheWeek/{pieDetailId}")]
-        public IActionResult RemovePieOfTheWeek(int pieDetailId)
+        public async Task<IActionResult> RemovePieOfTheWeek(int pieDetailId)
         {
             try
             {
                 var pieDetail = _pieDetailRepository.GetPieDetailById(pieDetailId);
                 pieDetail.IsPieOfTheWeek = false;
-                _pieDetailRepository.Update(pieDetail);
+                await _pieDetailRepository.Update(pieDetail);
                 return Ok();
             }
             catch
@@ -82,6 +102,14 @@ namespace RepoWebShop.Controllers
         }
 
         [HttpGet]
+        [Route("Ingredients/{id}")]
+        public IActionResult Ingredients(int id)
+        {
+            var result = _pieDetailRepository.PieDetails.FirstOrDefault(x => x.PieDetailId == id)?.Ingredients ?? "";
+            return Ok(result);
+        }
+
+        [HttpGet]
         [Route("GetPieById/{pieDetailId}")]
         public PieDetail GetPieById(int pieDetailId)
         {
@@ -94,15 +122,7 @@ namespace RepoWebShop.Controllers
         {
             IEnumerable<PieDetail> dbPieDetails = null;
 
-
-            if (string.IsNullOrEmpty(category))
-            {
-                dbPieDetails = _pieDetailRepository.PieDetailsWithChildren.OrderBy(p => p.PieDetailId);
-            }
-            else
-            {
-                dbPieDetails = _pieDetailRepository.PieDetailsWithChildren.OrderBy(p => p.PieDetailId).Where(p => p.Category.CategoryName == category);
-            }
+            dbPieDetails = _pieDetailRepository.PieDetailsWithChildren.OrderBy(p => p.PieDetailId);
 
             List<PieDetailViewModel> pieDetails = new List<PieDetailViewModel>();
 

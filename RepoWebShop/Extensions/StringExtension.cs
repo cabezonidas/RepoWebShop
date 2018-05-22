@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoWebShop.Extensions
@@ -29,6 +31,17 @@ namespace RepoWebShop.Extensions
                 chars = text.Length;
 
             return text.Substring(text.Length - chars);
+        }
+
+        public static string ToTitleCase(this string text)
+        {
+            text = text ?? string.Empty;
+            text = text.TrimStart();
+            text = text.TrimEnd();
+            CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
+            TextInfo textInfo = cultureInfo.TextInfo;
+            text = textInfo.ToTitleCase(text);
+            return text;
         }
     }
 }

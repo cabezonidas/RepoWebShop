@@ -4,7 +4,7 @@
 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 center-block pieoverviewsummary">
     @{ var pieweek = Model.PieDetail.IsPieOfTheWeek ? "pieoftheweek" : string.Empty;}
     <div class="thumbnail center-block @pieweek">
-        <div class="ribbon"><span>@Model.PieDetail.PreparationTime Hs</span></div>
+        <div class="ribbon"><span></span></div>
         <div class="pieOverviewImage">
             <a asp-controller="PieDetail"
                asp-action="Details"

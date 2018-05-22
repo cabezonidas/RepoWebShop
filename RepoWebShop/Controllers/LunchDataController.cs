@@ -59,7 +59,7 @@ namespace RepoWebShop.Controllers
         [Route("GetProducts")]
         public IActionResult GetProducts()
         {
-            var result = _catalogRepository.GetAll();
+            var result = _catalogRepository.GetAll().OrderBy(x => x.DisplayName.TrimStart()).OrderBy(x => x.Category).ToList();
             return Ok(result);
         }
 

@@ -25,7 +25,6 @@ namespace RepoWebShop.Repositories
             {
                 return _appDbContext.Pies
                     .Include(p => p.PieDetail)
-                    .Include(c => c.PieDetail.Category)
                     .Where(x => x.IsActive && x.PieDetail.IsActive);
             }
         }
@@ -35,8 +34,7 @@ namespace RepoWebShop.Repositories
             get
             {
                 return _appDbContext.Pies
-                    .Include(p => p.PieDetail)
-                    .Include(c => c.PieDetail.Category);
+                    .Include(p => p.PieDetail);
             }
         }
 

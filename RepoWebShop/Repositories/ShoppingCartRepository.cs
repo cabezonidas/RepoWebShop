@@ -107,13 +107,13 @@ namespace RepoWebShop.Repositories
             var catalogItems = GetCatalogItems(bookingId);
             var caterings = GetShoppingCaterings(bookingId);
             var customCatering = GetSessionLunchIfNotEmpty(bookingId);
-            var itemsPrepTime = items.Count() == 0 ? 0 : items.OrderByDescending(x => x.Pie.PieDetail.PreparationTime).First().Pie.PieDetail.PreparationTime;
+            //var itemsPrepTime = items.Count() == 0 ? 0 : items.OrderByDescending(x => x.Pie.PieDetail.PreparationTime).First().Pie.PieDetail.PreparationTime;
             var cateringsPrepTime = caterings.Count() == 0 ? 0 : caterings.OrderByDescending(x => x.Lunch.PreparationTime).First().Lunch.PreparationTime;
             var catalogItemsPrepTime = catalogItems.Count() == 0 ? 0 : catalogItems.OrderByDescending(x => x.Product.PreparationTime).First().Product.PreparationTime;
             var customCateringPrepTime = customCatering?.Lunch?.PreparationTime ?? 0;
             var hours = new List<int>();
             hours.Add(0);
-            hours.Add(itemsPrepTime);
+            //hours.Add(itemsPrepTime);
             hours.Add(cateringsPrepTime);
             hours.Add(catalogItemsPrepTime);
             hours.Add(customCateringPrepTime);
@@ -123,7 +123,7 @@ namespace RepoWebShop.Repositories
         public IEnumerable<ShoppingCartCatalogItem> GetCatalogItems(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
-            return _appDbContext.ShoppingCartCatalogProducts.Include(x => x.Product).Where(x => x.ShoppingCartId == bookingId).ToList();
+            return _appDbContext.ShoppingCartCatalogProducts.Include(x => x.Product).ThenInclude(x => x.PieDetail).Where(x => x.ShoppingCartId == bookingId).ToList();
         }
 
         public void ClearCart(string bookingId)

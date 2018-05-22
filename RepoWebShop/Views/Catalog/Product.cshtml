@@ -1,0 +1,247 @@
+﻿@model  ProductViewModel
+<div class="container">
+    <h2>Editar Producto</h2>
+
+    <form asp-controller="Catalog" asp-action="Product" method="post" role="form">
+        <hr />
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <input asp-for="ProductId" class="hidden" />
+                <div>
+                    <label asp-for="PieDetailId" class="control-label"></label>
+                    <div>
+                        <select asp-for="PieDetailId" id="pieDetailIds">
+                            <option value=""></option>
+                            @foreach (var detail in Model.PieDetails.OrderBy(x => x.Name.TrimStart()))
+                            {
+                                <option value="@detail.PieDetailId">
+                                    @detail.Name
+                                </option>
+                            }
+                        </select>
+                        <div>No poner tamaño ni variedad</div>
+                        <span asp-validation-for="PieDetailId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div id="pieDetailIngredients" class="">
+                    <label asp-for="Ingredients" class="control-label"></label>
+                    <div>
+                        <input asp-for="Ingredients" class="form-control" id="ingredients" />
+                        <span asp-validation-for="Ingredients" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <div>
+                    <label asp-for="SizeDescription" class="control-label"></label>
+                    <div>
+                        <select asp-for="SizeDescription" id="sizes">
+                            <option value=""></option>
+                            <option value="Chica">Chica</option>
+                            <option value="Chico">Chico</option>
+                            <option value="Grande">Grande</option>
+                            <option value="XL">XL</option>
+                            <option value="Docena">Docena</option>
+                            <option value="200 grs">200 grs</option>
+                            <option value="250 grs">250 grs</option>
+                            <option value="1/2 Kg">1/2 Kg</option>
+                            <option value="1 Kg">1 Kg</option>
+                        </select>
+                        <span asp-validation-for="SizeDescription" class="text-danger"></span>
+                    </div>
+                </div>
+                <div>
+                    <label asp-for="Flavour" class="control-label"></label>
+                    <div>
+                        <select asp-for="Flavour" id="flavours">
+                            <option value=""></option>
+                            <option value="Frutas Secas">Frutas Secas</option>
+                            <option value="Tradicional">Tradicional</option>
+                            <option value="Carne">Carne</option>
+                            <option value="Verdura">Verdura</option>
+                            <option value="Jamón y Queso">Jamón y Queso</option>
+                            <option value="Membrillo">Membrillo</option>
+                            <option value="Batata">Batata</option>
+                            <option value="Crema">Crema</option>
+                            <option value="Pastelera">Pastelera</option>
+                            <option value="Almendra">Almendra</option>
+                            <option value="Choco Blanco">Choco Blanco</option>
+                            <option value="Choco Negro">Choco Negro</option>
+                            <option value="Pan Negro">Pan Negro</option>
+                        </select>
+                        <span asp-validation-for="Flavour" class="text-danger"></span>
+                    </div>
+                </div>
+                <div>
+                    <label asp-for="Category" class="control-label"></label>
+                    <div>
+                        <select asp-for="Category" class="form-control">
+                            <option>Postre</option>
+                            <option>Seco</option>
+                            <option>Lunch</option>
+                            <option>Appetizer</option>
+                        </select>
+                        <span asp-validation-for="Category" class="text-danger"></span>
+                    </div>
+                </div>
+                <div>
+                    <label asp-for="Temperature" class="control-label"></label>
+                    <div>
+                        <select asp-for="Temperature" class="form-control">
+                            <option>Frío</option>
+                            <option>Ambiente</option>
+                            <option>Caliente</option>
+                        </select>
+                        <span asp-validation-for="Category" class="text-danger"></span>
+                    </div>
+                </div>
+                <div>
+                    <label asp-for="PreparationTime" class="control-label"></label>
+                    <div>
+                        <input asp-for="PreparationTime" class="form-control" type="number" />
+                        <span asp-validation-for="PreparationTime" class="text-danger"></span>
+                    </div>
+                </div>
+                <div>
+                    <label asp-for="IsActive" class="control-label"></label>
+                    <div>
+                        <input asp-for="IsActive" class="form-control" type="checkbox" />
+                        <span asp-validation-for="IsActive" class="text-danger"></span>
+                    </div>
+                </div>
+                <div>
+                    <label asp-for="IsOnSale" class="control-label"></label>
+                    <div>
+                        <input asp-for="IsOnSale" class="form-control" type="checkbox" />
+                        <span asp-validation-for="IsOnSale" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <div>
+                    <label asp-for="Portions" class="control-label"></label>
+                    <div>
+                        <input asp-for="Portions" class="form-control" type="number" />
+                    </div>
+                    <div>
+                        (1 por ej. para sandwiches / 8 para torta chica)
+                    </div>
+                    <div>
+                        <span asp-validation-for="Portions" class="text-danger"></span>
+                    </div>
+                    <br />
+                </div>
+                <div>
+                    <label asp-for="MinOrderAmount" class="control-label"></label>
+                    <div>
+                        <input asp-for="MinOrderAmount" class="form-control" type="number" />
+                    </div>
+                    <div>
+                        (12 por ej. para sandwiches / 1 para tortas)
+                    </div>
+                    <div>
+                        <span asp-validation-for="MinOrderAmount" class="text-danger"></span>
+                    </div>
+                    <br />
+                </div>
+                <div>
+                    <label asp-for="MultipleAmount" class="control-label"></label>
+                    <div>
+                        <input asp-for="MultipleAmount" class="form-control" type="number" />
+                    </div>
+                    <div>
+                        (6 por ej. para sandwiches / 1 para tortas)
+                    </div>
+                    <div>
+                        <span asp-validation-for="MultipleAmount" class="text-danger"></span>
+                    </div>
+                    <br />
+                </div>
+                <div>
+                    <label asp-for="Price" class="control-label"></label>
+                    <div>
+                        <input asp-for="Price" class="form-control" type="number" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                </div>
+                <div>
+                    <label asp-for="PriceInStore" class="control-label"></label>
+                    <div>
+                        <input asp-for="PriceInStore" class="form-control" type="number" />
+                        <span asp-validation-for="PriceInStore" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                <hr />
+                <label asp-for="Name" class="control-label"></label>
+                <div>
+                    <input asp-for="Name" class="form-control" disabled="disabled" />
+                </div>
+                <label asp-for="Description" class="control-label"></label>
+                <div>
+                    <input asp-for="Description" class="form-control" disabled="disabled" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="text-center" style="margin: 20px;">
+                <input type="submit" class="btn btn-primary" value="Guardar" />
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    var $pieDetail;
+    var $sizes;
+    var $flavours;
+    $(document).ready(() => {
+        $pieDetail = initializeSelector();
+        $sizes = $('select#sizes').selectize({
+            placeholder: 'Escribir tamaño (opcional)',
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            }
+        });
+        $flavours = $('select#flavours').selectize({
+            placeholder: 'Escribir variedad (opcional)',
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            }
+        });
+    });
+
+    function initializeSelector() {
+        return $('select#pieDetailIds').selectize({
+            placeholder: 'Elegir...',
+            create: (input, callback) => onCreate(input, callback),
+            onChange: function (event) {
+                $.get('/api/PieDetailData/Ingredients/' + event).then((data) =>
+                    $('#ingredients').empty().val(data)
+                )
+            }
+        });
+    };
+
+    function onCreate(input, callback) {
+        $pieDetail[0].selectize.disable();
+        $.post('/api/PieDetailData/AddPieDetail/' + input).then((data) => {
+            $pieDetail[0].selectize.enable();
+            console.log(data);
+            callback({
+                value: data.pieDetail,
+                text: input
+            })
+        }).fail((data) => {
+            alert('Ocurrió un error al agregar el producto.')
+        })
+    }
+</script>

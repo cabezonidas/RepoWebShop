@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using RepoWebShop.Models;
 using System.Threading.Tasks;
+using RepoWebShop.ViewModels;
 
 namespace RepoWebShop.Interfaces
 {
@@ -13,5 +14,6 @@ namespace RepoWebShop.Interfaces
         Task<int> Update(PieDetail pieDetail);
         void Delete(int pieDetailId);
         void Restore(int pieDetailId);
+        void UpdateIngredients(ProductViewModel vm);
     }
 }

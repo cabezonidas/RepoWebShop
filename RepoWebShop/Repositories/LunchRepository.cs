@@ -204,7 +204,9 @@ namespace RepoWebShop.Repositories
             return _appDbContext.Lunch
                 .Include(x => x.Miscellanea)
                 .Include(x => x.Items)
-                .ThenInclude(x => x.Product).OrderByDescending(x => x.LunchId)
+                .ThenInclude(x => x.Product)
+                .ThenInclude(x => x.PieDetail)
+                .OrderByDescending(x => x.LunchId)
                 .ToList().Where(x => GetTotal(x) > 0);
         }
 

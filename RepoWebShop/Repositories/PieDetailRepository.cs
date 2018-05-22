@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using RepoWebShop.Models;
 using RepoWebShop.Interfaces;
+using RepoWebShop.ViewModels;
+using RepoWebShop.Extensions;
 
 namespace RepoWebShop.Repositories
 {
@@ -25,8 +27,7 @@ namespace RepoWebShop.Repositories
         {
             get
             {
-                return _appDbContext.PieDetails
-                    .Include(p => p.Category);
+                return _appDbContext.PieDetails;
             }
         }
 
@@ -57,19 +58,19 @@ namespace RepoWebShop.Repositories
         }
 
 
-        public Task<int> Add(PieDetail pieDetail)
+        public async Task<int> Add(PieDetail pieDetail)
         {
             _appDbContext.PieDetails.Add(pieDetail);
-            return _appDbContext.SaveChangesAsync();
+            await _appDbContext.SaveChangesAsync();
+            return pieDetail.PieDetailId;
         }
 
-        public Task<int> Update(PieDetail pieDetail)
+        public async Task<int> Update(PieDetail pieDetail)
         {
             PieDetail oldPieDetail = _appDbContext.PieDetails.First(x => x.PieDetailId == pieDetail.PieDetailId);
-
             _mapper.Map(pieDetail, oldPieDetail);
-
-            return _appDbContext.SaveChangesAsync();
+            await _appDbContext.SaveChangesAsync();
+            return pieDetail.PieDetailId;
         }
 
         public PieDetail GetPieDetailById(int pieDetailId)
@@ -81,6 +82,14 @@ namespace RepoWebShop.Repositories
         {
             var pieDetail = _appDbContext.PieDetails.FirstOrDefault(x => x.PieDetailId == pieDetailId);
             pieDetail.IsActive = true;
+            _appDbContext.SaveChanges();
+        }
+
+        public void UpdateIngredients(ProductViewModel vm)
+        {
+            var result = _appDbContext.PieDetails.First(x => x.PieDetailId == vm.PieDetailId);
+            result.Ingredients = vm.Ingredients.ToTitleCase();
+            _appDbContext.PieDetails.Update(result);
             _appDbContext.SaveChanges();
         }
     }

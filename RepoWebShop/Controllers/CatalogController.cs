@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
@@ -14,8 +15,13 @@ namespace RepoWebShop.Controllers
     public class CatalogController : Controller
     {
         private readonly ICatalogRepository _catalogRepo;
-        public CatalogController(ICatalogRepository catalogRepo)
+        private readonly IPieDetailRepository _pieDetailRepo;
+        private readonly IMapper _mapper;
+
+        public CatalogController(IMapper mapper, ICatalogRepository catalogRepo, IPieDetailRepository pieDetailRepo)
         {
+            _mapper = mapper;
+            _pieDetailRepo = pieDetailRepo;
             _catalogRepo = catalogRepo;
         }
 
@@ -30,9 +36,57 @@ namespace RepoWebShop.Controllers
         }
 
         [HttpGet]
+        [Route("[controller]/Product")]
+        public IActionResult Product()
+        {
+            ProductViewModel vm = new ProductViewModel();
+            vm.PieDetails = _pieDetailRepo.PieDetails;
+            return View(vm);
+        }
+
+        [HttpGet]
+        [Route("[controller]/Product/{id}")]
+        public IActionResult Product(int id)
+        {
+            var result = _catalogRepo.GetById(id);
+            result.MultipleAmount = result.MultipleAmount == 0 ? result.MinOrderAmount : result.MultipleAmount;
+            var vm = _mapper.Map<Product, ProductViewModel>(result);
+            vm.PieDetails = _pieDetailRepo.PieDetails;
+            vm.Ingredients = result.PieDetail?.Ingredients ?? result.Description;
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Product(ProductViewModel vm)
+        {
+            if(ModelState.IsValid)
+            {
+                _pieDetailRepo.UpdateIngredients(vm);
+                var product = _catalogRepo.CreateOrUpdate(vm);
+                var products = _catalogRepo.GetAll().OrderBy(x => x.DisplayName).ToArray();
+                for(int i = 0; i < products.Length; i++)
+                    if (products[i].DisplayName.CompareTo(product.DisplayName) > 0)
+                        return Redirect($"/Catalog/Product/{products[i].ProductId}");
+                return RedirectToAction("Index");
+            }
+            vm.PieDetails = _pieDetailRepo.PieDetails;
+            return View(vm);
+        }
+
+        [HttpGet]
+        [Route("[controller]/New")]
         public IActionResult New()
         {
             return View(new Product());
+        }
+
+        [HttpGet]
+        [Route("[controller]/New/{pieDetailId}")]
+        public IActionResult New(int pieDetailId)
+        {
+            var result = new Product { PieDetailId = pieDetailId };
+            return View(result);
         }
 
         [HttpPost]

@@ -1,4 +1,5 @@
 ﻿@model Product
+@inject IPieDetailRepository pieDetail
 
 <div class="container">
     <h2>Producto Nuevo en Catálogo SIN foto</h2>
@@ -109,6 +110,33 @@
         </div>
 
         <div class="form-group">
+            <label asp-for="PieDetailId" class="col-md-2 control-label"></label>
+            <div class="col-md-2">
+                <select asp-for="PieDetailId" id="pieDetailId">
+                    <option value="-1">
+                        Sin foto...
+                    </option>
+                    @foreach (var detail in pieDetail.PieDetails.OrderBy(x => x.Name))
+                    {
+                        if(Model.PieDetailId == detail.PieDetailId)
+                        {
+                            <option value="@detail.PieDetailId" selected="selected">
+                                @detail.Name
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@detail.PieDetailId">
+                                @detail.Name
+                            </option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="PieDetailId" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" class="btn btn-primary" value="Guardar" />
             </div>
@@ -119,3 +147,15 @@
 
     @Html.Partial("~/Views/Shared/OnlineProductsPreview.cshtml", "")
 </div>
+<script>
+    $(document).ready(() => {
+        initializeSelector();
+    });
+
+    function initializeSelector() {
+        $selectize = $('select#pieDetailId').selectize({
+            placeholder: "Buscar...",
+        });
+    };
+
+</script>

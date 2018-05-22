@@ -36,12 +36,12 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.OrderBy(x => x.DisplayName.TrimStart()))
             {
                 <tr>
                     <td width="60">
                         <div style="font-size: large; color: #883636">
-                            @item.Name
+                            @item.DisplayName.TrimStart()
                         </div>
                         <div>
                             Prociones aprox.: @item.Portions <span class="fa fa-pie-chart"></span>
@@ -50,10 +50,7 @@
                             Preparación: @item.PreparationTime hs
                         </div>
                         <div class="text-muted text-capitalize" style="font-style:italic;">
-                            @if(!string.IsNullOrEmpty(item.Description))
-                            {
-                            <div>@item.Description</div>
-                            }
+                            <div>@item.DisplayDescription</div>
                         </div>
                     </td>
                     <td width="40">

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RepoWebShop.Models
 {
@@ -10,9 +8,12 @@ namespace RepoWebShop.Models
     {
         public int ProductId { get; set; }
 
-        [Display(Name = "Nombre")]
-        [Required]
-        public string Name { get; set; }
+        [Display(Name = "Nombre")] 
+        public string Name { get; set; } //To be deprecated
+
+        [Display(Name = "Descripción")]
+        public string Description { get; set; } //To be deprecated
+
         public decimal? OldPrice { get; set; }
         public decimal? OldPriceInStore { get; set; }
 
@@ -20,6 +21,16 @@ namespace RepoWebShop.Models
         [Required]
         [Range(0, double.MaxValue)]
         public decimal Price { get; set; }
+
+        [Display(Name = "Incrementos")]
+        [Required]
+        public int MultipleAmount { get; set; }
+
+        [Display(Name = "Tamaño")]
+        public string SizeDescription { get; set; }
+
+        [Display(Name = "Variedad")]
+        public string Flavour { get; set; }
 
         [Display(Name = "Precio en Tienda")]
         [Required]
@@ -48,14 +59,50 @@ namespace RepoWebShop.Models
         [Required]
         public int PreparationTime { get; set; }
 
-        [Display(Name = "Descripción")]
-        [Required]
-        public string Description { get; set; }
 
         public bool IsActive { get; set; }
 
         [Display(Name = "¿Se vende por internet?")]
         [Required]
         public bool IsOnSale { get; set; }
+
+        [Display(Name = "¿Está destacado con fotos?")]
+        public PieDetail PieDetail { get; set; }
+
+        [Display(Name = "¿Está destacado con fotos?")]
+        public int? PieDetailId { get; set; }
+
+        [BindNever]
+        public string DisplayName
+        {
+            get
+            {
+                if (PieDetail == null)
+                    return Name;
+                else
+                {
+                    var displayName = PieDetail.Name.TrimStart();
+                    if (!String.IsNullOrEmpty(SizeDescription))
+                        displayName += $" {SizeDescription}";
+                    if (!String.IsNullOrEmpty(Flavour))
+                        displayName += $" ({Flavour})";
+                    return displayName;
+                }
+            }
+        }
+
+        [BindNever]
+        public string DisplayDescription
+        {
+            get
+            {
+                if (PieDetail == null)
+                    return Description;
+                else
+                {
+                    return PieDetail.Ingredients;
+                }
+            }
+        }
     }
 }

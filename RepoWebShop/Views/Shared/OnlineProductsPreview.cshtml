@@ -12,7 +12,6 @@
                     <th>Producto</th>
                     <th>Precio Internet</th>
                     <th>Precio en Sucursal</th>
-                    <th>Tiempo de Preparación</th>
                     <th>Activo</th>
                 </tr>
             </thead>
@@ -33,9 +32,6 @@
                         </td>
                         <td>
                             @item.StorePrice
-                        </td>
-                        <td>
-                            @item.PieDetail.PreparationTime
                         </td>
                         <td>
                             @if (item.IsActive)

@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180521061835_catalogunified3")]
+    partial class catalogunified3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -765,7 +766,11 @@ namespace RepoWebShop.Migrations
                     b.Property<int>("PieDetailId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("CategoryId");
+
                     b.Property<long>("FlickrAlbumId");
+
+                    b.Property<bool>("InStock");
 
                     b.Property<string>("Ingredients");
 
@@ -778,9 +783,13 @@ namespace RepoWebShop.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
+                    b.Property<int>("PreparationTime");
+
                     b.Property<string>("ShortDescription");
 
                     b.HasKey("PieDetailId");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("PieDetails");
                 });
@@ -809,9 +818,8 @@ namespace RepoWebShop.Migrations
                     b.Property<string>("Category")
                         .IsRequired();
 
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Flavour");
+                    b.Property<string>("Description")
+                        .IsRequired();
 
                     b.Property<bool>("IsActive");
 
@@ -819,9 +827,8 @@ namespace RepoWebShop.Migrations
 
                     b.Property<int>("MinOrderAmount");
 
-                    b.Property<int>("MultipleAmount");
-
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.Property<decimal?>("OldPrice");
 
@@ -836,8 +843,6 @@ namespace RepoWebShop.Migrations
                     b.Property<decimal>("Price");
 
                     b.Property<decimal>("PriceInStore");
-
-                    b.Property<string>("SizeDescription");
 
                     b.Property<string>("Temperature");
 
@@ -1227,6 +1232,14 @@ namespace RepoWebShop.Migrations
                     b.HasOne("RepoWebShop.Models.PieDetail", "PieDetail")
                         .WithMany()
                         .HasForeignKey("PieDetailId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("RepoWebShop.Models.PieDetail", b =>
+                {
+                    b.HasOne("RepoWebShop.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

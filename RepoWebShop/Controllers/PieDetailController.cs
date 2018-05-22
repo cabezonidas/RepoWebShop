@@ -43,17 +43,10 @@ namespace RepoWebShop.Controllers
 
             var piesWithPrice = _pieRepository.ActivePies.Select(x => x.PieDetail.PieDetailId).Distinct();
             
-            if (string.IsNullOrEmpty(category))
-            {
-                pieDetails = _pieDetailRepository.PieDetailsWithChildren.OrderBy(p => p.Name);
-                currentCategory = "Ver todos";
-            }
-            else
-            {
-                pieDetails = _pieDetailRepository.PieDetailsWithChildren.Where(p => p.Category.CategoryName == category)
-                   .OrderBy(p => p.Name);
-                currentCategory = _categoryRepository.Categories.FirstOrDefault(c => c.CategoryName == category).CategoryName;
-            }
+            pieDetails = _pieDetailRepository.PieDetailsWithChildren.OrderBy(p => p.Name);
+            currentCategory = "Ver todos";
+
+
             var viewProducts = pieDetails.Select(x => (MapDbPieDetailToPieDetailViewModel(x)));
 
             return View(new PieDetailsListViewModel
@@ -97,8 +90,8 @@ namespace RepoWebShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _pieDetailRepository.Add(_mapper.Map<PieDetailCreateViewModel, PieDetail>(pieDetail));
-                return RedirectToAction("AllProducts", "Admin");
+                var pieDetailId = await _pieDetailRepository.Add(_mapper.Map<PieDetailCreateViewModel, PieDetail>(pieDetail));
+                return RedirectToAction("New", "Catalog", pieDetailId);
             }
 
             return View(pieDetail);
@@ -109,10 +102,8 @@ namespace RepoWebShop.Controllers
         public ViewResult Create()
         {
             var albumes = _flickrRepository.Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content });
-            var categories = _appDbContext.Categories.Select(x => new SelectListItem() { Value = x.CategoryId.ToString(), Text = x.CategoryName });
             var pieDetailCreateViewModel = new PieDetailCreateViewModel()
             {
-                Categories = categories.ToList(),
                 Albumes = albumes.ToList()
             };
             return View(pieDetailCreateViewModel);

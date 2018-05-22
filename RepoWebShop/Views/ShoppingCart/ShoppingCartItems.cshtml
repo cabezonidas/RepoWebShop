@@ -41,7 +41,7 @@
                     </td>
                     <td class="text-left">
                         <a href="/PieDetail/Details/@line.Pie.PieDetailId" class="text-muted">
-                            @line.Pie.PieDetail.Name (@line.Pie.Name) - @line.Pie.PieDetail.PreparationTime hs
+                            @line.Pie.PieDetail.Name (@line.Pie.Name) @*- @line.Pie.PieDetail.PreparationTime hs*@
                         </a>
                     </td>
                     <td class="text-right">@line.Pie.Price.ToString("c")</td>
@@ -127,7 +127,7 @@
                         </a>
                     </td>
                     <td class="text-left text-muted">
-                        @line.Product.Name - @line.Product.PreparationTime hs
+                        @line.Product.DisplayName - @line.Product.PreparationTime hs
                     </td>
                     <td class="text-right">@line.Product.Price.ToString("c")</td>
                     <td class="text-right">

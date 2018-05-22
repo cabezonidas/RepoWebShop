@@ -1,7 +1,6 @@
 ﻿using AutoMapper;   
 using Microsoft.AspNetCore.Identity;
 using RepoWebShop.Extensions;
-using RepoWebShop.Interfaces;
 using RepoWebShop.ViewModels;
 using System;
 using System.Security.Claims;
@@ -12,6 +11,8 @@ namespace RepoWebShop.Models
     {
         public MappingProfile()
         {
+            CreateMap<Product, ProductViewModel>();
+            CreateMap<ProductViewModel, Product>();
             CreateMap<OrderCatering, ShoppingCartComboCatering>();
             CreateMap<ShoppingCartComboCatering, OrderCatering>();
             CreateMap<LunchComboViewModel, Lunch>();

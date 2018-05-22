@@ -29,10 +29,6 @@ namespace RepoWebShop.ViewModels
         public string FlickrAlbumId { get; set; }
 
         [Required]
-        [Display(Name = "Categoria")]
-        public int CategoryId { get; set; }
-
-        [Required]
         [Display(Name = "Tiempo de preparacion (hs)")]
         public int PreparationTime { get; set; }
 
@@ -43,9 +39,7 @@ namespace RepoWebShop.ViewModels
 
         [Display(Name = "Activo")]
         public bool IsActive { get; set; }
-
-        public List<SelectListItem> Categories { set; get; }
-
+        
         public List<SelectListItem> Albumes { set; get; } 
     }
 }

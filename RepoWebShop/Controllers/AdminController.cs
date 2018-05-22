@@ -41,7 +41,6 @@ namespace RepoWebShop.Controllers
             _pieRepository = pieRepository;
             _appDbContext = appDbContext;
             _mapper = mapper;
-            _categories = _appDbContext.Categories.Select(x => new SelectListItem() { Value = x.CategoryId.ToString(), Text = x.CategoryName }).ToList();
         }
 
         public IActionResult Index()
@@ -166,8 +165,7 @@ namespace RepoWebShop.Controllers
             {
                 var pieDetailCreateViewModel = _mapper.Map<PieDetail, PieDetailCreateViewModel>(pieDetail);
                 var albumes = _flickrRepository.Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content });
-
-                pieDetailCreateViewModel.Categories = _categories;
+                
                 pieDetailCreateViewModel.Albumes = albumes.ToList();
                 return View(pieDetailCreateViewModel);
             }
@@ -246,8 +244,7 @@ namespace RepoWebShop.Controllers
 
                 //return View(pieDetailCreateViewModel);
             }
-
-            pieDetailCreateViewModel.Categories = _categories;
+            
             var albumes = _flickrRepository.Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content });
             pieDetailCreateViewModel.Albumes = albumes.ToList();
 

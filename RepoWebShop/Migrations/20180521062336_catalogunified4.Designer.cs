@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180521062336_catalogunified4")]
+    partial class catalogunified4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -765,7 +766,11 @@ namespace RepoWebShop.Migrations
                     b.Property<int>("PieDetailId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("CategoryId");
+
                     b.Property<long>("FlickrAlbumId");
+
+                    b.Property<bool>("InStock");
 
                     b.Property<string>("Ingredients");
 
@@ -777,6 +782,8 @@ namespace RepoWebShop.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired();
+
+                    b.Property<int>("PreparationTime");
 
                     b.Property<string>("ShortDescription");
 
@@ -809,9 +816,8 @@ namespace RepoWebShop.Migrations
                     b.Property<string>("Category")
                         .IsRequired();
 
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Flavour");
+                    b.Property<string>("Description")
+                        .IsRequired();
 
                     b.Property<bool>("IsActive");
 
@@ -819,9 +825,8 @@ namespace RepoWebShop.Migrations
 
                     b.Property<int>("MinOrderAmount");
 
-                    b.Property<int>("MultipleAmount");
-
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.Property<decimal?>("OldPrice");
 
@@ -836,8 +841,6 @@ namespace RepoWebShop.Migrations
                     b.Property<decimal>("Price");
 
                     b.Property<decimal>("PriceInStore");
-
-                    b.Property<string>("SizeDescription");
 
                     b.Property<string>("Temperature");
 

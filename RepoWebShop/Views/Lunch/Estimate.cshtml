@@ -99,22 +99,22 @@
     function initializeSelector(data) {
         $selectize = $('select#items').selectize({
             options: data,
-            labelField: 'name',
+            labelField: 'displayName',
             valueField: 'productId',
-            searchField: ['name'],
+            searchField: ['displayName'],
             placeholder: "Buscar producto...",
             delimiter: ",",
             render: {
                 option: function (item, escape) {
                     return '<div>' +
-                        (item.name ? '<div class="name" style="color:#883636"">' + escape(item.name) + ' $' + escape(item.minOrderAmount * item.price) + '</div>' : '') +
+                        (item.displayName ? '<div class="name" style="color:#883636"">' + escape(item.displayName) + ' $' + escape(item.minOrderAmount * item.price) + '</div>' : '') +
                         (item.price ? '<div class="price">Precio Unitario: $' + escape(item.price) + '</div>' : '') +
                         (item.minOrderAmount ? '<div class="bites">Unidades: ' + escape(item.minOrderAmount) + '</div>' : '') +
                         '</div>';
                 },
                 item: function (item, escape) {
                     return '<div style="color: green;">' +
-                        (item.name ? '<span class="name" >' + escape(item.name) + '</span>' : '') +
+                        (item.displayName ? '<span class="name" >' + escape(item.displayName) + '</span>' : '') +
                         (item.minOrderAmount ? ' x ' + escape(item.minOrderAmount) : '') +
                         (item.price ? ' - $' + escape(item.price * item.minOrderAmount) : '') +
                         '</div>';

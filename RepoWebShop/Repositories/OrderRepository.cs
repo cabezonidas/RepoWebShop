@@ -379,17 +379,7 @@ namespace RepoWebShop.Models
                 _appDbContext.SaveChanges();
             });
         }
-
-        private int GetPreparationTime(int orderId)
-        {
-            int preparationTime = 0;
-            var piesIds = _appDbContext.OrderDetails.Where(x => x.OrderId == orderId).Select(x => x.PieId).Distinct();
-            var pieDetailIds = _appDbContext.Pies.Where(x => piesIds.Contains(x.PieId)).Select(x => x.PieDetailId).Distinct();
-            preparationTime = _appDbContext.PieDetails.Where(x => pieDetailIds.Contains(x.PieDetailId)).Select(x => x.PreparationTime).OrderByDescending(x => x).FirstOrDefault();
-
-            return preparationTime;
-        }
-       
+      
         public async Task<Order> PaymentNotified(PaymentNotice payment)
         {
             Order order = GetOrderByBookingId(payment.BookingId);

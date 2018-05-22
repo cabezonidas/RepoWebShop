@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
 using RepoWebShop.ViewModels;
@@ -10,16 +12,20 @@ namespace RepoWebShop.Models
     {
         private readonly AppDbContext _appDbContext;
         private readonly ICalendarRepository _calendarRepository;
+        private readonly IPieDetailRepository _pieDetailRepository;
+        private readonly IMapper _mapper;
 
-        public CatalogRepository(AppDbContext appDbContext, ICalendarRepository calendarRepository)
+        public CatalogRepository(IMapper mapper, IPieDetailRepository pieDetailRepository, AppDbContext appDbContext, ICalendarRepository calendarRepository)
         {
+            _mapper = mapper;
+            _pieDetailRepository = pieDetailRepository;
             _appDbContext = appDbContext;
             _calendarRepository = calendarRepository;
         }
 
         public void Activate(int productId)
         {
-            var result = _appDbContext.Products.FirstOrDefault(x => x.ProductId == productId);
+            var result = GetAll().FirstOrDefault(x => x.ProductId == productId);
             if(result != null)
             {
                 result.IsActive = true;
@@ -45,6 +51,11 @@ namespace RepoWebShop.Models
 
         public void Create(Product product)
         {
+            if(product.PieDetailId.HasValue && product.PieDetailId != -1)
+            {
+                var pieDetail = _pieDetailRepository.GetPieDetailById(product.PieDetailId.Value);
+                product.PieDetail = pieDetail;
+            }
             product.IsActive = true;
             _appDbContext.Products.Add(product);
             _appDbContext.SaveChanges();
@@ -52,7 +63,7 @@ namespace RepoWebShop.Models
 
         public void Deactivate(int productId)
         {
-            var product = _appDbContext.Products.FirstOrDefault(x => x.ProductId == productId);
+            var product = GetAll().FirstOrDefault(x => x.ProductId == productId);
 
             if(product != null)
             {
@@ -64,28 +75,38 @@ namespace RepoWebShop.Models
 
         public void Edit(Product product)
         {
+            if (product.PieDetailId.HasValue && product.PieDetailId != -1)
+            {
+                var pieDetail = _pieDetailRepository.GetPieDetailById(product.PieDetailId.Value);
+                product.PieDetail = pieDetail;
+            }
+            else
+            {
+                product.PieDetail = null;
+                product.PieDetailId = null;
+            }
             _appDbContext.Products.Update(product);
             _appDbContext.SaveChanges();
         }
 
         public IEnumerable<Product> GetActive()
         {
-            return _appDbContext.Products.Where(x => x.IsActive).ToList();
+            return GetAll().Where(x => x.IsActive).ToList();
         }
 
         public IEnumerable<Product> GetAvailableToBuyOnline()
         {
-            return _appDbContext.Products.Where(x => x.IsActive && x.IsOnSale).ToList();
+            return GetAll().Where(x => x.IsActive && x.IsOnSale).ToList();
         }
 
         public IEnumerable<Product> GetAll()
         {
-            return _appDbContext.Products.ToList();
+            return _appDbContext.Products.Include(x => x.PieDetail).ToList();
         }
 
         public Product GetById(int id)
         {
-            return _appDbContext.Products.FirstOrDefault(x => x.ProductId == id);
+            return GetAll().FirstOrDefault(x => x.ProductId == id);
         }
 
         public IEnumerable<ProductInflationEstimateViewModel> InflationEstimate(decimal percentage, int roundTo)
@@ -104,6 +125,29 @@ namespace RepoWebShop.Models
 
             _appDbContext.Products.UpdateRange(products);
             _appDbContext.SaveChanges();
+        }
+
+        public Product CreateOrUpdate(ProductViewModel vm)
+        {
+            var existingProduct = _appDbContext.Products.FirstOrDefault(x => x.ProductId == vm.ProductId);
+            var result = existingProduct != null ? _mapper.Map(vm, existingProduct) : _mapper.Map<ProductViewModel, Product>(vm);
+
+            //result.Description = result.Description.ToTitleCase();
+            //result.Name = result.Name.ToTitleCase();
+            result.Category = result.Category.ToTitleCase();
+            result.Flavour = result.Flavour.ToTitleCase();
+            result.SizeDescription = result.SizeDescription.ToTitleCase();
+            result.Temperature = result.Temperature.ToTitleCase();
+            result.PieDetail = _pieDetailRepository.GetPieDetailById(vm.PieDetailId);
+            
+
+            if (existingProduct != null)
+                _appDbContext.Products.Update(result);
+            else
+                _appDbContext.Products.Add(result);
+
+            _appDbContext.SaveChanges();
+            return result;
         }
     }
 }
