@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using RepoWebShop.Models;
 using System;
 using System.Collections.Generic;
@@ -28,18 +29,18 @@ namespace RepoWebShop.ViewModels
         [Display(Name = "Album Flickr Id")]
         public string FlickrAlbumId { get; set; }
 
-        [Required]
-        [Display(Name = "Tiempo de preparacion (hs)")]
-        public int PreparationTime { get; set; }
-
-
         [Display(Name = "Destacado")]
         public bool IsPieOfTheWeek { get; set; }
 
-
         [Display(Name = "Activo")]
         public bool IsActive { get; set; }
-        
+
+        [Display(Name = "Ingredientes")]
+        public string Ingredients { get; set; }
+
         public List<SelectListItem> Albumes { set; get; } 
+
+        [BindNever]
+        public IEnumerable<Product> Children { get; set; }
     }
 }

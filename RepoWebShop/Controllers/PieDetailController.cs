@@ -41,7 +41,6 @@ namespace RepoWebShop.Controllers
             IEnumerable<PieDetail> pieDetails;
             string currentCategory = string.Empty;
 
-            var piesWithPrice = _pieRepository.ActivePies.Select(x => x.PieDetail.PieDetailId).Distinct();
             
             pieDetails = _pieDetailRepository.PieDetailsWithChildren.OrderBy(p => p.Name);
             currentCategory = "Ver todos";

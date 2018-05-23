@@ -3,9 +3,10 @@
 <div class="container">
     <div>
         <h2>Productos</h2>
-        <a href="/Catalog/New" class="btn btn-primary">Nuevo</a>
+        <a href="/Catalog/Product" class="btn btn-primary">Nuevo</a>
         <a href="/Catalog/Inflation" class="btn btn-primary">Ajustar Precios</a>
         <a asp-action="OnlyPrices" asp-controller="Catalog" class="btn btn-primary">Imprimir</a>
+        <a href="#" class="btn btn-primary">Configuración Rápida</a>
     </div>
     <br />
     <table class="table table-striped" id="products">
@@ -30,7 +31,7 @@
                     var showRestore = prod.IsActive ? "hidden" : "";
             <tr>
                 <td>
-                    <a href="/Catalog/Edit/@prod.ProductId">
+                    <a href="/Catalog/Product/@prod.ProductId">
                         @prod.DisplayName
                     </a>
 

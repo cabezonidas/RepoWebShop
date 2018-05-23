@@ -25,10 +25,7 @@ namespace RepoWebShop.Controllers
         private readonly ICategoryRepository _categoryRepository;
         private readonly AppDbContext _appDbContext;
         private readonly IMapper _mapper;
-        private readonly ICalendarRepository _calendar;
-        private readonly List<SelectListItem> _categories;
-
-        
+        private readonly ICalendarRepository _calendar;        
 
         public AdminController(ICalendarRepository calendar, IShoppingCartRepository cart, IGalleryRepository galleryRepository, IFlickrRepository flickrRepository, IMapper mapper, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
         {
@@ -118,11 +115,6 @@ namespace RepoWebShop.Controllers
             return View(result);
         }
 
-        public IActionResult Prices()
-        {
-            return View(_pieRepository.AllPies);
-        }
-
         public IActionResult Errors()
         {
             var exceptions = _appDbContext.Exceptions.OrderByDescending(x => x.SiteExceptionId).ToList();
@@ -151,7 +143,7 @@ namespace RepoWebShop.Controllers
 
         public IActionResult AllProducts()
         {
-            return View();
+            return View(_pieDetailRepository.PieDetails);
         }
 
         [HttpGet]
@@ -167,36 +159,11 @@ namespace RepoWebShop.Controllers
                 var albumes = _flickrRepository.Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content });
                 
                 pieDetailCreateViewModel.Albumes = albumes.ToList();
+                pieDetailCreateViewModel.Children = _pieDetailRepository.GetChildren(pieDetailCreateViewModel.PieDetailId);
                 return View(pieDetailCreateViewModel);
             }
         }
 
-        [HttpGet]
-        [Route("[Controller]/EditPie/{pieDetailId}/{pieId}")]
-        public IActionResult EditPie(int pieDetailId, int pieId)
-        {
-            var pie = _pieRepository.AllPies.FirstOrDefault(x => x.PieId == pieId);
-            if (pie == null || pie.PieDetailId != pieDetailId)
-                return NotFound();
-
-            else
-                return View(pie);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("[Controller]/EditPie/{pieDetailId}/{pieId}")]
-        public async Task<IActionResult> EditPie(Pie pie)
-        {
-
-            if (ModelState.IsValid)
-            {
-                await _pieRepository.Update(pie);
-                
-                return RedirectToAction(nameof(EditPieDetail), "Admin", new { id = pie.PieDetailId });
-            }
-            return View(_pieRepository.AllPies.FirstOrDefault(x => x.PieId == pie.PieId));
-        }
 
         [HttpGet]
         public IActionResult Galleries()
@@ -247,37 +214,9 @@ namespace RepoWebShop.Controllers
             
             var albumes = _flickrRepository.Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content });
             pieDetailCreateViewModel.Albumes = albumes.ToList();
+            pieDetailCreateViewModel.Children = _pieDetailRepository.GetChildren(pieDetailCreateViewModel.PieDetailId);
 
             return View(pieDetailCreateViewModel);
-        }
-
-        [HttpGet]
-        [Route("[Controller]/EditPieDetail/AddPie/{id}")]
-        public IActionResult AddPieToPieDetail(int id)
-        {
-            var pieDetail = _pieDetailRepository.PieDetails.First(x => x.PieDetailId == id);
-            Pie model = new Pie()
-            {
-                PieDetail = pieDetail,
-                PieDetailId = pieDetail.PieDetailId
-            };
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("[Controller]/EditPieDetail/AddPie/{id}")]
-        public IActionResult AddPieToPieDetail(Pie pie)
-        {
-            if (ModelState.IsValid)
-            {
-                var pieId = _pieRepository.Add(pie);
-
-                return RedirectToAction("EditPieDetail/" + pieId.PieDetailId);
-            }
-
-            pie.PieDetail = _pieDetailRepository.GetPieDetailById(pie.PieDetailId);
-            return View(pie);
         }
     }
 }

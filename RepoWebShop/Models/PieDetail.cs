@@ -25,10 +25,10 @@ namespace RepoWebShop.Models
         public long FlickrAlbumId { get; set; }
 
         [Display(Name = "Destacado")]
-        public bool IsPieOfTheWeek { get; set; }
-        
+        public bool IsPieOfTheWeek { get; set; } = false;
+
         [Display(Name = "Activo")]
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = false;
 
         [Display(Name = "Ingredientes")]
         public string Ingredients { get; internal set; }

@@ -36,6 +36,19 @@ namespace RepoWebShop.Controllers
         }
 
         [HttpGet]
+        [Route("[controller]/AddPieDetailChild/{pieDetailId}")]
+        public IActionResult AddPieDetailChild(int pieDetailId)
+        {
+            var pieDetail = _pieDetailRepo.GetPieDetailById(pieDetailId);
+            ProductViewModel vm = new ProductViewModel();
+            vm.PieDetails = _pieDetailRepo.PieDetails;
+            vm.PieDetail = pieDetail;
+            vm.PieDetailId = pieDetail.PieDetailId;
+            vm.Ingredients = pieDetail.Ingredients;
+            return View("Product", vm);
+        }
+
+        [HttpGet]
         [Route("[controller]/Product")]
         public IActionResult Product()
         {
@@ -53,6 +66,7 @@ namespace RepoWebShop.Controllers
             var vm = _mapper.Map<Product, ProductViewModel>(result);
             vm.PieDetails = _pieDetailRepo.PieDetails;
             vm.Ingredients = result.PieDetail?.Ingredients ?? result.Description;
+            vm.IsAdding = false;
             return View(vm);
         }
 

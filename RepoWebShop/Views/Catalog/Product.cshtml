@@ -1,6 +1,6 @@
 ﻿@model  ProductViewModel
 <div class="container">
-    <h2>Editar Producto</h2>
+    <h2>@Html.Raw(Model.IsAdding ? "Agregar" : "Editar") Producto</h2>
 
     <form asp-controller="Catalog" asp-action="Product" method="post" role="form">
         <hr />
@@ -28,6 +28,25 @@
                     <div>
                         <input asp-for="Ingredients" class="form-control" id="ingredients" />
                         <span asp-validation-for="Ingredients" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="connected hidden ">
+                    <br />
+                    <label class="control-label">Relacionados</label>
+                    <div class="small">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr >
+                                    <td>Tamaño</td>
+                                    <td>Variedad</td>
+                                    <td>Precio Online</td>
+                                    <td>Precio Sucursal</td>
+                                </tr>
+                            </thead>
+                            <tbody id="children">
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -160,19 +179,21 @@
                 <div>
                     <label asp-for="Price" class="control-label"></label>
                     <div>
-                        <input asp-for="Price" class="form-control" type="number" />
+                        <input asp-for="Price" class="form-control"  />
                         <span asp-validation-for="Price" class="text-danger"></span>
                     </div>
                 </div>
                 <div>
                     <label asp-for="PriceInStore" class="control-label"></label>
                     <div>
-                        <input asp-for="PriceInStore" class="form-control" type="number" />
+                        <input asp-for="PriceInStore" class="form-control"  />
                         <span asp-validation-for="PriceInStore" class="text-danger"></span>
                     </div>
                 </div>
             </div>
         </div>
+        @if(!string.IsNullOrEmpty(Model.Name) && !string.IsNullOrEmpty(Model.Description))
+        { 
         <div class="row">
             <div>
                 <hr />
@@ -186,9 +207,10 @@
                 </div>
             </div>
         </div>
+        }
         <div class="row">
             <div class="text-center" style="margin: 20px;">
-                <input type="submit" class="btn btn-primary" value="Guardar" />
+                <input type="submit" class="btn btn-primary" value="@Html.Raw(Model.IsAdding ? "Agregar" : "Guardar")" />
             </div>
         </div>
     </form>
@@ -197,6 +219,7 @@
     var $pieDetail;
     var $sizes;
     var $flavours;
+
     $(document).ready(() => {
         $pieDetail = initializeSelector();
         $sizes = $('select#sizes').selectize({
@@ -217,16 +240,19 @@
                 }
             }
         });
+        bringChildren();
     });
+
 
     function initializeSelector() {
         return $('select#pieDetailIds').selectize({
             placeholder: 'Elegir...',
             create: (input, callback) => onCreate(input, callback),
             onChange: function (event) {
-                $.get('/api/PieDetailData/Ingredients/' + event).then((data) =>
-                    $('#ingredients').empty().val(data)
-                )
+                $.get('/api/PieDetailData/Ingredients/' + event).then((data) => {
+                    $('#ingredients').empty().val(data);
+                    bringChildren();
+                })
             }
         });
     };
@@ -235,7 +261,6 @@
         $pieDetail[0].selectize.disable();
         $.post('/api/PieDetailData/AddPieDetail/' + input).then((data) => {
             $pieDetail[0].selectize.enable();
-            console.log(data);
             callback({
                 value: data.pieDetail,
                 text: input
@@ -244,4 +269,24 @@
             alert('Ocurrió un error al agregar el producto.')
         })
     }
+    function bringChildren() {
+        $.get('/api/CatalogData/GetByParent/' + $('#pieDetailIds')[0].value).then((data) => {
+            $('#children').empty();
+            data.products.forEach(function (element) {
+                var style = element.productId == @Model.ProductId ? "bold" : "unset";
+                var row = `<tr + style="font-weight:` + style +`;">
+                    <td>` + element.sizeDescription + `</td>
+                    <td>` + element.flavour + `</td>
+                    <td>` + element.price + `</td>
+                    <td>` + element.priceInStore + `</td>
+                  </tr>`;
+                $('#children').append(row);
+            })
+            if (data.products.length > 0)
+                $('.connected').removeClass('hidden');
+            else
+                $('.connected').addClass('hidden')
+        }).fail(() => $('.connected').addClass('hidden'));
+    }
+
 </script>

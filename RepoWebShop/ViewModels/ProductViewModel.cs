@@ -6,6 +6,8 @@ namespace RepoWebShop.ViewModels
 {
     public class ProductViewModel
     {
+        public bool IsAdding { get; set; } = true;
+
         public IEnumerable<PieDetail> PieDetails { get; set; }
 
         [Display(Name = "Nombre Genérico")]
@@ -30,7 +32,7 @@ namespace RepoWebShop.ViewModels
         public int Portions { get; set; } = 8;
 
         [Display(Name = "Temperatura")]
-        public string Temperature { get; set; } = "Ambiente";
+        public string Temperature { get; set; } = "Frío";
 
         [Display(Name = "Ingredientes")]
         [Required]

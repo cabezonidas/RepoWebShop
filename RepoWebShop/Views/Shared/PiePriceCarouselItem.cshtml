@@ -1,22 +1,23 @@
-﻿@model Pie
+﻿@model Product
 
 
 <div class='addToCart' style="margin: auto;">
     <div style="height: 70px; max-height:70px; ">
 
-        @{var isPromo = Model.StorePrice.HasValue && Model.StorePrice.Value > Model.Price; }
+        @{var isPromo = Model.PriceInStore > Model.Price; }
 
             <div style="font-size: larger; ">
                 <div>
-                    <strong>@Model.Name </strong>
+                    @{ var separator = string.IsNullOrEmpty(Model.Flavour) || string.IsNullOrEmpty(Model.SizeDescription) ? "" : " - "; }
+                    <strong>@Html.Raw(Model.SizeDescription + separator + Model.Flavour)</strong>
                 </div>
                 <div>
                     <strong>$@Model.Price </strong>
                     @if (isPromo)
                     {
-                        var perc = Decimal.Floor(100 - (Model.Price / Model.StorePrice.Value * 100));
+                        var perc = Decimal.Floor(100 - (Model.Price / Model.PriceInStore * 100m));
 
-                        <strong style="color: green;">@Html.Raw((perc >= 5 ? $"-{perc}% " : "") + "Online")</strong>
+                        <strong style="color: green;">@Html.Raw((perc >= 10 ? $"-{perc}% " : "") + "Online")</strong>
                     }
                 </div>
             </div>
@@ -24,7 +25,7 @@
                 <div>
                     @if (isPromo)
                     {
-                        <strong style="color: red;">$@Model.StorePrice </strong>
+                        <strong style="color: red;">$@Model.PriceInStore </strong>
                         <strong>En sucursal</strong>
                     }
                 </div>
@@ -34,11 +35,14 @@
     </div>
 
     <p class='button'>
-        <a class='btn btn-repo btn-primary' asp-controller='ShoppingCart' asp-action='AddToShoppingCart' asp-route-pieId='@Model.PieId'>
-            Comprar <span class='glyphicon glyphicon-shopping-cart'></span>
+        <a title="Comprar" asp-controller="ShoppingCart" asp-action="AddProductToShoppingCart"
+           asp-route-id="@Model.ProductId" class="btn btn-primary">
+            Comprar
         </a>
     </p>
     <div style="height: 50px; max-height: 50px;  ">
-        @Model.SizeDescription
+        <div>
+            Rinde @Model.Portions <span class="fa fa-pie-chart"></span> Aprox.
+        </div>
     </div>
 </div>

@@ -1,4 +1,5 @@
-﻿<style>
+﻿@model IEnumerable<PieDetail>
+<style>
     .all-products {
         /*font-family: Arial;*/
     }
@@ -18,57 +19,39 @@
             <thead>
                 <tr>
                     <th>Nombre</th>
-                    <th>Descripcion</th>
-                    <th>Categoria</th>
+                    <th>Fotos</th>
+                    <th>Activo</th>
                 </tr>
             </thead>
-            <tbody id='allProducts-tbody'></tbody>
+            <tbody id='allProducts-tbody'>
+                @foreach(var pieDetail in Model.OrderBy(x => x.Name.TrimStart()).OrderBy(x => !(x.FlickrAlbumId > 0)).OrderBy(x => !x.IsActive))
+                {
+                <tr>
+                    <td>
+                        <a asp-action="EditPieDetail" asp-controller="Admin" asp-route-id="@pieDetail.PieDetailId">
+                            @pieDetail.Name
+                        </a>
+                    </td>
+                    @{ var photos = pieDetail.FlickrAlbumId > 0 ? "fa-check" : "fa-times"; }
+                    <td><span class="fa @photos"></span></td>
+                    @{ var active = pieDetail.IsActive ? "fa-check" : "fa-times"; }
+                    <td><span class="fa @active"></span></td>
+                </tr>
+                }
+            </tbody>
         </table>
     </div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        getProducts();
-    });
-
-    function getProducts() {
-        var url = "/api/AdminData/GetProducts";
-        $.ajax({
-            url: url,
-            method: "GET",
-            success: onSuccess,
-            error: function (error) {
-                console.log(error);
-            }
-        });
-    }
-
-    function onSuccess(data) {
-        $.each(data, function (index, item) {
-            $('#allProducts-tbody').append(getRow(item));
-        });
         $('#allProducts').DataTable({
             "language": {
                 "url": "/Scripts/SpanishDatatables.json"
             },
-            "order": [[0, "asc"]],
-            "pageLength": 50
+            "aaSorting": [],
+            "pageLength": 250
         });
-        $('#allProducts-div').parent().css('overflow', 'auto');
-        $('#allProducts-div').css('width', '100%');
-        $('#allProducts-div').show();
-    }
+    });
 
-    function getRow(item) {
-        var row = $('<tr>');
-        var state = '';
-        if (!item.isActive)
-            state = '<div class="text-muted"> Inactivo</div>';
-        row.append('<td><a href="/Admin/EditPieDetail/' + item.pieDetailId + '">' + item.name + '</a>' + state + '</td>');
-        row.append('<td>' + item.shortDescription + '</td>');
-        row.append('<td>' + item.category.categoryName + '</td>');
-        console.log(item);
-        return row;
-    }
 </script>

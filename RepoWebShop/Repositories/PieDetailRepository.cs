@@ -35,7 +35,7 @@ namespace RepoWebShop.Repositories
         {
             get
             {
-                return _appDbContext.PieDetails.Where(p => p.IsPieOfTheWeek);
+                return PieDetailsWithChildren.Where(p => p.IsPieOfTheWeek);
             }
         }
 
@@ -43,8 +43,8 @@ namespace RepoWebShop.Repositories
         {
             get
             {
-                var pieDetailsWithReferences = _pieRepository.ActivePies.Select(x => x.PieDetailId).Distinct();
-                return PieDetails.Where(x => pieDetailsWithReferences.Contains(x.PieDetailId));
+                var pieDetailsWithReferences = _appDbContext.Products.Where(x => x.IsOnSale && x.IsActive).Include(x => x.PieDetail).Select(x => x.PieDetail.PieDetailId).Distinct();
+                return PieDetails.Where(x => x.IsActive && x.FlickrAlbumId > 0 && pieDetailsWithReferences.Contains(x.PieDetailId));
             }
             
         }
@@ -92,5 +92,7 @@ namespace RepoWebShop.Repositories
             _appDbContext.PieDetails.Update(result);
             _appDbContext.SaveChanges();
         }
+
+        public IEnumerable<Product> GetChildren(int id) => _appDbContext.Products.Include(x => x.PieDetail).Where(x => x.PieDetail.PieDetailId == id).ToList();
     }
 }

@@ -20,5 +20,6 @@ namespace RepoWebShop.Interfaces
         void ApplyPriceRise(decimal percentage, int roundTo);
         IEnumerable<ProductInflationEstimateViewModel> InflationEstimate(decimal percentage, int roundTo);
         Product CreateOrUpdate(ProductViewModel vm);
+        IEnumerable<Product> GetByParent(int id);
     }
 }

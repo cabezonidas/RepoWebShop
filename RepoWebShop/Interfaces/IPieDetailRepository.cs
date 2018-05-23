@@ -15,5 +15,6 @@ namespace RepoWebShop.Interfaces
         void Delete(int pieDetailId);
         void Restore(int pieDetailId);
         void UpdateIngredients(ProductViewModel vm);
+        IEnumerable<Product> GetChildren(int id);
     }
 }

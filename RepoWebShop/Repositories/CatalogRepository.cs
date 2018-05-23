@@ -149,5 +149,7 @@ namespace RepoWebShop.Models
             _appDbContext.SaveChanges();
             return result;
         }
+
+        public IEnumerable<Product> GetByParent(int id) => _pieDetailRepository.GetChildren(id);
     }
 }

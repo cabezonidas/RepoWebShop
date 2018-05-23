@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,22 +20,25 @@ namespace RepoWebShop.Repositories
             _mapper = mapper;
         }
 
+        [Obsolete("Pie objects are deprecated, please use catalog products instead.")]
         public IEnumerable<Pie> ActivePies
         {
             get
             {
-                return _appDbContext.Pies
-                    .Include(p => p.PieDetail)
-                    .Where(x => x.IsActive && x.PieDetail.IsActive);
+                //return _appDbContext.Pies
+                //    .Include(p => p.PieDetail)
+                //    .Where(x => x.IsActive && x.PieDetail.IsActive);
+                return new List<Pie>();
             }
         }
 
+        [Obsolete("Pie objects are deprecated, please use catalog products instead.")]
         public IEnumerable<Pie> AllPies
         {
             get
             {
-                return _appDbContext.Pies
-                    .Include(p => p.PieDetail);
+                //return _appDbContext.Pies.Include(p => p.PieDetail);
+                return new List<Pie>();
             }
         }
 

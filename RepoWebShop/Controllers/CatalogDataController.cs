@@ -16,9 +16,11 @@ namespace RepoWebShop.Controllers
     public class CatalogDataController : Controller
     {
         private readonly ICatalogRepository _catalogRepository;
+        private readonly IPieDetailRepository _pieDetailRepository;
 
-        public CatalogDataController(ICatalogRepository catalogRepository)
+        public CatalogDataController(ICatalogRepository catalogRepository, IPieDetailRepository pieDetailRepository)
         {
+            _pieDetailRepository = pieDetailRepository;
             _catalogRepository = catalogRepository;
         }
 
@@ -44,6 +46,14 @@ namespace RepoWebShop.Controllers
         {
             _catalogRepository.Activate(id);
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("GetByParent/{id}")]
+        public IActionResult GetByParent(int id)
+        {
+            IEnumerable<Product> products = _catalogRepository.GetByParent(id);
+            return Ok(new { products });
         }
 
         [HttpPost]
