@@ -103,7 +103,7 @@
                                                             if (slot.Key.Date == date.Date)
                                                             {
                                                                 <option value="@slot.Key.Ticks">
-                                                                    @string.Format("{0:hh:mm tt}", slot.Key).ToLower() y @string.Format("{0:hh:mm tt}", slot.Key.Add(slot.Value)).ToLower()
+                                                                    las @string.Format("{0:HH:mm}", slot.Key).ToLower() y las @string.Format("{0:HH:mm}", slot.Key.Add(slot.Value)).ToLower()
                                                                 </option>
                                                             }
                                                         }

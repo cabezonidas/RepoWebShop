@@ -52,6 +52,7 @@ namespace RepoWebShop.Interfaces
         void AcknowledgeSystemTime(string bookingId);
         SessionDetailsViewModel SessionsDetails(string friendlyBookingId = null);
         IEnumerable<ShoppingCartComboCatering> AllShoppingCartCaterings();
+        IEnumerable<string> GetPendingBookings();
         int CountTrolleyObjects(string bookingId);
         void AddCateringToOrder(ShoppingCartLunch customLunch);
         ShoppingCartLunch GetSessionLunchIfNotEmpty(string bookingId = null);

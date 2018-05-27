@@ -14,14 +14,17 @@ namespace RepoWebShop.Extensions
         public static dynamic GetValue(this Hashtable hashtable, string key, Type obj)
         {
             var resultType = obj.UnderlyingSystemType;
-            object result = resultType == typeof(string) ? string.Empty : null;
+            object result = resultType == typeof(string) ? string.Empty : Activator.CreateInstance(resultType);
+            
 
             if (hashtable.HasValue(key))
                 try
                 {
                     result = Convert.ChangeType(hashtable[key], resultType);
                 }
-                catch { }
+                catch
+                {
+                }
             return result;
         }
     }

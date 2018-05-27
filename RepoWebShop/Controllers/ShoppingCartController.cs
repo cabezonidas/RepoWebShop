@@ -96,18 +96,18 @@ namespace RepoWebShop.Controllers
             };
             return View(shoppingCartViewModel);
         }
-        
-        //[PageVisitAsync]
-        //public RedirectToActionResult AddToShoppingCart(int pieId)
-        //{
-        //    var selectedPie = _pieRepository.ActivePies.FirstOrDefault(p => p.PieId == pieId);
 
-        //    if (selectedPie != null)
-        //    {
-        //        _cartRepository.AddToCart(selectedPie, 1);
-        //    }
-        //    return RedirectToAction("Index");
-        //}
+        [PageVisitAsync]
+        public RedirectToActionResult AddToShoppingCart(int pieId)
+        {
+            var selectedPie = _pieRepository.ActivePies.FirstOrDefault(p => p.PieId == pieId);
+
+            if (selectedPie != null)
+            {
+                _cartRepository.AddToCart(selectedPie, 1);
+            }
+            return RedirectToAction("Index");
+        }
 
         [PageVisitAsync]
         public RedirectToActionResult AddProductToShoppingCart(int id)

@@ -83,32 +83,64 @@
                                     <td style='padding:2px; text-align:left;  padding-left: 10px; padding-right: 10px;'>
                                         <a href="@itemref" style="text-decoration: none; color: black; ">
                                             <div>
-                                                @item.Pie.PieDetail.Name @item.Pie.Name<br />
-                                                Precio: $@item.Price<br />
+                                                <div>@item.Pie.PieDetail.Name @item.Pie.Name</div>
+                                                <div>Precio: $@item.Price
+                                                </div>
                                                 Cantidad: @item.Amount
                                             </div>
                                         </a>
                                     </td>
                                     @{var subtotal = item.Price * item.Amount;}
-                                    <td style='padding:2px; text-align:right; font-size: large; '>$@subtotal</td>
+                                    <td style='padding:2px; text-align:right; '>
+                                        <div style="font-size: large; ">
+                                            $@subtotal
+                                        </div>
+                                        @if(item.Pie.Price < item.Pie.StorePrice)
+                                        {
+                                            <div style="font-size: smaller; text-align: right; color: green;">
+                                                (-$@Html.Raw(item.Pie.StorePrice - item.Pie.Price))
+                                            </div>
+                                        }
+                                    </td>
                                     @{totalItems += subtotal;}
                                 </tr>
                             }
-                            @foreach (var item in Model.OrderCatalogItems)
+                            @foreach (var item in Model.OrderCatalogItems.OrderByDescending(x => x.Product.PieDetail?.FlickrAlbumId ?? 0))
                             {
+                                var albumId = item.Product.PieDetail?.FlickrAlbumId ?? 0;
+
+                                var pic = _flickr.GetAlbumPictures(albumId)?.PrimaryPicture;
+                                pic = !string.IsNullOrEmpty(pic) ? pic + "s.jpg" : $"{Model.AbsoluteUrl}/Pictures/cake-2.png";
+                                var itemref = "";
+                                if(item.Product.PieDetail?.IsActive ?? false)
+                                {
+                                    itemref = Model.AbsoluteUrl + $"/PieDetail/Details/{item.Product.PieDetail.PieDetailId}";
+                                }
                                 <tr>
                                     <td style='padding:10px; padding-left:2px; text-align:center;'>
-                                        <img src="@Model.AbsoluteUrl/Pictures/cake-2.png" width="75" />
+                                        <img src="@pic" width="75"  style="border-radius:5px;"/>
                                     </td>
                                     <td style='padding:2px; text-align:left;  padding-left: 10px; padding-right: 10px;'>
                                         <div>
-                                            @item.Product.Name<br />
-                                            Precio: $@item.Price<br />
-                                            Cantidad: @item.Amount
+                                            <div>@item.Product.DisplayName</div>
+                                            <div >Precio: $@item.Price
+                                            </div>
+                                            <div>Cantidad: @item.Amount</div>
                                         </div>
                                     </td>
                                     @{var subtotal = item.Price * item.Amount;}
-                                    <td style='padding:2px; text-align:right; font-size: large; '>$@subtotal</td>
+                                    <td style='padding:2px; text-align:right; '>
+                                        <div style="font-size: large; ">
+                                            $@subtotal
+                                        </div>
+                                        @if(item.Product.Price < item.Product.PriceInStore)
+                                        {
+                                            <div style="font-size: smaller; text-align: right; color: green;">
+                                                (-$@Html.Raw((item.Product.PriceInStore - item.Product.Price) * item.Amount))
+
+                                            </div>
+                                        }
+                                    </td>
                                     @{totalItems += subtotal;}
                                 </tr>
                             }
@@ -172,8 +204,8 @@
                                     <br />
                                 </td>
                             </tr>
-                            <tr style="font-size: 30px;">
-                                <td colspan="3" style="text-align: center">Total $@Model.OrderTotal</td>
+                            <tr style="">
+                                <td colspan="3" style="font-size: 30px;text-align: center">Total $@Model.OrderTotal</td>
                             </tr>
                         </tbody>
                     </table>

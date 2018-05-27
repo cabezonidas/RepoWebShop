@@ -101,7 +101,7 @@ namespace RepoWebShop.Models
 
         public IEnumerable<OrderCatalogItem> GetOrderCatalogItems(int id)
         {
-            return _appDbContext.OrderCatalogItems.Include(x => x.Order).Include(x => x.Product).Where(x => x.Order.OrderId == id);
+            return _appDbContext.OrderCatalogItems.Include(x => x.Order).Include(x => x.Product).ThenInclude(x => x.PieDetail).Where(x => x.Order.OrderId == id);
         }
 
         public IEnumerable<OrderCatering> GetOrderCaterings(int id)
@@ -114,10 +114,10 @@ namespace RepoWebShop.Models
             var orders = _appDbContext.Orders
                 .Include(x => x.Registration)
                 .Include(x => x.OrderLines)
-                .Include(x => x.OrderCatalogItems)
                 .Include(x => x.OrderCaterings)
                 .Include(x => x.DeliveryAddress)
                 .Include(x => x.Discount)
+                .Include(x => x.OrderCatalogItems)
                 .Where(o => o.Status != "draft").ToList();
 
             foreach (var order in orders)
@@ -129,7 +129,7 @@ namespace RepoWebShop.Models
                 }
                 foreach (var orderLine in order.OrderCatalogItems)
                 {
-                    orderLine.Product = _appDbContext.Products.First(x => x.ProductId == orderLine.ProductId);
+                    orderLine.Product = _appDbContext.Products.Include(x => x.PieDetail).First(x => x.ProductId == orderLine.ProductId);
                 }
                 foreach (var catering in order.OrderCaterings)
                 {

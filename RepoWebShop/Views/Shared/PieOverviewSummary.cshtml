@@ -1,10 +1,11 @@
 ﻿@model PieDetailViewModel
+@inject IPieDetailRepository pieDetailRepo
 
 
 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 center-block pieoverviewsummary">
     @{ var pieweek = Model.PieDetail.IsPieOfTheWeek ? "pieoftheweek" : string.Empty;}
     <div class="thumbnail center-block @pieweek">
-        <div class="ribbon"><span></span></div>
+        <div class="ribbon"><span>@Html.Raw(pieDetailRepo.GetChildren(Model.PieDetail.PieDetailId).OrderBy(x => x.PreparationTime).FirstOrDefault()?.PreparationTime ?? 0) Hs</span></div>
         <div class="pieOverviewImage">
             <a asp-controller="PieDetail"
                asp-action="Details"
@@ -14,13 +15,13 @@
                     <h3 style="max-height:36px; overflow: hidden;">
                         @if (!string.IsNullOrEmpty(pieweek))
                         {
-                        <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
                         }
                         @Model.PieDetail.Name
 
                         @if (!string.IsNullOrEmpty(pieweek))
                         {
-                        <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
                         }
                     </h3>
 
@@ -28,21 +29,21 @@
                 <div class="frame-square">
                     <div class="crop">
                         @{
-                        if (String.IsNullOrEmpty(Model.PrimaryPicture))
-                        {
-                        <img src="~/Pictures/imgnotfound.png">
-                        }
-                        else
-                        {
-                        var source = Model.PrimaryPicture + (Model.IsMobile ? "m" : "z") + ".jpg";
-                        <img src="@source" alt="">
-                        }
+                            if (String.IsNullOrEmpty(Model.PrimaryPicture))
+                            {
+                                <img src="~/Pictures/imgnotfound.png">
+                            }
+                            else
+                            {
+                                var source = Model.PrimaryPicture + (Model.IsMobile ? "m" : "z") + ".jpg";
+                                <img src="@source" alt="">
+                            }
                         }
                     </div>
                 </div>
                 <div class="text-center text-info link-detail">Cliqueá para más detalles y fotos</div>
                 @*<br />
-                <p class="shortDesc">@Model.PieDetail.ShortDescription</p>*@
+                    <p class="shortDesc">@Model.PieDetail.ShortDescription</p>*@
             </a>
             @Html.Partial("PiePriceCarousel", Model)
         </div>

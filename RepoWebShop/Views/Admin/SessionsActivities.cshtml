@@ -280,7 +280,7 @@
     @if (Model.Products.Any())
     {
         <div>
-            <h3>Items de catálogo sin foto</h3>
+            <h3>Items de catálogo</h3>
             <br />
             <table class="table table-striped activities">
                 <thead>
@@ -300,7 +300,7 @@
                                     @item.ShoppingCartId.Ending(6)
                                 </div>
                             </td>
-                            <td>@item.Product.Name</td>
+                            <td>@item.Product.DisplayName</td>
                         </tr>
                     }
                 </tbody>

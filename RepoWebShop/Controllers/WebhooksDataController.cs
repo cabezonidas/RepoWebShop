@@ -15,12 +15,14 @@ namespace RepoWebShop.Controllers
     public class WebhooksDataController : Controller
     {
         private readonly IPaymentNoticeRepository _paymentNoticeRepository;
+        private readonly IShoppingCartRepository _shoppingCart;
         private readonly AppDbContext _appDbContext;
         private readonly IMercadoPago _mp;
         private readonly IConfiguration _config;
 
-        public WebhooksDataController(IConfiguration config, IPaymentNoticeRepository paymentNoticeRepository, IMercadoPago mp, AppDbContext appDbContext)
+        public WebhooksDataController(IShoppingCartRepository shoppingCart, IConfiguration config, IPaymentNoticeRepository paymentNoticeRepository, IMercadoPago mp, AppDbContext appDbContext)
         {
+            _shoppingCart = shoppingCart;
             _config = config;
             _paymentNoticeRepository = paymentNoticeRepository;
             _mp = mp;
@@ -56,10 +58,19 @@ namespace RepoWebShop.Controllers
         private async Task CheckPaymentsChunck(int offset, int limit)
         {
             var latestPayments = await LatestPayments(offset, limit);
-            var pendingBookings = _appDbContext.ShoppingCartItems.Select(x => x.ShoppingCartId).Distinct();
+            var pendingBookings = _shoppingCart.GetPendingBookings();
             foreach (var latestPayment in latestPayments)
                 if (pendingBookings.Contains(latestPayment.Key))
-                    await OnPaymentNotified(latestPayment.Value);
+                {
+                    try
+                    {
+                        await OnPaymentNotified(latestPayment.Value);
+                    }
+                    catch(Exception ex)
+                    {
+                        //Record this
+                    }
+                }
         }
 
         private async Task<IEnumerable<KeyValuePair<string, string>>> LatestPayments(long offset, long limit)

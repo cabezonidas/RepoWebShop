@@ -13,11 +13,11 @@
                         <select asp-for="PieDetailId" id="pieDetailIds">
                             <option value=""></option>
                             @foreach (var detail in Model.PieDetails.OrderBy(x => x.Name.TrimStart()))
-                            {
-                                <option value="@detail.PieDetailId">
-                                    @detail.Name
-                                </option>
-                            }
+                        {
+                            <option value="@detail.PieDetailId">
+                                @detail.Name
+                            </option>
+                    }
                         </select>
                         <div>No poner tamaño ni variedad</div>
                         <span asp-validation-for="PieDetailId" class="text-danger"></span>
@@ -36,16 +36,14 @@
                     <div class="small">
                         <table class="table table-striped">
                             <thead>
-                                <tr >
+                                <tr>
                                     <td>Tamaño</td>
                                     <td>Variedad</td>
                                     <td>Precio Online</td>
                                     <td>Precio Sucursal</td>
                                 </tr>
                             </thead>
-                            <tbody id="children">
-
-                            </tbody>
+                            <tbody id="children"></tbody>
                         </table>
                     </div>
                 </div>
@@ -56,6 +54,7 @@
                     <div>
                         <select asp-for="SizeDescription" id="sizes">
                             <option value=""></option>
+                            <option value="@Model.SizeDescription">@Model.SizeDescription</option>
                             <option value="Chica">Chica</option>
                             <option value="Chico">Chico</option>
                             <option value="Grande">Grande</option>
@@ -74,6 +73,7 @@
                     <div>
                         <select asp-for="Flavour" id="flavours">
                             <option value=""></option>
+                            <option value="@Model.Flavour">@Model.Flavour</option>
                             <option value="Frutas Secas">Frutas Secas</option>
                             <option value="Tradicional">Tradicional</option>
                             <option value="Carne">Carne</option>
@@ -179,21 +179,22 @@
                 <div>
                     <label asp-for="Price" class="control-label"></label>
                     <div>
-                        <input asp-for="Price" class="form-control"  />
+                        <input asp-for="Price" class="form-control" />
                         <span asp-validation-for="Price" class="text-danger"></span>
                     </div>
                 </div>
                 <div>
                     <label asp-for="PriceInStore" class="control-label"></label>
                     <div>
-                        <input asp-for="PriceInStore" class="form-control"  />
+                        <input asp-for="PriceInStore" class="form-control" />
                         <span asp-validation-for="PriceInStore" class="text-danger"></span>
                     </div>
                 </div>
             </div>
         </div>
-        @if(!string.IsNullOrEmpty(Model.Name) && !string.IsNullOrEmpty(Model.Description))
-        { 
+        @if (!(string.IsNullOrEmpty(Model.Name) && string.IsNullOrEmpty(Model.Description)))
+    {
+
         <div class="row">
             <div>
                 <hr />
@@ -207,7 +208,7 @@
                 </div>
             </div>
         </div>
-        }
+}
         <div class="row">
             <div class="text-center" style="margin: 20px;">
                 <input type="submit" class="btn btn-primary" value="@Html.Raw(Model.IsAdding ? "Agregar" : "Guardar")" />

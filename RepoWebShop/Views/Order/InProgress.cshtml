@@ -97,7 +97,7 @@
                         @foreach (var ol in order.OrderCatalogItems)
                         {
                             var line = ol.Amount == 1 ? "" : ol.Amount + "x ";
-                            line += $"{ol.Product.Name}";
+                            line += $"{ol.Product.DisplayName}";
 
                             items.Add(line);
                         }

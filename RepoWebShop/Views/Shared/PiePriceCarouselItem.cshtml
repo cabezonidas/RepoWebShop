@@ -1,4 +1,16 @@
 ﻿@model Product
+@inject ICalendarRepository _calendar
+
+@{
+    string GetPickupTime(int prepTime)
+    {
+        var date = _calendar.GetPickupEstimate(prepTime);
+        var isToday = date.Date == _calendar.LocalTime().Date;
+        var datevalue = isToday ? "<span style=\"color: green;\">hoy</span> a partir de las" : $"a partir del {_calendar.FriendlyDate(date)} a las";
+        var text = $"Disponible {datevalue} {date.ToString("HH:ss")} hs.";
+        return text;
+    }
+}
 
 
 <div class='addToCart' style="margin: auto;">
@@ -6,30 +18,30 @@
 
         @{var isPromo = Model.PriceInStore > Model.Price; }
 
-            <div style="font-size: larger; ">
-                <div>
-                    @{ var separator = string.IsNullOrEmpty(Model.Flavour) || string.IsNullOrEmpty(Model.SizeDescription) ? "" : " - "; }
-                    <strong>@Html.Raw(Model.SizeDescription + separator + Model.Flavour)</strong>
-                </div>
-                <div>
-                    <strong>$@Model.Price </strong>
-                    @if (isPromo)
-                    {
-                        var perc = Decimal.Floor(100 - (Model.Price / Model.PriceInStore * 100m));
+        <div style="font-size: larger; ">
+            <div>
+                @{ var separator = string.IsNullOrEmpty(Model.Flavour) || string.IsNullOrEmpty(Model.SizeDescription) ? "" : " - "; }
+                <strong>@Html.Raw(Model.SizeDescription + separator + Model.Flavour)</strong>
+            </div>
+            <div>
+                <strong>$@Model.Price </strong>
+                @if (isPromo)
+                {
+                    var perc = Decimal.Floor(100 - (Model.Price / Model.PriceInStore * 100m));
 
-                        <strong style="color: green;">@Html.Raw((perc >= 10 ? $"-{perc}% " : "") + "Online")</strong>
-                    }
-                </div>
+                    <strong style="color: green;">@Html.Raw((perc >= 10 ? $"-{perc}% " : "") + "Online")</strong>
+                }
             </div>
-            <div style="font-size: smaller;" >
-                <div>
-                    @if (isPromo)
-                    {
-                        <strong style="color: red;">$@Model.PriceInStore </strong>
-                        <strong>En sucursal</strong>
-                    }
-                </div>
+        </div>
+        <div style="font-size: smaller;">
+            <div>
+                @if (isPromo)
+                {
+                    <strong style="color: red;">$@Model.PriceInStore </strong>
+                    <strong>En sucursal</strong>
+                }
             </div>
+        </div>
 
 
     </div>
@@ -40,9 +52,12 @@
             Comprar
         </a>
     </p>
-    <div style="height: 50px; max-height: 50px;  ">
+    <div  class="small"style="height: 50px; max-height: 50px;  ">
         <div>
-            Rinde @Model.Portions <span class="fa fa-pie-chart"></span> Aprox.
+            Rinde @Model.Portions <span class="fa fa-pie-chart"></span> aprox.
+        </div>
+        <div>
+            @Html.Raw(GetPickupTime(Model.PreparationTime))
         </div>
     </div>
 </div>

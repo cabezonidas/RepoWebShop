@@ -1,4 +1,5 @@
 ﻿@model HomeViewModel
+@inject IPieDetailRepository pieDetailRepo
 
 @section styles {
     <link href="~/Content/Home/Index.css" rel="stylesheet" />
@@ -56,9 +57,11 @@
 </header>
 
 
+@{
+    var validPieDetails = Model.PiesOfTheWeek.Where(x => pieDetailRepo.GetChildren(x.PieDetail.PieDetailId).Count() > 0);
+}
 
-
-@if (Model.PiesOfTheWeek.Count() > 0)
+@if (validPieDetails.Any())
 {
     <section class="bg-light" id="piesoftheweek">
         <div class="container">
@@ -66,7 +69,8 @@
                 <h1 class="title-logo"><a asp-action="List" asp-controller="PieDetail">Destacados</a></h1>
             </div>
             <div class="row pie-of-week-carousel">
-                @foreach (var pie in Model.PiesOfTheWeek)
+
+                @foreach (var pie in validPieDetails)
                 {
                     @Html.Partial("PieOverviewSummary", pie)
                 }

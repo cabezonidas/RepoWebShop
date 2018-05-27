@@ -499,7 +499,8 @@ namespace RepoWebShop.Repositories
                 .Include(x => x.Lunch).ToList();
             var products = _appDbContext.ShoppingCartCatalogProducts
                 .Where(x => x.ShoppingCartId.ContainsSubstring(friendlyBookingId, true))
-                .Include(x => x.Product).ToList();
+                .Include(x => x.Product)
+                .ThenInclude(x => x.PieDetail).ToList();
             var delivery = _appDbContext.DeliveryAddresses
                 .Where(x => x.ShoppingCartId.ContainsSubstring(friendlyBookingId, true)).ToList();
             var visits = _appDbContext.PageVisits
@@ -673,7 +674,7 @@ namespace RepoWebShop.Repositories
         {
             var result = new ShoppingCartComboCatering
             {
-                BookingId = _cartSession.BookingId,
+                BookingId = customLunch.BookingId,
                 Lunch = customLunch.Lunch,
                 LunchId = customLunch.Lunch.LunchId,
                 Created = _calendarRepository.LocalTime(),
@@ -688,6 +689,21 @@ namespace RepoWebShop.Repositories
             var bookingId = GetSessionCartId();
             _appDbContext.ShoppingCartCustomLunch.RemoveRange(_appDbContext.ShoppingCartCustomLunch.Where(x => x.BookingId == bookingId));
             _appDbContext.SaveChanges();
+        }
+
+        public IEnumerable<string> GetPendingBookings()
+        {
+            var result = new List<string>();
+            result.AddRange(_appDbContext.ShoppingCartByIp.Select(x => x.BookingId));
+            result.AddRange(_appDbContext.ShoppingCartCatalogProducts.Select(x => x.ShoppingCartId));
+            result.AddRange(_appDbContext.ShoppingCartCaterings.Select(x => x.BookingId));
+            result.AddRange(_appDbContext.ShoppingCartComments.Select(x => x.ShoppingCartId));
+            result.AddRange(_appDbContext.ShoppingCartCustomLunch.Select(x => x.BookingId));
+            result.AddRange(_appDbContext.ShoppingCartData.Select(x => x.BookingId));
+            result.AddRange(_appDbContext.ShoppingCartDiscount.Select(x => x.ShoppingCartId));
+            result.AddRange(_appDbContext.ShoppingCartItems.Select(x => x.ShoppingCartId));
+            result.AddRange(_appDbContext.ShoppingCartPickUpDates.Select(x => x.BookingId));
+            return result.Distinct().OrderBy(x => x).ToList();
         }
     }
 }
