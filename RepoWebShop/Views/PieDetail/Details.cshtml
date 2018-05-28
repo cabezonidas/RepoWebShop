@@ -9,7 +9,7 @@
     }
 </style>
 @{
-    var products = pieDetailRepo.GetChildren(Model.PieDetail.PieDetailId);
+    var products = pieDetailRepo.GetChildren(Model.PieDetail.PieDetailId).Where(x => x.IsOnSale);
 }
 @{
     string GetPickupTime(int prepTime)

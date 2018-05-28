@@ -6,7 +6,7 @@
         <a href="/Catalog/Product" class="btn btn-primary">Nuevo</a>
         <a href="/Catalog/Inflation" class="btn btn-primary">Ajustar Precios</a>
         <a asp-action="OnlyPrices" asp-controller="Catalog" class="btn btn-primary">Imprimir</a>
-        <a href="#" class="btn btn-primary">Configuración Rápida</a>
+        @*<a href="#" class="btn btn-primary">Configuración Rápida</a>*@
     </div>
     <br />
     <table class="table table-striped" id="products">
@@ -25,7 +25,7 @@
             </tr>
         </thead>
         <tbody>
-            @{ foreach (var prod in Model)
+            @{ foreach (var prod in Model.OrderBy(x => x.DisplayName).OrderBy(x => x.Category))
                 {
                     var showDelete = prod.IsActive ? "" : "hidden";
                     var showRestore = prod.IsActive ? "hidden" : "";
@@ -112,6 +112,8 @@
         "language": {
             "url": "/Scripts/SpanishDatatables.json"
         },
-        pageLength: 250
+        pageLength: 250,
+        "order": []
+        
     });
 </script>

@@ -48,55 +48,39 @@
     <div class="container">
     @{
         var categories = Model.Select(x => x.Category.ToLower()).Distinct().ToArray();
-        for(int i = 0; i < categories.Length; i++)
+        for (int i = 0; i < categories.Length; i++)
         {
             <br />
-            <table class="table table-striped" id="lunch" >
+            <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th class="product" colspan="2">
+                        <th class="product" colspan="1">
                             @categories[i].ToUpper()
                         </th>
-                        <th colspan="2">@calendar.FriendlyDate(calendar.LocalTime()) de @calendar.LocalTime().Year</th>
+                        <th colspan="1">@calendar.FriendlyDate(calendar.LocalTime()) de @calendar.LocalTime().Year</th>
                     </tr>
                     <tr>
                         <th class="product">Producto</th>
-                        <th>Precio Online</th>
                         <th>Precio en Tienda</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @{  foreach (var prod in Model.Where(x => x.Category.ToLower() == categories[i]).OrderBy(x => x.Name))
-                        {
-                    <tr>
-                        <td class="product">
+                    @foreach (var prod in Model.Where(x => x.Category.ToLower() == categories[i]).OrderBy(x => x.Name))
+                    { 
+                        <tr>
+                            <td class="product">
                             @if (prod.MinOrderAmount > 1)
                             {
                                 <span style="">@prod.MinOrderAmount </span>
                             }
-                            @prod.Name
-                        </td>
-                        <td>
-                            @if(prod.MinOrderAmount > 1)
-                            {
-                                <span style="">
-                                    @Html.Raw((prod.Price * prod.MinOrderAmount).ToString("c"))
-                                </span>
-                                <span style="font-size: small">
-                                    (@prod.Price.ToString("c") c/u)
-                                </span>
-                            }
-                            else
-                            {
-                                @prod.Price.ToString("c")
-                            }
-                        </td>
+                            @prod.DisplayName
+                            </td>
 
-                        <td>
-                            @if(prod.MinOrderAmount > 1)
+                            <td>
+                            @if (prod.MinOrderAmount > 1)
                             {
                                 <span style="">
-                                    @Html.Raw((prod.PriceInStore * 12).ToString("c"))
+                                    @Html.Raw((prod.PriceInStore * prod.MinOrderAmount).ToString("c"))
                                 </span>
                                 <span style="font-size: small">
                                     (@prod.PriceInStore.ToString("c") c/u)
@@ -106,19 +90,71 @@
                             {
                                 @prod.PriceInStore.ToString("c")
                             }
-                        </td>
-                    </tr>
-                        }
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
-            @if(i != categories.Length - 1)
+            @if (i != categories.Length - 1)
             {
                 <div class="pagebreak"> </div>
             }
         }
-    }
+        <div class="pagebreak"> </div>
+        var dif = Model.Where(x => x.PriceInStore > x.Price).OrderBy(x => x.DisplayName).OrderByDescending(x => x.Category);
+        <br />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th colspan="3">@calendar.FriendlyDate(calendar.LocalTime()) de @calendar.LocalTime().Year</th>
+                </tr>
+                <tr>
+                    <th style="text-align: left"class="product">Tipo</th>
+                    <th style="text-align: left">Producto</th>
+                    <th>Precio Online</th>
+                </tr>
+            </thead>
+            <tbody>
+                    @foreach (var prod in dif)
+                    {
+                    <tr>
+                        <td style="text-align: left">@prod.Category</td>
+                        <td class="product">
+                        @if (prod.MinOrderAmount > 1)
+                        {
+                            <span style="">@prod.MinOrderAmount </span>
+                        }
+                        @prod.DisplayName
+                        </td>
 
+                        <td>
+                        @{ 
+                            var onlinePrice = prod.MinOrderAmount * prod.Price;
+                            var storePrice = prod.MinOrderAmount * prod.PriceInStore;
+                            var priceDif = storePrice - onlinePrice;
+
+                            if (prod.MinOrderAmount > 1)
+                            {
+                                <span style="">
+                                    @onlinePrice.ToString("c") (-@priceDif.ToString("c"))
+                                </span>
+                                <span style="font-size: small">
+                                    @prod.Price.ToString("c") c/u (-@Html.Raw((priceDif / 12).ToString("c")) )
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    @onlinePrice.ToString("c") (-@priceDif.ToString("c"))
+                                </span>
+                            }
+                        }
+                        </td>
+                    </tr>
+                    }
+            </tbody>
+        </table>
+}
     </div>
     <script>
     window.print();

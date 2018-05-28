@@ -71,9 +71,9 @@ namespace RepoWebShop.Controllers
         }
         
 
-        public async Task<ViewResult> Catering()
+        public ViewResult Catering()
         {
-            var access_token = await GetSharePointAccessTokenAsync();
+            //var access_token = await GetSharePointAccessTokenAsync();
 
             //var uri = "https://lareposteria.sharepoint.com/_api/Web/Lists(guid'b10fac5f-d656-49ca-bb9a-589b9362bb94')/items?$select=Title,Precio,CantidadMinima&$filter=Categoria eq 'Lunch'&$orderby=Title asc";
             //var requestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
@@ -85,7 +85,7 @@ namespace RepoWebShop.Controllers
             //var Response = (new JsonSerializer().Deserialize<Object>((new JsonTextReader(new StreamReader(body)))));
             //return View("Catering", access_token);
 
-            var result = _appDbContext.Products.Where(x => x.IsActive && x.Category.ToLower().Trim() == "lunch").ToList();
+            var result = _catalog.GetAll().Where(x => x.Category.ToLower().Trim() == "lunch").ToList();
 
             return View("Catering", result);
         }

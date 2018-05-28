@@ -20,11 +20,11 @@ namespace RepoWebShop.Models
         [Display(Name = "Precio Online")]
         [Required]
         [Range(0, double.MaxValue)]
-        public decimal Price { get; set; }
+        public decimal Price { get; set; } = 100;
 
         [Display(Name = "Incrementos")]
         [Required]
-        public int MultipleAmount { get; set; }
+        public int MultipleAmount { get; set; } = 1;
 
         [Display(Name = "Tamaño")]
         public string SizeDescription { get; set; }
@@ -35,7 +35,7 @@ namespace RepoWebShop.Models
         [Display(Name = "Precio en Tienda")]
         [Required]
         [Range(0, double.MaxValue)]
-        public decimal PriceInStore { get; set; }
+        public decimal PriceInStore { get; set; } = 100;
 
         [Display(Name = "Categoría")]
         [Required]
@@ -47,20 +47,20 @@ namespace RepoWebShop.Models
         [Display(Name = "Cantidad mínima")]
         [Required]
         [Range(1, int.MaxValue)]
-        public int MinOrderAmount { get; set; }
+        public int MinOrderAmount { get; set; } = 1;
 
         [Display(Name = "Bocados por unidad")]
         [Range(1, int.MaxValue)]
         [Required]
-        public int Portions { get; set; }
+        public int Portions { get; set; } = 1;
 
         [Display(Name = "Tiempo de preparación")]
         [Range(1, int.MaxValue)]
         [Required]
-        public int PreparationTime { get; set; }
+        public int PreparationTime { get; set; } = 6;
 
 
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
         [Display(Name = "¿Se vende por internet?")]
         [Required]

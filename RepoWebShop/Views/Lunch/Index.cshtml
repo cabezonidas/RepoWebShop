@@ -36,7 +36,7 @@
         </thead>
         <tbody>
             @{
-                foreach (var lunch in Model)
+                foreach (var lunch in Model.OrderByDescending(x => x.Title).OrderBy(x => !x.IsCombo))
                 {
                     <tr>
                         <td>

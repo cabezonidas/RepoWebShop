@@ -77,12 +77,7 @@ namespace RepoWebShop.Controllers
             if(ModelState.IsValid)
             {
                 _pieDetailRepo.UpdateIngredients(vm);
-                var product = _catalogRepo.CreateOrUpdate(vm);
-                var products = _catalogRepo.GetAll().OrderBy(x => x.DisplayName).ToArray();
-                for(int i = 0; i < products.Length; i++)
-                    if (products[i].DisplayName.CompareTo(product.DisplayName) > 0)
-                        return Redirect($"/Catalog/Product/{products[i].ProductId}");
-                return RedirectToAction("Index");
+                return RedirectToAction("Product", "Catalog", vm.ProductId);
             }
             vm.PieDetails = _pieDetailRepo.PieDetails;
             return View(vm);
@@ -100,7 +95,12 @@ namespace RepoWebShop.Controllers
         public IActionResult New(int pieDetailId)
         {
             var result = new Product { PieDetailId = pieDetailId };
-            return View(result);
+            result.PieDetail = _pieDetailRepo.PieDetails.First(x => x.PieDetailId == pieDetailId);
+            var vm = _mapper.Map<Product, ProductViewModel>(result);
+            vm.PieDetails = _pieDetailRepo.PieDetails;
+            vm.Ingredients = result.PieDetail?.Ingredients ?? result.Description;
+            vm.IsAdding = true;
+            return View("Product", vm);
         }
 
         [HttpPost]
