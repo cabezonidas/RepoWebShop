@@ -54,7 +54,10 @@
                     <div>
                         <select asp-for="SizeDescription" id="sizes">
                             <option value=""></option>
-                            <option value="@Model.SizeDescription">@Model.SizeDescription</option>
+                            
+                            @if (!string.IsNullOrEmpty(Model.SizeDescription))
+                            {<option value="@Model.SizeDescription" selected="selected">@Model.SizeDescription</option>}
+
                             <option value="Chica">Chica</option>
                             <option value="Chico">Chico</option>
                             <option value="Grande">Grande</option>
@@ -73,7 +76,8 @@
                     <div>
                         <select asp-for="Flavour" id="flavours">
                             <option value=""></option>
-                            <option value="@Model.Flavour">@Model.Flavour</option>
+                            @if (!string.IsNullOrEmpty(Model.Flavour))
+                            {<option value="@Model.Flavour" selected="selected">@Model.Flavour</option>}
                             <option value="Frutas Secas">Frutas Secas</option>
                             <option value="Tradicional">Tradicional</option>
                             <option value="Carne">Carne</option>

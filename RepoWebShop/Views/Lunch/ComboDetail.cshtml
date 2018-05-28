@@ -40,7 +40,7 @@
                 <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-left">
                     <div class="col-item">
                         <div class="text-capitalize">
-                            @Html.Raw(item.Quantity * item.Product.MinOrderAmount > 1 ? $"{(item.Quantity * item.Product.MinOrderAmount).ToString()} " : "") @item.Product.Name
+                            @Html.Raw(item.Quantity * item.Product.MinOrderAmount > 1 ? $"{(item.Quantity * item.Product.MinOrderAmount).ToString()} " : "") @item.Product.DisplayName
                         </div>
                         <div style="height: 5px;"></div>
                     </div>

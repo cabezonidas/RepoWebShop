@@ -37,7 +37,7 @@
         }
 
         .special-cakes .step {
-            background-color: #e9f7cb8c;
+            background-color: papayawhip;
             margin: 5px;
             padding: 10px;
             border-radius: 2px;
@@ -49,7 +49,7 @@
                 margin-top: 5px;
                 padding: 4px;
                 text-align: center;
-                background-color: #60ad76;
+                background-color: #883636;
                 color: white;
                 font-family: 'Playball';
                 -moz-box-shadow: 0px 0px 4px rgba(0,0,0,0.55);
@@ -69,7 +69,7 @@
         .special-cakes .row div.step:focus {
             -webkit-transform: scale(1.05);
             transform: scale(1.05);
-            background-color: #ecf7dc;
+            background-color: papayawhip;
         }
 
         .special-cakes .row div.step {
@@ -90,65 +90,89 @@
 <br />
 <div class="container">
     <div class="special-cakes">
-        <div class="title-container">
-            <h1 class="title-logo">Armá tu torta</h1>
-        </div>
-        <div class="grid" id="localPage">
-            <div class="row">
-                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                    <div class="step">
-                        <h3>Elegir Tamaño</h3>
-                        <p>De 1 kg a 1.5 kg [Redonda]</p>
-                        <p>De 2 kg a 5 kg. [Rectangular]</p>
-                        <p class="text-muted">Se estima que medio kg es suficiente para 5 personas. El tamaño mínimo es 1 kg.</p>
+            <h1 class="text-center">¿Cómo armar tu torta?</h1>
+            <div class="grid" id="localPage">
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <div class="step">
+                            <h3>Elegir Tamaño</h3>
+                            <p>De 1 kg a 1.5 kg [Redonda]</p>
+                            <p>De 2 kg a 5 kg. [Rectangular]</p>
+                            <p class="text-muted">Se estima que medio kg es suficiente para 5 personas. El tamaño mínimo es 1 kg.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <div class="step">
+                            <h3>Elegir Bisquit</h3>
+                            <p>Chocolate / Vainilla</p>
+                            <p>Semi Galesa + chocolate</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <div class="step">
+                            <h3>Elegir Relleno</h3>
+                            <p>Dulce de leche, Crema, Chocolate, Nutella, Frutos del bosque, Frutos secos, crema de distintos sabores (limón, frutilla, dulce) Etc.</p>
+                            <p class="text-muted">Hasta 2 rellenos por torta.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <div class="step">
+                            <h3>Elegir Cobertura</h3>
+                            <p>Merengue italiano, Mouse de chocolate, Choco blanco, Choco negro, Pasta de azúcar</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <div class="step">
+                            <h3>Elegir Terminación</h3>
+                            <p>Cerezas, Frutillas, Confites, Copetes, Flores de azúcar, Etc.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <div class="step">
+                            <h3>Escribir Dedicacion</h3>
+                            <p>
+                                ¡Feliz Cumple Tomi!
+                            </p>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                    <div class="step">
-                        <h3>Elegir Bisquit</h3>
-                        <p>Chocolate / Vainilla</p>
-                        <p>Semi Galesa + chocolate</p>
-                    </div>
+                <div style="margin: 30px;">
+                    <hr />
                 </div>
-                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                    <div class="step">
-                        <h3>Elegir Relleno</h3>
-                        <p>Dulce de leche, Crema, Chocolate, Nutella, Frutos del bosque, Frutos secos, crema de distintos sabores (limón, frutilla, dulce) Etc.</p>
-                        <p class="text-muted">Hasta 2 rellenos por torta.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                    <div class="step">
-                        <h3>Elegir Cobertura</h3>
-                        <p>Merengue italiano, Mouse de chocolate, Choco blanco, Choco negro, Pasta de azúcar</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                    <div class="step">
-                        <h3>Elegir Terminación</h3>
-                        <p>Cerezas, Frutillas, Confites, Copetes, Flores de azúcar, Etc.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                    <div class="step">
-                        <h3>Escribir Dedicacion</h3>
-                        <p>
-                            ¡Feliz Cumple Tomi!
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="contact-mail">
-                <a asp-controller="Photos" asp-action="Index">
-                    <h3 style="font-family: 'Noto Serif';" class="text-capitalize text-muted">Ver fotos</h3>
-                </a>
-                <h3 style="font-family: 'Noto Serif';">Escribinos a <a href="mailto:info@delasartes.com.ar">info@delasartes.com.ar</a></h3>
-            </div>
 
-            <div>
+                <div class="text-left text-muted">
+                    <div style="">
+                        <h3 style="padding-left: 10px;">Bautismo y Comunión</h3>
+                        @Html.Partial("~/Views/Photos/SmallCarrousel.cshtml", 72157689990349894)
+                    </div>
+                    <div style="">
+                        <h3 style="padding-left: 10px;">Cumpleaños</h3>
+                        @Html.Partial("~/Views/Photos/SmallCarrousel.cshtml", 72157631388046352)
+                    </div>
+                    <div style="">
+                        <h3 style="padding-left: 10px;">Bodas</h3>
+                        @Html.Partial("~/Views/Photos/SmallCarrousel.cshtml", 72157631388135598)
+                    </div>
+                </div>
+
+
+                <div style="margin: 30px;">
+                    <hr />
+                </div>
+
+                <div class="contact-mail">
+                    <a asp-controller="Photos" asp-action="Index">
+                        <h4 style="font-family: 'Noto Serif';" class="text-capitalize text-muted">Ver más fotos</h4>
+                    </a>
+
+                    <div style="font-family: 'Noto Serif';">
+                        Escribinos a <a href="mailto:info@delasartes.com.ar">info@delasartes.com.ar</a></h4>
+                    </div>
+
+                    <div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 </div>
 
 <script>

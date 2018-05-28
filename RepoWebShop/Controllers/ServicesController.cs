@@ -23,9 +23,11 @@ namespace RepoWebShop.Controllers
         private readonly AppDbContext _appDbContext;
         private readonly IFlickrRepository _photosetAlbums;
         private readonly IConfiguration _config;
+        private readonly ICatalogRepository _catalog;
 
-        public ServicesController(AppDbContext appDbContext, IGalleryRepository photosRepository, IFlickrRepository photosetAlbums, IConfiguration config)
+        public ServicesController(ICatalogRepository catalog, AppDbContext appDbContext, IGalleryRepository photosRepository, IFlickrRepository photosetAlbums, IConfiguration config)
         {
+            _catalog = catalog;
             _config = config;
             _photosRepository = photosRepository;
             _photosetAlbums = photosetAlbums;
@@ -93,12 +95,12 @@ namespace RepoWebShop.Controllers
             return View(_photosRepository.GetGalleryPictures());
         }
 
-        public async Task<ViewResult> FullCatalog()
+        public ViewResult FullCatalog()
         {
             //var access_token = await GetSharePointAccessTokenAsync();
             //return View("FullCatalog", access_token);
 
-            var result = _appDbContext.Products.Where(x => x.IsActive && x.Category.ToLower().Trim() != "lunch").ToList();
+            var result = _catalog.GetActive().Where(x => x.Category.ToLower().Trim() != "lunch").OrderBy(x => x.DisplayName).ToList();
             return View("FullCatalog", result);
         }
 

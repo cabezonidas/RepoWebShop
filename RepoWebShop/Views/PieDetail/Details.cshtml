@@ -93,15 +93,15 @@
                                                     <span><strong>@separator</strong></span>
                                                     <span><strong>@product.SizeDescription</strong></span>
                                                 </div>
-                                                <div class="small" style="color: #883636;">
-                                                    Rinde aprox. @product.Portions <span class="fa fa-pie-chart"></span>
-                                                </div>
                                                 @if (string.IsNullOrEmpty(product.Flavour) && string.IsNullOrEmpty(product.SizeDescription))
                                                 {
                                                 <div>
                                                     <strong>@product.PieDetail.Name</strong>
                                                 </div>
                                                 }
+                                                <div class="small" style="color: #883636;">
+                                                    Rinde aprox. @product.Portions <span class="fa fa-pie-chart"></span>
+                                                </div>
                                                 <div class="small text-muted" style="font-style: italic;">
                                                     @Html.Raw(GetPickupTime(product.PreparationTime))
                                                 </div>

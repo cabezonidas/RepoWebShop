@@ -26,6 +26,7 @@ namespace RepoWebShop.Repositories
                 .Include(x => x.Miscellanea)
                 .Include(x => x.Items)
                 .ThenInclude(x => x.Product)
+                .ThenInclude(x => x.PieDetail)
                 .FirstOrDefault(x => x.LunchId == lunchId);
             
             return result;

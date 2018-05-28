@@ -57,6 +57,7 @@ namespace RepoWebShop.Repositories
                 .Include(x => x.Lunch.Miscellanea)
                 .Include(x => x.Lunch.Items)
                 .ThenInclude(x => x.Product)
+                .ThenInclude(x => x.PieDetail)
                 .FirstOrDefault(x => x.BookingId == bookingId);
             return result;
         }

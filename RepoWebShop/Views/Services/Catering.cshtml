@@ -11,7 +11,7 @@
             <h1 class="title-logo">Catering</h1>
         </div>
 
-        @{ long albumbId = 72157693586449552; }
+
 
 
 
@@ -22,28 +22,9 @@
 
             @*<img src="~/Pictures/Loader.gif" id="loading" style="margin: auto;" />*@
         </div>
-        <div class="container">
-            <div class="slider-nav" id="nav-@albumbId">
-            @foreach (var picture in _flickr.GetAlbumPictures(albumbId).PicturesUrls)
-            {
-                var pic = picture + "s.jpg";
-                <div class="item" style="">
-                    <img src="@pic" alt="image" draggable="false" style="margin-right: 2px;" />
-                </div>
-            }
-            </div>
-        </div>
-        <script type="text/javascript">
-        $('#nav-@albumbId' + '.slider-nav').slick({
-            slidesToScroll: 1,
-            dots: false,
-            infinite: true,
-            focusOnSelect: true,
-            arrows: false,
-            centerMode: false,
-            variableWidth: true
-        });
-        </script>
+        @{ long albumbId = 72157693586449552; }
+        @Html.Partial("~/Views/Photos/SmallCarrousel.cshtml", albumbId)
+
         @Html.Partial("~/Views/Lunch/Combos.cshtml", _lunch.GetAllLunches().Where(x => x.IsCombo))
         <div class="container">
             <h3>¿Querés uno a medida? </h3>
@@ -69,7 +50,7 @@
                     {
                         <tr>
                             <td>
-                                @item.Name
+                                @item.DisplayName
                             </td>
                             <td>
                                 @item.MinOrderAmount
