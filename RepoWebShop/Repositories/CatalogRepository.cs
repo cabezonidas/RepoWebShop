@@ -132,6 +132,12 @@ namespace RepoWebShop.Models
             var existingProduct = _appDbContext.Products.FirstOrDefault(x => x.ProductId == vm.ProductId);
             var result = existingProduct != null ? _mapper.Map(vm, existingProduct) : _mapper.Map<ProductViewModel, Product>(vm);
 
+            if(existingProduct != null)
+            {
+                result.OldPrice = vm.Price != existingProduct.Price ? existingProduct.Price : existingProduct.OldPrice;
+                result.OldPriceInStore = vm.PriceInStore != existingProduct.PriceInStore ? existingProduct.PriceInStore : existingProduct.OldPriceInStore;
+            }
+
             //result.Description = result.Description.ToTitleCase();
             //result.Name = result.Name.ToTitleCase();
             result.Category = result.Category.ToTitleCase();
@@ -151,5 +157,23 @@ namespace RepoWebShop.Models
         }
 
         public IEnumerable<Product> GetByParent(int id) => _pieDetailRepository.GetChildren(id);
+
+        public void QuickUpdate(int productId, decimal price, decimal priceInStore, bool onlineSale, string category, string temp, int minAmountOrder, int increments, int portions, int prepTime)
+        {
+            var prod = _appDbContext.Products.First(x => x.ProductId == productId);
+            prod.OldPrice = price != prod.Price ? prod.Price : prod.OldPrice;
+            prod.OldPriceInStore = priceInStore != prod.PriceInStore ? prod.PriceInStore : prod.OldPriceInStore;
+            prod.Price = price;
+            prod.PriceInStore = priceInStore;
+            prod.IsOnSale = onlineSale;
+            prod.Category = category.ToTitleCase();
+            prod.Temperature = temp.ToTitleCase();
+            prod.MinOrderAmount = minAmountOrder;
+            prod.MultipleAmount = increments;
+            prod.Portions = portions;
+            prod.PreparationTime = prepTime;
+            _appDbContext.Products.Update(prod);
+            _appDbContext.SaveChanges();
+        }
     }
 }

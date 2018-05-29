@@ -100,7 +100,7 @@ namespace RepoWebShop.Models
 
         public static DateTime GetOrderReady(DateTime orderAccreditted, int estimationHs, IEnumerable<IWorkingHours> workingHours, IEnumerable<PublicHoliday> holidays, IEnumerable<Vacation> vacations, bool isProcessing)
         {
-            int minutesEstimation = estimationHs * 60;
+            int minutesEstimation = estimationHs == 0 ? 1 : estimationHs * 60;
             int dayOfWeekSubmitted = (int)orderAccreditted.DayOfWeek;
             bool orderReady = false;
             var offset = 0;

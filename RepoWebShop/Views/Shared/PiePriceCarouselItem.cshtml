@@ -1,18 +1,6 @@
 ﻿@model Product
 @inject ICalendarRepository _calendar
 
-@{
-    string GetPickupTime(int prepTime)
-    {
-        var date = _calendar.GetPickupEstimate(prepTime);
-        var isToday = date.Date == _calendar.LocalTime().Date;
-        var datevalue = isToday ? "<span style=\"color: green;\">hoy</span> a partir de las" : $"a partir del {_calendar.FriendlyDate(date)} a las";
-        var text = $"Disponible {datevalue} {date.ToString("HH:ss")} hs.";
-        return text;
-    }
-}
-
-
 <div class='addToCart' style="margin: auto;">
     <div style="height: 70px; max-height:70px; ">
 
@@ -57,7 +45,7 @@
             Rinde @Model.Portions <span class="fa fa-pie-chart"></span> aprox.
         </div>
         <div>
-            @Html.Raw(GetPickupTime(Model.PreparationTime))
+            @Html.Raw(_calendar.GetSoonestPickupEstimateForUsers(Model.PreparationTime))
         </div>
     </div>
 </div>

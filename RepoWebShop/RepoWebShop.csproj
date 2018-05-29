@@ -37,6 +37,12 @@
     <Content Remove="wwwroot\Content\Photos\Default.css" />
   </ItemGroup>
 
+
+
+  <ItemGroup>
+    <None Remove="Properties\PublishProfiles\RepoWebShop-Test - Web Deploy.pubxml" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Update="wwwroot\**\*">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

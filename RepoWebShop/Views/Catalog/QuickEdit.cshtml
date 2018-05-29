@@ -1,0 +1,123 @@
+﻿@model IEnumerable<Product>
+<style>
+    td {
+        max-width: 100px;
+        min-width: 75px;
+    }
+</style>
+<div class="container">
+    <h2>Edición Rápida de Productos</h2>
+    <span><a asp-action="Index" asp-controller="Catalog" class="btn btn-primary">Volver</a></span>
+    <div style="margin: 10px;">
+        <span>¿Cuándo se entrega algo que se pida ahora que tenga </span><span><input type="number" step="1" value="4" id="hours-calculation" style="width: 50px;" /></span><span> hs de elaboración?</span><span style="margin-left: 10px;" class="btn btn-primary" onclick="getEstimate()">Calcular</span>
+        <div id="result-calculation">
+            <br />
+        </div>
+        <script>
+            function getEstimate() {
+                $.get('/api/CalendarData/GetPickupDateForUsers/' + $('#hours-calculation').val()).then((data) => {
+                    $('#result-calculation').empty().append(data.result);
+                });
+            }
+        </script>
+    </div>
+    <table class="table table-striped hidden">
+        <thead>
+            <tr>
+                <td>Producto</td>
+                <td>Precio</td>
+                <td>Sucursal</td>
+                <td>Venta Online</td>
+                <td>Categoría</td>
+                <td>Temp.</td>
+                <td>Cant. Mínima</td>
+                <td>Suma</td>
+                <td>Porciones Bocados</td>
+                <td>Tiempo Prep.</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var prd in Model.OrderBy(x => x.DisplayName).OrderBy(x => x.Category.ToTitleCase()))
+            {
+                <tr>
+                    <td>
+                        <a asp-action="Product" asp-controller="Catalog" asp-route-id="@prd.ProductId">
+                            @prd.DisplayName
+                        </a>
+                    </td>
+                    <td>
+                        @{ var price = prd.Price.ToString().Replace(",", ".");}
+                        <input id="price-@prd.ProductId" type="number" value="@price" step=".5" class="form-control" />
+                    </td>
+                    <td>
+                        <input id="storeprice-@prd.ProductId" type="number" value="@prd.PriceInStore.ToString().Replace(",", ".")" step=".5" class="form-control" />
+                    </td>
+                    <td>
+                        <input id="onsale-@prd.ProductId" type="checkbox" @Html.Raw(prd.IsOnSale ? "checked=\"checked\"" : "") class="form-control" />
+                    </td>
+                    <td>
+                        <input id="category-@prd.ProductId" type="text" value="@prd.Category" class="form-control" />
+                    </td>
+                    <td>
+                        <input id="temp-@prd.ProductId" type="text" value="@prd.Temperature" class="form-control" />
+                    </td>
+                    <td>
+                        <input id="minorder-@prd.ProductId" type="number" value="@prd.MinOrderAmount" min="1" max="120" step="1" class="form-control" />
+                    </td>
+                    <td>
+                        <input id="increments-@prd.ProductId" type="number" value="@prd.MultipleAmount" min="1" max="120" step="1" class="form-control" />
+                    </td>
+                    <td>
+                        <input id="portions-@prd.ProductId" type="number" value="@prd.Portions" min="1" max="120" step="1" class="form-control" />
+                    </td>
+                    <td>
+                        <input id="preptime-@prd.ProductId" type="number" value="@prd.PreparationTime" min="0" max="120" step="1" class="form-control" />
+                    </td>
+                    <td>
+                        <div>
+                            <div>
+                                <a class="btn btn-primary" onclick="quickUpdate(@prd.ProductId)">Guardar</a>
+                            </div>
+                            <div class="alert-success hidden" id="update-@prd.ProductId">
+                                ¡Guardado!
+                            </div>
+                        </div>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    function quickUpdate(productId) {
+        var price = $('#price-' + productId).val();
+        var priceInStore = $('#storeprice-' + productId).val();
+        var isOnSale = $('#onsale-' + productId).is(":checked") ? 1 : 0;
+        var category = $('#category-' + productId).val();
+        var temperature = $('#temp-' + productId).val();
+        var minOrderAmount = $('#minorder-' + productId).val();
+        var multipleAmount = $('#increments-' + productId).val();
+        var portions = $('#portions-' + productId).val();
+        var preparationTime = $('#preptime-' + productId).val();
+
+        console.log(price, isOnSale, preparationTime);
+
+        $('#update-' + productId).addClass('hidden');
+        var url = '/api/CatalogData/QuickUpdate/' + productId + '/' + price + '/' + priceInStore + '/' + isOnSale + '/' + category + '/' + temperature + '/' + minOrderAmount + '/' + multipleAmount + '/' + portions + '/' + preparationTime;
+        $.post(url).then(() => {
+            $('#update-' + productId).empty().removeClass('hidden').removeClass('alert-warning').addClass('alert-success').append('¡Guardado!');
+        }).fail(() => $('#update-' + productId).empty().removeClass('hidden').removeClass('alert-success').addClass('alert-warning').append('No se pudo guardar'));
+    }
+    $('table').DataTable({
+        "language": {
+            "url": "/Scripts/SpanishDatatables.json"
+        },
+        "sorting": [],
+        "initComplete": function (settings, json) {
+            $('table').removeClass('hidden');
+        }
+    })
+    
+</script>

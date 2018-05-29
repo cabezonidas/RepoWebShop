@@ -303,6 +303,21 @@ namespace RepoWebShop.Tests
             Assert.IsTrue(orderPickup.Day == 12);
             Assert.IsTrue(orderPickup.Hour == 19);
             Assert.IsTrue(orderPickup.Minute == 45);
+
+            estimationHs = 0;
+            orderAccreditted = new DateTime(2017, 9, 3, 16, 0, 0); // Domingo 3 de septiembre a las 4pm
+            finishingDate = WorkingHours.GetOrderReady(orderAccreditted, estimationHs, _processingHours, null, null, true);
+            Assert.IsTrue(finishingDate.Year == 2017);
+            Assert.IsTrue(finishingDate.Month == 9);
+            Assert.IsTrue(finishingDate.Day == 5);
+            Assert.IsTrue(finishingDate.Hour == 8);
+            Assert.IsTrue(finishingDate.Minute == 0);
+            orderPickup = WorkingHours.GetPickUpDate(orderAccreditted, estimationHs, _processingHours, _openHours, null, null);
+            Assert.IsTrue(orderPickup.Year == 2017);
+            Assert.IsTrue(orderPickup.Month == 9);
+            Assert.IsTrue(orderPickup.Day == 5);
+            Assert.IsTrue(orderPickup.Hour == 8);
+            Assert.IsTrue(orderPickup.Minute == 30);
         }
 
         [TestMethod]

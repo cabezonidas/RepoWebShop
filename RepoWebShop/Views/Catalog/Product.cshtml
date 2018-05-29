@@ -55,9 +55,82 @@
                 @if (!Model.IsAdding && Model.PieDetail != null && Model.PieDetailId > 0)
                 {
                     <div class="text-center" id="add-variety">
-                        <a asp-action="New" asp-route-pieDetailId="@Model.PieDetailId" asp-controller="Catalog" >Agregar otra veriedad de @Model.PieDetail.Name</a>
+                        <a asp-action="AddPieDetailChild" asp-route-pieDetailId="@Model.PieDetailId" asp-controller="Catalog" >Agregar otra veriedad de @Model.PieDetail.Name</a>
                     </div>
                 }
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                
+                <div>
+                    <label asp-for="Category" class="control-label"></label>
+                    <div>
+                        <select asp-for="Category" class="form-control">
+                            <option>Postre</option>
+                            <option>Seco</option>
+                            <option>Lunch</option>
+                            <option>Appetizer</option>
+                        </select>
+                        <span asp-validation-for="Category" class="text-danger"></span>
+                    </div>
+                </div>
+                <div>
+                    <label asp-for="Temperature" class="control-label"></label>
+                    <div>
+                        <select asp-for="Temperature" class="form-control">
+                            <option>Frío</option>
+                            <option>Ambiente</option>
+                            <option>Caliente</option>
+                        </select>
+                        <span asp-validation-for="Category" class="text-danger"></span>
+                    </div>
+                </div>
+                <div>
+                    <label asp-for="PreparationTime" class="control-label"></label>
+                    <div>
+                        <input asp-for="PreparationTime" class="form-control" type="number" />
+                        <span asp-validation-for="PreparationTime" class="text-danger"></span>
+                    </div>
+                </div>
+                <div>
+                    <label asp-for="MinOrderAmount" class="control-label"></label>
+                    <div>
+                        <input asp-for="MinOrderAmount" class="form-control" type="number" />
+                    </div>
+                    <div>
+                        (12 por ej. para sandwiches / 1 para tortas)
+                    </div>
+                    <div>
+                        <span asp-validation-for="MinOrderAmount" class="text-danger"></span>
+                    </div>
+                    <br />
+                </div>
+                <div>
+                    <label asp-for="MultipleAmount" class="control-label"></label>
+                    <div>
+                        <input asp-for="MultipleAmount" class="form-control" type="number" />
+                    </div>
+                    <div>
+                        (6 por ej. para sandwiches / 1 para tortas)
+                    </div>
+                    <div>
+                        <span asp-validation-for="MultipleAmount" class="text-danger"></span>
+                    </div>
+                    <br />
+                </div>
+                <div>
+                    <label asp-for="IsActive" class="control-label"></label>
+                    <div>
+                        <input asp-for="IsActive" class="form-control" type="checkbox" />
+                        <span asp-validation-for="IsActive" class="text-danger"></span>
+                    </div>
+                </div>
+                <div>
+                    <label asp-for="IsOnSale" class="control-label"></label>
+                    <div>
+                        <input asp-for="IsOnSale" class="form-control" type="checkbox" />
+                        <span asp-validation-for="IsOnSale" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div>
@@ -124,52 +197,6 @@
                     </div>
                 </div>
                 <div>
-                    <label asp-for="Category" class="control-label"></label>
-                    <div>
-                        <select asp-for="Category" class="form-control">
-                            <option>Postre</option>
-                            <option>Seco</option>
-                            <option>Lunch</option>
-                            <option>Appetizer</option>
-                        </select>
-                        <span asp-validation-for="Category" class="text-danger"></span>
-                    </div>
-                </div>
-                <div>
-                    <label asp-for="Temperature" class="control-label"></label>
-                    <div>
-                        <select asp-for="Temperature" class="form-control">
-                            <option>Frío</option>
-                            <option>Ambiente</option>
-                            <option>Caliente</option>
-                        </select>
-                        <span asp-validation-for="Category" class="text-danger"></span>
-                    </div>
-                </div>
-                <div>
-                    <label asp-for="PreparationTime" class="control-label"></label>
-                    <div>
-                        <input asp-for="PreparationTime" class="form-control" type="number" />
-                        <span asp-validation-for="PreparationTime" class="text-danger"></span>
-                    </div>
-                </div>
-                <div>
-                    <label asp-for="IsActive" class="control-label"></label>
-                    <div>
-                        <input asp-for="IsActive" class="form-control" type="checkbox" />
-                        <span asp-validation-for="IsActive" class="text-danger"></span>
-                    </div>
-                </div>
-                <div>
-                    <label asp-for="IsOnSale" class="control-label"></label>
-                    <div>
-                        <input asp-for="IsOnSale" class="form-control" type="checkbox" />
-                        <span asp-validation-for="IsOnSale" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                <div>
                     <label asp-for="Portions" class="control-label"></label>
                     <div>
                         <input asp-for="Portions" class="form-control" type="number" />
@@ -179,32 +206,6 @@
                     </div>
                     <div>
                         <span asp-validation-for="Portions" class="text-danger"></span>
-                    </div>
-                    <br />
-                </div>
-                <div>
-                    <label asp-for="MinOrderAmount" class="control-label"></label>
-                    <div>
-                        <input asp-for="MinOrderAmount" class="form-control" type="number" />
-                    </div>
-                    <div>
-                        (12 por ej. para sandwiches / 1 para tortas)
-                    </div>
-                    <div>
-                        <span asp-validation-for="MinOrderAmount" class="text-danger"></span>
-                    </div>
-                    <br />
-                </div>
-                <div>
-                    <label asp-for="MultipleAmount" class="control-label"></label>
-                    <div>
-                        <input asp-for="MultipleAmount" class="form-control" type="number" />
-                    </div>
-                    <div>
-                        (6 por ej. para sandwiches / 1 para tortas)
-                    </div>
-                    <div>
-                        <span asp-validation-for="MultipleAmount" class="text-danger"></span>
                     </div>
                     <br />
                 </div>

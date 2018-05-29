@@ -93,6 +93,6 @@ namespace RepoWebShop.Repositories
             _appDbContext.SaveChanges();
         }
 
-        public IEnumerable<Product> GetChildren(int id) => _appDbContext.Products.Include(x => x.PieDetail).Where(x => x.PieDetail.PieDetailId == id).ToList();
+        public IEnumerable<Product> GetChildren(int id) => _appDbContext.Products.Include(x => x.PieDetail).Where(x => x.PieDetail.PieDetailId == id && x.IsActive && x.IsOnSale).ToList();
     }
 }

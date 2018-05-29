@@ -30,6 +30,11 @@ namespace RepoWebShop.Controllers
             return View(_catalogRepo.GetAll());
         }
 
+        public IActionResult QuickEdit()
+        {
+            return View(_catalogRepo.GetAll().Where(x => x.IsActive));
+        }
+
         public IActionResult OnlyPrices()
         {
             return View(_catalogRepo.GetAll().Where(x => x.IsActive));
@@ -41,6 +46,19 @@ namespace RepoWebShop.Controllers
         {
             var pieDetail = _pieDetailRepo.GetPieDetailById(pieDetailId);
             ProductViewModel vm = new ProductViewModel();
+            var baseProduct = _pieDetailRepo.GetChildren(pieDetailId).FirstOrDefault();
+            if(baseProduct != null)
+            {
+                vm.Category = baseProduct.Category;
+                vm.IsActive = baseProduct.IsActive;
+                vm.IsOnSale = baseProduct.IsOnSale;
+                vm.MinOrderAmount = baseProduct.MinOrderAmount;
+                vm.MultipleAmount = baseProduct.MultipleAmount;
+                vm.PreparationTime = baseProduct.PreparationTime;
+                vm.Price = baseProduct.Price;
+                vm.PriceInStore = baseProduct.PriceInStore;
+                vm.Temperature = baseProduct.Temperature;
+            }
             vm.PieDetails = _pieDetailRepo.PieDetails;
             vm.PieDetail = pieDetail;
             vm.PieDetailId = pieDetail.PieDetailId;
@@ -77,62 +95,11 @@ namespace RepoWebShop.Controllers
             if(ModelState.IsValid)
             {
                 _pieDetailRepo.UpdateIngredients(vm);
-                return RedirectToAction("Product", "Catalog", vm.ProductId);
+                var product = _catalogRepo.CreateOrUpdate(vm);
+                return RedirectToAction("Product", "Catalog", new { id = product.ProductId });
             }
             vm.PieDetails = _pieDetailRepo.PieDetails;
             return View(vm);
-        }
-
-        [HttpGet]
-        [Route("[controller]/New")]
-        public IActionResult New()
-        {
-            return View(new Product());
-        }
-
-        [HttpGet]
-        [Route("[controller]/New/{pieDetailId}")]
-        public IActionResult New(int pieDetailId)
-        {
-            var result = new Product { PieDetailId = pieDetailId };
-            result.PieDetail = _pieDetailRepo.PieDetails.First(x => x.PieDetailId == pieDetailId);
-            var vm = _mapper.Map<Product, ProductViewModel>(result);
-            vm.PieDetails = _pieDetailRepo.PieDetails;
-            vm.Ingredients = result.PieDetail?.Ingredients ?? result.Description;
-            vm.IsAdding = true;
-            return View("Product", vm);
-        }
-
-        [HttpPost]
-        public IActionResult New(Product product)
-        {
-            if(ModelState.IsValid)
-            {
-                _catalogRepo.Create(product);
-                return RedirectToAction("Index");
-            }
-            return View(product);
-        }
-
-        [HttpGet]
-        public IActionResult Edit(int id)
-        {
-            var result = _catalogRepo.GetById(id);
-            if (result != null)
-                return View(result);
-            else
-                return NotFound();
-        }
-
-        [HttpPost]
-        public IActionResult Edit(Product product)
-        {
-            if (ModelState.IsValid)
-            {
-                _catalogRepo.Edit(product);
-                return RedirectToAction("Index");
-            }
-            return View(product);
         }
 
         [HttpGet]

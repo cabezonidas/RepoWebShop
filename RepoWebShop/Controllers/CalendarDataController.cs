@@ -38,6 +38,15 @@ namespace RepoWebShop.Controllers
         }
 
         [HttpGet]
+        [Route("GetPickupDateForUsers/{hours}")]
+        public IActionResult GetPickupDateForUsers(int hours)
+        {
+            string result = _calendarRepository.GetSoonestPickupEstimateForUsers(hours);
+
+            return Ok(new { result });
+        }
+
+        [HttpGet]
         [Route("GetProductPickupDate/{hours}")]
         public IActionResult GetProductPickupDate(int hours)
         {

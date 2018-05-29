@@ -63,5 +63,20 @@ namespace RepoWebShop.Controllers
             _catalogRepository.RestorePrices();
             return Ok();
         }
+        
+        [HttpPost]
+        [Route("QuickUpdate/{productId}/{price}/{priceInStore}/{onSale}/{category}/{temp}/{minAmountOrder}/{increments}/{portions}/{prepTime}")]
+        public IActionResult QuickUpdate(int productId, decimal price, decimal priceInStore, int onSale, string category, string temp, int minAmountOrder, int increments, int portions, int prepTime)
+        {
+            try
+            {
+                _catalogRepository.QuickUpdate(productId, price, priceInStore, onSale == 0 ? false : true, category, temp, minAmountOrder, increments, portions, prepTime);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
     }
 }

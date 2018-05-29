@@ -141,5 +141,14 @@ namespace RepoWebShop.Repositories
 
             return pickUpOptions;
         }
+
+        public string GetSoonestPickupEstimateForUsers(int prepTime)
+        {
+                var date = GetPickupEstimate(prepTime);
+                var isToday = date.Date == LocalTime().Date;
+                var datevalue = isToday ? "<span style=\"color: green;\">hoy</span> a partir de las" : $"a partir del {FriendlyDate(date)} a las";
+                var text = $"Disponible {datevalue} {date.ToString("HH:ss")} hs.";
+                return text;
+        }
     }
 }

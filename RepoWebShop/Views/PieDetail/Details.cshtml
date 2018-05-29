@@ -9,18 +9,9 @@
     }
 </style>
 @{
-    var products = pieDetailRepo.GetChildren(Model.PieDetail.PieDetailId).Where(x => x.IsOnSale);
+    var products = pieDetailRepo.GetChildren(Model.PieDetail.PieDetailId);
 }
-@{
-    string GetPickupTime(int prepTime)
-    {
-        var date = _calendar.GetPickupEstimate(prepTime);
-        var isToday = date.Date == _calendar.LocalTime().Date;
-        var datevalue = isToday ? "<span style=\"color: green;\">hoy mismo</span>" : $"para el {_calendar.FriendlyDate(date)}";
-        var text = $"Si comprás ahora, lo podés tener listo {datevalue} a las {date.ToString("HH:ss")} hs.";
-        return text;
-    }
-}
+
 
 @section metatags {
     <meta property="og:url" content="@Model.RequestAbsoluteUrl" />
@@ -103,7 +94,7 @@
                                                     Rinde aprox. @product.Portions <span class="fa fa-pie-chart"></span>
                                                 </div>
                                                 <div class="small text-muted" style="font-style: italic;">
-                                                    @Html.Raw(GetPickupTime(product.PreparationTime))
+                                                    @Html.Raw(_calendar.GetSoonestPickupEstimateForUsers(product.PreparationTime))
                                                 </div>
                                             </td>
                                             <td class="unit-price">
@@ -116,7 +107,7 @@
                                                         <div style="font-size: larger; ">
                                                             <div>
                                                                 <strong style="color: black;">$@product.Price </strong>
-                                                                <strong style="color: green;">@Html.Raw((perc >= 5 ? $"-{perc}% " : "") + "Online")</strong>
+                                                                <strong style="color: green;">@Html.Raw((perc >= 10 ? $"-{perc}% " : "") + "Online")</strong>
                                                             </div>
                                                         </div>
                                                         <div style="font-size: smaller;">
