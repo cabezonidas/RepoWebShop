@@ -1,4 +1,5 @@
 ﻿@model OrderDetailsViewModel
+@inject ILunchRepository lunch
 
 <style>
 
@@ -67,7 +68,7 @@
                                 @Html.Raw(string.IsNullOrEmpty(item.Lunch.Title) ? $"Catering #{item.LunchId}" : item.Lunch.Title) 
                             </a>
                         </td>
-                        <td> @item.Price</td>
+                        <td> @lunch.GetTotal(item.Lunch)</td>
                     </tr>
                 }
             </tbody>

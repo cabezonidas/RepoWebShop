@@ -174,7 +174,7 @@
                                             </div>
                                         </a>
                                     </td>
-                                    @{var subtotal = item.Price * item.Amount;}
+                                    @{var subtotal = _lunch.GetTotal(item.Lunch) * item.Amount;}
                                     <td style='padding:2px; text-align:right; font-size: large; '>
                                         $@subtotal
                                         @if (total < subtotalInStore)
