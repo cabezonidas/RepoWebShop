@@ -76,6 +76,7 @@ namespace RepoWebShop
                 options.User.RequireUniqueEmail = true;
             });
 
+            services.AddTransient<IMarketingRepository, MarketingRepository>();
             services.AddTransient<ILunchRepository, LunchRepository>();
             services.AddTransient<IDeliveryRepository, DeliveryRepository>();
             services.AddTransient<ICatalogRepository, CatalogRepository>();

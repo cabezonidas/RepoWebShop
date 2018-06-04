@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Product>
+@inject ICalendarRepository _calendar
 @if (Model.Any())
 {
 <style>
@@ -39,18 +40,19 @@
             @foreach (var item in Model.OrderBy(x => x.DisplayName.TrimStart()))
             {
                 <tr>
-                    <td width="60">
+                    <td width="60" class="small">
                         <div style="font-size: large; color: #883636">
                             @item.DisplayName.TrimStart()
+                        </div>
+                        <div class="text-muted text-capitalize" style="font-style:italic;">
+                            <div>@item.DisplayDescription</div>
                         </div>
                         <div>
                             Prociones aprox.: @item.Portions <span class="fa fa-pie-chart"></span>
                         </div>
-                        <div>
-                            Preparación: @item.PreparationTime hs
-                        </div>
-                        <div class="text-muted text-capitalize" style="font-style:italic;">
-                            <div>@item.DisplayDescription</div>
+                        <div style="color: #883636">
+                            @Html.Raw(_calendar.GetSoonestPickupEstimateForUsers(item.PreparationTime))
+                            @*Preparación: @item.PreparationTime hs*@
                         </div>
                     </td>
                     <td width="40">

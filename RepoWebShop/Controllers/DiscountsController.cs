@@ -36,6 +36,17 @@ namespace RepoWebShop.Controllers
             return View(vm);
         }
 
+        [AllowAnonymous]
+        [Route("Discounts/Details/{code}")]
+        public IActionResult Details(string code)
+        {
+            var result = _discountRepository.FindByCode(code);
+            if (result != null)
+                return View(result);
+            else
+                return NotFound();
+        }
+
         [HttpPost]
         public IActionResult Create(Discount discount)
         {
@@ -46,15 +57,14 @@ namespace RepoWebShop.Controllers
                 return View(discount);
             try
             {
-                _discountRepository.Add(discount);
+                var result = _discountRepository.Add(discount);
+                return Redirect($"/Discounts/Details/{result.Phrase}");
             }
             catch(Exception ex)
             {
                 ModelState.AddModelError(ex.Message, ex.Message);
                 return View(discount);
             }
-
-            return RedirectToAction("Index");
         }
 
         public IActionResult Delete(int id)

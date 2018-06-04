@@ -32,7 +32,7 @@ namespace RepoWebShop.Controllers
         {
             var discount = _discountRepository.FindByCode(code ?? string.Empty);
             var error = "";
-            Discount.ApplyDiscount(_calendarRepository.LocalTime(), _cartRepository.GetItemsAndCatalogProductsTotal(null), discount, out error);
+            Discount.ApplyDiscount(_calendarRepository.LocalTime(), _cartRepository.GetTotalWithoutDiscount(null), discount, out error);
 
             if (!string.IsNullOrEmpty(error))
             {

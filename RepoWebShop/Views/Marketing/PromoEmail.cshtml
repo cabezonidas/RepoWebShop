@@ -1,0 +1,175 @@
+﻿@inject IFlickrRepository _flickr
+<script src="~/CommonJs/summernote.js"></script>
+<script src="~/CommonJs/summernote-es.js"></script>
+@section styles {
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
+}
+@{
+    var albums = _flickr.Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content });
+    var albumoptions = new List<SelectListItem>();
+    var empty = new SelectListItem() { Text = "Elegir álbum...", Value = "", Selected = true, Disabled = true };
+    albumoptions.Add(empty);
+    albumoptions.AddRange(albums);
+}
+<style>
+    .atribute {
+        margin-top: 10px;
+    }
+    body, h1 {
+        font-family: Tahoma !important;
+        font-size: initial !important;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <h2>Armar email promocional</h2>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <h3 class="text-muted">Vista Preliminar</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div>
+                <div class="atribute">
+                    <div>Título</div>
+                    <div>
+                        <input type="text" class="form-control" placeholder="Escribir título..." id="title" />
+                    </div>
+                </div>
+                <div class="atribute">
+                    <div>Subtítulo</div>
+                    <div>
+                        <textarea class="form-control" id="textarea-subtitle"></textarea>
+                    </div>
+                </div>
+                <div class="atribute">
+                    <div>
+                        Elegir foto principal
+                    </div>
+                    <select class="form-control" asp-items="albumoptions" onchange="albumselected(this.value);"></select>
+                    <div style="height: 120px;" id="selected-album">
+                        <br />
+                        @foreach (var album in albums)
+                        {
+                        <div id="album-@album.Value" class="carousel hidden" style="">
+                            @Html.Partial("~/Views/Photos/SmallCarrousel.cshtml", Int64.Parse(album.Value))
+                        </div>
+                        }
+                    </div>
+                </div>
+                <div class="atribute">
+                    <div>Cuerpo del mensaje</div>
+                    <div>
+                        <textarea class="form-control" id="textarea-desc" ></textarea>
+                    </div>
+                </div>
+                <div class="atribute">
+                    <div>Pie</div>
+                    <div>
+                        <input type="text" class="form-control" placeholder="Escribir título..." id="foot" />
+                    </div>
+                </div>
+                
+                <div class="atribute text-center">
+                    <a class="btn btn-primary" asp-action="Index" asp-controller="Marketing" style="margin: 20px auto;">Ver Todos</a>
+                    <a class="btn btn-primary" style="margin: 20px auto;" onclick="savetemplate()">¡Guardar!</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            @Html.Partial("~/Views/Marketing/EmailTemplate.cshtml")
+        </div>
+    </div>
+</div>
+<script>
+
+    function savetemplate() {
+        if (!$('#title').val()) {
+            alert('El título no puede estar vacío.')
+        }
+        else {
+            var title = $('#title').val();
+            var body = $('#email-template').html();
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                'type': 'POST',
+                'url': '/api/MarketingData/SaveTemplate/' + title,
+                'data': JSON.stringify($('#email-template').html())
+            }).then(function () {
+                window.location = '/Marketing/Index'
+            }).fail(function () {
+                alert('No se pudo guardar.');
+            });
+        }
+    }
+
+    $(document).ready(function () {
+        $('#textarea-desc').summernote({
+            lang: 'es-ES',
+            placeholder: 'Escribir cuerpo del mensaje',
+            height: 250,  
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough', 'superscript', 'subscript']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']]
+            ],   
+            callbacks: {
+                onChange: function (data) {
+                    $('#rich-body').html(data);
+                }
+            }
+        });
+
+        $('#textarea-subtitle').summernote({
+            lang: 'es-ES',
+            placeholder: 'Escribir subtítulo',
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough', 'superscript', 'subscript']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']]
+            ],   
+            callbacks: {
+                onChange: function (data) {
+                    $('#email-subtitle').empty().html(data)
+                }
+            }
+        });
+
+
+        $('img').on('click', function () {
+            var thumbnail = $(this).attr('src');
+            var source = thumbnail.replace("s.jpg", "n.jpg");
+            $('#main-picture').empty();
+            var $img = $('<img id="dynamic">');
+            $img.css("max-width", "100%");
+            $img.css("max-height", "100%");
+            $img.css("border-radius", "5px");
+            $img.attr('src', source);
+            $img.appendTo('#main-picture');
+        });
+
+        $('input#title').on('keyup', function () {
+            $('#email-title').empty().append($(this).val())
+        });
+
+        $('input#foot').on('keyup', function () {
+            $('#email-foot').empty().append($(this).val())
+        });
+    });
+
+    function albumselected(albumId) {
+        $(".carousel").addClass("hidden");
+        $("#album-" + albumId).removeClass("hidden");
+    }
+</script>

@@ -7,7 +7,7 @@ namespace RepoWebShop.Interfaces
     {
         IEnumerable<Discount> GetActives();
         Discount FindByCode(string code);
-        void Add(Discount discount);
+        Discount Add(Discount discount);
         void Delete(int id);
     }
 }

@@ -43,5 +43,19 @@ namespace RepoWebShop.Extensions
             text = textInfo.ToTitleCase(text);
             return text;
         }
+
+        public static bool IsValidEmail(this string email)
+        {
+            email = email ?? string.Empty;
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

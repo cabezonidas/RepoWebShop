@@ -23,7 +23,15 @@ else
             }
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-right">
-                <h4>Total @Html.Raw(_lunchRepository.GetTotal(Model).ToString("c"))</h4>
+                @{
+                var total = _lunchRepository.GetTotal(Model);
+                <h2>Total @Html.Raw(total.ToString("c"))</h2>
+                var totalInStore = _lunchRepository.GetLunchTotalInStore(Model);
+                if (totalInStore > total)
+                {
+                    <h4 style="text-decoration-line: line-through">@Html.Raw(totalInStore.ToString("c"))</h4>
+                }
+                }
             </div>
         </div>
     </div>

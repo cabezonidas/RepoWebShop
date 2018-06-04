@@ -251,7 +251,7 @@ if (paymentState == typeof(OrderMercadoPagoPaymentPending))
 
         if (pickUp != null)
         {
-            if(!Model.Order.PickUpTime.HasValue)
+            if(Model.Order.PickUpTimeFrom.HasValue)
             {
                 defaultDate = Model.Order.PickUpTimeFrom.Value.ToString("s");
             }

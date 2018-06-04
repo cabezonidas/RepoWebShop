@@ -162,9 +162,9 @@ namespace RepoWebShop.Repositories
                     var bookings = bookingsWithDiscountsInUse.Select(y => y.ShoppingCartId);
                     var currentPreferencesWithDiscount = _appDbContext.ShoppingCartData.Where(x => bookings.Contains(x.BookingId)).ToList();
 
-                    if(currentPreferencesWithDiscount.Count > 0)
+                    if (currentPreferencesWithDiscount.Count > 0)
                     {
-                        foreach(var pref in currentPreferencesWithDiscount)
+                        foreach (var pref in currentPreferencesWithDiscount)
                         {
                             Task.Run(async () =>
                             {
@@ -177,7 +177,7 @@ namespace RepoWebShop.Repositories
             }
         }
 
-        public decimal GetItemsAndCatalogProductsTotal(string bookingId)
+        public decimal GetProductsTotal(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
             var items = _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == bookingId)?.Select(c => c.Pie.Price * c.Amount)?.Sum() ?? 0;
@@ -186,11 +186,29 @@ namespace RepoWebShop.Repositories
             return total;
         }
 
+        public decimal GetProductsTotalInStore(string bookingId)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            var items = _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == bookingId)?.Select(c => c.Pie.Price * c.Amount)?.Sum() ?? 0;
+            var catalogItems = _appDbContext.ShoppingCartCatalogProducts.Where(c => c.ShoppingCartId == bookingId)?.Select(c => c.Product.PriceInStore * c.Amount)?.Sum() ?? 0;
+            var total = items + catalogItems;
+            return total;
+        }
+
+        public decimal GetProductsOnlineSavings(string bookingId)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            var result = GetProductsTotal(bookingId) - GetProductsTotalInStore(bookingId);
+            result = result < 0 ? result : 0;
+            return result;
+        }
+
         public decimal GetTotal(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
             var subtotal = GetTotalWithoutDiscount(bookingId);
-            var discount = Discount.ApplyDiscount(_calendarRepository.LocalTime(), subtotal, GetDiscount(bookingId));
+            string error;
+            var discount = Discount.ApplyDiscount(_calendarRepository.LocalTime(), subtotal, GetDiscount(bookingId), out error);
             return subtotal + discount;
         }
 
@@ -205,7 +223,7 @@ namespace RepoWebShop.Repositories
         public decimal GetSubtotalWithoutDelivery(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
-            var items = GetItemsAndCatalogProductsTotal(bookingId);
+            var items = GetProductsTotal(bookingId);
             var customLunch = GetLunchTotal(GetSessionLunch(bookingId)?.Lunch);
             var caterings = GetCateringsTotal(bookingId);
             return items + caterings + customLunch;
@@ -214,17 +232,54 @@ namespace RepoWebShop.Repositories
         public decimal GetCateringsTotal(string bookingId)
         {
             var caterings = GetShoppingCaterings(bookingId);
-            var total = caterings.Select(x => (x.Lunch.ComboPrice == 0 ? GetLunchTotal(x.Lunch) : x.Lunch.ComboPrice) * x.Amount).Sum();
+            var total = caterings.Select(x => GetLunchTotal(x.Lunch) * x.Amount).Sum();
             return total;
         }
+
+        public decimal GetLunchTotalInStore(Lunch lunch)
+        {
+            if (lunch == null || (lunch.Items == null && lunch.Miscellanea == null))
+                return 0;
+            var itemsPrice = lunch.Items.Sum(x => x.SubTotalInStore);
+            var miscellaneaPrice = lunch.Miscellanea.Sum(x => x.Price * x.Quantity);
+            return itemsPrice + miscellaneaPrice;
+        }
+
+        public decimal GetCateringsTotalSavings(string bookingId)
+        {
+            var result = GetCateringsTotal(bookingId) - GetCateringsTotal(bookingId);
+            result = result < 0 ? result : 0;
+            return result;
+        }
+
 
         public decimal GetLunchTotal(Lunch lunch)
         {
             if (lunch == null || (lunch.Items == null && lunch.Miscellanea == null))
                 return 0;
-            var itemsPrice = lunch.Items.Sum(x => x.Product.MinOrderAmount * x.Quantity * x.Product.Price);
+            var itemsPrice = lunch.Items.Sum(x => x.SubTotal);
             var miscellaneaPrice = lunch.Miscellanea.Sum(x => x.Price * x.Quantity);
-            return itemsPrice + miscellaneaPrice;
+            var total = itemsPrice + miscellaneaPrice;
+
+            if (lunch.ComboPrice <= 0)
+                return total;
+            else
+                return lunch.ComboPrice < total ? lunch.ComboPrice : total;
+        }
+
+        public decimal GetCateringsTotalInStore(string bookingId)
+        {
+            var caterings = GetShoppingCaterings(bookingId);
+            var total = caterings.Select(x => GetLunchTotalInStore(x.Lunch) * x.Amount).Sum();
+            return total;
+        }
+
+
+        public decimal GetLunchOnlineSavings(Lunch lunch)
+        {
+            var result = GetLunchTotal(lunch) - GetLunchTotalInStore(lunch);
+            result = result < 0 ? result : 0;
+            return result;
         }
 
         public DeliveryAddress GetDelivery(string bookingId)
@@ -663,7 +718,9 @@ namespace RepoWebShop.Repositories
 
         public IEnumerable<ShoppingCartComboCatering> AllShoppingCartCaterings() => _appDbContext.ShoppingCartCaterings.Include(x => x.Lunch)
             .Include(x => x.Lunch.Miscellanea)
-            .Include(x => x.Lunch.Items).ToList();
+            .Include(x => x.Lunch.Items)
+            .ThenInclude(x => x.Product)
+            .ToList();
 
         public int CountTrolleyObjects(string bookingId)
         {

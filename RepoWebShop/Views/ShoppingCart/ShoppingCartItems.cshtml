@@ -75,9 +75,10 @@
                             @line.Lunch.Title - @line.Lunch.PreparationTime hs
                         </a>
                     </td>
-                    <td class="text-right">@line.Price.ToString("c")</td>
+                    
+                    <td class="text-right">@lunch.GetTotal(line.Lunch).ToString("c")</td>
                     <td class="text-right">
-                        @((line.Amount * line.Price).ToString("c"))
+                        @((line.Amount * lunch.GetTotal(line.Lunch)).ToString("c"))
                     </td>
                 </tr>
             }
@@ -100,7 +101,7 @@
                         </a>
                     </td>
                     @{ 
-                        var price = Model.CustomCatering.Lunch.Items.Sum(x => x.Product.Price * x.Quantity * x.Product.MinOrderAmount);
+                        var price = Model.CustomCatering.Lunch.Items.Sum(x => x.SubTotal);
                     }
                     <td class="text-right">@price.ToString("c")</td>
                     <td class="text-right">@price.ToString("c")</td>
@@ -168,15 +169,23 @@
                     </td>
                     <td class="text-center quantity"></td>
                     <td class="text-left text-success">
-                        <strong>
-                            Descuento @Model.Discount.Percentage % [Hasta @Model.Discount.Roof.ToString("c")]
-                        </strong>
                         @{
                             string error = "";
                             var discount = Discount.ApplyDiscount(calendar.LocalTime(), Model.ShopingCartTotalWithoutDiscount, Model.Discount, out error);
                         }
+                        <a title="@Model.Discount.Comments" style="color: green;" asp-action="Details" asp-controller="Discounts" asp-route-code="@Model.Discount.Phrase">
+                        @if(Model.Discount.Percentage < 100)
+                        { 
+                            <strong>Descuento @Model.Discount.Percentage % </strong>
+                            <div>[Hasta @Model.Discount.Roof.ToString("c")] Ver condiciones.</div>
+                        }
+                        else
+                        {
+                            <div>Voucher $@Model.Discount.Roof. Ver condiciones.</div>
+                        }
                         @if (!string.IsNullOrEmpty(error))
                         {<div>@error</div>}
+                        </a>
                     </td>
                     <td class="text-right">
                         <strong>
@@ -222,8 +231,16 @@
             </tr>
             <tr>
                 <td colspan="5" style="text-align: right;">
-                    <a class="btn btn-primary" asp-controller="PieDetail" asp-action="List" style="margin-bottom: 5px;">Seguir Comprando</a>
-                    <a class="btn btn-primary" href="#sms-container" id="tocheckout" style="margin-bottom: 5px;"> <span class="fa fa-arrow-down"></span> Finalizar</a>
+                    @*@if(Model.Discount != null)
+                    {
+                    <div style="text-align:center; font-size: 9px;">
+                        @Model.Discount.Comments
+                    </div>
+                    }*@
+                    <div>
+                        <a class="btn btn-primary" asp-controller="PieDetail" asp-action="List" style="margin-bottom: 5px;">Seguir Comprando</a>
+                        <a class="btn btn-primary" href="#sms-container" id="tocheckout" style="margin-bottom: 5px;"> <span class="fa fa-arrow-down"></span> Finalizar</a>
+                    </div>
                 </td>
             </tr>
         </tfoot>

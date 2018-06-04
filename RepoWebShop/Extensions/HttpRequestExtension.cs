@@ -16,7 +16,14 @@ namespace RepoWebShop.Extensions
         public static bool IsMobile(this HttpRequest request)
         {
             var userAgent = request.Headers["User-Agent"].ToString();
-            return (b.IsMatch(userAgent) || v.IsMatch(userAgent.Substring(0, 4)));
+            try
+            {
+                return (b.IsMatch(userAgent) || v.IsMatch(userAgent.Substring(0, 4)));
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public static string HostUrl(this HttpRequest request)

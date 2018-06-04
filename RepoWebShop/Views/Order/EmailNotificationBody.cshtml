@@ -84,7 +84,8 @@
                                         <a href="@itemref" style="text-decoration: none; color: black; ">
                                             <div>
                                                 <div>@item.Pie.PieDetail.Name @item.Pie.Name</div>
-                                                <div>Precio: $@item.Price
+                                                <div>
+                                                    Precio: $@item.Price
                                                 </div>
                                                 Cantidad: @item.Amount
                                             </div>
@@ -95,7 +96,7 @@
                                         <div style="font-size: large; ">
                                             $@subtotal
                                         </div>
-                                        @if(item.Pie.Price < item.Pie.StorePrice)
+                                        @if (item.Pie.Price < item.Pie.StorePrice)
                                         {
                                             <div style="font-size: smaller; text-align: right; color: green;">
                                                 (-$@Html.Raw(item.Pie.StorePrice - item.Pie.Price))
@@ -112,28 +113,33 @@
                                 var pic = _flickr.GetAlbumPictures(albumId)?.PrimaryPicture;
                                 pic = !string.IsNullOrEmpty(pic) ? pic + "s.jpg" : $"{Model.AbsoluteUrl}/Pictures/cake-2.png";
                                 var itemref = "";
-                                if(item.Product.PieDetail?.IsActive ?? false)
+                                if (item.Product.PieDetail?.IsActive ?? false)
                                 {
                                     itemref = Model.AbsoluteUrl + $"/PieDetail/Details/{item.Product.PieDetail.PieDetailId}";
                                 }
                                 <tr>
                                     <td style='padding:10px; padding-left:2px; text-align:center;'>
-                                        <img src="@pic" width="75"  style="border-radius:5px;"/>
+                                        <a href="@itemref">
+                                            <img src="@pic" width="75" style="border-radius:5px;" />
+                                        </a>
                                     </td>
                                     <td style='padding:2px; text-align:left;  padding-left: 10px; padding-right: 10px;'>
-                                        <div>
-                                            <div>@item.Product.DisplayName</div>
-                                            <div >Precio: $@item.Price
+                                        <a href="@itemref">
+                                            <div>
+                                                <div>@item.Product.DisplayName</div>
+                                                <div>
+                                                    Precio: $@item.Price
+                                                </div>
+                                                <div>Cantidad: @item.Amount</div>
                                             </div>
-                                            <div>Cantidad: @item.Amount</div>
-                                        </div>
+                                        </a>
                                     </td>
                                     @{var subtotal = item.Price * item.Amount;}
                                     <td style='padding:2px; text-align:right; '>
                                         <div style="font-size: large; ">
                                             $@subtotal
                                         </div>
-                                        @if(item.Product.Price < item.Product.PriceInStore)
+                                        @if (item.Product.Price < item.Product.PriceInStore)
                                         {
                                             <div style="font-size: smaller; text-align: right; color: green;">
                                                 (-$@Html.Raw((item.Product.PriceInStore - item.Product.Price) * item.Amount))
@@ -159,13 +165,26 @@
                                         <a href="@itemref" style="text-decoration: none; color: black">
                                             <div>
                                                 @Html.Raw(string.IsNullOrEmpty(item.Lunch.Title) ? $"Catering Personalizado" : item.Lunch.Title)<br />
-                                                Precio: $@item.Price<br />
+                                                @{
+                                                    var total = _lunch.GetTotal(item.Lunch);
+                                                    var subtotalInStore = _lunch.GetLunchTotalInStore(item.Lunch);
+                                                }
+                                                Precio: $@total<br />
                                                 Cantidad: @item.Amount
                                             </div>
                                         </a>
                                     </td>
                                     @{var subtotal = item.Price * item.Amount;}
-                                    <td style='padding:2px; text-align:right; font-size: large; '>$@subtotal</td>
+                                    <td style='padding:2px; text-align:right; font-size: large; '>
+                                        $@subtotal
+                                        @if (total < subtotalInStore)
+                                        {
+                                            <div style="font-size: smaller; text-align: right; color: green;">
+                                                (-$@Html.Raw((subtotalInStore - total) * item.Amount))
+
+                                            </div>
+                                        }
+                                    </td>
                                     @{totalItems += subtotal;}
                                 </tr>
                             }
@@ -192,8 +211,18 @@
                                             var discount = deliveryCost + totalItems - Model.OrderTotal;
                                         }
                                         <div style="color: green;">
-                                            <strong>Descuento @Model.Discount.Percentage % </strong>
-                                            <div>[Hasta @Model.Discount.Roof.ToString("c")]</div>
+                                            <a href="@Model.AbsoluteUrl/Discounts/Details/@Model.Discount.Phrase">
+
+                                                @if (Model.Discount.Percentage < 100)
+                                                {
+                                                    <strong>Descuento @Model.Discount.Percentage % </strong>
+                                                    <div>[Hasta @Model.Discount.Roof.ToString("c")]</div>
+                                                }
+                                                else
+                                                {
+                                                    <strong>Voucher $@Model.Discount.Roof </strong>
+                                                }
+                                            </a>
                                         </div>
                                     </td>
                                     <td style='padding:2px; text-align:right; color: green; '>-$@discount</td>
@@ -207,6 +236,22 @@
                             <tr style="">
                                 <td colspan="3" style="font-size: 30px;text-align: center">Total $@Model.OrderTotal</td>
                             </tr>
+                            @{
+                                var totalInStore = Model.OrderItems.Select(x => x.Price).Sum();
+                                totalInStore += Model.OrderCatalogItems.Select(x => (x.Product.PriceInStore > x.Product.Price ? x.Product.PriceInStore : x.Product.Price) * x.Amount).Sum();
+                                totalInStore += Model.OrderCaterings.Select(x => _lunch.GetLunchTotalInStore(x.Lunch) * x.Amount).Sum();
+                                var disc = Model.Discount != null ? deliveryCost + totalItems - Model.OrderTotal : 0;
+
+                                var dif = totalInStore - totalItems + disc;
+                                if (dif > 0)
+                                {
+                                    <tr style="">
+                                        <td colspan="3" style="font-size: 20px;text-align: center; color: green;">
+                                            Ahorro total online @dif.ToString("c")
+                                        </td>
+                                    </tr>
+                                }
+                            }
                         </tbody>
                     </table>
                     <br />

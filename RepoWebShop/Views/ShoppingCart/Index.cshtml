@@ -3,6 +3,11 @@
 @section styles {
     <link href="~/Content/ShoppingCart/Index.css" rel="stylesheet" />
 }
+
+@section metatags {
+    <title>De las Artes - Carrito</title>
+}
+
 @*@Model.FriendlyBookingId*@
 <div class="header" id="title">
     <div class="title-container">
@@ -27,9 +32,9 @@ else
             <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
                 @Html.Partial("~/Views/ShoppingCart/ShoppingCartItems.cshtml", Model)
                 @if (Model.Discount == null)
-                {
-                    @Html.Partial("~/Views/Discounts/ApplyDiscount.cshtml", new AddDiscountViewModel())
-                }                
+            {
+                @Html.Partial("~/Views/Discounts/ApplyDiscount.cshtml", new AddDiscountViewModel())
+        }
             </div>
             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 @*@Html.Partial("~/Views/Shared/PickupDate.cshtml", Model.PickupDate)*@
@@ -46,7 +51,7 @@ else
             </div>
         </div>
         <div class="row">
-            <hr style="margin-left:10%;margin-right:10%; margin-top: 30px; margin-bottom: 30px;"/>
+            <hr style="margin-left:10%;margin-right:10%; margin-top: 30px; margin-bottom: 30px;" />
         </div>
         <div class="row">
             <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
@@ -56,7 +61,7 @@ else
                 @Html.Partial("~/Views/ShoppingCart/CheckDelivery.cshtml", Model)
             </div>
         </div>
-
+        <div id="payout"></div>
         <br />
 
         <br />

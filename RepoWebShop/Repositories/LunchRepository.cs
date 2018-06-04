@@ -12,9 +12,11 @@ namespace RepoWebShop.Repositories
         private readonly AppDbContext _appDbContext;
         private readonly IShoppingCartRepository _cartRepository;
         private readonly IMapper _mapper;
+        private readonly ICatalogRepository _catalog;
 
-        public LunchRepository(IMapper mapper, AppDbContext appDbContext, IShoppingCartRepository cartRepository)
+        public LunchRepository(ICatalogRepository catalog, IMapper mapper, AppDbContext appDbContext, IShoppingCartRepository cartRepository)
         {
+            _catalog = catalog;
             _mapper = mapper;
             _appDbContext = appDbContext;
             _cartRepository = cartRepository;
@@ -35,7 +37,7 @@ namespace RepoWebShop.Repositories
         public LunchItem AddItemInstance(int lunchId, int productId)
         {
             var lunch = GetLunch(lunchId);
-            var product = _appDbContext.Products.First(x => x.ProductId == productId);
+            var product = _catalog.GetById(productId);
 
             var shoppingCartLunchItem = lunch.Items?.FirstOrDefault(x => x.Product == product);
 
@@ -58,7 +60,7 @@ namespace RepoWebShop.Repositories
         public LunchItem AddItem(int lunchId, int productId)
         {
             var lunch = GetLunch(lunchId);
-            var product = _appDbContext.Products.First(x => x.ProductId == productId);
+            var product = _catalog.GetById(productId);
 
             var shoppingCartLunchItem = lunch.Items?.FirstOrDefault(x => x.Product == product);
 
@@ -75,7 +77,7 @@ namespace RepoWebShop.Repositories
         {
             LunchItem result = null;
             var lunch = GetLunch(lunchId);
-            var product = _appDbContext.Products.First(x => x.ProductId == productId);
+            var product = _catalog.GetById(productId);
 
             var shoppingCartLunchItem = lunch.Items.FirstOrDefault(x => x.Product == product);
 
@@ -100,7 +102,7 @@ namespace RepoWebShop.Repositories
         {
             LunchItem result = null;
             var lunch = GetLunch(lunchId);
-            var product = _appDbContext.Products.First(x => x.ProductId == productId);
+            var product = _catalog.GetById(productId);
 
             var shoppingCartLunchItem = lunch.Items.FirstOrDefault(x => x.Product == product);
 
@@ -115,21 +117,21 @@ namespace RepoWebShop.Repositories
         public int SaveLunch(string bookingId = null)
         {
             var result = 0;
-            ShoppingCartLunch lunch = _cartRepository.GetSessionLunch(bookingId);
-            if(lunch != null)
+            ShoppingCartLunch cartLunch = _cartRepository.GetSessionLunch(bookingId);
+            if(cartLunch != null)
             {
-                result = lunch.Lunch.LunchId;
-                _appDbContext.ShoppingCartCustomLunch.Remove(lunch);
-                if(GetTotal(lunch.Lunch) == 0)
+                result = cartLunch.Lunch.LunchId;
+                _appDbContext.ShoppingCartCustomLunch.Remove(cartLunch);
+                if(GetTotal(cartLunch.Lunch) == 0)
                 {
-                    _appDbContext.Lunch.Remove(lunch.Lunch);
+                    _appDbContext.Lunch.Remove(cartLunch.Lunch);
                 }
                 else
                 {
-                    if (lunch.Lunch.ComboPrice == 0)
+                    if (cartLunch.Lunch.ComboPrice == 0)
                     {
-                        lunch.Lunch.ComboPrice = GetTotal(lunch.Lunch);
-                        _appDbContext.Lunch.Update(lunch.Lunch);
+                        cartLunch.Lunch.ComboPrice = GetTotal(cartLunch.Lunch);
+                        _appDbContext.Lunch.Update(cartLunch.Lunch);
                     }
                 }
                 _appDbContext.SaveChanges();
@@ -194,6 +196,8 @@ namespace RepoWebShop.Repositories
         }
 
         public decimal GetTotal(Lunch lunch) => _cartRepository.GetLunchTotal(lunch);
+
+        public decimal GetLunchTotalInStore(Lunch lunch) => _cartRepository.GetLunchTotalInStore(lunch);
 
         public LunchMiscellaneous GetMiscellaneous(int id)
         {

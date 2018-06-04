@@ -182,7 +182,7 @@ namespace RepoWebShop.Tests
                 ValidFrom = new DateTime(2016, 11, 5), //Sabado
                 DurationDays = 1,
                 InstancesLeft = null,
-                Loop = 7,
+                Weekly = true,
                 Percentage = 15,
                 Phrase = "SABADO15REPO",
                 Roof = 200,
@@ -213,7 +213,7 @@ namespace RepoWebShop.Tests
                 ValidFrom = new DateTime(2016, 11, 5), //Sabado
                 DurationDays = 1,
                 InstancesLeft = null,
-                Loop = 7,
+                Weekly = true,
                 Percentage = 15,
                 Phrase = "SABADO15REPO",
                 Roof = 200,

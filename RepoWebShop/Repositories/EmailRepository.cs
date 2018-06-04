@@ -13,6 +13,8 @@ using System.Threading;
 using System.Security.Cryptography;
 using RepoWebShop.Extensions;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RepoWebShop.Repositories
 {
@@ -204,5 +206,30 @@ namespace RepoWebShop.Repositories
             return message;
         }
 
+        public async Task SendPromoAsync(string subject, string emailBody, IEnumerable<string> allEmails)
+        {
+            var from = new MailboxAddress("De las Artes", _sender);
+
+            InternetAddress address;
+            var destination = new List<KeyValuePair<InternetAddress, string>>();
+
+            if (_env.IsProduction())
+                destination.AddRange(allEmails.Where(x => InternetAddress.TryParse(x, out address))
+                    .Select(x => new KeyValuePair<InternetAddress, string>(InternetAddress.Parse(x), x)));
+            else
+                destination.Add(new KeyValuePair<InternetAddress, string>(from, _sender));
+
+
+            foreach(KeyValuePair<InternetAddress, string> email in destination)
+            {
+                var msg = new MimeMessage();
+                msg.From.Add(from);
+                msg.To.Add(email.Key);
+                msg.Subject = subject;
+                var uniqueBody = emailBody.Replace("#emailunsubscribe#", email.Value);
+                msg.Body = (new BodyBuilder() { HtmlBody = uniqueBody }).ToMessageBody();
+                await SendMailAsync(msg);
+            }
+        }
     }
 }

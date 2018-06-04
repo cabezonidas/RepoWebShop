@@ -86,7 +86,7 @@ namespace RepoWebShop.Repositories
             
             try
             {
-                _smsRepository.SendSms($"+{phone}", $"Tu código de activación es {token}. De las Artes.");
+                _smsRepository.SendSms($"+{phone}", $"Tu código de activación es R-{token}. De las Artes.");
 
                 user.ValidationPhoneToken = token;
                 user.PhoneNumberDeclared = phone;

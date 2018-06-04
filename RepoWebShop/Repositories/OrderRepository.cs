@@ -106,7 +106,7 @@ namespace RepoWebShop.Models
 
         public IEnumerable<OrderCatering> GetOrderCaterings(int id)
         {
-            return _appDbContext.OrderCaterings.Include(x => x.Order).Include(x => x.Lunch).Where(x => x.Order.OrderId == id);
+            return _appDbContext.OrderCaterings.Include(x => x.Order).Include(x => x.Lunch).Include(x => x.Lunch.Miscellanea).Include(x => x.Lunch.Items).ThenInclude(x => x.Product).Where(x => x.Order.OrderId == id);
         }
 
         public IEnumerable<Order> GetAll()
@@ -180,13 +180,13 @@ namespace RepoWebShop.Models
             order.DeliveryAddress = _cartRepository.GetDelivery(order.BookingId);
             order.CustomerComments = _cartRepository.GetComments(order.BookingId)?.Comments;
             order.PreparationTime = _cartRepository.GetPreparationTime(order.BookingId);
-            order.PickUpTime = _calendarRepository.GetPickupEstimate(order.PreparationTime);
             order.OrderPlaced = _calendarRepository.LocalTime();
             order.PickedUp = false;
 
             var pickUpTime = _cartRepository.GetPickUpDate(order.BookingId);
             order.PickUpTimeFrom = pickUpTime.From;
             order.TimeLeftUntilStoreCloses = pickUpTime.To;
+            order.PickUpTime = order.PickUpTimeFrom;// _calendarRepository.GetPickupEstimate(order.PreparationTime);
 
             _appDbContext.Orders.Add(order);
             _appDbContext.SaveChanges();

@@ -9,11 +9,11 @@
                     font-size: larger;
                 }
             </style>
-
+        
         @if (Model.User == null)
         {
             <div class="sms alert alert-warning animated" style="margin-left: 30px; margin-right: 30px;">
-                <p class="mobile-msg">¿Querés recibir un SMS cuando la orden esté lista? <a asp-action="Login" asp-controller="Account" asp-route-returnUrl="/ShoppingCart"><strong>Click aquí</strong></a></p>
+                <p class="mobile-msg">¿Querés recibir un SMS cuando la orden esté lista? <a asp-action="Login" asp-controller="Account" asp-route-returnUrl="~/Account/VerifyNumber/ShoppingCart?bookmark=payout"><strong>Click aquí</strong></a></p>
             </div>
         }
         else
@@ -21,12 +21,14 @@
             <div class="sms alert alert-success animated" style="margin-left: 30px; margin-right: 30px;">
                 @if (!Model.User.PhoneNumberConfirmed)
                 {
-                    <p class="mobile-msg">@Model.User.FirstName, para recibir SMS cuando terminemos tu pedido por favor, <a asp-action="VerifyNumber" asp-controller="Account" asp-route-actionName="Index" asp-route-controllerName="ShoppingCart"><strong>ingresa tu número aquí.</strong></a></p>
+                    <p class="mobile-msg">@Model.User.FirstName, para recibir SMS cuando terminemos tu pedido por favor, <a asp-action="VerifyNumber" asp-controller="Account" asp-route-returnUrl="ShoppingCart#payout"><strong>ingresa tu número aquí.</strong></a></p>
                 }
                 else
                 {
-                    <p class="mobile-msg">@Model.User.FirstName, te vamos a avisar cuando la orden está lista al siguiente número +@Model.User.PhoneNumber</p>
-                    <a asp-action="VerifyNumber" asp-controller="Account" asp-route-actionName="Index" asp-route-controllerName="ShoppingCart">Cambiar</a>
+                    <div class="mobile-msg">
+                        @Model.User.FirstName, te vamos a avisar cuando la orden está lista al siguiente número +@Model.User.PhoneNumber
+                        <span><a asp-action="VerifyNumber" asp-controller="Account" asp-route-returnUrl="ShoppingCart#payout">Cambiar</a></span>
+                    </div>
                 }
             </div>
         }

@@ -1,13 +1,13 @@
 ﻿@model long
 @inject IFlickrRepository _flickr;
 
-<div class="container">
+<div class="">
     <div class="slider-nav" id="nav-@Model">
         @foreach (var picture in _flickr.GetAlbumPictures(Model).PicturesUrls)
         {
             var pic = picture + "s.jpg";
             <div class="item" style="">
-                <img src="@pic" alt="image" draggable="false" style="margin-right: 2px;" />
+                <img src="@pic" alt="image" draggable="false" style="margin-right: 2px;" class="preview" />
             </div>
         }
     </div>

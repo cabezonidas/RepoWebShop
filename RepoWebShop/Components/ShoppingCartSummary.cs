@@ -24,7 +24,7 @@ namespace RepoWebShop.Components
             {
                 //ShoppingCart = _shoppingCart,
                 Items = _cartRepository.GetItems(null).ToList(),
-                ShoppingCartTotal = _cartRepository.GetItemsAndCatalogProductsTotal(null)
+                ShoppingCartTotal = _cartRepository.GetProductsTotal(null)
             };
             return View(shoppingCartViewModel);
         }

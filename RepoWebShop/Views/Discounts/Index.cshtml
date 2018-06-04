@@ -18,7 +18,7 @@
                     Válido Hasta
                 </th>
                 <th>
-                    Repetición cada
+                    Repetición semanal
                 </th>
                 <th>
                     Usos disponibles
@@ -27,10 +27,13 @@
                     Descuento
                 </th>
                 <th>
+                    Orden mínima
+                </th>
+                <th>
                     Tope
                 </th>
                 <th>
-                    Comentarios
+                    Condiciones
                 </th>
                 <th>
 
@@ -42,16 +45,18 @@
             {
             <tr>
                 <td>
-                    @discount.Phrase.ToUpper()
+                    <a asp-action="Details" asp-controller="Discounts" asp-route-code="@discount.Phrase.ToUpper()">
+                        @discount.Phrase.ToUpper()
+                    </a>
                 </td>
                 <td>
                     @Html.Raw($"{_calendarRepository.FriendlyDate(discount.ValidFrom)} de {discount.ValidFrom.Year}")
                 </td>
                 <td>
-                    @Html.Raw($"{_calendarRepository.FriendlyDate(discount.ValidFrom.AddDays(discount.DurationDays - 1))} de {discount.ValidFrom.Year}")
+                    @Html.Raw($"{_calendarRepository.FriendlyDate(discount.ValidTo)} de {discount.ValidFrom.Year}")
                 </td>
                 <td>
-                    @Html.Raw(discount.Loop.HasValue ? discount.Loop.Value + " día" + (discount.Loop.Value > 1 ? "s" : "") : "No se repite")
+                    <span class='fa fa-@Html.Raw(discount.Weekly ? "check" : "times")'></span>
                 </td>
                 <td>
                     @Html.Raw(discount.InstancesLeft.HasValue ? discount.InstancesLeft.Value.ToString() : "Infinitos")
@@ -60,10 +65,16 @@
                     @discount.Percentage %
                 </td>
                 <td>
+                    $@discount.Base
+                </td>
+                <td>
                     $@discount.Roof
                 </td>
                 <td>
-                    @discount.Comments
+                    <div title="@discount.Comments">
+                        @discount.Comments.Substring(0, discount.Comments.Length >= 100 ? 100 : discount.Comments.Length - 1)...
+                    </div>
+                    
                 </td>
                 <td>
                     <a asp-controller="Discounts" asp-action="Delete" asp-route-id="@discount.DiscountId">Eliminar</a>

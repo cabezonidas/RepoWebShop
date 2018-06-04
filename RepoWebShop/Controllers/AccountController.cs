@@ -46,15 +46,21 @@ namespace RepoWebShop.Controllers
         }
 
         [AllowAnonymous]
+        [Route("[controller]/Login/{*returnUrl}")]
         public async Task<IActionResult> Login(string returnUrl)
         {
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
             return View(new LoginViewModel
             {
                 ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList(),
-                ReturnUrl = returnUrl
+                ReturnUrl = returnUrl ?? (Request.Query.ContainsKey("returnUrl") ? Request.Query["returnUrl"].ToString() : string.Empty)
             });
         }
+
+        
+        [AllowAnonymous]
+        [Route("[controller]/AccessDenied/{*returnUrl}")]
+        public IActionResult AccessDenied(string returnUrl) => RedirectToAction("Index", "Home");
 
         [AllowAnonymous]
         [Route("[Controller]/EmailVerification/{user}/{hash}")]
@@ -206,6 +212,7 @@ namespace RepoWebShop.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        [Route("[controller]/Login/{*returnUrl}")]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
             if (!ModelState.IsValid)
@@ -243,15 +250,23 @@ namespace RepoWebShop.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult Register()
+        [Route("[controller]/Register/{*returnUrl}")]
+        public IActionResult Register(string returnUrl)
         {
-            return View();
+            var result = new RegisterViewModel { ReturnUrl = returnUrl };
+            return View(result);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
+        [Route("[controller]/Register/{*returnUrl}")]
         public async Task<IActionResult> Register(RegisterViewModel registration)
+        {
+            return await RegisterUser(registration);
+        }
+
+        private async Task<IActionResult> RegisterUser(RegisterViewModel registration)
         {
             var user = _mapper.Map<RegisterViewModel, ApplicationUser>(registration);
             if (ModelState.IsValid)
@@ -262,7 +277,10 @@ namespace RepoWebShop.Controllers
                 {
                     await _emailRepository.SendEmailActivationAsync(user);
                     await _signInManager.PasswordSignInAsync(user, registration.Password, true, false);
-                    return RedirectToAction("Index", "Home");
+                    if (string.IsNullOrEmpty(registration.ReturnUrl))
+                        return RedirectToAction("Index", "Home");
+                    else
+                        return Redirect(registration.ReturnUrl);
                 }
                 foreach (var error in result.Errors)
                     ModelState.AddModelError(error.Code, error.Description);
@@ -362,21 +380,15 @@ namespace RepoWebShop.Controllers
         }
 
         [HttpGet]
-        [Route("[Controller]/VerifyNumber/{controllerName}/{actionName}/")]
-        public IActionResult VerifyNumber(string controllerName, string actionName)
+        [Route("[Controller]/VerifyNumber/{*returnUrl}")]
+        public IActionResult VerifyNumber(string returnUrl)
         {
+            var hash = Request.Query.ContainsKey("bookmark") ? "#" + Request.Query["bookmark"] : string.Empty;
             var result = new AppUserValidateViewModel()
             {
-                Controller = controllerName,
-                Action = actionName
+                ReturnUrl = "/" + returnUrl + hash
             };
             return View(result);
-        }
-
-        [HttpGet]
-        public IActionResult VerifyNumber()
-        {
-            return View(new AppUserValidateViewModel());
         }
 
         [HttpPost]
@@ -384,7 +396,6 @@ namespace RepoWebShop.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ExternalLogin(string provider, string returnUrl = null)
         {
-            // Request a redirect to the external login provider.
             var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             var result = Challenge(properties, provider);

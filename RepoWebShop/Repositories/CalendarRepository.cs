@@ -13,7 +13,7 @@ namespace RepoWebShop.Repositories
         private readonly AppDbContext _appDbContext;
         private readonly IConfiguration _config;
 
-        private string dayToSpanish(string day)
+        public string dayToSpanish(string day)
         {
             switch (day)
             {
@@ -37,7 +37,7 @@ namespace RepoWebShop.Repositories
             return "";
         }
 
-        private string spanishMonth(int month)
+        public string spanishMonth(int month)
         {
             switch (month)
             {
@@ -89,13 +89,19 @@ namespace RepoWebShop.Repositories
 
         public DateTime GetPickupEstimate(int hours)
         {
-            return WorkingHours.GetPickUpDate(
+            var result = WorkingHours.GetPickUpDate(
                 LocalTime(),
                 hours,
                 _appDbContext.ProcessingHours.ToList(),
                 _appDbContext.OpenHours.ToList(),
                 _appDbContext.Holidays.ToList(),
-                _appDbContext.Vacations.ToList());            
+                _appDbContext.Vacations.ToList());
+
+            var localTime = LocalTime();
+            var offsetMinutes = 15 - (localTime.Minute % 15);
+            localTime = localTime.AddMinutes(offsetMinutes);
+
+            return result >= localTime ? result : localTime;
         }
 
         public string SuperFriendlyDate(DateTime? date)
@@ -127,7 +133,7 @@ namespace RepoWebShop.Repositories
 
         public IEnumerable<KeyValuePair<DateTime, TimeSpan>> GetPickUpOption(int preparationTime, Discount discount)
         {
-            var validDiscount = Discount.ApplyDiscount(LocalTime(), 1, discount) < 0;
+            var validDiscount = Discount.IsValid(LocalTime(), discount);
             if (!validDiscount)
                 discount = null;
 

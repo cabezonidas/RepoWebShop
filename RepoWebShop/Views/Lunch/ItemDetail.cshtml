@@ -19,7 +19,7 @@ else
                     {
                         <span class="fa fa-caret-left text-muted"></span>
                     }
-                    <span  style="margin-left: 5px;margin-right: 5px;">@Html.Raw(Model.Product.MinOrderAmount * Model.Quantity)</span>
+                    <span  style="margin-left: 5px;margin-right: 5px;">@Html.Raw(Model.ItemCount)</span>
                     <span class="fa fa-caret-right handy" onclick="addLunchItemInstance(@Model.Product.ProductId)"></span>
                 </div>
                 <div onclick="removeLunchItem(@Model.Product.ProductId)" class="handy">
@@ -27,8 +27,12 @@ else
                 </div>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
-                <div style="font-size: x-large; color:#883636" class=" text-right itemprice">@Html.Raw((Model.Product.MinOrderAmount * Model.Quantity * Model.Product.Price).ToString("c"))</div>
+                <div style="font-size: x-large; color:#883636" class=" text-right itemprice">@Html.Raw((Model.SubTotal).ToString("c"))</div>
                 <div class=" text-right">@Model.Product.Price.ToString("c")  c/u</div>
+                @if(Model.Product.Price < Model.Product.PriceInStore)
+                { 
+                    <div style="font-size: smaller; text-decoration-line: line-through; text-align: right;">@Model.Product.PriceInStore.ToString("c")  c/u</div>
+                }
             </div>
         </div>
     </div>

@@ -1,0 +1,93 @@
+﻿@inject IMarketingRepository _marketing
+
+
+@{
+    var templates = _marketing.GetTemplates().Select(x => new SelectListItem() { Value = x.EmailMarketingTemplateId.ToString(), Text = x.Title });
+    var templateoptions = new List<SelectListItem>();
+    var empty = new SelectListItem() { Text = "Elegir template...", Value = "", Selected = true, Disabled = true };
+    templateoptions.Add(empty);
+    templateoptions.AddRange(templates);
+}
+
+<style>
+    .atribute {
+        margin-top: 10px;
+    }
+
+    body, h1 {
+        font-family: Tahoma !important;
+        font-size: initial !important;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <h2>Enviar email promocional</h2>
+            <div class="atribute">
+                <div>
+                    Elegir email
+                </div>
+                <select class="form-control" asp-items="templateoptions" onchange="templateselected(this.value);"></select>
+            </div>
+            <div class="atribute">
+                <div>
+                    Realizar prueba
+                </div>
+                <div>
+                    <div><input type="email" placeholder="Poner email de prueba..." id="testemailbox" class="form-control"/></div>
+                    <div style="margin-top: 20px;">
+                        <a class="btn btn-primary" onclick="testmail()">Probar</a>
+                        <a class="btn btn-primary" asp-action="PromoEmail" asp-controller="Marketing">Volver</a>
+                        <a class="btn btn-primary hidden" onclick="sendmails()" id="sendall">¡Enviar a todos!</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <h3 class="text-muted">Vista Preliminar</h3>
+            <div id="email-preview">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function templateselected(templateId) {
+        $.get('/api/MarketingData/GetTemplate/' + templateId).then((data) => {
+            $('#email-preview').empty().html(data.bodyHtml);
+            $('#sendall').removeClass('hidden');
+        }).fail(() => {
+            $('#email-preview').empty().append('No se pudo cargar el mail');
+        });
+    }
+
+    function testmail() {
+        var email = $('#testemailbox').val();
+        var templateId = $('select').find(":selected").val();
+
+        if (!email)
+            alert('Introducir un mail de prueba.')
+        else {
+            $.post('/api/MarketingData/SendPromoEmails/' + templateId + '/' + email).then(() => {
+                alert('¡Correo enviado!');
+                window.location = '/Admin';
+            }).fail((data) => {
+                alert('No se pudo enviar los correos');
+            })
+        }
+    }
+
+    function sendmails() {
+        $('#sendall').addClass('hidden');
+        var templateId = $('select').find(":selected").val();
+        $.post('/api/MarketingData/SendPromoEmails/' + templateId).then(() => {
+            alert('¡Correo enviado!');
+            window.location = '/Admin';
+        }).fail((data) => {
+            alert('No se pudo enviar los correos');
+        })
+    }
+
+</script>

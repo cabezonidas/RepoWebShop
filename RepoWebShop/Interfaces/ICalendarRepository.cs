@@ -6,6 +6,8 @@ namespace RepoWebShop.Interfaces
 {
     public interface ICalendarRepository
     {
+        string dayToSpanish(string day);
+        string spanishMonth(int month);
         DateTime GetPickupEstimate(int hours);
         string GetSoonestPickupEstimateForUsers(int hours);
         DateTime LocalTime();

@@ -18,12 +18,19 @@ namespace RepoWebShop.Interfaces
         Discount GetDiscount(string bookingId);
         decimal GetTotalWithoutDiscount(string bookingId);
 
-        decimal GetItemsAndCatalogProductsTotal(string bookingId);
+        decimal GetProductsTotal(string bookingId);
         decimal GetCateringsTotal(string bookingId);
         int GetPreparationTime(string bookingId);
         void ClearCart(string bookingId);
         decimal GetLunchTotal(Lunch lunch);
         decimal GetTotal(string bookingId);
+
+        decimal GetLunchTotalInStore(Lunch lunch);
+        decimal GetCateringsTotalInStore(string bookingId);
+        decimal GetLunchOnlineSavings(Lunch lunch);
+        decimal GetCateringsTotalSavings(string bookingId);
+        decimal GetProductsTotalInStore(string bookingId);
+        decimal GetProductsOnlineSavings(string bookingId);
 
         void AddComments(string comments);
         void ClearFromCart(int pieId);

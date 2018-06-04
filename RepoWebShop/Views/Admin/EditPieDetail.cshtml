@@ -1,6 +1,7 @@
 ﻿@model PieDetailCreateViewModel
 
 <script src="~/CommonJs/summernote.js"></script>
+<script src="~/CommonJs/summernote-es.js"></script>
 
 
 @section styles {
@@ -88,41 +89,41 @@
     </form>
     <div>
         @if (Model.Children.Any())
-        { 
+        {
             <h3>Opciones</h3>
-        <div id="allPies-div" class="small">
-            <table id="allPies" class="display nowrap dataTable dtr-inline collapsed table table-striped" cellspacing="0" role="grid">
-                <thead>
-                    <tr>
-                        <th>Tamaño</th>
-                        <th>Variedad</th>
-                        <th>Precio Online</th>
-                        <th>Precio Sucursal</th>
-                        <th>Preparación</th>
-                        <th>Venta Online</th>
-                        <th>Activo</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id='allPies-tbody'>
-                    @foreach(var item in Model.Children.OrderBy(x => x.Price))
-                    {
-                    <tr>
-                        <td>@item.SizeDescription</td>
-                        <td>@item.Flavour</td>
-                        <td>@item.Price</td>
-                        <td>@item.PriceInStore</td>
-                        <td>@item.PreparationTime</td>
-                        @{ var active = item.IsActive ? "fa-check" : "fa-times"; }
-                        @{ var vtaOnline = item.IsOnSale || !item.IsActive ? "fa-check" : "fa-times"; }
-                        <td><span class="fa @vtaOnline"></span></td>
-                        <td><span class="fa @active"></span></td>
-                        <td><a asp-action="Product" asp-controller="Catalog" asp-route-id="@item.ProductId">Modificar</a></td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+            <div id="allPies-div" class="small">
+                <table id="allPies" class="display nowrap dataTable dtr-inline collapsed table table-striped" cellspacing="0" role="grid">
+                    <thead>
+                        <tr>
+                            <th>Tamaño</th>
+                            <th>Variedad</th>
+                            <th>Precio Online</th>
+                            <th>Precio Sucursal</th>
+                            <th>Preparación</th>
+                            <th>Venta Online</th>
+                            <th>Activo</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id='allPies-tbody'>
+                        @foreach (var item in Model.Children.OrderBy(x => x.Price))
+                        {
+                            <tr>
+                                <td>@item.SizeDescription</td>
+                                <td>@item.Flavour</td>
+                                <td>@item.Price</td>
+                                <td>@item.PriceInStore</td>
+                                <td>@item.PreparationTime</td>
+                                @{ var active = item.IsActive ? "fa-check" : "fa-times"; }
+                                @{ var vtaOnline = item.IsOnSale || !item.IsActive ? "fa-check" : "fa-times"; }
+                                <td><span class="fa @vtaOnline"></span></td>
+                                <td><span class="fa @active"></span></td>
+                                <td><a asp-action="Product" asp-controller="Catalog" asp-route-id="@item.ProductId">Modificar</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
         <div align="center" style="margin-top: 20px;">
             <a class="btn btn-primary" asp-action="AddPieDetailChild" asp-controller="Catalog" asp-route-pieDetailId="@Model.PieDetailId">Agregar item</a>
@@ -132,7 +133,9 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        $('#textarea-desc').summernote();
+        $('#textarea-desc').summernote({
+            lang: 'es-ES'
+        });
     });
     var dataTable;
     $(document).ready(function () {

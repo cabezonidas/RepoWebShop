@@ -11,6 +11,7 @@ namespace RepoWebShop.Interfaces
         int GetBites(Lunch lunch);
         int GetConvitees(Lunch lunch);
         decimal GetTotal(Lunch lunch);
+        decimal GetLunchTotalInStore(Lunch lunch);
 
         int SaveLunch(string bookingId = null);
         Lunch GetLunch(int id);

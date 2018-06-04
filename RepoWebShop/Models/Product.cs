@@ -55,7 +55,7 @@ namespace RepoWebShop.Models
         public int Portions { get; set; } = 1;
 
         [Display(Name = "Tiempo de preparación")]
-        [Range(1, int.MaxValue)]
+        [Range(0, int.MaxValue)]
         [Required]
         public int PreparationTime { get; set; } = 6;
 

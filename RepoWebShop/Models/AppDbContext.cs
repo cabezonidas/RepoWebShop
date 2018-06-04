@@ -18,6 +18,11 @@ namespace RepoWebShop.Models
         //        .IsUnique(true);
         //}
 
+        public DbSet<EmailMarketingTemplate> EmailMarketingTemplates { get; set; }
+        public DbSet<EmailMarketingHistory> EmailMarketingHistory { get; set; }
+
+        public DbSet<Unsubscribe> Unsubscribed { get; set; }
+
         public DbSet<Session> ServerCache { get; set; }
 
         public DbSet<OrderCatering> OrderCaterings { get; set; }

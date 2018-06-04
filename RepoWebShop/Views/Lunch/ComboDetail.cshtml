@@ -40,7 +40,7 @@
                 <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-left">
                     <div class="col-item">
                         <div class="text-capitalize">
-                            @Html.Raw(item.Quantity * item.Product.MinOrderAmount > 1 ? $"{(item.Quantity * item.Product.MinOrderAmount).ToString()} " : "") @item.Product.DisplayName
+                            @Html.Raw(item.ItemCount > 1 ? $"{(item.ItemCount).ToString()} " : "") @item.Product.DisplayName
                         </div>
                         <div style="height: 5px;"></div>
                     </div>
@@ -48,7 +48,7 @@
                 <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-right">
                     <div class="col-price">
                         <div style="font-size: large;">
-                            @Html.Raw((item.Quantity * item.Product.MinOrderAmount * item.Product.Price).ToString())
+                            @Html.Raw((item.SubTotal).ToString())
                         </div>
 
                         @if (item.Product.Price < item.Product.PriceInStore)
@@ -99,25 +99,26 @@
         </div>
         @{
             var total = _lunchRepository.GetTotal(Model);
-            var percentage = 100 - (Model.ComboPrice / total * 100);
+            var totalInStore = _lunchRepository.GetLunchTotalInStore(Model);
+            var percentage = 100 - (total / totalInStore * 100);
         }
         <div style="font-size: large;">
             <span>
                 Total
             </span>
-            @{ var decoration = (Model.ComboPrice < total && Model.ComboPrice > 0) ? "text-decoration-line: line-through; color: red;" : ""; }
+            @{ var decoration = (total < totalInStore) ? "text-decoration-line: line-through; color: red;" : ""; }
             <span style="@decoration">
-                @Html.Raw(_lunchRepository.GetTotal(Model).ToString("c"))
+                @Html.Raw(totalInStore.ToString("c"))
             </span>
         </div>
-        @if (Model.ComboPrice < total && Model.ComboPrice > 0)
+        @if (total < totalInStore)
         {
             <div style="color: green;">
                 <div style="font-size: x-large">
-                    @Model.ComboPrice.ToString("c")
+                    @total.ToString("c")
                 </div>
                 <div>
-                    Precio Online @Html.Raw(percentage >= 5 ? $"{Decimal.ToInt32(percentage)} % Off" : "")
+                    Precio Online @Html.Raw(percentage >= 10 ? $"{Decimal.ToInt32(percentage)} % Off" : "")
                 </div>
             </div>
         }

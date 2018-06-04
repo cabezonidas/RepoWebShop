@@ -11,5 +11,6 @@ namespace RepoWebShop.Interfaces
         Task SendEmailActivationAsync(ApplicationUser appUser);
         Task NotifyOrderCompleteAsync(Order order);
         Task SendEmailResetPasswordAsync(ApplicationUser foundUser);
+        Task SendPromoAsync(string subject, string emailBody, IEnumerable<string> allEmails);
     }
 }

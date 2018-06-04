@@ -347,16 +347,16 @@ namespace RepoWebShop.Migrations
                     b.Property<int>("DiscountId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<decimal>("Base");
+
                     b.Property<string>("Comments")
-                        .HasMaxLength(50);
+                        .HasMaxLength(5000);
 
                     b.Property<int>("DurationDays");
 
                     b.Property<int?>("InstancesLeft");
 
                     b.Property<bool>("IsActive");
-
-                    b.Property<int?>("Loop");
 
                     b.Property<int>("Percentage");
 
@@ -367,6 +367,8 @@ namespace RepoWebShop.Migrations
                     b.Property<decimal>("Roof");
 
                     b.Property<DateTime>("ValidFrom");
+
+                    b.Property<bool>("Weekly");
 
                     b.HasKey("DiscountId");
 
@@ -393,6 +395,40 @@ namespace RepoWebShop.Migrations
                     b.HasKey("EmailId");
 
                     b.ToTable("Emails");
+                });
+
+            modelBuilder.Entity("RepoWebShop.Models.EmailMarketingHistory", b =>
+                {
+                    b.Property<int>("EmailMarketingHistoryId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Email");
+
+                    b.Property<int?>("EmailTemplateEmailMarketingTemplateId");
+
+                    b.Property<DateTime>("Sent");
+
+                    b.HasKey("EmailMarketingHistoryId");
+
+                    b.HasIndex("EmailTemplateEmailMarketingTemplateId");
+
+                    b.ToTable("EmailMarketingHistory");
+                });
+
+            modelBuilder.Entity("RepoWebShop.Models.EmailMarketingTemplate", b =>
+                {
+                    b.Property<int>("EmailMarketingTemplateId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<string>("EmailBody");
+
+                    b.Property<string>("Title");
+
+                    b.HasKey("EmailMarketingTemplateId");
+
+                    b.ToTable("EmailMarketingTemplates");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.GalleryFlickrAlbum", b =>
@@ -1069,6 +1105,20 @@ namespace RepoWebShop.Migrations
                     b.ToTable("Exceptions");
                 });
 
+            modelBuilder.Entity("RepoWebShop.Models.Unsubscribe", b =>
+                {
+                    b.Property<string>("UnsubscribeId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Email");
+
+                    b.Property<DateTime>("Unsubscribed");
+
+                    b.HasKey("UnsubscribeId");
+
+                    b.ToTable("Unsubscribed");
+                });
+
             modelBuilder.Entity("RepoWebShop.Models.Vacation", b =>
                 {
                     b.Property<int>("VacationId")
@@ -1133,6 +1183,13 @@ namespace RepoWebShop.Migrations
                     b.HasOne("RepoWebShop.Models.ApplicationUser", "User")
                         .WithMany("DeliveryAddresses")
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("RepoWebShop.Models.EmailMarketingHistory", b =>
+                {
+                    b.HasOne("RepoWebShop.Models.EmailMarketingTemplate", "EmailTemplate")
+                        .WithMany()
+                        .HasForeignKey("EmailTemplateEmailMarketingTemplateId");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.LunchItem", b =>

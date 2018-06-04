@@ -13,7 +13,6 @@ namespace RepoWebShop.ViewModels
         public string Token { get; set; }
 
         public string PhoneNumber { get; set; }
-        public string Controller { get; internal set; }
-        public string Action { get; internal set; }
+        public string ReturnUrl { get; internal set; }
     }
 }

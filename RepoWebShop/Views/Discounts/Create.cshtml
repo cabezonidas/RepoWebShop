@@ -37,10 +37,10 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="Loop" class="col-md-2 control-label"></label>
+            <label asp-for="Weekly" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Loop" class="form-control" placeholder="Poner 7 si se quiere repetir todas las semanas, sino dejar vacío" />
-                <span asp-validation-for="Loop" class="text-danger"></span>
+                <input asp-for="Weekly" class="form-control" placeholder="Poner 7 si se quiere repetir todas las semanas, sino dejar vacío" />
+                <span asp-validation-for="Weekly" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
@@ -58,16 +58,23 @@
             </div>
         </div>
         <div class="form-group">
+            <label asp-for="Base" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Base" class="form-control" />
+                <span asp-validation-for="Base" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
             <label asp-for="Roof" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <input asp-for="Roof" class="form-control" value="200" />
                 <span asp-validation-for="Roof" class="text-danger"></span>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group hidden">
             <label asp-for="Comments" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input maxlength="50" asp-for="Comments" class="form-control" placeholder="Poner por qué se hace el descuento, o cuando se planea retirar, o dejar vacío" />
+                <input maxlength="500" asp-for="Comments" class="form-control" placeholder="Poner bases y condiciones..." />
                 <span asp-validation-for="Comments" class="text-danger"></span>
             </div>
         </div>

@@ -85,6 +85,40 @@
 </style>
 
 <div class="container" style="margin: auto; max-width: 600px;">
+    <h2 class="text-center" style="margin-top: 50px; ">Iniciar Sesión</h2>
+    @{
+        var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+        if (loginProviders.Count > 0)
+        {
+            
+                <input type="hidden" asp-for="ReturnUrl" />
+                <table>
+                    <tbody>
+                        @foreach (var provider in loginProviders)
+                        {
+                            <tr>
+                                <td>
+                                    @{ 
+                                        var classstyle = provider.Name == "Facebook" ? "loginBtn--facebook" : (provider.Name == "Google" ? "loginBtn--google" : string.Empty);
+                                    }
+
+                                    <form asp-route-provider="@provider.Name" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                                        <button class="loginBtn @classstyle" type="submit" value="@provider.Name" name="provider">
+                                            Ingresar con @provider.Name
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="2">
+                                <hr />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+        }
+    }
     <form asp-controller="Account" asp-action="Login" method="post" role="form">
         <input type="hidden" asp-for="ReturnUrl" />
         @if (Model.Errors != null)
@@ -95,7 +129,7 @@
             <tbody>
                 <tr>
                     <td colspan="2">
-                        <h2 class="text-center">Ingresa tus detalles</h2>
+                        <h3 class="text-center">Iniciar Sesión Manualmente</h3>
                     </td>
                 </tr>
                 <tr>
@@ -104,6 +138,10 @@
                     </td>
                     <td>
                         <input asp-for="UserName" class="form-control" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
                         <span asp-validation-for="UserName" class="text-danger"></span>
                     </td>
                 </tr>
@@ -113,18 +151,22 @@
                     </td>
                     <td>
                         <input asp-for="Password" class="form-control" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td colspan="2">
                         <div asp-validation-summary="All" class="text-danger"></div>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2" style="text-align: center;">
                         <input type="submit" class="btn btn-primary" value="Iniciar Sesión" />
-                        <a id="registerLink" asp-controller="Account" asp-action="Register" class="btn btn-primary">Registrarse</a>
+                        <a id="registerLink" asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl" class="btn btn-primary">Registrarse</a>
                     </td>
                 </tr>
                 <tr>
@@ -135,47 +177,7 @@
             </tbody>
         </table>
     </form>
-    @{
-        var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-        if (loginProviders.Count > 0)
-        {
-            <form asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
-                <input type="hidden" asp-for="ReturnUrl" />
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <hr>
-                            </td>
-                        </tr>
-                        @foreach (var provider in loginProviders)
-                        {
-                            <tr>
-                                <td>
-                                    @if (provider.Name == "Facebook")
-                                    {
-                                        <button class="loginBtn loginBtn--facebook" type="submit" value="@provider.Name" name="provider">
-                                            Seguir con Facebook
-                                        </button>
-                                    }
-                                    else if (provider.Name == "Google")
-                                    {
-                                        <button class="loginBtn loginBtn--google" type="submit" value="@provider.Name" name="provider">
-                                            Seguir con Google
-                                        </button>
-                                    }
-                                    else
-                                    {
-                                        <button type="submit" class="btn btn-default" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.Name</button>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </form>
-        }
-    }
+
 
 
 </div>
