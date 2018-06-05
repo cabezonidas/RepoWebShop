@@ -9,13 +9,13 @@
     <meta property="og:type" content="product" />
     <meta property="og:title" content="@title" />
 
-    @if (string.IsNullOrEmpty(Model.ThumbnailUrl))
+    @if (!string.IsNullOrEmpty(Model.ThumbnailUrl))
     {
     <meta property="og:image" content="@Model.ThumbnailUrl" />
     }
 
 
-    <title>Catering @Html.Raw(title)</title>
+    <title>@Html.Raw(title)</title>
 }
 <div id="fb-root"></div>
 <script>
