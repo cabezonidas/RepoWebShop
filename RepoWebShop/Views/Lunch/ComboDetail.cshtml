@@ -1,6 +1,8 @@
 ﻿@model Lunch
 @inject ILunchRepository _lunchRepository
 @inject ICalendarRepository _calendar
+
+
 <style>
     .col-price {
         padding-right: 10px;
@@ -23,7 +25,10 @@
         {
             <div style="font-size: larger; color: silver"><span class="fa fa-star" style="color: silver"></span> Personalizado <span class="fa fa-star" style="color: silver"></span></div>
         }
-        <div class="text-capitalize" style="font-size: large; text-decoration: underline;">@Model.Title</div>
+        <a style="color: papayawhip" class="text-muted" asp-action="Special" asp-route-id="@Model.LunchId" asp-controller="Lunch">
+            <div class="text-capitalize" style="font-size: large; text-decoration: underline;">@Model.Title</div>
+        </a>
+
         @if (Model.IsCombo)
         {
             <div>

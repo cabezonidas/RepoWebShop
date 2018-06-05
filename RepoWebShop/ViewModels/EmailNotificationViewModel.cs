@@ -13,6 +13,7 @@ namespace RepoWebShop.ViewModels
         public string MercadoPagoTransaction { get; set; }
         public DateTime? OrderReady { get; set; }
         public Decimal OrderTotal { get; set; }
+        public decimal TotalInStore { get; set; }
         public IEnumerable<OrderDetail> OrderItems { get; set; }
         public string AbsoluteUrl { get; set; }
         public string Comments { get; set; }

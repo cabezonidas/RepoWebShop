@@ -1,5 +1,14 @@
 ﻿@model LunchComboViewModel
 @inject ILunchRepository _lunchRepository
+@inject IFlickrRepository _flickr
+
+@{
+    var albums = _flickr.Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content });
+    var albumoptions = new List<SelectListItem>();
+    var empty = new SelectListItem() { Text = "Elegir álbum...", Value = "", Selected = true, Disabled = true };
+    albumoptions.Add(empty);
+    albumoptions.AddRange(albums);
+}
 
 <div class="container">
     <h2>Editar Combo para Lunch #@Model.LunchId</h2>
@@ -82,6 +91,24 @@
         </div>
 
         <div class="form-group">
+            <label asp-for="ThumbnailUrl" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select class="form-control" asp-items="albumoptions" onchange="albumselected(this.value);"></select>
+                <br />
+                <div>
+                    <input class="form-control" asp-for="ThumbnailUrl" id="thumbnailurl" />
+                </div>
+                <div style="" id="selected-album">
+                    <br />
+                    <div id="album-carousel">
+
+                    </div>
+                </div>
+                <span asp-validation-for="ThumbnailUrl" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" class="btn btn-primary" value="Guardar" />
             </div>
@@ -90,3 +117,19 @@
 </div>
 <hr />
 @Html.Partial("~/Views/Lunch/Detail.cshtml", _lunchRepository.GetLunch(Model.LunchId))
+<script>
+    function linkimgs() {
+        $('img').on('click', function () {
+            var thumbnail = $(this).attr('src');
+            var source = thumbnail.replace("s.jpg", "n.jpg");
+            $('#thumbnailurl').val(source);
+        });
+    }
+
+    function albumselected(albumId) {
+        $.get("/api/PhotosData/SmallCarrouselDynamic/" + albumId).then((data) => {
+            $('#album-carousel').empty().append(data);
+            linkimgs();
+        });
+    }
+</script>

@@ -51,12 +51,10 @@
                     <select class="form-control" asp-items="albumoptions" onchange="albumselected(this.value);"></select>
                     <div style="height: 120px;" id="selected-album">
                         <br />
-                        @foreach (var album in albums)
-                        {
-                        <div id="album-@album.Value" class="carousel hidden" style="">
-                            @Html.Partial("~/Views/Photos/SmallCarrousel.cshtml", Int64.Parse(album.Value))
+                        <div id="album-carousel">
+
                         </div>
-                        }
+                        
                     </div>
                 </div>
                 <div class="atribute">
@@ -146,7 +144,16 @@
             }
         });
 
+        $('input#title').on('keyup', function () {
+            $('#email-title').empty().append($(this).val())
+        });
 
+        $('input#foot').on('keyup', function () {
+            $('#email-foot').empty().append($(this).val())
+        });
+    });
+
+    function linkimgs() {
         $('img').on('click', function () {
             var thumbnail = $(this).attr('src');
             var source = thumbnail.replace("s.jpg", "n.jpg");
@@ -158,18 +165,12 @@
             $img.attr('src', source);
             $img.appendTo('#main-picture');
         });
-
-        $('input#title').on('keyup', function () {
-            $('#email-title').empty().append($(this).val())
-        });
-
-        $('input#foot').on('keyup', function () {
-            $('#email-foot').empty().append($(this).val())
-        });
-    });
+    }
 
     function albumselected(albumId) {
-        $(".carousel").addClass("hidden");
-        $("#album-" + albumId).removeClass("hidden");
+        $.get("/api/PhotosData/SmallCarrouselDynamic/" + albumId).then((data) => {
+            $('#album-carousel').empty().append(data);
+            linkimgs();
+        });
     }
 </script>

@@ -127,8 +127,19 @@
                             <span class="fa fa-caret-right"></span>
                         </a>
                     </td>
-                    <td class="text-left text-muted">
-                        @line.Product.DisplayName - @line.Product.PreparationTime hs
+                    <td class="text-left text-muted" title="@line.Product.PieDetail.Ingredients">
+                        @if (line.Product?.PieDetail?.IsActive ?? false)
+                        {
+                            <a class="text-muted" asp-action="Details" asp-route-id="@line.Product.PieDetail.PieDetailId" asp-controller="PieDetail">
+                                @line.Product.DisplayName - @line.Product.PreparationTime hs
+                            </a>
+                        }
+                        else
+                        {
+                            <div>
+                                @line.Product.DisplayName - @line.Product.PreparationTime hs
+                            </div>
+                        }
                     </td>
                     <td class="text-right">@line.Product.Price.ToString("c")</td>
                     <td class="text-right">

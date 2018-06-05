@@ -33,6 +33,20 @@ namespace RepoWebShop.Controllers
         }
 
         [HttpGet]
+        [Route("SmallCarrouselDynamic/{Id}")]
+        public ActionResult SmallCarrouselDynamic(long Id)
+        {
+            var album = _photosetAlbums.GetAlbumPictures(Id);
+            if (album == null)
+                return NotFound();
+            else
+            {
+                var result = PartialView("~/Views/Photos/SmallCarrouselDynamic.cshtml", album);
+                return result;
+            }
+        }
+
+        [HttpGet]
         [Route("GetAlbumStaff/{Id}")]
         public ActionResult GetAlbumStaff(long Id)
         {

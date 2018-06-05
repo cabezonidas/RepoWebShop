@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180605030634_ordersavings")]
+    partial class ordersavings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -465,8 +466,6 @@ namespace RepoWebShop.Migrations
                     b.Property<bool>("IsGeneric");
 
                     b.Property<int>("PreparationTime");
-
-                    b.Property<string>("ThumbnailUrl");
 
                     b.Property<string>("Title");
 

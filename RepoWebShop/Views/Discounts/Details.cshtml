@@ -1,6 +1,8 @@
 ﻿@model Discount
 @inject ICalendarRepository calendar
-
+@section metatags {
+    <title>Promo @Model.Phrase</title>
+}
 <style>
     div#discount-template {
         max-width: 550px;
@@ -8,9 +10,11 @@
         margin: auto;
         min-width: 250px;
     }
+
     * {
         text-align: center;
     }
+
     div.head {
         background-color: #883636;
         color: papayawhip;
@@ -18,14 +22,17 @@
         border-top-right-radius: 10px;
         padding-bottom: 20px;
     }
+
         div.head div#title {
             font-size: 25px;
             padding-bottom: 10px;
         }
+
     div.body {
         background-color: papayawhip;
         padding: 20px;
     }
+
     div.foot {
         padding: 20px;
         background-color: #883636;
@@ -35,16 +42,20 @@
         border-bottom-left-radius: 10px;
         border-bottom-right-radius: 10px;
     }
+
     .voucher-amount {
         font-size: 60px;
         color: green;
     }
+
     .voucher {
         font-size: 30px;
     }
+
     .percentage {
         font-size: 60px;
     }
+
     .code-title {
         font-size: large;
         padding: 5px;
@@ -55,23 +66,22 @@
         border-bottom-color: #883636;
         border-bottom-style: solid;
     }
-
 </style>
 <div>
 
     <div style="" id="discount-template">
-@{
-    string error;
-    if (!Discount.IsValid(calendar.LocalTime(), Model, out error))
-    {
-        <div style="margin: auto; padding: 20px;" class="hidden-print">
-            <div class="alert alert-warning alert-dismissible">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                @error
-            </div>
-        </div>
-    }
-}
+        @{
+            string error;
+            if (!Discount.IsValid(calendar.LocalTime(), Model, out error))
+            {
+                <div style="margin: auto; padding: 20px;" class="hidden-print">
+                    <div class="alert alert-warning alert-dismissible">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        @error
+                    </div>
+                </div>
+            }
+        }
         <div class="head">
             <br />
             <a href="http://delasartes.com.ar" target="_blank" style="text-decoration: none; ">
@@ -110,7 +120,7 @@
         </div>
 
         <div style="margin: 20px;">
-            <a class="btn btn-primary" asp-action="List" asp-controller="PieDetail" >¡Empezar a Comprar!</a>
+            <a class="btn btn-primary" asp-action="List" asp-controller="PieDetail">¡Empezar a Comprar!</a>
         </div>
     </div>
 </div>

@@ -3,11 +3,13 @@
 @inject SignInManager<ApplicationUser> _signIn
 @inject UserManager<ApplicationUser> _userManager
 
-    @{ 
-        var user = await _userManager.GetUser(_signIn);
-        var isAdmin = user != null && await _userManager.IsInRoleAsync(user, "Administrator");
-    }
-
+@{
+    var user = await _userManager.GetUser(_signIn);
+    var isAdmin = user != null && await _userManager.IsInRoleAsync(user, "Administrator");
+}
+@section metatags {
+    <title>Catering Personalizado</title>
+}
 <style>
     .handy:hover {
         cursor: pointer;
@@ -52,23 +54,23 @@
             </div>
         </div>
     </div>
-    @if(isAdmin)
+    @if (isAdmin)
     {
-    <div class="row" style="max-width: 500px; margin: auto;background-color: papayawhip; ">
-        <div class="">
-            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-left">
-                <div>Agregar Manual</div>
-                <input type="text" class="form-control" id="miscDesc" placeholder="Torta de 1 kg..." />
-            </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-left">
-                <div>Precio $</div>
-                <input type="number" class="form-control" id="miscPrice" placeholder="300" />
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
-                <span style="margin:auto;" class="handy" onclick="addMiscellaneous()">Agregar</span>
+        <div class="row" style="max-width: 500px; margin: auto;background-color: papayawhip; ">
+            <div class="">
+                <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-left">
+                    <div>Agregar Manual</div>
+                    <input type="text" class="form-control" id="miscDesc" placeholder="Torta de 1 kg..." />
+                </div>
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-left">
+                    <div>Precio $</div>
+                    <input type="number" class="form-control" id="miscPrice" placeholder="300" />
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
+                    <span style="margin:auto;" class="handy" onclick="addMiscellaneous()">Agregar</span>
+                </div>
             </div>
         </div>
-    </div>
     }
     @{var hidden = _lunchRepository.GetTotal(Model) > 0 ? "" : "hidden";}
     <div class="row @hidden saveLunch" style="max-width: 500px; margin: auto;background-color: papayawhip;  ">
@@ -87,9 +89,10 @@
         <a class="btn btn-primary" style="margin-top: 5px;" asp-action="Catering" asp-controller="Services">Ver más opciones</a>
         <a class="btn btn-primary" style="margin-top: 5px;" asp-action="ClearCustomCateringFromCart" asp-controller="ShoppingCart">Descartar</a>
     </div>
-</div>
+</div>s
 
 <script>
+    loaderOn();
     $(document).ready(() => {
         $.get('/api/LunchData/GetProducts/').then((data) => {
             initializeSelector(data);
@@ -98,6 +101,7 @@
 
     function initializeSelector(data) {
         $selectize = $('select#items').selectize({
+            create: loaderOff(),
             options: data,
             labelField: 'displayName',
             valueField: 'productId',
@@ -149,11 +153,13 @@
     function getTotals() {
         $.get('/api/LunchData/GetTotals/').then((data) => {
             $('#totals').empty().append(data);
+            loaderOff();
         });
 
     }
 
     function appendItem(id) {
+        loaderOn();
         $.post('/api/LunchData/AddProduct/' + id).then((data) => {
             pasteItem('product', data, id);
         });
@@ -171,6 +177,7 @@
     }
 
     function removeLunchItemInstance(id) {
+        loaderOn();
         $.ajax({
             url: '/api/LunchData/RemoveProductInstance/' + id,
             type: 'DELETE',
@@ -181,6 +188,7 @@
     }
 
     function removeLunchItem(id) {
+        loaderOn();
         $.ajax({
             url: '/api/LunchData/RemoveProduct/' + id,
             type: 'DELETE',
@@ -191,6 +199,7 @@
     }
 
     function addLunchItemInstance(id) {
+        loaderOn();
         $.ajax({
             url: '/api/LunchData/AddProductInstance/' + id,
             type: 'POST',
@@ -201,6 +210,7 @@
     }
 
     function removeMiscellaneousInstance(lunchMiscellaneousId) {
+        loaderOn();
         $.ajax({
             url: '/api/LunchData/RemoveMiscellaneousInstance/' + lunchMiscellaneousId,
             type: 'DELETE',
@@ -211,6 +221,7 @@
     }
 
     function addMiscellaneousInstance(lunchMiscellaneousId) {
+        loaderOn();
         $.ajax({
             url: '/api/LunchData/AddMiscellaneousInstance/' + lunchMiscellaneousId,
             type: 'POST',
@@ -221,6 +232,7 @@
     }
 
     function removeMiscellaneous(lunchMiscellaneousId) {
+        loaderOn();
         $.ajax({
             url: '/api/LunchData/RemoveMiscellaneous/' + lunchMiscellaneousId,
             type: 'DELETE',
@@ -231,6 +243,7 @@
     }
 
     function addMiscellaneous() {
+        loaderOn();
         $.ajax({
             url: '/api/LunchData/AddMiscellaneous/' + ($('#miscDesc').val()).replace("/", "__") + '/' + $('#miscPrice').val(),
             type: 'POST',
@@ -243,9 +256,9 @@
             }
         });
     }
+
+
 </script>
-
-
 
 
 

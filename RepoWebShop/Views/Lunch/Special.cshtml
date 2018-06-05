@@ -1,12 +1,46 @@
 ﻿@model Lunch
 
+@{
+    var title = "Catering " + (string.IsNullOrEmpty(Model.Title) ? "Personalizado" : $"- {Model.Title}");
+    var url = Url.Action("Special", "Lunch", new { id = Model.LunchId });
+}
+@section metatags {
+    <meta property="og:url" content="@url" />
+    <meta property="og:type" content="product" />
+    <meta property="og:title" content="@title" />
+
+    @if (string.IsNullOrEmpty(Model.ThumbnailUrl))
+    {
+    <meta property="og:image" content="@Model.ThumbnailUrl" />
+    }
+
+
+    <title>Catering @Html.Raw(title)</title>
+}
+<div id="fb-root"></div>
+<script>
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = 'https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v2.11&appId=744831982380043';
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
+
 <div class="container">
     <h2 class="text-center">@Html.Raw("Presupuesto " + (Model.IsGeneric ? "Genérico" : "Especial"))</h2>
     <div style="max-width: 500px; margin:auto;">
         @Html.Partial("~/Views/Lunch/ComboDetail.cshtml", Model)
     </div>
     <div class="text-center hidden-print" style="margin: 20px auto;">
-        <a class="btn btn-primary" asp-action="Catering" asp-controller="Services">Ver más</a>
-        <a class="btn btn-primary" onclick="window.print()">Imprimir</a>
+        <div class="fb-share-button" style="margin-bottom: 25px;"
+             data-href="@url"
+             data-layout="button_count">
+        </div>
+        <div>
+            <a class="btn btn-primary" asp-action="Catering" asp-controller="Services">Ver más</a>
+            <a class="btn btn-primary" onclick="window.print()">Imprimir</a>
+        </div>
     </div>
 </div>

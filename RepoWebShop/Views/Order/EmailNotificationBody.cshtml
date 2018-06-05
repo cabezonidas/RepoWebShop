@@ -237,19 +237,16 @@
                                 <td colspan="3" style="font-size: 30px;text-align: center">Total $@Model.OrderTotal</td>
                             </tr>
                             @{
-                                var totalInStore = Model.OrderItems.Select(x => x.Price).Sum();
-                                totalInStore += Model.OrderCatalogItems.Select(x => (x.Product.PriceInStore > x.Product.Price ? x.Product.PriceInStore : x.Product.Price) * x.Amount).Sum();
-                                totalInStore += Model.OrderCaterings.Select(x => _lunch.GetLunchTotalInStore(x.Lunch) * x.Amount).Sum();
-                                var disc = Model.Discount != null ? deliveryCost + totalItems - Model.OrderTotal : 0;
-
-                                var dif = totalInStore - totalItems + disc;
-                                if (dif > 0)
+                                if (Model.OrderTotal < Model.TotalInStore)
                                 {
+                                    {
+                                        var dif = Model.TotalInStore - Model.OrderTotal;
                                     <tr style="">
                                         <td colspan="3" style="font-size: 20px;text-align: center; color: green;">
-                                            Ahorro total online @dif.ToString("c")
+                                            Ahorro @dif.ToString("c")
                                         </td>
                                     </tr>
+                                    }
                                 }
                             }
                         </tbody>

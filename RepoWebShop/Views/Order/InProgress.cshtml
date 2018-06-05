@@ -43,7 +43,7 @@
                 {
                     background_color = "red"; //"#ffe2e2";
                 }
-                <tr style='color:@background_color; '>
+                <tr style='color:@background_color; ' id="tr-@order.OrderId">
                     <td style="text-align: center;">
                         <a style="font-size:large; color: @background_color" asp-action="Detail" asp-controller="Order" asp-route-id="@order.OrderId">@order.FriendlyBookingId</a>
                         @if (order.Finished)
@@ -117,14 +117,18 @@
                         @if (order.Finished)
                         {
                             <a class="btn btn-info" onclick="pickedUp(@order.OrderId);" id="@order.OrderId" title="Hacer click si el pedido ya fue entregado">Archivar</a>
-                            <div class="text-muted" style="font-size:smaller">Guarda la orden en la base de datos y significa que el cliente ya recibió su producto</div>
+                            <div class="text-muted" style="font-size:smaller" id="text-@order.OrderId">Guarda la orden en la base de datos y significa que el cliente ya recibió su producto</div>
                         }
                         else
                         {
                             <a class="btn btn-warning" onclick="orderCompleted(@order.OrderId);" id="@order.OrderId" title="Comunica al cliente que la orden está lista para ser entregada">Notificar Cliente</a>
-                            <div class="text-muted" style="font-size:smaller">Avisa al cliente que la orden está lista para ser entregada</div>
+                            <div class="text-muted" style="font-size:smaller" id="text-@order.OrderId">Avisa al cliente que la orden está lista para ser entregada</div>
                         }
+                        <div>
+                            <span class="fa fa-refresh hidden" style="color: #883636 ;cursor: pointer; font-size: 20px;" id="refresh-@order.OrderId" onclick="window.location.reload()" title="Refrescar la página">
 
+                            </span>
+                        </div>
                     </td>
                 </tr>
             }
@@ -152,35 +156,43 @@
     });
 
     function pickedUp(id) {
+        loaderOn();
         $('a#' + id).hide();
+        $('div#text-' + id).hide();
         $.ajax({
             type: 'POST',
             url: '/api/OrderData/PickUpOrder/' + id,
             data: {},
             success: function (data) {
-                window.location.reload();
+                $('span#refresh-' + id).removeClass('hidden');
+                loaderOff();
             },
             error: function (xhr, textStatus, error) {
                 console.log(xhr.statusText);
                 console.log(textStatus);
                 console.log(error);
+                loaderOff();
             }
         });
     }
 
     function orderCompleted(id) {
+        loaderOn();
         $('a#' + id).hide();
+        $('div#text-' + id).hide();
         $.ajax({
             type: 'POST',
             url: '/api/OrderData/CompleteOrder/' + id,
             data: {},
             success: function (data) {
-                window.location.reload();
+                $('span#refresh-' + id).removeClass('hidden');
+                loaderOff();
             },
             error: function (xhr, textStatus, error) {
                 console.log(xhr.statusText);
                 console.log(textStatus);
                 console.log(error);
+                loaderOff();
             }
         });
     }

@@ -5,6 +5,7 @@ using RepoWebShop.States;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace RepoWebShop.Models
 {
@@ -177,5 +178,7 @@ namespace RepoWebShop.Models
         public Discount Discount { get; internal set; }
         public DateTime? PickUpTimeFrom { get; internal set; }
         public TimeSpan? TimeLeftUntilStoreCloses { get; internal set; }
+
+        public decimal TotalInStore { get; set; }
     }
 }

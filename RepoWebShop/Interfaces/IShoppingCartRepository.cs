@@ -64,5 +64,6 @@ namespace RepoWebShop.Interfaces
         void AddCateringToOrder(ShoppingCartLunch customLunch);
         ShoppingCartLunch GetSessionLunchIfNotEmpty(string bookingId = null);
         void ClearCustomCateringFromCart();
+        decimal GetTotalInStore(string bookingId);
     }
 }

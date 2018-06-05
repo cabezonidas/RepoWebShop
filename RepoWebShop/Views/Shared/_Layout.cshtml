@@ -71,10 +71,11 @@
         </noscript>
         <!-- End Facebook Pixel Code -->
     }
-
+    <script src="~/Scripts/loader.js"></script>
     <meta name="google-site-verification" content="TUVubu2wlOkQR100TXZkZ92DF5zmVpN22oYsYPpaZ9A" />
 </head>
 <body>
+    @Html.Partial("~/Views/Shared/Loader.cshtml")
     <div id="fb-root"></div>
     <script>
         (function (d, s, id) {
@@ -232,5 +233,7 @@ new MediaViewModel() { Icon = "fa-whatsapp", Class = "social-whatsapp", Ref = "h
     <div class="text-center text-muted hidden-print">
         Sesión #@sc.BookingId.Ending(6)
     </div>
+
+
 </body>
 </html>

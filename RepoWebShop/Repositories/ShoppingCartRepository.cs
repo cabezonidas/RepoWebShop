@@ -220,12 +220,31 @@ namespace RepoWebShop.Repositories
             return delivery + subtotal;
         }
 
+        public decimal GetTotalInStore(string bookingId) => GetTotalWithoutDiscountInStore(bookingId);
+
+        public decimal GetTotalWithoutDiscountInStore(string bookingId)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            var subtotal = GetSubtotalWithoutDeliveryInStore(bookingId);
+            var delivery = GetDelivery(bookingId)?.DeliveryCost ?? 0;
+            return delivery + subtotal;
+        }
+
         public decimal GetSubtotalWithoutDelivery(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
             var items = GetProductsTotal(bookingId);
             var customLunch = GetLunchTotal(GetSessionLunch(bookingId)?.Lunch);
             var caterings = GetCateringsTotal(bookingId);
+            return items + caterings + customLunch;
+        }
+
+        public decimal GetSubtotalWithoutDeliveryInStore(string bookingId)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            var items = GetProductsTotalInStore(bookingId);
+            var customLunch = GetLunchTotalInStore(GetSessionLunch(bookingId)?.Lunch);
+            var caterings = GetCateringsTotalInStore(bookingId);
             return items + caterings + customLunch;
         }
 

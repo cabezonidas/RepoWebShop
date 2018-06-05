@@ -1,0 +1,27 @@
+﻿@model AlbumPictures
+@{ 
+    var id = Guid.NewGuid();
+}
+
+<div class="">
+    <div class="slider-nav" id="nav-@id">
+        @foreach (var picture in Model.PicturesUrls)
+        {
+            var pic = picture + "s.jpg";
+            <div class="item" style="">
+                <img src="@pic" alt="image" draggable="false" style="margin-right: 2px;" class="preview" />
+            </div>
+        }
+    </div>
+</div>
+<script type="text/javascript">
+        $('#nav-@id' + '.slider-nav').slick({
+            slidesToScroll: 1,
+            dots: false,
+            infinite: true,
+            focusOnSelect: true,
+            arrows: false,
+            centerMode: false,
+            variableWidth: true
+        });
+</script>

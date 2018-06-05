@@ -40,5 +40,9 @@ namespace RepoWebShop.ViewModels
         [Display(Name = "Invitados")]
         [Required]
         public int Attendants { get; set; }
+
+        [Display(Name = "Imagen preliminar")]
+        public string ThumbnailUrl { get; set; }
+
     }
 }

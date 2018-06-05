@@ -72,7 +72,7 @@ namespace RepoWebShop.Controllers
         }
 
         [HttpGet]
-        [Route("AddComments/{comments}")]
+        [Route("AddComments/{*comments}")]
         public IActionResult AddComments(string comments)
         {
             comments = (string.IsNullOrEmpty(comments) || comments == "undefined") ? string.Empty : comments;

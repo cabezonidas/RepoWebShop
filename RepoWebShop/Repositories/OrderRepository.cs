@@ -176,6 +176,7 @@ namespace RepoWebShop.Models
             order.BookingId = order.BookingId ?? _cartRepository.GetSessionCartId();
             order.PhoneNumber = order.Registration?.PhoneNumber;
             order.OrderTotal = _cartRepository.GetTotal(order.BookingId);
+            order.TotalInStore = _cartRepository.GetTotalInStore(order.BookingId);
             order.Discount = _cartRepository.GetDiscount(order.BookingId);
             order.DeliveryAddress = _cartRepository.GetDelivery(order.BookingId);
             order.CustomerComments = _cartRepository.GetComments(order.BookingId)?.Comments;
@@ -256,6 +257,7 @@ namespace RepoWebShop.Models
             emailData.OrderReady = order.PickUpTimeFrom ?? order.PickUpTime;
             emailData.TimeLeftUntilStoreCloses = order.TimeLeftUntilStoreCloses;
             emailData.OrderTotal = order.OrderTotal; //Without MP interests
+            emailData.TotalInStore = order.TotalInStore; 
             emailData.OrderType = String.IsNullOrEmpty(order.MercadoPagoTransaction) ? "Reserva" : "Compra";
             emailData.PreparationTime = order.PreparationTime;
             emailData.FriendlyBookingId = order.FriendlyBookingId;
