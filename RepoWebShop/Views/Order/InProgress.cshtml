@@ -7,10 +7,6 @@
 @inject ICalendarRepository _calendarRepository
 
 <style>
-    div.container {
-        font-family: Noto Serif;
-    }
-
     a {
         color: black;
     }
@@ -32,7 +28,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var order in Model.OrderBy(x => x.PickUpTime))
+            @foreach (var order in Model.OrderBy(x => x.PickUpTimeFrom))
             {
                 string background_color;
                 @if (order.Finished)
@@ -114,20 +110,13 @@
                     <td>$@order.OrderTotal</td>
 
                     <td style="max-width:200px; " class="text-center">
-                        @if (order.Finished)
-                        {
-                            <a class="btn btn-info" onclick="pickedUp(@order.OrderId);" id="@order.OrderId" title="Hacer click si el pedido ya fue entregado">Archivar</a>
-                            <div class="text-muted" style="font-size:smaller" id="text-@order.OrderId">Guarda la orden en la base de datos y significa que el cliente ya recibió su producto</div>
-                        }
-                        else
-                        {
+                        <div class="ready @Html.Raw(order.Finished ? "hidden" : "")" id="ready-@order.OrderId">
                             <a class="btn btn-warning" onclick="orderCompleted(@order.OrderId);" id="@order.OrderId" title="Comunica al cliente que la orden está lista para ser entregada">Notificar Cliente</a>
-                            <div class="text-muted" style="font-size:smaller" id="text-@order.OrderId">Avisa al cliente que la orden está lista para ser entregada</div>
-                        }
-                        <div>
-                            <span class="fa fa-refresh hidden" style="color: #883636 ;cursor: pointer; font-size: 20px;" id="refresh-@order.OrderId" onclick="window.location.reload()" title="Refrescar la página">
-
-                            </span>
+                            <div class="text-muted" style="font-size:smaller">Avisa al cliente que la orden está lista para ser entregada</div>
+                        </div>
+                        <div class="archive @Html.Raw(order.Finished ? "" : "hidden")" id="archive-@order.OrderId">
+                            <a class="btn btn-info archive" id="@order.OrderId" title="Hacer click si el pedido ya fue entregado">Archivar</a>
+                            <div class="text-muted" style="font-size:smaller" >Guarda la orden en la base de datos y significa que el cliente ya recibió su producto</div>
                         </div>
                     </td>
                 </tr>
@@ -147,7 +136,9 @@
 </div>
 
 <script type="text/javascript">
-    $('#orders').DataTable({
+
+
+    $table = $('#orders').DataTable({
         "language": {
             "url": "/Scripts/SpanishDatatables.json"
         },
@@ -155,16 +146,16 @@
         "aaSorting": []
     });
 
-    function pickedUp(id) {
+    $('#orders tbody').on('click', 'a.archive', function () {
         loaderOn();
-        $('a#' + id).hide();
-        $('div#text-' + id).hide();
+        $row = $(this).parents('tr');
+        var id = $(this).attr('id');
         $.ajax({
             type: 'POST',
             url: '/api/OrderData/PickUpOrder/' + id,
             data: {},
             success: function (data) {
-                $('span#refresh-' + id).removeClass('hidden');
+                $table.row($row).remove().draw();
                 loaderOff();
             },
             error: function (xhr, textStatus, error) {
@@ -174,9 +165,10 @@
                 loaderOff();
             }
         });
-    }
+    });
 
     function orderCompleted(id) {
+        $('div.ready#ready-' + id).addClass('hidden');
         loaderOn();
         $('a#' + id).hide();
         $('div#text-' + id).hide();
@@ -185,7 +177,7 @@
             url: '/api/OrderData/CompleteOrder/' + id,
             data: {},
             success: function (data) {
-                $('span#refresh-' + id).removeClass('hidden');
+                $('div.archive#archive-' + id).removeClass('hidden');
                 loaderOff();
             },
             error: function (xhr, textStatus, error) {

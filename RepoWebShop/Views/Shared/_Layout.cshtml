@@ -6,16 +6,18 @@
 @{
     var user = await _userManager.GetUser(_signIn);
     var isAdmin = user != null && await _userManager.IsInRoleAsync(user, "Administrator");
+    var host = this.Context?.Request?.HostUrl() ?? "";
 }
 <!DOCTYPE html>
 <html lang="es-ar">
 <head>
-    <meta property="og:image" content="~/Pictures/LogoRepo.PNG" />
+    @RenderSection("metatags", required: false)
+
+    <meta property="og:image" content="@host/Pictures/LogoWithBackground.png" />
     @Html.Partial("~/Views/Shared/Favicon.cshtml")
     @Html.Partial("~/Views/Shared/ExternalCss.cshtml")
     @Html.Partial("~/Views/Shared/SharedCss.cshtml")
     <meta property="fb:app_id" content="744831982380043" />
-    @RenderSection("metatags", required: false)
     @RenderSection("styles", required: false)
 
     <meta charset="utf-8">
@@ -233,7 +235,6 @@ new MediaViewModel() { Icon = "fa-whatsapp", Class = "social-whatsapp", Ref = "h
     <div class="text-center text-muted hidden-print">
         Sesión #@sc.BookingId.Ending(6)
     </div>
-
 
 </body>
 </html>

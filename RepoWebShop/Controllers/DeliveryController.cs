@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -52,6 +53,9 @@ namespace RepoWebShop.Controllers
             return View(viewModel);
         }
 
+        [Authorize(Roles = "Administrator")]
+        public IActionResult Estimate() => View();
+
         [HttpPost]
         public async Task<IActionResult> Index(DeliveryAddressViewModel deliveryAddres)
         {
@@ -59,21 +63,23 @@ namespace RepoWebShop.Controllers
             deliveryAddres.CostByBlock = _config.GetValue<int>("DeliveryCostByBlock");
             deliveryAddres.DeliveryRadius = _config.GetValue<int>("DeliveryRadius");
 
-            if (!ModelState.IsValid)
+            try
             {
-                try
-                {
-                    var potentialPlace = await _deliveryRepository.GuessPlaceIdAsync(deliveryAddres.AddressLine1);
-                    var placeConfirmed = await _deliveryRepository.GetPlaceAsync(potentialPlace);
-                    deliveryAddres.AddressLine1 = placeConfirmed.StreetName + " " + placeConfirmed.StreetNumber + ", " + placeConfirmed.PostalCode;
-                    deliveryAddres.ZipCode = placeConfirmed.PostalCode;
-                    deliveryAddres.StreetName = placeConfirmed.StreetName;
-                    deliveryAddres.StreetNumber = placeConfirmed.StreetNumber;
-                }
-                catch
-                {
-                    return View(deliveryAddres);
-                }
+                var potentialPlace = await _deliveryRepository.GuessPlaceIdAsync(deliveryAddres.AddressLine1);
+                var placeConfirmed = await _deliveryRepository.GetPlaceAsync(potentialPlace);
+                deliveryAddres.AddressLine1 = placeConfirmed.StreetName + " " + placeConfirmed.StreetNumber + ", " + placeConfirmed.PostalCode;
+                deliveryAddres.ZipCode = placeConfirmed.PostalCode;
+                deliveryAddres.StreetName = placeConfirmed.StreetName;
+                deliveryAddres.StreetNumber = placeConfirmed.StreetNumber;
+            }
+            catch(Exception ex)
+            {
+                ModelState.AddModelError("InvalidAddress", ex.Message);
+            }
+
+            if(!ModelState.IsValid)
+            {
+                return View(deliveryAddres);
             }
 
             var distance = await _deliveryRepository.GetDistanceAsync(deliveryAddres.AddressLine1);

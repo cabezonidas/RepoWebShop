@@ -282,16 +282,16 @@ namespace RepoWebShop.Models
                 _appDbContext.SaveChanges();
                 //Send mail
             },
-            () => {
+            async () => {
                 if(_env.IsProduction())
                 {
                     if (order.Registration != null && order.Registration.PhoneNumberConfirmed)
                     {
                         var user = order.Registration;
-                        _smsRepository.SendSms(user.PhoneNumber,
+                        await _smsRepository.SendSms(user.PhoneNumber,
                             $"{user.FirstName}, ¡Tu pedido {order.FriendlyBookingId} ya está listo! De las Artes.");
                     }
-                    _emailRepository.NotifyOrderCompleteAsync(order);
+                    await _emailRepository.NotifyOrderCompleteAsync(order);
                 }
             });
         }
@@ -404,7 +404,7 @@ namespace RepoWebShop.Models
                 _appDbContext.Orders.Update(order);
                 _appDbContext.SaveChanges();
                 await _emailRepository.SendOrderConfirmationAsync(order,
-                () => _smsRepository.NotifyAdmins($"¡Pedido nuevo! Código {order.FriendlyBookingId}"));
+                async () => await _smsRepository.NotifyAdminsAsync($"¡Pedido nuevo! Código {order.FriendlyBookingId}"));
             }
 
             return order;

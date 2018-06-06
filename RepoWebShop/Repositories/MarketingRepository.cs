@@ -4,6 +4,8 @@ using RepoWebShop.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Twilio.Rest.Lookups.V1;
+using Twilio.Types;
 
 namespace RepoWebShop.Repositories
 {
@@ -41,6 +43,17 @@ namespace RepoWebShop.Repositories
             var result = emails.Where(x => x.IsValidEmail() && !unsubscribed.Contains(x)).ToList();
 
             return result;
+        }
+
+        public IEnumerable<string> GetAllMobiles()
+        {
+            var numbers = new List<string>();
+            numbers.AddRange(_appDbContext.Orders.Select(x => x.PhoneNumber));
+            numbers.AddRange(_appDbContext.Users.Select(x => x.PhoneNumber));
+            numbers.AddRange(_appDbContext.Users.Select(x => x.PhoneNumberDeclared));
+            numbers.AddRange(_appDbContext.PaymentNotices.Select(x => x.PhoneNumber));
+
+            return numbers.Where(x => !string.IsNullOrEmpty(x)).Distinct();
         }
 
         public IEnumerable<EmailMarketingTemplate> GetTemplates()

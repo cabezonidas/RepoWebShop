@@ -27,5 +27,22 @@ namespace RepoWebShop.Controllers
         {
             return Ok(new { distance = await _deliveryRepository.GetDistanceAsync(deliveryAddress) });
         }
+
+        [HttpGet]
+        [Route("GetCost/{deliveryAddress}")]
+        public async Task<IActionResult> GetCost(string deliveryAddress)
+        {
+            try
+            {
+                var distance = await _deliveryRepository.GetExactDistanceAsync(deliveryAddress);
+                var cost = _deliveryRepository.GetDeliveryEstimate(distance);
+                return Ok(new { cost });
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+
+        }
     }
 }

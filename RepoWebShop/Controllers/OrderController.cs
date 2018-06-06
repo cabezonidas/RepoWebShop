@@ -288,7 +288,7 @@ namespace RepoWebShop.Controllers
                 order = _orderRepository.CreateOrder(order);
 
                 await _emailRespository.SendOrderConfirmationAsync(order,
-                    () => _smsRepository.NotifyAdmins($"¡Nueva reserva! Código {order.FriendlyBookingId}")
+                    async () => await _smsRepository.NotifyAdminsAsync($"¡Nueva reserva! Código {order.FriendlyBookingId}")
                 );
                 return Redirect($"/Order/Status/{order.FriendlyBookingId}");
             }

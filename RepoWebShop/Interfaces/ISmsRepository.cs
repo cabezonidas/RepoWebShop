@@ -1,10 +1,14 @@
-﻿using Twilio.Rest.Api.V2010.Account;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Twilio.Rest.Api.V2010.Account;
+using Twilio.Types;
 
 namespace RepoWebShop.Interfaces
 {
     public interface ISmsRepository
     {
-        MessageResource SendSms(string phone, string body);
-        void NotifyAdmins(string v);
+        Task<MessageResource> SendSms(string phone, string body);
+        Task NotifyAdminsAsync(string v);
+        Task<IEnumerable<string>> GetFormattedNumbers(IEnumerable<string> numbers);
     }
 }

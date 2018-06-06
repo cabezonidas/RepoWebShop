@@ -1,153 +1,175 @@
 ﻿@model DeliveryAddressViewModel
 
+@{
+    var url = (this.Context?.Request?.HostUrl() ?? "") + "/Delivery/Index";
+}
 @section metatags {
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
+
+    <meta property="og:url" content="@url" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Envío a domicilio" />
+    <meta property="og:description" content="De las Artes - Desde 1992" />
+
+    <title>De las Artes - Envío a domicilio</title>
 }
+<div id="fb-root"></div>
+<script>
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = 'https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v2.11&appId=744831982380043';
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
 <br />
 
-<div class="container" >
+<div class="container">
     <div class="title-container">
         <h1 class="title-logo">Delivery</h1>
     </div>
 
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-    <form asp-controller="Delivery" asp-action="Index" class="form-horizontal" method="post" role="form" autocomplete="off">
-        <div class="form-group" id="locationField">
-            <div class="text-center text-muted" style="margin-bottom: 20px;">
-                <h3>Horarios de envío</h3>
-                <h4 class="">De Martes a Sábados<br />Entre 10:30 y 12:30 o entre 18:00 y 20:00</h4>
-            </div>
-            <label asp-for="AddressLine1" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="AddressLine1" id="autocomplete" class="form-control"
-                       placeholder="Avenida Jose Maria Moreno 561"
-                       onFocus="geolocate()" autocomplete="off"/>
-                <div style="margin-top: 5px;">
-                    <div class="text-center alert-danger hidden" id="addressNotSupported">
-                        <span class="fa fa-times" style="color: red;">
-
-                        </span>
-                        La dirección está fuera de nuestro radio de delivery. Ponete en contacto con nosotros, para ver si podemos hacer el delivery.
-                    </div>
-                    <div class="text-center alert-success hidden" id="addressSupported">
-                        <span class="fa fa-check" style="color: limegreen;">
-
-                        </span>
-                        La dirección está dentro de nuestro radio de delivery
-                    </div>
+        <form asp-controller="Delivery" asp-action="Index" class="form-horizontal" method="post" role="form" autocomplete="off">
+            <div class="form-group" id="locationField">
+                <div class="text-center text-muted" style="margin-bottom: 20px;">
+                    <h3>Horarios de envío</h3>
+                    <h4 class="">De Martes a Sábados<br />Entre 10:30 y 12:30 o entre 18:00 y 20:00</h4>
                 </div>
-                <div asp-validation-summary="All" class="text-danger"></div>
+                <label asp-for="AddressLine1" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="AddressLine1" id="autocomplete" class="form-control"
+                           placeholder="Avenida Jose Maria Moreno 561"
+                           onFocus="geolocate()" autocomplete="off" />
+                    <div style="margin-top: 5px;">
+                        <div style="" id="error" class="hidden alert-danger text-center">
+
+                        </div>
+                        <div id="cost" class="text-center alert-success text-center">
+
+                        </div>
+                    </div>
+                    <div asp-validation-summary="All" class="text-danger allerrors"></div>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="DeliveryInstructions" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <textarea maxlength="250" asp-for="DeliveryInstructions" placeholder="Ingresa instrucciones de envío, piso, departamento, unidad, etc.." class="form-control" rows="4"></textarea>
+            <div class="form-group">
+                <label asp-for="DeliveryInstructions" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <textarea maxlength="250" asp-for="DeliveryInstructions" placeholder="Ingresa instrucciones de envío, piso, departamento, unidad, etc.." class="form-control" rows="4"></textarea>
+                </div>
             </div>
-        </div>
 
 
-        <div class="form-group hidden">
-            <div class="col-md-2 control-label"></div>
-            <div class="col-md-10">
-                <table id="address">
-                    <tr>
-                        <td>
-                            <input id="street_number" asp-for="StreetNumber" readonly="readonly" />
-                        </td>
-                        <td>
-                            <input id="route" asp-for="StreetName" readonly="readonly" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input id="locality" asp-for="State" readonly="readonly" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input id="administrative_area_level_1" readonly="readonly" />
-                        </td>
-                        <td>
-                            <input id="postal_code" asp-for="ZipCode" readonly="readonly" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input id="country" asp-for="Country" disabled="disabled" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input id="locality" asp-for="State" disabled="disabled" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input id="distance" asp-for="Distance" type="number" />
-                        </td>
-                    </tr>
-                </table>
+            <div class="form-group hidden">
+                <div class="col-md-2 control-label"></div>
+                <div class="col-md-10">
+                    <table id="address">
+                        <tr>
+                            <td>
+                                <input id="street_number" asp-for="StreetNumber" readonly="readonly" />
+                            </td>
+                            <td>
+                                <input id="route" asp-for="StreetName" readonly="readonly" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="locality" asp-for="State" readonly="readonly" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="administrative_area_level_1" readonly="readonly" />
+                            </td>
+                            <td>
+                                <input id="postal_code" asp-for="ZipCode" readonly="readonly" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="country" asp-for="Country" disabled="disabled" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="locality" asp-for="State" disabled="disabled" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="distance" asp-for="Distance" type="number" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
-        </div>
 
 
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <a asp-action="Index" asp-controller="ShoppingCart" class="btn btn-primary" value="Volver">
-                    <span class="glyphicon glyphicon-arrow-left">
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <a asp-action="Index" asp-controller="ShoppingCart" class="btn btn-primary" value="Volver">
+                        <span class="glyphicon glyphicon-arrow-left">
 
-                    </span>
-                    Volver
-                </a>
-                <input type="submit" class="btn btn-primary" value="Guardar envío" />
+                        </span>
+                        Volver
+                    </a>
+                    <input type="submit" class="btn btn-primary" value="Guardar envío" />
+                </div>
             </div>
+        </form>
+        <div class="text-center text-muted">
+            <h3 class="">¿Qué pasa si el delivery no llega a tu zona?</h3>
+            <div>Podemos hacer el envío dependiendo del monto y la antelación del pedido.</div>
+            <div>Para eso deberás ponerte en contacto con nosotros.</div>
+            <div>Llamanos al <a href="tel:+5491149250262">4925-0262</a> o escribirnos a <a href="mailto:info@@delasartes.com.ar">info@@delasartes.com.ar</a></div>
+            <div>Tambien podés ponerte en contacto a través de nuestros medios sociales.</div>
         </div>
-    </form>
-    <div class="text-center text-muted">
-        <h3 class="">¿Qué pasa si el delivery no llega a tu zona?</h3>
-        <h4>Podemos hacer el envío dependiendo del monto y la antelación del pedido.</h4>
-        <h4>Para eso deberás ponerte en contacto con nosotros.</h4>
-        <h4>Llamanos al <a href="tel:+5491149250262">4925-0262</a> o escribirnos a <a href="mailto:info@@delasartes.com.ar">info@@delasartes.com.ar</a></h4>
-        <h4>Tambien podés ponerte en contacto a través de nuestros medios sociales.</h4>
-    </div>
+
     </div>
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-        <h3 class="text-muted text-center">Zona de Cobertura - Radio de 3kms</h3>
+        <h3 class="text-muted text-center">Zona de Cobertura - Radio de @Model.DeliveryRadius mts</h3>
         <h4 class="text-center text-muted">El costo de envío se calcula automáticamente</h4>
         <h5 class="text-center text-muted">
             @{var maxCostDelivery = (Model.DeliveryRadius / 100) * Model.CostByBlock; }
             El costo varía entre $@Model.MinimumCharge y $@maxCostDelivery dependiendo la distancia.<br />
-            
+
         </h5>
         <div id="map" style="height:350px; width:100%;"></div>
+        <div class="text-center">
+            <div class="fb-share-button" style="margin: 25px;"
+                 data-href="@url"
+                 data-layout="button_count">
+            </div>
+        </div>
     </div>
 
 
 </div>
+
 <script>
     function getDistance() {
+        loaderOn();
+        $('#cost').empty();
+        $('#error').empty().addClass('hidden');
         var location = $('#autocomplete').val();
-        $.get("api/DeliveryData/GetDistance/" + location, function (data) {
-            document.getElementById('distance').value = data.distance;
-            if (data.distance > 3000 || data.distance < 1) {
-                $('#addressNotSupported').removeClass('hidden');
-                $('#addressSupported').addClass('hidden');
-            }
-            else {
-                $('#addressNotSupported').addClass('hidden');
-                $('#addressSupported').removeClass('hidden');
-            }
+        $.get("/api/DeliveryData/GetCost/" + location).then((data) => {
+            $('#cost').append("<span class='fa fa-check' style='margin: 5px;'></span>Estás dentro del radio. Costo de envío $" + data.cost);
+            $('.allerrors').empty();
+            loaderOff();
+        }).fail((XMLHttpRequest, textStatus, errorThrown) => {
+            console.log(XMLHttpRequest);
+            console.log(textStatus);
+            console.log(errorThrown);
+            $('.allerrors').empty();
+            $('#error').append("<span class='fa fa-times' style='margin: 5px;'></span>" + XMLHttpRequest.responseJSON.message);
+            $('#error').removeClass('hidden');
+            loaderOff();
         });
     }
-    function initGoogle() {
-        initAutocomplete();
-        initMap();
-    }
-</script>
-<script>
+
     var placeSearch, autocomplete;
     var componentForm = {
         street_number: 'short_name',
@@ -159,9 +181,6 @@
     };
 
     function initAutocomplete() {
-        // Create the autocomplete object, restricting the search to geographical
-        // location types.
-
         autocomplete = new google.maps.places.Autocomplete(
             (document.getElementById('autocomplete')),
             {
@@ -169,23 +188,14 @@
                 componentRestrictions: { country: 'ar' }
             });
 
-
-        // When the user selects an address from the dropdown, populate the address
-        // fields in the form.
         autocomplete.addListener('place_changed', fillInAddress);
     }
 
     function fillInAddress() {
-        // Get the place details from the autocomplete object.
         var place = autocomplete.getPlace();
-
         for (var component in componentForm) {
             document.getElementById(component).value = '';
-            //document.getElementById(component).disabled = false;
         }
-
-        // Get each component of the address from the place details
-        // and fill the corresponding field on the form.
         for (var i = 0; i < place.address_components.length; i++) {
             var addressType = place.address_components[i].types[0];
             if (componentForm[addressType]) {
@@ -196,8 +206,6 @@
         getDistance();
     }
 
-    // Bias the autocomplete object to the user's geographical location,
-    // as supplied by the browser's 'navigator.geolocation' object.
     function geolocate() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
@@ -213,44 +221,32 @@
             });
         }
     }
-</script>
-
-<script>
-    // This example creates circles on the map, representing populations in North
-    // America.
-
-    // First, create an object containing LatLng and population for each city.
-    var citymap = {
-        delasartes: {
-            center: { lat: -34.625265, lng: -58.434483 }
-        }
-    };
 
     function initMap() {
-        // Create the map.
+        var citymap = {
+            center: { lat: -34.625265, lng: -58.434483 }
+        };
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 12,
-            center: { lat: -34.625265, lng: -58.434483 },
+            center: citymap.center,
             mapTypeId: 'terrain'
         });
+        var cityCircle = new google.maps.Circle({
+            strokeColor: '#006600',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#66ff66',
+            fillOpacity: 0.35,
+            map: map,
+            center: citymap.center,
+            radius: 3000
+        });
+    }
 
-        // Construct the circle for each value in citymap.
-        // Note: We scale the area of the circle based on the population.
-        for (var city in citymap) {
-            // Add the circle for this city to the map.
-            var cityCircle = new google.maps.Circle({
-                strokeColor: '#006600',
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: '#66ff66',
-                fillOpacity: 0.35,
-                map: map,
-                center: citymap[city].center,
-                radius: 3000
-            });
-        }
+    function initGoogle() {
+        initAutocomplete();
+        initMap();
     }
 </script>
-
 <script src="https://maps.googleapis.com/maps/api/js?input=Vict&types;=geocode&language;=es&key=AIzaSyAR5nmTSuiZsjA5Yhgx3w9EDEyF-C8zIwU&libraries=places&callback=initGoogle"
         async defer></script>

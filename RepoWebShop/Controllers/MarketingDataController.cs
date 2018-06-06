@@ -14,10 +14,11 @@ namespace RepoWebShop.Controllers
     public class MarketingDataController : Controller
     {
         private readonly IMarketingRepository _marketingRepo;
-
-        public MarketingDataController (IMarketingRepository marketingRepo)
+        private readonly ISmsRepository _smsRepo;
+        public MarketingDataController (IMarketingRepository marketingRepo, ISmsRepository smsRepo)
         {
             _marketingRepo = marketingRepo;
+            _smsRepo = smsRepo;
         }
 
         [HttpPost]
@@ -38,6 +39,23 @@ namespace RepoWebShop.Controllers
         {
             await _marketingRepo.SendPromoEmailsAsync(templateId, email);
             return Ok();
+        }
+
+        [HttpPost]
+        [Route("SendPromoSms/{tel}/{body}")]
+        public async Task<IActionResult> SendPromoSms(string tel, string body)
+        {
+            if(string.IsNullOrEmpty(tel) || string.IsNullOrEmpty(body))
+                return BadRequest();
+            try
+            {
+                await _smsRepo.SendSms(tel, body);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet]

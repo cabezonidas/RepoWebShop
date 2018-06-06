@@ -65,6 +65,17 @@ namespace RepoWebShop.Repositories
             return res1;
         }
 
+        public async Task<int> GetExactDistanceAsync(string addressLine1)
+        {
+            var potentialPlace = await GuessPlaceIdAsync(addressLine1);
+            var placeConfirmed = await GetPlaceAsync(potentialPlace);
+
+            var destination = await GetGeoLocationAsync(addressLine1);
+            var res1 = distance(destination.Key, destination.Value, 'K');
+
+            return res1;
+        }
+
         public async Task<int> GetDrivingDistanceAsync(string addressLine1)
         {
             var httpClient = new HttpClient();
@@ -125,10 +136,15 @@ namespace RepoWebShop.Repositories
 
         public decimal GetDeliveryEstimate(decimal distance)
         {
+            var radius = _config.GetValue<int>("DeliveryRadius");
             var result = ((int)(distance / 100)) * _costByBlock;
-            if (result < _minimumCharge)
-                result = _minimumCharge;
-            return result;
+            if (radius >= distance)
+            {
+                if (result < _minimumCharge)
+                    result = _minimumCharge;
+                return result;
+            }
+            throw new Exception($"El destino está fuera del rango. El costo sería ${result}, pero el destino está a {distance} mts y nuestra distancia de cobertura son {radius} mts. ");
         }
 
         public async Task<string> GuessPlaceIdAsync(string address)
@@ -183,6 +199,15 @@ namespace RepoWebShop.Repositories
                 StreetName = streetName,
                 StreetNumber = streetNumber
             };
+
+            if (string.IsNullOrEmpty(address.StreetNumber))
+                throw new Exception("No se puede determinar la altura.");
+
+            if (string.IsNullOrEmpty(address.StreetName))
+                throw new Exception("No se puede determinar la calle.");
+
+            if (string.IsNullOrEmpty(address.PostalCode))
+                throw new Exception("No se puede determinar el código postal.");
 
             return address;
         }

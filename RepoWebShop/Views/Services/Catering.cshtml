@@ -1,51 +1,74 @@
 ﻿@model IEnumerable<Product>
 @inject ILunchRepository _lunch;
 @inject IFlickrRepository _flickr;
-
+@{
+    var url = (this.Context?.Request?.HostUrl() ?? "") + "/Services/Catering";
+    var desc = "De las Artes también se dedica a armar el catering ideal para tus eventos. Sea una mesa dulce, una torta festiva, o el menú entero, nuestro personal siempre lo va a ayudar a dimensionar su catering. Nuestras opciones crecen al ritmo de las tendencias gastronómicas. Con experiencia, y profesionales de la gastronomía a cargo, un catering con sello 'De las Artes' está bien dimensionado, es novedoso, accesible y por sobre todo, de primera calidad.";
+}
 @section metatags {
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+
+    <meta property="og:url" content="@url" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Catering de las Artes" />
+    <meta property="og:description" content="@desc" />
+
     <title>Catering</title>
 }
+<div id="fb-root"></div>
+<script>
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = 'https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v2.11&appId=744831982380043';
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
+<div class="container">
+    <div class="title-container">
+        <h1 class="title-logo">Catering</h1>
+    </div>
 
+
+
+
+
+
+    <div class="text-center">
+        <h4>Echale un vistazo a nuestros deliciosos menúes que podemos preparar para tu evento o... <a class="alert-success" asp-action="Estimate" asp-controller="Lunch">¡Armátelo vos mism@@!</a></h4>
+        <h4>Normalmente nosotros recomendamos entre 10 y 12 bocados por comensal, dependiendo de cuánto dure la celebración.</h4>
+        <div class="fb-share-button" style="margin-bottom: 25px;"
+             data-href="@url"
+             data-layout="button_count">
+        </div>
+        @*<img src="~/Pictures/Loader.gif" id="loading" style="margin: auto;" />*@
+    </div>
+    @{ long albumbId = 72157693586449552; }
+    @Html.Partial("~/Views/Photos/SmallCarrousel.cshtml", albumbId)
+
+    @Html.Partial("~/Views/Lunch/Combos.cshtml", _lunch.GetAllLunches().Where(x => x.IsCombo))
     <div class="container">
-        <div class="title-container">
-            <h1 class="title-logo">Catering</h1>
-        </div>
-
-
-
-
-
-
-        <div class="text-center">
-            <h4>Echale un vistazo a nuestros deliciosos menúes que podemos preparar para tu evento o... <a class="alert-success" asp-action="Estimate" asp-controller="Lunch">¡Armátelo vos mism@@!</a></h4>
-            <h4>Normalmente nosotros recomendamos entre 10 y 12 bocados por comensal, dependiendo de cuánto dure la celebración.</h4>
-
-            @*<img src="~/Pictures/Loader.gif" id="loading" style="margin: auto;" />*@
-        </div>
-        @{ long albumbId = 72157693586449552; }
-        @Html.Partial("~/Views/Photos/SmallCarrousel.cshtml", albumbId)
-
-        @Html.Partial("~/Views/Lunch/Combos.cshtml", _lunch.GetAllLunches().Where(x => x.IsCombo))
-        <div class="container">
-            <h3>¿Querés uno a medida? </h3>
-            <h5>Acá podes ver nuestras opciones más clásicas. Contactate con nosotros y te ayudamos a elegir, sobre todo con opciones que no están en esta lista.</h5>
-            <h5>Si querés armártelo por tu propia cuenta, hacé click <a class="alert-success" asp-action="Estimate" asp-controller="Lunch">aquí</a></h5>
-            <table class="" id="table">
-                <thead>
-                    <tr>
-                        <th>
-                            Producto
-                        </th>
-                        <th>
-                            Cantidad mínima
-                        </th>
-                        <th>
-                            Precio U. (Sucursal)
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="tbody">
-                    @{
+        <h3>¿Querés uno a medida? </h3>
+        <h5>Acá podes ver nuestras opciones más clásicas. Contactate con nosotros y te ayudamos a elegir, sobre todo con opciones que no están en esta lista.</h5>
+        <h5>Si querés armártelo por tu propia cuenta, hacé click <a class="alert-success" asp-action="Estimate" asp-controller="Lunch">aquí</a></h5>
+        <table class="" id="table">
+            <thead>
+                <tr>
+                    <th>
+                        Producto
+                    </th>
+                    <th>
+                        Cantidad mínima
+                    </th>
+                    <th>
+                        Precio U. (Sucursal)
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+                @{
                     foreach (var item in Model)
                     {
                         <tr>
@@ -59,12 +82,12 @@
                                 @item.PriceInStore.ToString("c")
                             </td>
                         </tr>
-                }
                     }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
     </div>
+</div>
 <script>
     @*$.ajax({
         url: "https://lareposteria.sharepoint.com/_api/Web/Lists(guid'b10fac5f-d656-49ca-bb9a-589b9362bb94')/items?$select=Title,Precio,CantidadMinima&$filter=Categoria eq 'Lunch'&$orderby=Title asc",

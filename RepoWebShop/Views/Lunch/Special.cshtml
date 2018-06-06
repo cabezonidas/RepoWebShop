@@ -2,16 +2,17 @@
 
 @{
     var title = "Catering " + (string.IsNullOrEmpty(Model.Title) ? "Personalizado" : $"- {Model.Title}");
-    var url = Url.Action("Special", "Lunch", new { id = Model.LunchId });
+    var url = (this.Context?.Request?.HostUrl() ?? "") + "/Lunch/Special/" + Model.LunchId;
 }
 @section metatags {
     <meta property="og:url" content="@url" />
     <meta property="og:type" content="product" />
     <meta property="og:title" content="@title" />
+    <meta property="og:description" content="Catering 'De las Artes' recomendado para @Model.Attendants comensales." />
 
     @if (!string.IsNullOrEmpty(Model.ThumbnailUrl))
     {
-    <meta property="og:image" content="@Model.ThumbnailUrl" />
+        <meta property="og:image" content="@Model.ThumbnailUrl" />
     }
 
 

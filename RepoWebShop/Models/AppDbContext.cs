@@ -18,6 +18,7 @@ namespace RepoWebShop.Models
         //        .IsUnique(true);
         //}
 
+        public DbSet<SmsHistory> SmsHistory { get; set; }
         public DbSet<EmailMarketingTemplate> EmailMarketingTemplates { get; set; }
         public DbSet<EmailMarketingHistory> EmailMarketingHistory { get; set; }
 

@@ -1,0 +1,76 @@
+﻿@model PromoSmsViewModel
+@section styles {
+    <link rel="stylesheet" href="~/lib/intl-tel-input/build/css/intlTelInput.css">
+}
+
+<div class="container">
+    <form asp-controller="Marketing" asp-action="PromoSms" method="post" class="form-horizontal" role="form">
+        <div class="form-group">
+            <div class="col-md-2 "></div>
+            <div class="col-md-6">
+                <h2 class="text-muted text-center">Envío de SMS</h2>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Body" class="col-md-2 control-label"></label>
+            <div class="col-md-6">
+                <textarea asp-for="Body" placeholder="Indicar cuerpo del mensaje y no olvidar mencionar el remitente, ya que el destinatario no sabrá de donde proviene el SMS." maxlength="160" class="form-control" id="textarea-body" style="height: 150px;"></textarea>
+                <span asp-validation-for="Body" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label"></label>
+            <div class="col-md-3">
+                <input class="form-control" type="tel" id="phone" /> <br />
+            </div>
+            <div class="col-md-3">
+                <a class="btn btn-primary" onclick="sendmessage()" id="delete-pieDetail">Enviar individual</a>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-primary" value="Enviar a todos" />
+                <div>
+                    Esta acción no tiene vuelta atrás y le envía el mensaje a TODOS los teléfonos registrados en la base de datos.
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="~/lib/intl-tel-input/build/js/intlTelInput.min.js"></script>
+
+<script type="text/javascript">
+    $("#phone").intlTelInput({
+        initialCountry: "ar",
+        geoIpLookup: function (callback) {
+            $.get("http://ipinfo.io", function () { }, "jsonp").always(function (resp) {
+                var countryCode = (resp && resp.country) ? resp.country : "";
+                callback(countryCode);
+            });
+        },
+        preferredCountries: ['ar', 'nz'],
+        separateDialCode: true,
+        utilsScript: "/lib/intl-tel-input/build/js/utils.js"
+    });
+
+    function sendmessage() {
+        loaderOn();
+        $.post('/api/MarketingData/SendPromoSms/' + $("#phone").intlTelInput("getNumber").replace('+', '') + "/" + $('#textarea-body').val()).then(() => {
+            msgSent();
+        }).fail(() => {
+            msgNotSent();
+        });
+    }
+
+    function msgSent() {
+        loaderOff();
+        alert('Mensaje enviado.');
+    }
+
+    function msgNotSent() {
+        loaderOff();
+        alert('Mensaje no fue enviado.');
+    }
+
+</script>
