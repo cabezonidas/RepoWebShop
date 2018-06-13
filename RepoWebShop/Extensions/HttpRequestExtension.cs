@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -34,6 +36,38 @@ namespace RepoWebShop.Extensions
         public static string AbsoluteUrl(this HttpRequest request)
         {
             return $"{request.HostUrl()}{request.Path.Value}";
+        }
+
+        public static Dictionary<string, string> BodyAsDictionary(this HttpRequest request)
+        {
+            var result = new Dictionary<string, string>();
+            string body;
+            if (request.Body.CanSeek)
+                request.Body.Seek(0, SeekOrigin.Begin);
+            using (var reader = new StreamReader(request.Body))
+            {
+                body = reader.ReadToEnd();
+            }
+
+            var resultSet = body.Split("&").Select(x => StringToKeyValue(x)).Where(x => !string.IsNullOrEmpty(x.Key));
+
+            foreach (var entry in resultSet)
+                result.Add(entry.Key, entry.Value);
+
+            return result;
+        }
+
+
+
+        private static KeyValuePair<string, string> StringToKeyValue(string value)
+        {
+            KeyValuePair<string, string> result;
+            var index = value.IndexOf("=");
+            if (index > 0 && value.Length > index)
+                result = new KeyValuePair<string, string>(value.Substring(0, index), value.Substring(index + 1, value.Length - index - 1));
+            else
+                result = new KeyValuePair<string, string>();
+            return result;
         }
     }
 }

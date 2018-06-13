@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180613013327_printqueue")]
+    partial class printqueue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -835,8 +836,6 @@ namespace RepoWebShop.Migrations
                     b.Property<DateTime>("Created");
 
                     b.Property<string>("Message");
-
-                    b.Property<string>("Printer");
 
                     b.Property<bool>("Printing");
 

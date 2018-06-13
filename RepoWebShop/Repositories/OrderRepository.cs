@@ -429,5 +429,7 @@ namespace RepoWebShop.Models
                 //|| _appDbContext.ShoppingCartCustomLunch.Any(x => x.BookingId == bookingId)
                 || _appDbContext.Orders.Any(x => x.BookingId == bookingId);
         }
+
+        public Order GetById(int id) => GetAll().First(x => x.OrderId == id);
     }
 }

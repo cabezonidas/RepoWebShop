@@ -235,6 +235,11 @@ if (paymentState == typeof(OrderMercadoPagoPaymentPending))
                     </div>
                 </td>
             </tr>
+            <tr>
+                <td colspan="3">
+                    <a class="btn btn-primary hidden" onclick="printOrder()" id="print-ticket">Imprimir Ticket</a>
+                </td>
+            </tr>
         </tbody>
     </table>
 
@@ -261,6 +266,12 @@ if (paymentState == typeof(OrderMercadoPagoPaymentPending))
                 defaultDate = Model.Order.PickUpTime.Value.ToString("s");
             }
         }
+    }
+
+    function printOrder() {
+        $.post("/api/OrderData/PrintOnlineOrder/@Model.Order.OrderId").then(() => {
+            $('#print-ticket').addClass('hidden');
+        }).fail(() => "No se pudo mandar a imprimir");
     }
 
     var datetimepickertemp;

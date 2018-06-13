@@ -40,7 +40,7 @@ namespace RepoWebShop.Repositories
             //var numbers = _config.GetSection("AdminMobiles").GetChildren().Select(x => x.Value);
             if(_env.IsProduction())
             {
-                var numbers = _appDbContext.AdminNotifications.Select(x => x.Phone);
+                var numbers = _appDbContext.AdminNotifications.ToList().Select(x => x.Phone);
                 foreach(var number in numbers)
                     await SendSms(number, v);
             }

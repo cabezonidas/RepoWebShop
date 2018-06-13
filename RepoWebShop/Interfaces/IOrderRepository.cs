@@ -29,6 +29,7 @@ namespace RepoWebShop.Interfaces
         void ReturnOrder(int orderId, string reason);
         IEnumerable<Order> GetOrdersInProgress();
         IEnumerable<Order> GetOrdersCancelled();
+        Order GetById(int id);
         IEnumerable<Order> GetOrdersCompleted();
         IEnumerable<Order> GetOrdersPickedUp();
         IEnumerable<Order> GetOrdersReturned();

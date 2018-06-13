@@ -5,6 +5,7 @@ using RepoWebShop.Interfaces;
 using RepoWebShop.Extensions;
 using System.Threading.Tasks;
 using System.Net.Http;
+using RepoWebShop.Models;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,9 +16,11 @@ namespace RepoWebShop.Controllers
     public class OrderDataController : Controller
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IPrinterRepository _printer;
 
-        public OrderDataController(IOrderRepository orderRepository)
+        public OrderDataController(IOrderRepository orderRepository, IPrinterRepository printer)
         {
+            _printer = printer;
             _orderRepository = orderRepository;
         }
 
@@ -33,6 +36,24 @@ namespace RepoWebShop.Controllers
             {
                 return NotFound();
             }
+        }
+
+        [Route("PrintOnlineOrder/{id}")]
+        [HttpPost]
+        public IActionResult PrintOnlineOrder(int id)
+        {
+            Order order = _orderRepository.GetById(id);
+            _printer.AddToQueue("local_printer", order, true);
+            return Ok();
+        }
+
+        [Route("PrintInStoreOrder/{id}")]
+        [HttpPost]
+        public IActionResult PrintInStoreOrder(int id)
+        {
+            Order order = _orderRepository.GetById(id);
+            _printer.AddToQueue("local_printer", order, false);
+            return Ok();
         }
 
         [Route("AddComments/{orderId}")]
