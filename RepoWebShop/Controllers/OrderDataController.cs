@@ -27,9 +27,9 @@ namespace RepoWebShop.Controllers
         [Route("FindOrderApproved/{bookingId}")]
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult FindOrderApproved(string bookingId)
+        public async Task<IActionResult> FindOrderApproved(string bookingId)
         {
-            var order = _orderRepository.GetOrderByBookingId(bookingId);
+            var order = await _orderRepository.GetOrderByFriendlyBookingId(bookingId);
             if (order != null && order.Status == "approved")
                 return Ok();
             else
@@ -40,19 +40,14 @@ namespace RepoWebShop.Controllers
 
         [Route("PrintOnlineOrder/{id}")]
         [HttpPost]
-        public IActionResult PrintOnlineOrder(int id)
+        [AllowAnonymous]
+        public async Task<IActionResult> PrintOnlineOrder(int id)
         {
-            Order order = _orderRepository.GetById(id);
-            _printer.AddToQueue("local_printer", order, true);
-            return Ok();
-        }
+            Order order = await _orderRepository.GetOrderByIdAsync(id);
+            var view = "OrderPrint";
+            var result = await this.RenderViewAsync(view, order, true);
 
-        [Route("PrintInStoreOrder/{id}")]
-        [HttpPost]
-        public IActionResult PrintInStoreOrder(int id)
-        {
-            Order order = _orderRepository.GetById(id);
-            _printer.AddToQueue("local_printer", order, false);
+            _printer.AddToQueue(result);
             return Ok();
         }
 
@@ -89,25 +84,25 @@ namespace RepoWebShop.Controllers
 
         [Route("PickUpOrder/{orderId}")]
         [HttpPost]
-        public IActionResult PickUpOrder(int orderId)
+        public async Task<IActionResult> PickUpOrder(int orderId)
         {
-            _orderRepository.PickUpOrder(orderId);
+            await _orderRepository.PickUpOrderAsync(orderId);
             return Ok();
         }
 
         [Route("CompleteOrder/{orderId}")]
         [HttpPost]
-        public IActionResult CompleteOrder(int orderId)
+        public async Task<IActionResult> CompleteOrder(int orderId)
         {
-            _orderRepository.CompleteOrder(orderId);
+            await _orderRepository.CompleteOrderAsync(orderId);
             return Ok();
         }
 
         [Route("PayOrder/{orderId}")]
         [HttpPost]
-        public IActionResult PayOrder(int orderId)
+        public async Task<IActionResult> PayOrder(int orderId)
         {
-            _orderRepository.PayOrder(orderId);
+            await _orderRepository.PayOrderAsync(orderId);
             return Ok();
         }
     }

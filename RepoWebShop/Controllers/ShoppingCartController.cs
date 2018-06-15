@@ -122,9 +122,9 @@ namespace RepoWebShop.Controllers
         }
 
         [PageVisitAsync]
-        public RedirectToActionResult AddCateringToShoppingCart(int id)
+        public async Task<RedirectToActionResult> AddCateringToShoppingCart(int id)
         {
-            var catering = _lunchRep.GetLunch(id);
+            var catering = await _lunchRep.GetLunchByIdAsync(id);
             if (catering != null)
                 _cartRepository.AddCateringToCart(catering, amount: 1);
             return RedirectToAction("Index");
@@ -175,9 +175,9 @@ namespace RepoWebShop.Controllers
         }
 
         [PageVisitAsync]
-        public RedirectToActionResult RemoveCateringFromCart(int lunchId)
+        public async Task<RedirectToActionResult> RemoveCateringFromCart(int lunchId)
         {
-            var lunch = _lunchRep.GetLunch(lunchId);
+            var lunch = await _lunchRep.GetLunchByIdAsync(lunchId);
             _cartRepository.RemoveLunchFromCart(lunch);
             return RedirectToAction("Index");
         }

@@ -25,7 +25,7 @@ namespace RepoWebShop.Repositories
             _appDbContext.SaveChanges();
 
             if(_orderRespository.ValidBookingId(paymentNotification.BookingId))
-                await _orderRespository.PaymentNotified(paymentNotification);
+                await _orderRespository.PaymentNotifiedAsync(paymentNotification);
 
             /*
             pending         - The user has not yet completed the payment process

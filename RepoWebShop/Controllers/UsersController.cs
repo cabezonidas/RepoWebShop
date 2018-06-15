@@ -30,7 +30,7 @@ namespace RepoWebShop.Controllers
         public async Task<ViewResult> Index()
         {
             var users = _appDbContext.Users.ToList();
-            var orders = _orderRepository.GetAll();
+            var orders = await _orderRepository.GetAllAsync();
 
             var ordersWithoutUsers = orders.Where(x => x.Registration == null);
             var ordersWithUsers = orders.Where(x => x.Registration != null);

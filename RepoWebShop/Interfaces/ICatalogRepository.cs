@@ -8,7 +8,7 @@ namespace RepoWebShop.Interfaces
 {
     public interface ICatalogRepository
     {
-        IEnumerable<Product> GetAll();
+        IEnumerable<Product> GetAll(Func<Product, bool> condition = null);
         IEnumerable<Product> GetAvailableToBuyOnline();
         Product GetById(int id);
         IEnumerable<Product> GetActive();

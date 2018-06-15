@@ -25,20 +25,11 @@ namespace RepoWebShop.Controllers
             _catalogRepo = catalogRepo;
         }
 
-        public IActionResult Index()
-        {
-            return View(_catalogRepo.GetAll());
-        }
+        public IActionResult Index() => View(_catalogRepo.GetAll());
 
-        public IActionResult QuickEdit()
-        {
-            return View(_catalogRepo.GetAll().Where(x => x.IsActive));
-        }
+        public IActionResult QuickEdit() => View(_catalogRepo.GetAll(x => x.IsActive));
 
-        public IActionResult OnlyPrices()
-        {
-            return View(_catalogRepo.GetAll().Where(x => x.IsActive));
-        }
+        public IActionResult OnlyPrices() => View(_catalogRepo.GetAll(x => x.IsActive));
 
         [HttpGet]
         [Route("[controller]/AddPieDetailChild/{pieDetailId}")]

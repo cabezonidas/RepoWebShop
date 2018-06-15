@@ -24,6 +24,7 @@ namespace RepoWebShop.Controllers
         private readonly IPieDetailRepository _pieDetailRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IEmailRepository _emailRespository;
+        private readonly IPrinterRepository _printer;
         private readonly IMapper _mp;
         private readonly ICalendarRepository _calendarRepository;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -32,8 +33,9 @@ namespace RepoWebShop.Controllers
         private int _minimumArsForOrderDelivery;
         private int _maxArsForReservation;
 
-        public OrderController(ISmsRepository smsRepository, IConfiguration config, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ICalendarRepository calendarRepository, IMapper mp, IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, IShoppingCartRepository shoppingCart, IAccountRepository accountRepository)
+        public OrderController(IPrinterRepository printer, ISmsRepository smsRepository, IConfiguration config, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ICalendarRepository calendarRepository, IMapper mp, IEmailRepository emailRespository, IOrderRepository orderRepository, IPieDetailRepository pieDetailRepository, IShoppingCartRepository shoppingCart, IAccountRepository accountRepository)
         {
+            _printer = printer;
             _signInManager = signInManager;
             _userManager = userManager;
             _pieDetailRepository = pieDetailRepository;
@@ -49,20 +51,19 @@ namespace RepoWebShop.Controllers
             _smsRepository = smsRepository;
         }
 
-        public IActionResult EmailNotification(int id)
+        public async Task<IActionResult> EmailNotification(int id)
         {
-            var viewModel = _orderRepository.GetEmailData(id);
+            var viewModel = await _orderRepository.GetEmailDataAsync(id);
             return View(viewModel);
         }
 
-        public IActionResult EmailSentNotification(int id)
+        public async Task<IActionResult> EmailSentNotification(int id)
         {
-            var order = _orderRepository.GetOrder(id);
-
+            var order = await _orderRepository.GetOrderByIdAsync(id);
             return View(order.Email);
         }
 
-        public IActionResult Status(string id)
+        public async Task<IActionResult> Status(string id)
         {
             if (Request.QueryString.HasValue)
             {
@@ -70,14 +71,16 @@ namespace RepoWebShop.Controllers
                     if(Request.Query["preference_id"].ToString() == _cartRepository.GetMpPreference(_cartRepository.GetSessionCartId()))
                         _cartRepository.RenewId();
 
+#pragma warning disable CS4014 // Ya que no se esperaba esta llamada, la ejecución del método actual continúa antes de que se complete la llamada
                 Task.Run(async () =>
                 {
                     var apicall = $"http://{Request.Host.ToString()}/api/WebhooksData/OnPaymentNotNotified";
                     await new HttpClient().GetAsync(apicall);
                 });
+#pragma warning restore CS4014 // Ya que no se esperaba esta llamada, la ejecución del método actual continúa antes de que se complete la llamada
             }
 
-            Order order = _orderRepository.GetOrderByBookingId(id);
+            Order order = await _orderRepository.GetOrderByFriendlyBookingId(id);
             OrderStatusViewModel orderstatus;
             if (order == null)
             {
@@ -94,7 +97,7 @@ namespace RepoWebShop.Controllers
                 orderstatus = new OrderStatusViewModel()
                 {
                     BookingId = id ?? string.Empty,
-                    Notification = _orderRepository.GetEmailData(order.OrderId),
+                    Notification = await _orderRepository.GetEmailDataAsync(order.OrderId),
                     Payment = order.OrderPaymentStatus,
                     Progress = order.OrderProgressState
                 };
@@ -104,12 +107,12 @@ namespace RepoWebShop.Controllers
 
         [HttpGet]
         [Route("[Controller]/Pending/{id}")]
-        public IActionResult Pending(string id)
+        public async Task<IActionResult> Pending(string id)
         {
             if(Request.QueryString.HasValue)
             {
                 _cartRepository.RenewId();
-                Task.Run(async () =>
+                await Task.Run(async () =>
                 {
                     var apicall = $"http://{Request.Host.ToString()}/api/WebhooksData/OnPaymentNotNotified";
                     await new HttpClient().GetAsync(apicall);
@@ -121,9 +124,9 @@ namespace RepoWebShop.Controllers
 
         [HttpGet]
         [Route("[Controller]/OrderComplete/{id}")]
-        public IActionResult OrderComplete(int id)
+        public async Task<IActionResult> OrderComplete(int id)
         {
-            Order order = _orderRepository.GetOrder(id);
+            Order order = await _orderRepository.GetOrderByIdAsync(id);
             if (order == null)
                 return NotFound();
             else
@@ -136,9 +139,9 @@ namespace RepoWebShop.Controllers
         [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("[Controller]/UpdateOrderWithReason/{subaction}/{id}")]
-        public IActionResult UpdateOrderWithReason(string subaction, int id)
+        public async Task<IActionResult> UpdateOrderWithReason(string subaction, int id)
         {
-            var order = _orderRepository.GetOrder(id);
+            var order = await _orderRepository.GetOrderByIdAsync(id);
             var orderViewModel = new UpdateOrderWithReasonViewModel();
 
             orderViewModel.Order = order;
@@ -150,90 +153,90 @@ namespace RepoWebShop.Controllers
 
         [Authorize(Roles = "Administrator")]
         [HttpPost]
-        public IActionResult Cancel(UpdateOrderWithReasonViewModel orderCancelled)
+        public async Task<IActionResult> Cancel(UpdateOrderWithReasonViewModel orderCancelled)
         {
             if (ModelState.IsValid)
             {
-                _orderRepository.CancelOrder(orderCancelled.OrderId, orderCancelled.Reason);
+                await _orderRepository.CancelOrderAsync(orderCancelled.OrderId, orderCancelled.Reason);
                 return Redirect("/Order/Cancelled");
             }
-            orderCancelled.Order = _orderRepository.GetOrder(orderCancelled.OrderId);
+            orderCancelled.Order = await _orderRepository.GetOrderByIdAsync(orderCancelled.OrderId);
             return View(orderCancelled);
         }
 
 
         [Authorize(Roles = "Administrator")]
         [HttpPost]
-        public IActionResult CancelPayment(UpdateOrderWithReasonViewModel orderPaymentCancelled)
+        public async Task<IActionResult> CancelPayment(UpdateOrderWithReasonViewModel orderPaymentCancelled)
         {
             if (ModelState.IsValid)
             {
-                _orderRepository.CancelPaymentOrder(orderPaymentCancelled.OrderId, orderPaymentCancelled.Reason);
+                await _orderRepository.CancelPaymentOrderAsync(orderPaymentCancelled.OrderId, orderPaymentCancelled.Reason);
                 return Redirect("/Order/Cancelled");
             }
-            orderPaymentCancelled.Order = _orderRepository.GetOrder(orderPaymentCancelled.OrderId);
+            orderPaymentCancelled.Order = await _orderRepository.GetOrderByIdAsync(orderPaymentCancelled.OrderId);
             return View(orderPaymentCancelled);
         }
 
         [Authorize(Roles = "Administrator")]
         [HttpPost]
-        public IActionResult Refund(UpdateOrderWithReasonViewModel orderRefunded)
+        public async Task<IActionResult> Refund(UpdateOrderWithReasonViewModel orderRefunded)
         {
             if (ModelState.IsValid)
             {
-                _orderRepository.RefundOrder(orderRefunded.OrderId, orderRefunded.Reason);
+                await _orderRepository.RefundOrderAsync(orderRefunded.OrderId, orderRefunded.Reason);
                 return Redirect("/Order/Refunded");
             }
-            orderRefunded.Order = _orderRepository.GetOrder(orderRefunded.OrderId);
+            orderRefunded.Order = await _orderRepository.GetOrderByIdAsync(orderRefunded.OrderId);
             return View(orderRefunded);
         }
 
         [Authorize(Roles = "Administrator")]
         [HttpPost]
-        public IActionResult Return(UpdateOrderWithReasonViewModel orderReturned)
+        public async Task<IActionResult> Return(UpdateOrderWithReasonViewModel orderReturned)
         {
             if (ModelState.IsValid)
             {
-                _orderRepository.ReturnOrder(orderReturned.OrderId, orderReturned.Reason);
+                await _orderRepository.ReturnOrderAsync(orderReturned.OrderId, orderReturned.Reason);
                 return Redirect("/Order/Returned");
             }
-            orderReturned.Order = _orderRepository.GetOrder(orderReturned.OrderId);
+            orderReturned.Order = await _orderRepository.GetOrderByIdAsync(orderReturned.OrderId);
             return View(orderReturned);
         }
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult InProgress() => View(_orderRepository.GetOrdersInProgress());
+        public async Task<IActionResult> InProgress() => View(await _orderRepository.GetOrdersInProgressAsync());
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult Cancelled() => View(_orderRepository.GetOrdersCancelled());
+        public async Task<IActionResult> Cancelled() => View(await _orderRepository.GetOrdersCancelledAsync());
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult Completed() => View(_orderRepository.GetOrdersCompleted());
+        public async Task<IActionResult> Completed() => View(await _orderRepository.GetOrdersCompletedAsync());
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult PickedUp() => View(_orderRepository.GetOrdersPickedUp());
+        public async Task<IActionResult> PickedUp() => View(await _orderRepository.GetOrdersPickedUpAsync());
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult Returned() => View(_orderRepository.GetOrdersReturned());
+        public async Task<IActionResult> Returned() => View(await _orderRepository.GetOrdersReturnedAsync());
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult Refunded() => View(_orderRepository.GetOrdersRefunded());
+        public async Task<IActionResult> Refunded() => View(await _orderRepository.GetOrdersRefundedAsync());
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult NotYetPaid() => View(_orderRepository.GetOrdersPickedUpWithPendingPayment());
+        public async Task<IActionResult> NotYetPaid() => View(await _orderRepository.GetOrdersPickedUpWithPendingPaymentAsync());
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult AllOrders() => View(_orderRepository.GetAll());
+        public async Task<IActionResult> AllOrders() => View(await _orderRepository.GetAllAsync());
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult Detail(int id)
+        public async Task<IActionResult> Detail(int id)
         {
-            Order order = _orderRepository.GetOrder(id);
+            Order order = await _orderRepository.GetOrderByIdAsync(id);
             if (order != null)
             {
-                var items = _orderRepository.GetOrderDetails(order.OrderId);
-                var catalogItems = _orderRepository.GetOrderCatalogItems(order.OrderId);
-                var caterings = _orderRepository.GetOrderCaterings(order.OrderId);
+                var items = order.OrderLines;
+                var catalogItems = order.OrderCatalogItems;
+                var caterings = order.OrderCaterings;
                 var orderDetails = new OrderDetailsViewModel(order, items, catalogItems, caterings);
                 return View(orderDetails);
             }
@@ -286,10 +289,7 @@ namespace RepoWebShop.Controllers
                 order.Status = "reservation";
                 order.Registration = _currentUser;
                 order = _orderRepository.CreateOrder(order);
-
-                await _emailRespository.SendOrderConfirmationAsync(order,
-                    async () => await _smsRepository.NotifyAdminsAsync($"¡Nueva reserva! Código {order.FriendlyBookingId}")
-                );
+                await _orderRepository.AfterOrderConfirmedAsync(order);
                 return Redirect($"/Order/Status/{order.FriendlyBookingId}");
             }
             return View(_currentUser);

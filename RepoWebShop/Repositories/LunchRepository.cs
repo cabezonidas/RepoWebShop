@@ -2,8 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Repositories
 {
@@ -22,21 +24,11 @@ namespace RepoWebShop.Repositories
             _cartRepository = cartRepository;
         }
 
-        public Lunch GetLunch(int lunchId)
-        {
-            Lunch result = _appDbContext.Lunch
-                .Include(x => x.Miscellanea)
-                .Include(x => x.Items)
-                .ThenInclude(x => x.Product)
-                .ThenInclude(x => x.PieDetail)
-                .FirstOrDefault(x => x.LunchId == lunchId);
-            
-            return result;
-        }
+        public async Task<Lunch> GetLunchByIdAsync(int lunchId) => (await GetAllLunchesAsync(x => x.LunchId == lunchId)).FirstOrDefault();
 
-        public LunchItem AddItemInstance(int lunchId, int productId)
+        public async Task<LunchItem> AddItemInstanceAsync(int lunchId, int productId)
         {
-            var lunch = GetLunch(lunchId);
+            var lunch = await GetLunchByIdAsync(lunchId);
             var product = _catalog.GetById(productId);
 
             var shoppingCartLunchItem = lunch.Items?.FirstOrDefault(x => x.Product == product);
@@ -57,9 +49,9 @@ namespace RepoWebShop.Repositories
 
 
 
-        public LunchItem AddItem(int lunchId, int productId)
+        public async Task<LunchItem> AddItemAsync(int lunchId, int productId)
         {
-            var lunch = GetLunch(lunchId);
+            var lunch = await GetLunchByIdAsync(lunchId);
             var product = _catalog.GetById(productId);
 
             var shoppingCartLunchItem = lunch.Items?.FirstOrDefault(x => x.Product == product);
@@ -73,10 +65,10 @@ namespace RepoWebShop.Repositories
             return shoppingCartLunchItem;
         }
 
-        public LunchItem RemoveItemInstance(int lunchId, int productId)
+        public async Task<LunchItem> RemoveItemInstanceAsync(int lunchId, int productId)
         {
             LunchItem result = null;
-            var lunch = GetLunch(lunchId);
+            var lunch = await GetLunchByIdAsync(lunchId);
             var product = _catalog.GetById(productId);
 
             var shoppingCartLunchItem = lunch.Items.FirstOrDefault(x => x.Product == product);
@@ -98,10 +90,10 @@ namespace RepoWebShop.Repositories
             return result;
         }
 
-        public LunchItem RemoveItem(int lunchId, int productId)
+        public async Task<LunchItem> RemoveItemAsync(int lunchId, int productId)
         {
             LunchItem result = null;
-            var lunch = GetLunch(lunchId);
+            var lunch = await GetLunchByIdAsync(lunchId);
             var product = _catalog.GetById(productId);
 
             var shoppingCartLunchItem = lunch.Items.FirstOrDefault(x => x.Product == product);
@@ -139,45 +131,45 @@ namespace RepoWebShop.Repositories
             return result;
         }
 
-        public LunchMiscellaneous AddMiscellaneous(int lunchId, string description, decimal price)
+        public async Task<LunchMiscellaneous> AddMiscellaneousAsync(int lunchId, string description, decimal price)
         {
-            var lunch = GetLunch(lunchId);
+            var lunch = await GetLunchByIdAsync(lunchId);
             var miscellaneous = new LunchMiscellaneous { Description = description, Price = price, Quantity = 1, Lunch = lunch };
-            _appDbContext.LunchMiscellanea.Add(miscellaneous);
-            _appDbContext.SaveChanges();
+            await _appDbContext.LunchMiscellanea.AddAsync(miscellaneous);
+            await _appDbContext.SaveChangesAsync();
             return miscellaneous;
         }
 
-        public LunchMiscellaneous AddMiscellaneousInstance(int lunchId, int miscellaneousId)
+        public async Task<LunchMiscellaneous> AddMiscellaneousInstanceAsync(int lunchId, int miscellaneousId)
         {
-            var lunch = GetLunch(lunchId);
+            var lunch = await GetLunchByIdAsync(lunchId);
             var result = lunch.Miscellanea.First(x => x.LunchMiscellaneousId == miscellaneousId);
 
             result.Quantity += 1;
 
             _appDbContext.LunchMiscellanea.Update(result);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
 
             return result;
         }
 
-        public LunchMiscellaneous RemoveMiscellaneousInstance(int lunchId, int miscellaneousId)
+        public async Task<LunchMiscellaneous> RemoveMiscellaneousInstanceAsync(int lunchId, int miscellaneousId)
         {
-            var lunch = GetLunch(lunchId);
+            var lunch = await GetLunchByIdAsync(lunchId);
             var result = lunch.Miscellanea.First(x => x.LunchMiscellaneousId == miscellaneousId);
 
             result.Quantity -= result.Quantity > 1 ? 1 : 0;
             _appDbContext.LunchMiscellanea.Update(result);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
             return result;
         }
 
-        public void RemoveMiscellaneous(int lunchId, int miscellaneousId)
+        public async Task RemoveMiscellaneousAsync(int lunchId, int miscellaneousId)
         {
-            var lunch = GetLunch(lunchId);
+            var lunch = await GetLunchByIdAsync(lunchId);
             var result = lunch.Miscellanea.First(x => x.LunchMiscellaneousId == miscellaneousId);
             _appDbContext.LunchMiscellanea.Remove(result);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
         public int GetBites(Lunch lunch)
@@ -204,33 +196,35 @@ namespace RepoWebShop.Repositories
             return _appDbContext.LunchMiscellanea.First(x => x.LunchMiscellaneousId == id);
         }
 
-        public IEnumerable<Lunch> GetAllLunches()
+        public async Task<IEnumerable<Lunch>> GetAllLunchesAsync(Func<Lunch, bool> condition = null)
         {
-            return _appDbContext.Lunch
+            var result = await _appDbContext.Lunch
+                .Where(x => condition == null || condition(x))
                 .Include(x => x.Miscellanea)
                 .Include(x => x.Items)
                 .ThenInclude(x => x.Product)
                 .ThenInclude(x => x.PieDetail)
-                .OrderByDescending(x => x.LunchId)
-                .ToList().Where(x => GetTotal(x) > 0);
+                .ToListAsync();
+                
+            return result.Where(x => GetTotal(x) > 0);
         }
 
-        public void CopyLunch(int id)
+        public async Task CopyLunchAsync(int id)
         {
             //SaveLunch();
-            var lunch = GetLunch(id);
+            var lunch = await GetLunchByIdAsync(id);
             var newSessionLunch = _cartRepository.GetOrCreateSessionLunch();
             var items = lunch.Items.Select(x => new LunchItem { Lunch = newSessionLunch.Lunch, Product = x.Product, Quantity = x.Quantity }).ToList();
             var miscellanea = lunch.Miscellanea.Select(x => new LunchMiscellaneous { Lunch = newSessionLunch.Lunch, Description = x.Description, Price = x.Price, Quantity = x.Quantity }).ToList();
             _appDbContext.LunchItems.AddRange(items);
             _appDbContext.LunchMiscellanea.AddRange(miscellanea);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public void ModifyLunch(int id)
+        public async Task ModifyLunchAsync(int id)
         {
             SaveLunch();
-            var lunch = GetLunch(id);
+            var lunch = await GetLunchByIdAsync(id);
             var result = new ShoppingCartLunch
             {
                 BookingId = _cartRepository.GetSessionCartId(),

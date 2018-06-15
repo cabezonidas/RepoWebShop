@@ -7,7 +7,7 @@ namespace RepoWebShop.Interfaces
 {
     public interface IEmailRepository
     {
-        Task SendOrderConfirmationAsync(Order order, Action notifyAdmins);
+        Task SendOrderConfirmationAsync(Order order);
         Task SendEmailActivationAsync(ApplicationUser appUser);
         Task NotifyOrderCompleteAsync(Order order);
         Task SendEmailResetPasswordAsync(ApplicationUser foundUser);

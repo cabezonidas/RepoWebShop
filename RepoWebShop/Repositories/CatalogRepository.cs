@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,7 @@ namespace RepoWebShop.Models
 
         public void Activate(int productId)
         {
-            var result = GetAll().FirstOrDefault(x => x.ProductId == productId);
+            var result = GetById(productId);
             if(result != null)
             {
                 result.IsActive = true;
@@ -63,8 +64,7 @@ namespace RepoWebShop.Models
 
         public void Deactivate(int productId)
         {
-            var product = GetAll().FirstOrDefault(x => x.ProductId == productId);
-
+            var product = GetById(productId);
             if(product != null)
             {
                 product.IsActive = false;
@@ -89,25 +89,13 @@ namespace RepoWebShop.Models
             _appDbContext.SaveChanges();
         }
 
-        public IEnumerable<Product> GetActive()
-        {
-            return GetAll().Where(x => x.IsActive).ToList();
-        }
+        public IEnumerable<Product> GetActive() => GetAll(x => x.IsActive).ToList();
 
-        public IEnumerable<Product> GetAvailableToBuyOnline()
-        {
-            return GetAll().Where(x => x.IsActive && x.IsOnSale).ToList();
-        }
+        public IEnumerable<Product> GetAvailableToBuyOnline() => GetAll(x => x.IsActive && x.IsOnSale).ToList();
+        
+        public IEnumerable<Product> GetAll(Func<Product, bool> condition = null) => _appDbContext.Products.Where(x => condition == null || condition(x)).Include(x => x.PieDetail).ToList();
 
-        public IEnumerable<Product> GetAll()
-        {
-            return _appDbContext.Products.Include(x => x.PieDetail).ToList();
-        }
-
-        public Product GetById(int id)
-        {
-            return GetAll().FirstOrDefault(x => x.ProductId == id);
-        }
+        public Product GetById(int id) => GetAll(x => x.ProductId == id).FirstOrDefault();
 
         public IEnumerable<ProductInflationEstimateViewModel> InflationEstimate(decimal percentage, int roundTo)
         {

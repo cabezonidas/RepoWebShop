@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Controllers
 {
@@ -18,9 +19,9 @@ namespace RepoWebShop.Controllers
 
         [HttpGet]
         [Route("Management")]
-        public IActionResult Management()
+        public async Task<IActionResult> Management()
         {
-            var orders = _orderRepository.GetAll();
+            var orders = await _orderRepository.GetAllAsync();
             return Ok(orders);
         }
     }

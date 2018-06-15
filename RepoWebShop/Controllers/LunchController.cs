@@ -31,48 +31,44 @@ namespace RepoWebShop.Controllers
             _lunchRepository = lunchRepository;
         }
 
-        public IActionResult Index()
-        {
-            IEnumerable<Lunch> lunches =  _lunchRepository.GetAllLunches();
-            return View(lunches);
-        }
+        public async Task<IActionResult> Index() => View(await _lunchRepository.GetAllLunchesAsync());
 
 
         [HttpGet]
         [Route("[controller]/ComboDetail/{id}")]
-        public IActionResult ComboDetail(int id) => View(_lunchRepository.GetLunch(id));
+        public async Task<IActionResult> ComboDetail(int id) => View(await _lunchRepository.GetLunchByIdAsync(id));
 
         [HttpGet]
         [AllowAnonymous]
         [Route("[controller]/CopyLunch/{id}")]
-        public IActionResult CopyLunch(int id)
+        public async Task<IActionResult> CopyLunch(int id)
         {
-            _lunchRepository.CopyLunch(id);
+            await _lunchRepository.CopyLunchAsync(id);
             return RedirectToAction("Estimate");
         }
 
         [HttpGet]
         [Route("[controller]/EditCombo/{lunchId}")]
-        public IActionResult EditCombo(int lunchId)
+        public async Task<IActionResult> EditCombo(int lunchId)
         {
-            var combo = _lunchRepository.GetAllLunches().FirstOrDefault(x => x.LunchId == lunchId);
+            var combo = await _lunchRepository.GetLunchByIdAsync(lunchId);
             var newCombo = _mapper.Map<Lunch, LunchComboViewModel>(combo);
             return View(newCombo);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EditCombo(LunchComboViewModel lunchComboVM)
+        public async Task<IActionResult> EditCombo(LunchComboViewModel lunchComboVM)
         {
             if (!ModelState.IsValid)
             {
                 return View(lunchComboVM);
             }
-            var lunch = _lunchRepository.GetAllLunches().First(x => x.LunchId == lunchComboVM.LunchId);
+            var lunch = await _lunchRepository.GetLunchByIdAsync(lunchComboVM.LunchId);
             lunch = _mapper.Map(lunchComboVM, lunch);
 
             _appDbContext.Lunch.Update(lunch);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
             if(lunchComboVM.IsGeneric)
                 return RedirectToAction("Index");
             else
@@ -81,9 +77,9 @@ namespace RepoWebShop.Controllers
 
         [HttpGet]
         [Route("[controller]/ModifyLunch/{id}")]
-        public IActionResult ModifyLunch(int id)
+        public async Task<IActionResult> ModifyLunch(int id)
         {
-            _lunchRepository.ModifyLunch(id);
+            await _lunchRepository.ModifyLunchAsync(id);
             return RedirectToAction("Estimate");
         }
 
@@ -94,22 +90,14 @@ namespace RepoWebShop.Controllers
             return View(result);
         }
 
-        public IActionResult Detail(int id)
-        {
-            Lunch lunch = _lunchRepository.GetLunch(id);
-            return View(lunch);
-        }
+        public async Task<IActionResult> Detail(int id) => View(await _lunchRepository.GetLunchByIdAsync(id));
 
         [AllowAnonymous]
-        public IActionResult Special(int id)
-        {
-            Lunch lunch = _lunchRepository.GetLunch(id);
-            return View(lunch);
-        }
+        public async Task<IActionResult> Special(int id) => View(await _lunchRepository.GetLunchByIdAsync(id));
 
         [AllowAnonymous]
         [HttpGet]
         [Route("[controller]/Combos/")]
-        public IActionResult Combos() => View(_lunchRepository.GetAllLunches());
+        public async Task<IActionResult> Combos() => View(await _lunchRepository.GetAllLunchesAsync());
     }
 }

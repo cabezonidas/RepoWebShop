@@ -35,10 +35,10 @@ namespace RepoWebShop.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("AddProductInstance/{productId}")]
-        public IActionResult AddProductInstance(int productId)
+        public async Task<IActionResult> AddProductInstance(int productId)
         {
             var sessionLunch = _cartRepository.GetOrCreateSessionLunch();
-            var result = _lunchRepository.AddItemInstance(sessionLunch.Lunch.LunchId, productId);
+            var result = await _lunchRepository.AddItemInstanceAsync(sessionLunch.Lunch.LunchId, productId);
             var route = "~/Views/Lunch/ItemDetail.cshtml";
             return PartialView(route, result);
         }
@@ -46,10 +46,10 @@ namespace RepoWebShop.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("AddProduct/{productId}")]
-        public IActionResult AddProduct(int productId)
+        public async Task<IActionResult> AddProduct(int productId)
         {
             var sessionLunch = _cartRepository.GetOrCreateSessionLunch();
-            var result = _lunchRepository.AddItem(sessionLunch.Lunch.LunchId, productId);
+            var result = await _lunchRepository.AddItemAsync(sessionLunch.Lunch.LunchId, productId);
             var route = "~/Views/Lunch/ItemDetail.cshtml";
             return PartialView(route, result);
         }
@@ -85,10 +85,10 @@ namespace RepoWebShop.Controllers
         [HttpDelete]
         [AllowAnonymous]
         [Route("RemoveProductInstance/{productId}")]
-        public IActionResult RemoveProductInstance(int productId)
+        public async Task<IActionResult> RemoveProductInstance(int productId)
         {
             var sessionLunch = _cartRepository.GetOrCreateSessionLunch();
-            var result = _lunchRepository.RemoveItemInstance(sessionLunch.Lunch.LunchId, productId);
+            var result = await _lunchRepository.RemoveItemInstanceAsync(sessionLunch.Lunch.LunchId, productId);
             var route = "~/Views/Lunch/ItemDetail.cshtml";
             return PartialView(route, result);
         }
@@ -96,10 +96,10 @@ namespace RepoWebShop.Controllers
         [HttpDelete]
         [AllowAnonymous]
         [Route("RemoveProduct/{productId}")]
-        public IActionResult RemoveProduct(int productId)
+        public async Task<IActionResult> RemoveProduct(int productId)
         {
             var sessionLunch = _cartRepository.GetOrCreateSessionLunch();
-            var result = _lunchRepository.RemoveItem(sessionLunch.Lunch.LunchId, productId);
+            var result = await _lunchRepository.RemoveItemAsync(sessionLunch.Lunch.LunchId, productId);
             var route = "~/Views/Lunch/ItemDetail.cshtml";
             return PartialView(route, result);
         }
@@ -118,11 +118,11 @@ namespace RepoWebShop.Controllers
 
         [HttpPost]
         [Route("AddMiscellaneous/{description}/{price}")]
-        public IActionResult AddMiscellaneous(string description, decimal price)
+        public async Task<IActionResult> AddMiscellaneous(string description, decimal price)
         {
             description = description.Replace("__", "/");
             var lunch = _cartRepository.GetOrCreateSessionLunch();
-            var result = _lunchRepository.AddMiscellaneous(lunch.Lunch.LunchId, description, price);
+            var result = await _lunchRepository.AddMiscellaneousAsync(lunch.Lunch.LunchId, description, price);
             return Ok(result.LunchMiscellaneousId);
         }
 
@@ -137,30 +137,30 @@ namespace RepoWebShop.Controllers
 
         [HttpPost]
         [Route("AddMiscellaneousInstance/{miscellaneousId}")]
-        public IActionResult AddMiscellaneousInstance(int miscellaneousId)
+        public async Task<IActionResult> AddMiscellaneousInstance(int miscellaneousId)
         {
             var lunch = _cartRepository.GetOrCreateSessionLunch();
-            var result = _lunchRepository.AddMiscellaneousInstance(lunch.Lunch.LunchId, miscellaneousId);
+            var result = await _lunchRepository.AddMiscellaneousInstanceAsync(lunch.Lunch.LunchId, miscellaneousId);
             var route = "~/Views/Lunch/MiscellaneousDetail.cshtml";
             return PartialView(route, result);
         }
 
         [HttpDelete]
         [Route("RemoveMiscellaneousInstance/{miscellaneousId}")]
-        public IActionResult RemoveMiscellaneousInstance(int miscellaneousId)
+        public async Task<IActionResult> RemoveMiscellaneousInstance(int miscellaneousId)
         {
             var lunch = _cartRepository.GetOrCreateSessionLunch();
-            var result = _lunchRepository.RemoveMiscellaneousInstance(lunch.Lunch.LunchId, miscellaneousId);
+            var result = await _lunchRepository.RemoveMiscellaneousInstanceAsync(lunch.Lunch.LunchId, miscellaneousId);
             var route = "~/Views/Lunch/MiscellaneousDetail.cshtml";
             return PartialView(route, result);
         }
 
         [HttpDelete]
         [Route("RemoveMiscellaneous/{miscellaneousId}")]
-        public IActionResult RemoveMiscellaneous(int miscellaneousId)
+        public async Task<IActionResult> RemoveMiscellaneous(int miscellaneousId)
         {
             var lunch = _cartRepository.GetOrCreateSessionLunch();
-            _lunchRepository.RemoveMiscellaneous(lunch.Lunch.LunchId, miscellaneousId);
+            await _lunchRepository.RemoveMiscellaneousAsync(lunch.Lunch.LunchId, miscellaneousId);
             var route = "~/Views/Lunch/MiscellaneousDetail.cshtml";
             return PartialView(route, null);
         }

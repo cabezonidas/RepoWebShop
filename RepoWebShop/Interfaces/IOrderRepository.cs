@@ -8,38 +8,36 @@ namespace RepoWebShop.Interfaces
 {
     public interface IOrderRepository
     {
-        EmailNotificationViewModel ToEmailNotification(Order order);
-        Order CreateOrder(Order order);
-        void UpdateOrderStatus(int orderId, string status);
-        Order GetDraftOrderByBookingId(string bookingId);
-        Order GetOrderByBookingId(string bookingId);
-        IEnumerable<Order> GetAll();
-        Order GetOrder(int id);
-        IEnumerable<OrderDetail> GetOrderDetails(int id);
-        IEnumerable<OrderCatering> GetOrderCaterings(int id);
-        IEnumerable<OrderCatalogItem> GetOrderCatalogItems(int id);
         void UpdateManagementComments(int orderId, string comments);
         void UpdatePickUpDate(int orderId, DateTime pickUp);
+        void UpdateOrderStatus(int orderId, string status);
         bool InvertPickedUpStatus(int orderId);
-        EmailNotificationViewModel GetEmailData(int id);
-        void CompleteOrder(int orderId);
-        void PickUpOrder(int orderId);
-        void CancelOrder(int orderId, string reason);
-        void RefundOrder(int orderId, string reason);
-        void ReturnOrder(int orderId, string reason);
-        IEnumerable<Order> GetOrdersInProgress();
-        IEnumerable<Order> GetOrdersCancelled();
-        Order GetById(int id);
-        IEnumerable<Order> GetOrdersCompleted();
-        IEnumerable<Order> GetOrdersPickedUp();
-        IEnumerable<Order> GetOrdersReturned();
-        IEnumerable<Order> GetOrdersRefunded();
-        IEnumerable<Order> GetOrdersPickedUpWithPendingPayment();
-        void PayOrder(int orderId);
-        Task<Order> PaymentNotified(PaymentNotice paymentNotification);
-        void CancelPaymentOrder(int orderId, string reason);
+        Order GetDraftOrderByBookingId(string friendlyBookingId);
+        Task<IEnumerable<Order>> GetAllAsync(Func<Order, bool> condition = null);
+        Task<IEnumerable<Order>> GetOrdersInProgressAsync();
+        Task<IEnumerable<Order>> GetOrdersCancelledAsync();
+        Task<IEnumerable<Order>> GetOrdersCompletedAsync();
+        Task<IEnumerable<Order>> GetOrdersPickedUpAsync();
+        Task<IEnumerable<Order>> GetOrdersReturnedAsync();
+        Task<IEnumerable<Order>> GetOrdersRefundedAsync();
+        Task<IEnumerable<Order>> GetOrdersPickedUpWithPendingPaymentAsync();
+        Order CreateOrder(Order order);
+        Task<EmailNotificationViewModel> GetEmailDataAsync(int id);
+        Task<Order> GetOrderByIdAsync(int id);
+        Task<Order> GetOrderByBookingIdAsync(string id);
+        Task<Order> GetOrderByFriendlyBookingId(string friendlyId);
+        EmailNotificationViewModel ToEmailNotification(Order order);
+        Task CompleteOrderAsync(int orderId);
+        Task PickUpOrderAsync(int orderId);
+        Task CancelOrderAsync(int orderId, string reason);
+        Task ReturnOrderAsync(int orderId, string reason);
+        Task RefundOrderAsync(int orderId, string reason);
+        Task CancelPaymentOrderAsync(int orderId, string reason);
+        Task PayOrderAsync(int orderId);
+        Task<Order> PaymentNotifiedAsync(PaymentNotice payment);
         Order LatestReservationInProgress(ApplicationUser currentUser);
+        Task<IEnumerable<Order>> GetByUserOrdersAsync(ApplicationUser user);
         bool ValidBookingId(string bookingId);
-        IEnumerable<Order> GetByUserOrders(ApplicationUser user);
+        Task AfterOrderConfirmedAsync(Order order);
     }
 }

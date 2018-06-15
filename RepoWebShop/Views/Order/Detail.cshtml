@@ -237,7 +237,7 @@ if (paymentState == typeof(OrderMercadoPagoPaymentPending))
             </tr>
             <tr>
                 <td colspan="3">
-                    <a class="btn btn-primary hidden" onclick="printOrder()" id="print-ticket">Imprimir Ticket</a>
+                    <a class="btn btn-primary " onclick="printOrder()" id="print-ticket">Imprimir Ticket</a>
                 </td>
             </tr>
         </tbody>
@@ -269,9 +269,8 @@ if (paymentState == typeof(OrderMercadoPagoPaymentPending))
     }
 
     function printOrder() {
-        $.post("/api/OrderData/PrintOnlineOrder/@Model.Order.OrderId").then(() => {
-            $('#print-ticket').addClass('hidden');
-        }).fail(() => "No se pudo mandar a imprimir");
+        loaderOn();
+        $.post("/api/OrderData/PrintOnlineOrder/@Model.Order.OrderId").fail(() => "No se pudo mandar a imprimir").always(() => loaderOff());
     }
 
     var datetimepickertemp;

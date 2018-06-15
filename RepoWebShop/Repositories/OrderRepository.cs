@@ -29,10 +29,12 @@ namespace RepoWebShop.Models
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHostingEnvironment _env;
+        private readonly IPrinterRepository _printer;
         private readonly string host;
 
-        public OrderRepository(IHostingEnvironment env, ILunchRepository lunchRep, UserManager<ApplicationUser> userManager, IHttpContextAccessor contextAccessor, IEmailRepository emailRepository, ISmsRepository smsRepository, AppDbContext appDbContext, IMercadoPago mp, ICalendarRepository calendarRepository, IShoppingCartRepository shoppingCartRepository, IMapper mapper)
+        public OrderRepository(IHostingEnvironment env, IPrinterRepository printer, ILunchRepository lunchRep, UserManager<ApplicationUser> userManager, IHttpContextAccessor contextAccessor, IEmailRepository emailRepository, ISmsRepository smsRepository, AppDbContext appDbContext, IMercadoPago mp, ICalendarRepository calendarRepository, IShoppingCartRepository shoppingCartRepository, IMapper mapper)
         {
+            _printer = printer;
             _env = env;
             _lunchRep = lunchRep;
             host = "http://" + contextAccessor.HttpContext?.Request.Host.ToString();
@@ -82,87 +84,49 @@ namespace RepoWebShop.Models
             return _appDbContext.Orders.Include(x => x.Registration).OrderByDescending(x => x.OrderId).FirstOrDefault(x => x.BookingId.EndsWith(friendlyBookingId) && x.Status == "draft");
         }
 
-        public Order GetOrderByBookingId(string friendlyBookingId)
+        public async Task<IEnumerable<Order>> GetAllAsync(Func<Order, bool> condition = null)
         {
-            if (friendlyBookingId == null)
-                return null;
-            return _appDbContext.Orders.Include(x => x.Registration).OrderByDescending(x => x.OrderId).FirstOrDefault(x => x.BookingId.EndsWith(friendlyBookingId));
-        }
-
-        public Order GetOrder(int id)
-        {
-            return _appDbContext.Orders.Include(x => x.Registration).Include(x => x.Discount).Include(x => x.Email).Include(x => x.DeliveryAddress).FirstOrDefault(x => x.OrderId == id);
-        }
-
-        public IEnumerable<OrderDetail> GetOrderDetails(int id)
-        {
-            return _appDbContext.OrderDetails.Include(x => x.Order.Email).Include(x => x.Pie).ThenInclude(x => x.PieDetail).Where(x => x.OrderId == id);
-        }
-
-        public IEnumerable<OrderCatalogItem> GetOrderCatalogItems(int id)
-        {
-            return _appDbContext.OrderCatalogItems.Include(x => x.Order).Include(x => x.Product).ThenInclude(x => x.PieDetail).Where(x => x.Order.OrderId == id);
-        }
-
-        public IEnumerable<OrderCatering> GetOrderCaterings(int id)
-        {
-            return _appDbContext.OrderCaterings.Include(x => x.Order).Include(x => x.Lunch).Include(x => x.Lunch.Miscellanea).Include(x => x.Lunch.Items).ThenInclude(x => x.Product).Where(x => x.Order.OrderId == id);
-        }
-
-        public IEnumerable<Order> GetAll()
-        {
-            var orders = _appDbContext.Orders
+            List<Order> orders = await _appDbContext.Orders
+                .Where(x => (condition == null || condition(x)) && x.Status != "draft")
                 .Include(x => x.Registration)
                 .Include(x => x.OrderLines)
-                .Include(x => x.OrderCaterings)
                 .Include(x => x.DeliveryAddress)
                 .Include(x => x.Discount)
                 .Include(x => x.OrderCatalogItems)
-                .Where(o => o.Status != "draft").ToList();
+                .Include(x => x.OrderCaterings)
+                .ToListAsync();
 
             foreach (var order in orders)
             {
                 foreach (var orderLine in order.OrderLines)
-                {
-                    orderLine.Pie = _appDbContext.Pies.First(x => x.PieId == orderLine.PieId);
-                    orderLine.Pie.PieDetail = _appDbContext.PieDetails.First(x => x.PieDetailId == orderLine.Pie.PieDetailId);
-                }
+                    orderLine.Pie = _appDbContext.Pies.Include(x => x.PieDetail).First(x => x.PieId == orderLine.PieId);
+
                 foreach (var orderLine in order.OrderCatalogItems)
-                {
                     orderLine.Product = _appDbContext.Products.Include(x => x.PieDetail).First(x => x.ProductId == orderLine.ProductId);
-                }
+                
                 foreach (var catering in order.OrderCaterings)
-                {
-                    catering.Lunch = _appDbContext.Lunch.First(x => x.LunchId == catering.LunchId);
-                }
+                    catering.Lunch = (await _lunchRep.GetAllLunchesAsync(x => x.LunchId == catering.LunchId)).FirstOrDefault();
             }
 
             return orders;
         }
 
-        public IEnumerable<Order> GetOrdersInProgress()
-        {
-            return GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderInProgress)
-            || x.OrderProgressState.GetType() == typeof(OrderComplete));
-        }
+        public async Task<IEnumerable<Order>> GetOrdersInProgressAsync() => 
+            await GetAllAsync(x => x.OrderProgressState.GetType() == typeof(OrderInProgress) || x.OrderProgressState.GetType() == typeof(OrderComplete));
 
-        public IEnumerable<Order> GetOrdersCancelled() => GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderCancelled));
+        public async Task<IEnumerable<Order>> GetOrdersCancelledAsync() => await GetAllAsync(x => x.OrderProgressState.GetType() == typeof(OrderCancelled));
 
-        public IEnumerable<Order> GetOrdersCompleted() => GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderComplete));
+        public async Task<IEnumerable<Order>> GetOrdersCompletedAsync() => await GetAllAsync(x => x.OrderProgressState.GetType() == typeof(OrderComplete));
 
-        public IEnumerable<Order> GetOrdersPickedUp() => GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderPickedUp));
+        public async Task<IEnumerable<Order>> GetOrdersPickedUpAsync() => await GetAllAsync(x => x.OrderProgressState.GetType() == typeof(OrderPickedUp));
 
-        public IEnumerable<Order> GetOrdersReturned() => GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderReturned));
+        public async Task<IEnumerable<Order>> GetOrdersReturnedAsync() => await GetAllAsync(x => x.OrderProgressState.GetType() == typeof(OrderReturned));
 
-        public IEnumerable<Order> GetOrdersRefunded() => GetAll().Where(x => x.Refunded);
+        public async Task<IEnumerable<Order>> GetOrdersRefundedAsync() => await GetAllAsync(x => x.Refunded);
 
-        public IEnumerable<Order> GetOrdersPickedUpWithPendingPayment()
-        {
-            return GetAll().Where(x => x.OrderProgressState.GetType() == typeof(OrderPickedUp)
-                    && (x.OrderPaymentStatus.GetType() == typeof(OrderMercadoPagoNotPaid)
-                        || x.OrderPaymentStatus.GetType() == typeof(OrderReservationNotPaid))
-            );
-        }
+        public async Task<IEnumerable<Order>> GetOrdersPickedUpWithPendingPaymentAsync() =>
+            await GetAllAsync(x => x.OrderProgressState.GetType() == typeof(OrderPickedUp)
+                && (x.OrderPaymentStatus.GetType() == typeof(OrderMercadoPagoNotPaid) || x.OrderPaymentStatus.GetType() == typeof(OrderReservationNotPaid)));
 
         public Order CreateOrder(Order order)
         {
@@ -235,25 +199,28 @@ namespace RepoWebShop.Models
             return order;
         }
 
-        public EmailNotificationViewModel GetEmailData(int id)
+        public async Task<EmailNotificationViewModel> GetEmailDataAsync(int id)
         {
-            var order = GetOrder(id);
+            var order = (await GetAllAsync(x => x.OrderId == id)).FirstOrDefault();
             EmailNotificationViewModel emailData = ToEmailNotification(order);
             return emailData;
         }
 
+        public async Task<Order> GetOrderByIdAsync(int id) =>  (await GetAllAsync(x => x.OrderId == id)).FirstOrDefault();
+
+        public async Task<Order> GetOrderByBookingIdAsync(string id) => (await GetAllAsync(x => x.BookingId == id)).FirstOrDefault();
+
+        public async Task<Order> GetOrderByFriendlyBookingId(string friendlyId) => (await GetAllAsync(x => x.BookingId.EndsWith(friendlyId))).LastOrDefault();
+
         public EmailNotificationViewModel ToEmailNotification(Order order)
         {
-            var orderDetails = GetOrderDetails(order.OrderId);
-            var orderCatalogItems = GetOrderCatalogItems(order.OrderId);
-            var orderCaterings = GetOrderCaterings(order.OrderId);
             var emailData = new EmailNotificationViewModel();
             emailData.AbsoluteUrl = host;
             emailData.Comments = order.CustomerComments;
             emailData.MercadoPagoTransaction = order.MercadoPagoTransaction;
-            emailData.OrderItems = orderDetails;
-            emailData.OrderCatalogItems = orderCatalogItems;
-            emailData.OrderCaterings = orderCaterings;
+            emailData.OrderItems = order.OrderLines;
+            emailData.OrderCatalogItems = order.OrderCatalogItems;
+            emailData.OrderCaterings = order.OrderCaterings;
             emailData.OrderReady = order.PickUpTimeFrom ?? order.PickUpTime;
             emailData.TimeLeftUntilStoreCloses = order.TimeLeftUntilStoreCloses;
             emailData.OrderTotal = order.OrderTotal; //Without MP interests
@@ -271,16 +238,15 @@ namespace RepoWebShop.Models
             return emailData;
         }
 
-        public void CompleteOrder(int orderId)
+        public async Task CompleteOrderAsync(int orderId)
         {
-            var order = GetOrder(orderId);
+            var order = await GetOrderByIdAsync(orderId);
             order.OrderProgressState.Complete(() =>
             {
                 order.Finished = true;
                 var eventDesc = $"Orden lista.";
                 order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - {eventDesc}";
                 _appDbContext.SaveChanges();
-                //Send mail
             },
             async () => {
                 if(_env.IsProduction())
@@ -296,9 +262,9 @@ namespace RepoWebShop.Models
             });
         }
 
-        public void PickUpOrder(int orderId)
+        public async Task PickUpOrderAsync(int orderId)
         {
-            var order = GetOrder(orderId);
+            var order = await GetOrderByIdAsync(orderId);
             order.OrderProgressState.PickUp(() =>
             {
                 order.Finished = true;
@@ -309,9 +275,9 @@ namespace RepoWebShop.Models
             });
         }
 
-        public void CancelOrder(int orderId, string reason)
+        public async Task CancelOrderAsync(int orderId, string reason)
         {
-            var order = GetOrder(orderId);
+            var order = await GetOrderByIdAsync(orderId);
             order.OrderProgressState.Cancel(() =>
             {
                 order.Cancelled = true;
@@ -322,22 +288,21 @@ namespace RepoWebShop.Models
             });
         }
 
-        public void ReturnOrder(int orderId, string reason)
+        public async Task ReturnOrderAsync(int orderId, string reason)
         {
-            var order = GetOrder(orderId);
+            var order = await GetOrderByIdAsync(orderId);
             order.OrderProgressState.Return(() =>
             {
                 order.Returned = true;
                 var eventDesc = $"Orden retornada.";
                 order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - {eventDesc}. Motivo: {reason}";
                 _appDbContext.SaveChanges();
-                //Send mail or text
             });
         }
 
-        public void RefundOrder(int orderId, string reason)
+        public async Task RefundOrderAsync(int orderId, string reason)
         {
-            var order = GetOrder(orderId);
+            var order = await GetOrderByIdAsync(orderId);
             order.OrderPaymentStatus.Refund(() =>
             {
                 order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - Devolución del dinero. Motivo: {reason}";
@@ -353,9 +318,9 @@ namespace RepoWebShop.Models
             });
         }
 
-        public void CancelPaymentOrder(int orderId, string reason)
+        public async Task CancelPaymentOrderAsync(int orderId, string reason)
         {
-            var order = GetOrder(orderId);
+            var order = await GetOrderByIdAsync(orderId);
             order.OrderPaymentStatus.Cancel(() =>
             {
                 order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - Pago cancelado. Motivo: {reason}";
@@ -370,9 +335,9 @@ namespace RepoWebShop.Models
             });
         }
 
-        public void PayOrder(int orderId)
+        public async Task PayOrderAsync(int orderId)
         {
-            var order = GetOrder(orderId);
+            var order = await GetOrderByIdAsync(orderId);
             order.OrderPaymentStatus.Pay(() =>
             {
                 order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - Dinero recibido.";
@@ -382,9 +347,9 @@ namespace RepoWebShop.Models
             });
         }
       
-        public async Task<Order> PaymentNotified(PaymentNotice payment)
+        public async Task<Order> PaymentNotifiedAsync(PaymentNotice payment)
         {
-            Order order = GetOrderByBookingId(payment.BookingId);
+            Order order = await GetOrderByBookingIdAsync(payment.BookingId);
 
             var orderStatusBefore = order?.Status;
 
@@ -403,8 +368,7 @@ namespace RepoWebShop.Models
                 order.Payout = _calendarRepository.LocalTime();
                 _appDbContext.Orders.Update(order);
                 _appDbContext.SaveChanges();
-                await _emailRepository.SendOrderConfirmationAsync(order,
-                async () => await _smsRepository.NotifyAdminsAsync($"¡Pedido nuevo! Código {order.FriendlyBookingId}"));
+                await AfterOrderConfirmedAsync(order);
             }
 
             return order;
@@ -418,18 +382,19 @@ namespace RepoWebShop.Models
                     && x.OrderPaymentStatus.GetType() == typeof(OrderReservationNotPaid));
         }
 
-        public IEnumerable<Order> GetByUserOrders(ApplicationUser user) => _appDbContext.Orders.Where(x => x.Registration == user).Include(x => x.Email);
+        public async Task<IEnumerable<Order>> GetByUserOrdersAsync(ApplicationUser user) => await GetAllAsync(x => x.Registration == user);
 
         public bool ValidBookingId(string bookingId)
         {
             return _cartRepository.GetTotal(bookingId) > 0
-                //_appDbContext.ShoppingCartItems.Any(x => x.ShoppingCartId == bookingId)
-                //|| _appDbContext.ShoppingCartCaterings.Any(x => x.BookingId == bookingId)
-                //|| _appDbContext.ShoppingCartCatalogProducts.Any(x => x.ShoppingCartId == bookingId)
-                //|| _appDbContext.ShoppingCartCustomLunch.Any(x => x.BookingId == bookingId)
                 || _appDbContext.Orders.Any(x => x.BookingId == bookingId);
         }
 
-        public Order GetById(int id) => GetAll().First(x => x.OrderId == id);
+        public async Task AfterOrderConfirmedAsync(Order order)
+        {
+            await _printer.AddToQueueAsync(order.OrderId);
+            await _emailRepository.SendOrderConfirmationAsync(order);
+            await _smsRepository.NotifyAdminsAsync($"¡Pedido nuevo! Código {order.FriendlyBookingId}");
+        }
     }
 }

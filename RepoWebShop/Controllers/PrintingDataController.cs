@@ -32,6 +32,7 @@ namespace RepoWebShop.Controllers
         [Route("Queue")]
         public IActionResult Queue()
         {
+
             var content = Request.BodyAsDictionary();
 
             if (content["ConnectionType"] == "GetRequest" && content["ID"] == printerKey)

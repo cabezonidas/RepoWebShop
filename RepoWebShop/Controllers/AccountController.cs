@@ -329,7 +329,7 @@ namespace RepoWebShop.Controllers
         {
             UserOrdersViewModel vm = new UserOrdersViewModel();
             vm.User = await _userManager.GetUser(_signInManager);
-            vm.Orders = _orderRepository.GetByUserOrders(vm.User);
+            vm.Orders = await _orderRepository.GetByUserOrdersAsync(vm.User);
             
             return View(vm);
         }

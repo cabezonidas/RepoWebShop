@@ -85,7 +85,7 @@ namespace RepoWebShop.Controllers
             //var Response = (new JsonSerializer().Deserialize<Object>((new JsonTextReader(new StreamReader(body)))));
             //return View("Catering", access_token);
 
-            var result = _catalog.GetAll().Where(x => x.Category.ToLower().Trim() == "lunch").ToList();
+            var result = _catalog.GetAll(x => x.Category.ToLower().Trim() == "lunch").ToList();
 
             return View("Catering", result);
         }

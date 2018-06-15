@@ -28,23 +28,23 @@ namespace RepoWebShop.Controllers
         [HttpGet]
         public IActionResult Payments()
         {
-            var result = _paymentsRepository.GetPayments().Select(x =>
+            var result = _paymentsRepository.GetPayments().Select(async x =>
                 new PaymentViewModel()
                 {
                     PaymentNotice = x,
-                    Order = _orderRepository.GetOrderByBookingId(x.BookingId) ?? new Order()
+                    Order = await _orderRepository.GetOrderByBookingIdAsync(x.BookingId) ?? new Order()
                 });
             return View(result);
         }
 
         [HttpGet]
-        public IActionResult Payment(int id)
+        public async Task<IActionResult> Payment(int id)
         {
             var pn = _paymentsRepository.GetPayment(id);
             var result = new PaymentViewModel()
             {
                 PaymentNotice = pn,
-                Order = _orderRepository.GetOrderByBookingId(pn.BookingId) ?? new Order()
+                Order = await _orderRepository.GetOrderByBookingIdAsync(pn.BookingId) ?? new Order()
             };
             return View(result);
         }

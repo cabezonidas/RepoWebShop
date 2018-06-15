@@ -96,7 +96,7 @@ namespace RepoWebShop.Repositories
             }
         }
         
-        public async Task SendOrderConfirmationAsync(Order order, Action notifyAdmins)
+        public async Task SendOrderConfirmationAsync(Order order)
         {
             if (order != null)
             {
@@ -128,7 +128,6 @@ namespace RepoWebShop.Repositories
                 }
 
             }
-            notifyAdmins();
         }
         
         public async Task SendEmailResetPasswordAsync(ApplicationUser foundUser)

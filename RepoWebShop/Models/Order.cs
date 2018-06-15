@@ -128,6 +128,24 @@ namespace RepoWebShop.Models
             }
         }
 
+
+
+        [BindNever]
+        public string CustomerName
+        {
+            get => Registration != null ? $"{Registration.LastName}, {Registration.FirstName}" : $"{MercadoPagoName}, {MercadoPagoUsername}";
+        }
+
+        [BindNever]
+        public string CustomerNumbers
+        {
+            get
+            {
+                var phones = new List<string>() { "", Registration?.PhoneNumber ?? "", Registration?.PhoneNumberDeclared ?? "", PhoneNumber };
+                return string.Join(" / ", phones.Distinct());
+            }
+        }
+
         [BindNever]
         public IOrderPaymentStatus OrderPaymentStatus
         {
@@ -180,5 +198,33 @@ namespace RepoWebShop.Models
         public TimeSpan? TimeLeftUntilStoreCloses { get; internal set; }
 
         public decimal TotalInStore { get; set; }
+
+        [BindNever]
+        public List<KeyValuePair<int, string>> ItemDetails
+        {
+            get
+            {
+                var result = new List<KeyValuePair<int, string>>();
+                try
+                {
+                    var pies = OrderLines.Select(x => new KeyValuePair<int, string>(x.Amount, $"{x.Pie.PieDetail.Name} {x.Pie.Name}"));
+                    var products = OrderCatalogItems.Select(x => new KeyValuePair<int, string>(x.Amount, x.Product.DisplayName)).ToList();
+                    var miscellanea = new List<KeyValuePair<int, string>>();
+                    foreach (var cat in OrderCaterings)
+                    {
+                        products.AddRange(cat.Lunch.Items.Select(x => new KeyValuePair<int, string>(x.ItemCount * cat.Amount, x.Product.DisplayName)));
+                        miscellanea.AddRange(cat.Lunch.Miscellanea.Select(x => new KeyValuePair<int, string>(x.Quantity * cat.Amount, x.Description)));
+                    }
+                    products = products.GroupBy(x => x.Value).Select(group => new KeyValuePair<int, string>(group.Sum(x => x.Key), group.Key)).ToList();
+                    result.AddRange(pies);
+                    result.AddRange(products);
+                    result.AddRange(miscellanea);
+                    result = result.OrderByDescending(x => x.Key).ToList();
+                }
+                catch { }
+
+                return result;
+            }
+        }
     }
 }
