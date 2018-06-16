@@ -26,8 +26,6 @@ namespace RepoWebShop.Models
         public string Description { get; set; }
 
         public string ThumbnailUrl { get; set; }
-
-        public decimal ComboPrice { get; set; }
         
         public int PreparationTime { get; set; }
         

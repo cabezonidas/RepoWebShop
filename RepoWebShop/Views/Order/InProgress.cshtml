@@ -15,16 +15,16 @@
 <div class="container">
     <h2>Pedidos en proceso</h2>
 
-    <table id="orders" class="table-striped">
+    <table id="orders" class="display responsive table-striped" style="width:100%">
         <thead>
             <tr>
-                <th data-breakpoints="xs">Reserva</th>
-                <th data-breakpoints="xs">Estado</th>
-                <th data-breakpoints="xs sm">Cliente</th>
-                <th data-breakpoints="xs sm">Entrega</th>
-                <th data-breakpoints="xs sm">Detalle</th>
-                <th data-breakpoints="xs sm">Monto</th>
-                <th data-breakpoints="xs sm"></th>
+                <th>Reserva</th>
+                <th>Estado</th>
+                <th>Cliente</th>
+                <th>Entrega</th>
+                <th>Detalle</th>
+                <th>Monto</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -143,6 +143,7 @@
             "url": "/Scripts/SpanishDatatables.json"
         },
         pageLength: 25,
+        responsive: true,
         "aaSorting": []
     });
 

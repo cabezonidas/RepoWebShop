@@ -25,10 +25,6 @@ namespace RepoWebShop.ViewModels
         [Display(Name = "Descripción")]
         public string Description { get; set; }
 
-        [Display(Name = "Precio del combo")]
-        [Required]
-        public string ComboPrice { get; set; }
-
         [Display(Name = "Tiempo de preparación (hs)")]
         [Required]
         public int PreparationTime { get; set; }

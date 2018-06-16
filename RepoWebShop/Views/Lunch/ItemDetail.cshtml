@@ -27,12 +27,18 @@ else
                 </div>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
-                <div style="font-size: x-large; color:#883636" class=" text-right itemprice">@Html.Raw((Model.SubTotal).ToString("c"))</div>
-                <div class=" text-right">@Model.Product.Price.ToString("c")  c/u</div>
-                @if(Model.Product.Price < Model.Product.PriceInStore)
-                { 
-                    <div style="font-size: smaller; text-decoration-line: line-through; text-align: right;">@Model.Product.PriceInStore.ToString("c")  c/u</div>
-                }
+                <div class="online">
+                    <div style="font-size: x-large; color:#883636" class=" text-right itemprice">@Html.Raw((Model.SubTotal).ToString("c"))</div>
+                    <div class=" text-right">@Model.Product.Price.ToString("c")  c/u</div>
+                    @if(Model.Product.Price < Model.Product.PriceInStore)
+                    { 
+                        <div style="font-size: smaller; text-decoration-line: line-through; text-align: right;">@Model.Product.PriceInStore.ToString("c")  c/u</div>
+                    }
+                </div>
+                <div class="in-store hidden">
+                    <div style="font-size: x-large; color:#883636" class=" text-right itemprice">@Html.Raw((Model.SubTotalInStore).ToString("c"))</div>
+                    <div class=" text-right">@Model.Product.PriceInStore.ToString("c")  c/u</div>
+                </div>
             </div>
         </div>
     </div>

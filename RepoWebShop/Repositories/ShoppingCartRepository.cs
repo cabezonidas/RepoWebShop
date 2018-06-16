@@ -280,10 +280,7 @@ namespace RepoWebShop.Repositories
             var miscellaneaPrice = lunch.Miscellanea.Sum(x => x.Price * x.Quantity);
             var total = itemsPrice + miscellaneaPrice;
 
-            if (lunch.ComboPrice <= 0)
-                return total;
-            else
-                return lunch.ComboPrice < total ? lunch.ComboPrice : total;
+            return total;
         }
 
         public decimal GetCateringsTotalInStore(string bookingId)

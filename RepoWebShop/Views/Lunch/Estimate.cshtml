@@ -28,9 +28,17 @@
     <br />
     <div class="row" style="border-top-left-radius: 5px; border-top-right-radius: 5px; max-width: 500px; margin: auto; background-color: #883636; color:papayawhip">
         <h2>Catering Personalizado</h2>
+        @if (isAdmin)
+        {
+        <div>
+            <div>Precio Sucursal</div>
+            @Html.Partial("~/Views/Shared/Toggle.cshtml", "instore-toggle")
+        </div>
+        }
     </div>
 
     <div id="lunchbox">
+
         @if (Model != null && Model.Items != null)
         {
             foreach (var item in Model.Items)
@@ -97,7 +105,23 @@
         $.get('/api/LunchData/GetProducts/').then((data) => {
             initializeSelector(data);
         });
+    
+        $('#instore-toggle').change(function() {
+            chooseMode();
+        })
     });
+
+    function chooseMode(){
+        if($('#instore-toggle').is(":checked")) {
+            $('.in-store').removeClass('hidden');
+            $('.online').addClass('hidden');
+        } else {
+            $('.online').removeClass('hidden');
+            $('.in-store').addClass('hidden');
+        }        
+    }
+
+
 
     function initializeSelector(data) {
         $selectize = $('select#items').selectize({
@@ -111,8 +135,8 @@
             render: {
                 option: function (item, escape) {
                     return '<div>' +
-                        (item.displayName ? '<div class="name" style="color:#883636"">' + escape(item.displayName) + ' $' + escape(item.minOrderAmount * item.price) + '</div>' : '') +
-                        (item.price ? '<div class="price">Precio Unitario: $' + escape(item.price) + '</div>' : '') +
+                        (item.displayName ? '<div class="name" style="color:#883636"">' + escape(item.displayName) + ' <span style="color: green;">$' + escape(item.minOrderAmount * item.price) + ' ' +  minimumOrderPriceFormat(item) + '</span></div>' : '') +
+                        (item.price ? '<div class="price" >Precio Unitario: $' + escape(item.price) + ' ' + unitPriceFormat(item) + '</div>' : '') +
                         (item.minOrderAmount ? '<div class="bites">Unidades: ' + escape(item.minOrderAmount) + '</div>' : '') +
                         '</div>';
                 },
@@ -129,6 +153,20 @@
             }
         });
     };
+
+    function unitPriceFormat(item) {
+        var priceInStore = '';
+        if(item.priceInStore > item.price)
+            priceInStore = '<span style="color: red; font-size: smaller;">Sucursal $' + escape(item.priceInStore) + '</span>';
+        return priceInStore;
+    }
+
+    function minimumOrderPriceFormat(item) {
+        var priceInStore = '';
+        if(item.priceInStore > item.price)
+            priceInStore = '<span style="color: red; font-size: smaller;">Sucursal $' + escape(item.minOrderAmount * item.priceInStore) + '</span>';
+        return priceInStore;
+    }
 
     function save() {
         $.post('/api/LunchData/SaveLunch/').then((data) => {
@@ -154,6 +192,7 @@
         $.get('/api/LunchData/GetTotals/').then((data) => {
             $('#totals').empty().append(data);
             loaderOff();
+            chooseMode();
         });
 
     }

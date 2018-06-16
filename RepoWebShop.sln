@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoWebShop", "RepoWebShop\RepoWebShop.csproj", "{5C46C91B-68F3-4CF5-B81E-48BA00933314}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoWebShop.Tests", "RepoWebShop.Tests\RepoWebShop.Tests.csproj", "{E8F3665E-4A1F-4CCD-8A48-EA0220451DF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoWebShop.Tests", "RepoWebShop.Tests\RepoWebShop.Tests.csproj", "{E8F3665E-4A1F-4CCD-8A48-EA0220451DF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

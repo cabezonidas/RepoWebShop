@@ -118,14 +118,6 @@ namespace RepoWebShop.Repositories
                 {
                     _appDbContext.Lunch.Remove(cartLunch.Lunch);
                 }
-                else
-                {
-                    if (cartLunch.Lunch.ComboPrice == 0)
-                    {
-                        cartLunch.Lunch.ComboPrice = GetTotal(cartLunch.Lunch);
-                        _appDbContext.Lunch.Update(cartLunch.Lunch);
-                    }
-                }
                 _appDbContext.SaveChanges();
             }
             return result;
@@ -205,8 +197,9 @@ namespace RepoWebShop.Repositories
                 .ThenInclude(x => x.Product)
                 .ThenInclude(x => x.PieDetail)
                 .ToListAsync();
-                
-            return result.Where(x => GetTotal(x) > 0);
+
+            //return result.Where(x => GetTotal(x) > 0);
+            return result;
         }
 
         public async Task CopyLunchAsync(int id)
