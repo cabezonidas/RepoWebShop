@@ -18,8 +18,10 @@ else
             <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-left">
             @if (isAdmin)
             {
-                <div>Bocados: @_lunchRepository.GetBites(Model)</div>
-                <div>Invitados: @_lunchRepository.GetConvitees(Model) personas</div>
+                <div class="hidden-print">
+                    <div>Bocados: @_lunchRepository.GetBites(Model)</div>
+                    <div>Invitados: @_lunchRepository.GetConvitees(Model) personas</div>
+                </div>
             }
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-right">
@@ -27,7 +29,7 @@ else
 
                 @{
                     var total = _lunchRepository.GetTotal(Model);
-                <h2>Total @Html.Raw(total.ToString("c"))</h2>
+                <h3>Total @Html.Raw(total.ToString("c"))</h3>
                     var totalInStore = _lunchRepository.GetLunchTotalInStore(Model);
                     if (totalInStore > total)
                     {

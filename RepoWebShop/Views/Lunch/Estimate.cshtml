@@ -1,12 +1,8 @@
 ﻿@model Lunch
 @inject ILunchRepository _lunchRepository
-@inject SignInManager<ApplicationUser> _signIn
-@inject UserManager<ApplicationUser> _userManager
+@inject IAccountRepository _account
 
-@{
-    var user = await _userManager.GetUser(_signIn);
-    var isAdmin = user != null && await _userManager.IsInRoleAsync(user, "Administrator");
-}
+
 @section metatags {
     <title>Catering Personalizado</title>
 }
@@ -28,13 +24,7 @@
     <br />
     <div class="row" style="border-top-left-radius: 5px; border-top-right-radius: 5px; max-width: 500px; margin: auto; background-color: #883636; color:papayawhip">
         <h2>Catering Personalizado</h2>
-        @if (isAdmin)
-        {
-        <div>
-            <div>Precio Sucursal</div>
-            @Html.Partial("~/Views/Shared/Toggle.cshtml", "instore-toggle")
-        </div>
-        }
+        @Html.Partial("~/Views/Shared/InStoreSwitch.cshtml")
     </div>
 
     <div id="lunchbox">
@@ -52,7 +42,7 @@
         }
     </div>
 
-    <div class="row" style="max-width: 500px; margin: auto;background-color: papayawhip; ">
+    <div class="row hidden-print" style="max-width: 500px; margin: auto;background-color: papayawhip; ">
         <div class="selecteItem">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-left">
                 <div>Buscar</div>
@@ -62,9 +52,9 @@
             </div>
         </div>
     </div>
-    @if (isAdmin)
+    @if (await _account.IsAdmin())
     {
-        <div class="row" style="max-width: 500px; margin: auto;background-color: papayawhip; ">
+        <div class="row hidden-print" style="max-width: 500px; margin: auto;background-color: papayawhip; ">
             <div class="">
                 <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-left">
                     <div>Agregar Manual</div>
@@ -81,10 +71,11 @@
         </div>
     }
     @{var hidden = _lunchRepository.GetTotal(Model) > 0 ? "" : "hidden";}
-    <div class="row @hidden saveLunch" style="max-width: 500px; margin: auto;background-color: papayawhip;  ">
+    <div class="row @hidden saveLunch  hidden-print" style="max-width: 500px; margin: auto;background-color: papayawhip;  ">
         <div class="selecteItem">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
                 <a class="btn btn-primary" onclick="save()">Guardar</a>
+                <a class="btn btn-primary" onclick="window.print()">Imprimir</a>
             </div>
         </div>
         <br />
@@ -94,8 +85,8 @@
         @Html.Partial("~/Views/Lunch/LunchTotals.cshtml", Model)
     </div>
     <div>
-        <a class="btn btn-primary" style="margin-top: 5px;" asp-action="Catering" asp-controller="Services">Ver más opciones</a>
-        <a class="btn btn-primary" style="margin-top: 5px;" asp-action="ClearCustomCateringFromCart" asp-controller="ShoppingCart">Descartar</a>
+        <a class="btn btn-primary hidden-print" style="margin-top: 5px;" asp-action="Catering" asp-controller="Services">Ver más opciones</a>
+        <a class="btn btn-primary hidden-print" style="margin-top: 5px;" asp-action="ClearCustomCateringFromCart" asp-controller="ShoppingCart">Descartar</a>
     </div>
 </div>s
 
@@ -105,21 +96,7 @@
         $.get('/api/LunchData/GetProducts/').then((data) => {
             initializeSelector(data);
         });
-    
-        $('#instore-toggle').change(function() {
-            chooseMode();
-        })
     });
-
-    function chooseMode(){
-        if($('#instore-toggle').is(":checked")) {
-            $('.in-store').removeClass('hidden');
-            $('.online').addClass('hidden');
-        } else {
-            $('.online').removeClass('hidden');
-            $('.in-store').addClass('hidden');
-        }        
-    }
 
 
 
@@ -171,7 +148,7 @@
     function save() {
         $.post('/api/LunchData/SaveLunch/').then((data) => {
             @{
-                if(!isAdmin)
+                if(!await _account.IsAdmin())
                 {
                     <text>
                         window.location = '/ShoppingCart/';

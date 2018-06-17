@@ -31,6 +31,9 @@
 
 <div class="container">
     <h2 class="text-center">@Html.Raw("Presupuesto " + (Model.IsGeneric ? "Genérico" : "Especial"))</h2>
+    <div class="text-center">
+        @Html.Partial("~/Views/Shared/InStoreSwitch.cshtml")
+    </div>
     <div style="max-width: 500px; margin:auto;">
         @Html.Partial("~/Views/Lunch/ComboDetail.cshtml", Model)
     </div>

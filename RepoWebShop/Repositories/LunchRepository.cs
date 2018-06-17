@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
@@ -15,13 +16,17 @@ namespace RepoWebShop.Repositories
         private readonly IShoppingCartRepository _cartRepository;
         private readonly IMapper _mapper;
         private readonly ICatalogRepository _catalog;
+        private readonly IConfiguration _config;
+        private readonly int _cateringMinPrepTime;
 
-        public LunchRepository(ICatalogRepository catalog, IMapper mapper, AppDbContext appDbContext, IShoppingCartRepository cartRepository)
+        public LunchRepository(ICatalogRepository catalog, IConfiguration config, IMapper mapper, AppDbContext appDbContext, IShoppingCartRepository cartRepository)
         {
+            _config = config;
             _catalog = catalog;
             _mapper = mapper;
             _appDbContext = appDbContext;
             _cartRepository = cartRepository;
+            _cateringMinPrepTime = _config.GetValue<int>("CateringDefaultPreparationTime");
         }
 
         public async Task<Lunch> GetLunchByIdAsync(int lunchId) => (await GetAllLunchesAsync(x => x.LunchId == lunchId)).FirstOrDefault();
@@ -43,11 +48,25 @@ namespace RepoWebShop.Repositories
                 shoppingCartLunchItem.Quantity += 1;
                 _appDbContext.LunchItems.Update(shoppingCartLunchItem);
             }
+
+            UpdatePreparationTime(lunch);
+
+
             _appDbContext.SaveChanges();
             return shoppingCartLunchItem;
         }
 
-
+        private void UpdatePreparationTime(Lunch lunch)
+        {
+            var longestPrepTime = lunch.Items.OrderByDescending(x => x.Product.PreparationTime).FirstOrDefault()?.Product?.PreparationTime ?? _cateringMinPrepTime;
+            longestPrepTime = longestPrepTime < _cateringMinPrepTime ? _cateringMinPrepTime : longestPrepTime;
+            if(lunch.PreparationTime != longestPrepTime)
+            {
+                lunch.PreparationTime = longestPrepTime;
+                _appDbContext.Lunch.Update(lunch);
+                _appDbContext.SaveChanges();
+            }
+        }
 
         public async Task<LunchItem> AddItemAsync(int lunchId, int productId)
         {
@@ -62,6 +81,7 @@ namespace RepoWebShop.Repositories
                 _appDbContext.LunchItems.Add(shoppingCartLunchItem);
                 _appDbContext.SaveChanges();
             }
+            UpdatePreparationTime(lunch);
             return shoppingCartLunchItem;
         }
 
@@ -87,6 +107,9 @@ namespace RepoWebShop.Repositories
                 }
                 _appDbContext.SaveChanges();
             }
+
+            UpdatePreparationTime(lunch);
+
             return result;
         }
 
@@ -103,6 +126,9 @@ namespace RepoWebShop.Repositories
                 _appDbContext.LunchItems.Remove(shoppingCartLunchItem);
                 _appDbContext.SaveChanges();
             }
+
+            UpdatePreparationTime(lunch);
+
             return result;
         }
 

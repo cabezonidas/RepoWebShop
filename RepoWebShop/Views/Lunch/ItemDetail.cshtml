@@ -13,16 +13,16 @@ else
                     <span class="" style="margin-right: 5px;">Unidades </span>
                     @if(Model.Quantity > 1)
                     {
-                        <span class="fa fa-caret-left handy" onclick="removeLunchItemInstance(@Model.Product.ProductId)"></span>
+                        <span class="fa fa-caret-left handy hidden-print" onclick="removeLunchItemInstance(@Model.Product.ProductId)"></span>
                     }
                     else
                     {
-                        <span class="fa fa-caret-left text-muted"></span>
+                        <span class="fa fa-caret-left text-muted hidden-print"></span>
                     }
                     <span  style="margin-left: 5px;margin-right: 5px;">@Html.Raw(Model.ItemCount)</span>
-                    <span class="fa fa-caret-right handy" onclick="addLunchItemInstance(@Model.Product.ProductId)"></span>
+                    <span class="fa fa-caret-right handy hidden-print" onclick="addLunchItemInstance(@Model.Product.ProductId)"></span>
                 </div>
-                <div onclick="removeLunchItem(@Model.Product.ProductId)" class="handy">
+                <div onclick="removeLunchItem(@Model.Product.ProductId)" class="handy hidden-print">
                     Quitar
                 </div>
             </div>

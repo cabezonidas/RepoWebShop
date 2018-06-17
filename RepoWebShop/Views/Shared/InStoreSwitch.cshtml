@@ -1,10 +1,18 @@
-﻿@model string
+﻿@inject IAccountRepository _account
+
+@if(await _account.IsAdmin())
+{
+
+
 
 <!-- Rounded switch -->
-<label class="switch">
-    <input type="checkbox" id="@Model">
-    <span class="slider round"></span>
-</label>
+<div class="hidden-print">
+    <div>Precio Sucursal</div>
+    <label class="switch">
+        <input type="checkbox" id="instore-toggle">
+        <span class="slider round"></span>
+    </label>
+</div>
 
 <style>
     /* The switch - the box around the slider */
@@ -68,3 +76,21 @@
             border-radius: 50%;
         }
 </style>
+<script>
+    $(document).ready(() => {
+        $('#instore-toggle').change(function() {
+            chooseMode();
+        })
+    });
+
+    function chooseMode(){
+        if($('#instore-toggle').is(":checked")) {
+            $('.in-store').removeClass('hidden');
+            $('.online').addClass('hidden');
+        } else {
+            $('.online').removeClass('hidden');
+            $('.in-store').addClass('hidden');
+        }
+    }
+</script>
+}

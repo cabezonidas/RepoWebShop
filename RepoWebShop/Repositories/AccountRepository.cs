@@ -79,7 +79,11 @@ namespace RepoWebShop.Repositories
                 return IdentityResult.Failed(errors);
             }
         }
-
+        public async Task<bool> IsAdmin()
+        {
+            var user = await _userManager.GetUser(_signInManager);
+            return user != null && await _userManager.IsInRoleAsync(user, "Administrator");
+        }
         public async Task<string> SendValidationCode(ApplicationUser user, string phone)
         {
             var token = String.Concat(DateTime.Now.Ticks.ToString().ToArray().TakeLast(4));

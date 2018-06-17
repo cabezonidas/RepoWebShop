@@ -2,6 +2,9 @@
 @inject ILunchRepository _lunchRepository
 @inject ICalendarRepository _calendar
 
+@section metatags {
+    <title>Catering De las Artes</title>
+}
 
 <style>
     .col-price {
@@ -37,6 +40,7 @@
             </div>
         }
         <div style="font-size: smaller">Combo #@Model.LunchId</div>
+
     </div>
     <div class="text-center" style="background-color:papayawhip; color:#883636; padding-top: 10px;">
         @foreach (var item in Model.Items)
@@ -51,7 +55,7 @@
                     </div>
                 </div>
                 <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-right">
-                    <div class="col-price">
+                    <div class="col-price online">
                         <div style="font-size: large;">
                             @Html.Raw((item.SubTotal).ToString())
                         </div>
@@ -71,6 +75,14 @@
                                 @item.Product.Price.ToString() c/u
                             </div>
                         }
+                    </div>
+                    <div class="col-price in-store hidden">
+                        <div style="font-size: large;">
+                            @Html.Raw((item.SubTotalInStore).ToString())
+                        </div>
+                        <div style="font-size: smaller;">
+                            @item.Product.PriceInStore.ToString() c/u
+                        </div>
                     </div>
                 </div>
             </div>
@@ -107,26 +119,38 @@
             var totalInStore = _lunchRepository.GetLunchTotalInStore(Model);
             var percentage = 100 - (total / totalInStore * 100);
         }
-        <div style="font-size: large;">
-            <span>
-                Total
-            </span>
-            @{ var decoration = (total < totalInStore) ? "text-decoration-line: line-through; color: red;" : ""; }
-            <span style="@decoration">
-                @Html.Raw(totalInStore.ToString("c"))
-            </span>
-        </div>
-        @if (total < totalInStore)
-        {
-            <div style="color: green;">
-                <div style="font-size: x-large">
-                    @total.ToString("c")
-                </div>
-                <div>
-                    Precio Online @Html.Raw(percentage >= 10 ? $"{Decimal.ToInt32(percentage)} % Off" : "")
-                </div>
+        <div class="online">
+            <div style="font-size: large;">
+                <span>
+                    Total
+                </span>
+                @{ var decoration = (total < totalInStore) ? "text-decoration-line: line-through; color: red;" : ""; }
+                <span style="@decoration">
+                    @Html.Raw(totalInStore.ToString("c"))
+                </span>
             </div>
-        }
+            @if (total < totalInStore)
+            {
+                <div style="color: green;">
+                    <div style="font-size: x-large">
+                        @total.ToString("c")
+                    </div>
+                    <div>
+                        Precio Online @Html.Raw(percentage >= 10 ? $"{Decimal.ToInt32(percentage)} % Off" : "")
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="in-store hidden" >
+            <div style="font-size: x-large;">
+                <span>
+                    Total
+                </span>
+                <span >
+                    @Html.Raw(totalInStore.ToString("c"))
+                </span>
+            </div>
+        </div>
         <div style="padding: 10px;">
             @if (Model.IsCombo)
             {

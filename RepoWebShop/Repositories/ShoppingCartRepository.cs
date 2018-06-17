@@ -23,8 +23,9 @@ namespace RepoWebShop.Repositories
         private readonly IConfiguration _config;
         private readonly IDiscountRepository _discountRepository;
         private readonly IHttpContextAccessor _contextAccessor;
-        private int _minimumArsForOrderDelivery;
-        private int _maxArsForReservation;
+        private readonly int _minimumArsForOrderDelivery;
+        private readonly int _maxArsForReservation;
+        private readonly int _cateringMinPrepTime;
 
         public ShoppingCartRepository(IHttpContextAccessor contextAccessor, IConfiguration config, IDiscountRepository discountRepository, ShoppingCart shoppingCart, IMapper mapper, AppDbContext appDbContext, ICalendarRepository calendarRepository)
         {
@@ -38,6 +39,7 @@ namespace RepoWebShop.Repositories
 
             _minimumArsForOrderDelivery = _config.GetValue<int>("MinimumArsForOrderDelivery");
             _maxArsForReservation = _config.GetValue<int>("MaxArsForReservation");
+            _cateringMinPrepTime = _config.GetValue<int>("CateringDefaultPreparationTime");
         }
 
         public ShoppingCartLunch GetSessionLunchIfNotEmpty(string bookingId = null)
@@ -73,7 +75,7 @@ namespace RepoWebShop.Repositories
                     BookingId = bookingId,
                     Lunch = new Lunch()
                     {
-                        PreparationTime = 24,
+                        PreparationTime = _cateringMinPrepTime,
                     }
                 };
                 _appDbContext.ShoppingCartCustomLunch.Add(result);

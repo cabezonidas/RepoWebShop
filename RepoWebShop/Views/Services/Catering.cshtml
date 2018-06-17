@@ -1,7 +1,9 @@
 ﻿@model IEnumerable<Product>
 @inject ILunchRepository _lunch
 @inject IFlickrRepository _flickr
+
 @{
+
     var url = (this.Context?.Request?.HostUrl() ?? "") + "/Services/Catering";
     var desc = "De las Artes también se dedica a armar el catering ideal para tus eventos. Sea una mesa dulce, una torta festiva, o el menú entero, nuestro personal siempre lo va a ayudar a dimensionar su catering. Nuestras opciones crecen al ritmo de las tendencias gastronómicas. Con experiencia, y profesionales de la gastronomía a cargo, un catering con sello 'De las Artes' está bien dimensionado, es novedoso, accesible y por sobre todo, de primera calidad.";
 }
@@ -30,8 +32,6 @@
     <div class="title-container">
         <h1 class="title-logo">Catering</h1>
     </div>
-
-
 
 
 

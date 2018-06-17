@@ -31,7 +31,7 @@ namespace RepoWebShop.Controllers
             _lunchRepository = lunchRepository;
         }
 
-        public async Task<IActionResult> Index() => View(await _lunchRepository.GetAllLunchesAsync());
+        public async Task<IActionResult> Index() => View((await _lunchRepository.GetAllLunchesAsync()).Where(x => _lunchRepository.GetTotal(x) > 0));
 
 
         [HttpGet]
