@@ -76,6 +76,11 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
                 <a class="btn btn-primary" onclick="save()">Guardar</a>
                 <a class="btn btn-primary" onclick="window.print()">Imprimir</a>
+                @if (await _account.IsAdmin())
+                {
+                    <a class="btn btn-primary in-store hidden" onclick="printInStoreCatering()">Ticket</a>
+                    <a class="btn btn-primary online" onclick="printOnlineCatering()">Ticket</a>
+                }
             </div>
         </div>
         <br />
@@ -98,7 +103,14 @@
         });
     });
 
-
+    function printInStoreCatering() {
+        loaderOn();
+        $.post("/api/LunchData/PrintInStoreCatering/@Model.LunchId").fail(() => "No se pudo mandar a imprimir").always(() => loaderOff());
+    }
+    function printOnlineCatering() {
+        loaderOn();
+        $.post("/api/LunchData/PrintOnlineCatering/@Model.LunchId").fail(() => "No se pudo mandar a imprimir").always(() => loaderOff());
+    }
 
     function initializeSelector(data) {
         $selectize = $('select#items').selectize({

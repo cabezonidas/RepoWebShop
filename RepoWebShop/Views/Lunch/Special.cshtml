@@ -1,4 +1,5 @@
 ﻿@model Lunch
+@inject IAccountRepository _account
 
 @{
     var title = "Catering " + (string.IsNullOrEmpty(Model.Title) ? "Personalizado" : $"- {Model.Title}");
@@ -38,13 +39,28 @@
         @Html.Partial("~/Views/Lunch/ComboDetail.cshtml", Model)
     </div>
     <div class="text-center hidden-print" style="margin: 20px auto;">
-        <div class="fb-share-button" style="margin-bottom: 25px;"
-             data-href="@url"
-             data-layout="button_count">
-        </div>
         <div>
             <a class="btn btn-primary" asp-action="Catering" asp-controller="Services">Ver más</a>
             <a class="btn btn-primary" onclick="window.print()">Imprimir</a>
+            @if (await _account.IsAdmin())
+            {
+                <a class="btn btn-primary in-store hidden" onclick="printInStoreCatering()">Ticket</a>
+                <a class="btn btn-primary online" onclick="printOnlineCatering()">Ticket</a>
+            }
+        </div>
+        <div class="fb-share-button" style="margin-top: 25px;"
+             data-href="@url"
+             data-layout="button_count">
         </div>
     </div>
 </div>
+<script>
+    function printInStoreCatering() {
+        loaderOn();
+        $.post("/api/LunchData/PrintInStoreCatering/@Model.LunchId").fail(() => "No se pudo mandar a imprimir").always(() => loaderOff());
+    }
+    function printOnlineCatering() {
+        loaderOn();
+        $.post("/api/LunchData/PrintOnlineCatering/@Model.LunchId").fail(() => "No se pudo mandar a imprimir").always(() => loaderOff());
+    }
+</script>

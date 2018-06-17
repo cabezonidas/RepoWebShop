@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
+using RepoWebShop.ViewModels;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -21,15 +22,45 @@ namespace RepoWebShop.Controllers
         private readonly SignInManager<ApplicationUser> _signIn;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IShoppingCartRepository _cartRepository;
+        private readonly IPrinterRepository _printer;
 
-        public LunchDataController(IShoppingCartRepository cartRepository, SignInManager<ApplicationUser> signIn, UserManager<ApplicationUser> userMana, IMapper mapper, ILunchRepository lunchRepository, ICatalogRepository catalogRepository)
+        public LunchDataController(IPrinterRepository printer, IShoppingCartRepository cartRepository, SignInManager<ApplicationUser> signIn, UserManager<ApplicationUser> userMana, IMapper mapper, ILunchRepository lunchRepository, ICatalogRepository catalogRepository)
         {
+            _printer = printer;
             _cartRepository = cartRepository;
             _userManager = userMana;
             _signIn = signIn;
             _mapper = mapper;
             _lunchRepository = lunchRepository;
             _catalogRepository = catalogRepository;
+        }
+
+        [Route("PrintInStoreCatering/{id}")]
+        [HttpPost]
+        public async Task<IActionResult> PrintInStoreCatering(int id)
+        {
+            var lunch = await _lunchRepository.GetLunchByIdAsync(id);
+            var lunchVm = _mapper.Map<Lunch, LunchTicketViewModel>(lunch);
+            lunchVm.InStore = true;
+            var view = "TicketCatering";
+            var result = await this.RenderViewAsync(view, lunchVm, true);
+
+            _printer.AddToQueue(result);
+            return Ok();
+        }
+
+        [Route("PrintOnlineCatering/{id}")]
+        [HttpPost]
+        public async Task<IActionResult> PrintOnlineCatering(int id)
+        {
+            var lunch = await _lunchRepository.GetLunchByIdAsync(id);
+            var lunchVm = _mapper.Map<Lunch, LunchTicketViewModel>(lunch);
+            lunchVm.InStore = false;
+            var view = "TicketCatering";
+            var result = await this.RenderViewAsync(view, lunchVm, true);
+
+            _printer.AddToQueue(result);
+            return Ok();
         }
 
         [HttpPost]
@@ -59,7 +90,10 @@ namespace RepoWebShop.Controllers
         [Route("GetProducts")]
         public IActionResult GetProducts()
         {
-            var result = _catalogRepository.GetAll().OrderBy(x => x.DisplayName.TrimStart()).OrderBy(x => x.Category).ToList();
+            var result = _catalogRepository.GetAll();
+            result = result.OrderBy(x => x.DisplayName.TrimStart());
+            result = result.OrderBy(x => x.Category);
+            result = result.ToList();
             return Ok(result);
         }
 

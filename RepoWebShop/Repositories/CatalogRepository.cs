@@ -89,11 +89,23 @@ namespace RepoWebShop.Models
             _appDbContext.SaveChanges();
         }
 
-        public IEnumerable<Product> GetActive() => GetAll(x => x.IsActive).ToList();
+        public IEnumerable<Product> GetActive()
+        {
+            var result = GetAll(x => x.IsActive);
+            return result;
+        }
 
-        public IEnumerable<Product> GetAvailableToBuyOnline() => GetAll(x => x.IsActive && x.IsOnSale).ToList();
-        
-        public IEnumerable<Product> GetAll(Func<Product, bool> condition = null) => _appDbContext.Products.Where(x => condition == null || condition(x)).Include(x => x.PieDetail).ToList();
+        public IEnumerable<Product> GetAvailableToBuyOnline()
+        {
+            var result = GetAll(x => x.IsActive && x.IsOnSale);
+            return result;
+        }
+
+        public IEnumerable<Product> GetAll(Func<Product, bool> condition = null)
+        {
+            var result = _appDbContext.Products.Where(x => condition == null || condition(x)).Include(x => x.PieDetail);
+            return result;
+        }
 
         public Product GetById(int id) => GetAll(x => x.ProductId == id).FirstOrDefault();
 

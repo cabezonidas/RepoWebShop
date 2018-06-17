@@ -1,0 +1,76 @@
+﻿@model LunchTicketViewModel
+@inject ICalendarRepository _calendar
+@inject ILunchRepository _lunch
+@inject IHostingEnvironment _env
+
+<ePOSPrint>
+    <Parameter>
+        <devid>local_printer</devid>
+        <timeout>10000</timeout>
+    </Parameter>
+    <PrintData>
+        <epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">
+            <text lang="en" />
+            <text smooth="true" />
+            <text align="center" />
+            @if (!_env.IsProduction())
+            {
+                <text>
+                    <text font="font_b" />
+                    <text width="2" height="2" />
+                    <text reverse="false" ul="false" em="true" color="color_1" />
+                    <text>-- PRUEBA --&#10;</text>
+                    <feed unit="12" />
+                </text>
+            }
+            <text font="font_b" />
+            <text width="2" height="2" />
+            <text reverse="false" ul="false" em="true" color="color_1" />
+            <text>@Html.Raw(string.IsNullOrEmpty(Model.Title) ? "Catering" : Model.Title)&#10;</text>
+            <feed unit="12" />
+
+            <text>&#10;</text>
+            <text align="left" />
+            <text font="font_a" />
+            <text width="1" height="1" />
+            <text reverse="false" ul="false" em="false" color="color_1" />
+
+            <text>&#10;</text>
+            <text width="1" height="1" />
+            <text reverse="false" ul="false" em="false" color="color_1" />
+
+            @foreach (var item in Model.Items)
+            {
+                <text>
+                    <text align="left">@item.ItemCount @item.Product.DisplayName&#10;</text>
+                    <text align="right">@item.ItemCount x $@Html.Raw(Model.InStore ? item.Product.PriceInStore : item.Product.Price)&#10;</text>
+                    <text align="right">$@Html.Raw(item.ItemCount * (Model.InStore ? item.Product.PriceInStore : item.Product.Price))&#10;</text>
+                    <text>&#10;</text>
+                </text>
+            }
+            @foreach (var item in Model.Miscellanea)
+            {
+                <text>
+                    <text align="left">@item.Quantity @item.Description&#10;</text>
+                    <text align="right">@item.Quantity x $@item.Price&#10;</text>
+                    <text align="right">$@Html.Raw(item.Quantity * item.Price)&#10;</text>
+                    <text>&#10;</text>
+                </text>
+            }
+
+            <text reverse="false" ul="false" em="true" />
+
+            <text width="2" height="1" />
+            <text>TOTAL</text>
+            <text x="264" />
+            <text>$@Html.Raw(Model.InStore ? _lunch.GetLunchTotalInStore(Model) : _lunch.GetTotal(Model))&#10;</text>
+            <text reverse="false" ul="false" em="false" />
+            <text width="1" height="1" />
+            <feed unit="12" />
+            <text align="center" />
+            <feed line="3" />
+            <cut type="feed" />
+        </epos-print>
+    </PrintData>
+</ePOSPrint>
+

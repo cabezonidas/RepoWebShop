@@ -1,4 +1,5 @@
 ﻿@model Lunch
+@inject ICalendarRepository _calendar
 @inject ILunchRepository _lunchRepository
 @inject SignInManager<ApplicationUser> _signIn
 @inject UserManager<ApplicationUser> _userManager
@@ -16,34 +17,37 @@ else
 {
     <div class="row " style="border-bottom-left-radius:5px; border-bottom-right-radius:5px; max-width: 500px; margin: auto; background-color: #883636; color:papayawhip">
         <div class="selecteItem">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-left">
+                @Html.Raw(_calendar.GetSoonestPickupEstimateForUsers(Model.PreparationTime))
+            </div>
             <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-left">
-            @if (isAdmin)
-            {
-                <div class="hidden-print">
-                    <div>Bocados: @_lunchRepository.GetBites(Model)</div>
-                    <div>Invitados: @_lunchRepository.GetConvitees(Model) personas</div>
-                </div>
-            }
+                @if (isAdmin)
+                {
+                    <div class="hidden-print">
+                        <div>Bocados: @_lunchRepository.GetBites(Model)</div>
+                        <div>Invitados: @_lunchRepository.GetConvitees(Model) personas</div>
+                    </div>
+                }
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-right">
                 <div class="online">
 
-                @{
-                    var total = _lunchRepository.GetTotal(Model);
-                <h3>Total @Html.Raw(total.ToString("c"))</h3>
-                    var totalInStore = _lunchRepository.GetLunchTotalInStore(Model);
-                    if (totalInStore > total)
-                    {
-                    <h4 style="text-decoration-line: line-through">@Html.Raw(totalInStore.ToString("c"))</h4>
+                    @{
+                        var total = _lunchRepository.GetTotal(Model);
+                        <h3>Total @Html.Raw(total.ToString("c"))</h3>
+                        var totalInStore = _lunchRepository.GetLunchTotalInStore(Model);
+                        if (totalInStore > total)
+                        {
+                            <h4 style="text-decoration-line: line-through">@Html.Raw(totalInStore.ToString("c"))</h4>
+                        }
                     }
-                }
                 </div>
                 <div class="in-store hidden">
 
-                @{
-                    var total2 = _lunchRepository.GetLunchTotalInStore(Model);
-                    <h2>Total @Html.Raw(total2.ToString("c"))</h2>
-                }
+                    @{
+                        var total2 = _lunchRepository.GetLunchTotalInStore(Model);
+                        <h2>Total @Html.Raw(total2.ToString("c"))</h2>
+                    }
                 </div>
 
             </div>

@@ -41,15 +41,10 @@ namespace RepoWebShop.Controllers
         {
             var viewProducts = _pieDetailRepository.PieDetailsWithChildren.OrderBy(p => p.Name).Select(x => (_pieDetailRepository.MapDbPieDetailToPieDetailViewModel(x)));
 
-            var products = _catalogRepository.GetAvailableToBuyOnline()
-                .Where(x => x.Category.ToLower() != "lunch" && x.Category.ToLower() != "appetizer");
+            var products = _catalogRepository
+                .GetAll(x => x.IsActive && x.IsOnSale && x.Category.ToLower() != "lunch" && x.Category.ToLower() != "appetizer");
 
             Dictionary<int, string> times = _pieDetailRepository.TimeEstimations(products);
-
-            foreach(var partialView in viewProducts)
-            {
-            
-            }
 
             return View(new PieDetailsListViewModel
             {
