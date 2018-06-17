@@ -2,6 +2,7 @@
 @inject ILunchRepository _lunchRepository
 @inject SignInManager<ApplicationUser> _signIn
 @inject UserManager<ApplicationUser> _userManager
+@inject ICalendarRepository _calendar
 
 @{
     var user = await _userManager.GetUser(_signIn);

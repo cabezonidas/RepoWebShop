@@ -7,6 +7,7 @@ using RepoWebShop.Models;
 using RepoWebShop.Interfaces;
 using RepoWebShop.ViewModels;
 using RepoWebShop.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace RepoWebShop.Repositories
 {
@@ -15,12 +16,50 @@ namespace RepoWebShop.Repositories
         private readonly AppDbContext _appDbContext;
         private readonly IMapper _mapper;
         private readonly IPieRepository _pieRepository;
+        private readonly IFlickrRepository _flickrRepository;
+        private readonly ICalendarRepository _calendar;
+        private readonly IHttpContextAccessor _ctx;
 
-        public PieDetailRepository(IPieRepository pieRepository, IMapper mapper, AppDbContext appDbContext)
+        public PieDetailRepository(IHttpContextAccessor contextAccessor, ICalendarRepository calendarRepository, IFlickrRepository flicrRepository, IPieRepository pieRepository, IMapper mapper, AppDbContext appDbContext)
         {
+            _calendar = calendarRepository;
+            _flickrRepository = flicrRepository;
             _appDbContext = appDbContext;
             _mapper = mapper;
             _pieRepository = pieRepository;
+            _ctx = contextAccessor;
+        }
+
+        public Dictionary<int, string> TimeEstimations(IEnumerable<Product> products)
+        {
+            var timeEstimations = new Dictionary<int, string>();
+            foreach (var time in products.Select(x => x.PreparationTime).Distinct())
+                timeEstimations.Add(time, _calendar.GetSoonestPickupEstimateForUsers(time));
+            return timeEstimations;
+        }
+
+        public PieDetailViewModel MapDbPieDetailToPieDetailViewModel(PieDetail dbPieDetail)
+        {
+            var products = GetChildren(dbPieDetail.PieDetailId);
+            var times = TimeEstimations(products);
+
+            var result = new PieDetailViewModel()
+            {
+                IsMobile = _ctx.HttpContext.Request.IsMobile(),
+                PrimaryPicture = _flickrRepository.GetAlbumPictures(dbPieDetail.FlickrAlbumId).PrimaryPicture,
+                PieDetail = dbPieDetail,
+                Pies = _pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == dbPieDetail.PieDetailId)
+            };
+
+            result.Products = products
+                .Select(x => _mapper.Map<Product, ProductEstimationViewModel>(x))
+                .Select(x =>
+                {
+                    x.Estimation = times[x.PreparationTime];
+                    return x;
+                });
+
+            return result;
         }
 
         public IEnumerable<PieDetail> PieDetails

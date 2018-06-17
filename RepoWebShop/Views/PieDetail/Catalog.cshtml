@@ -1,5 +1,4 @@
-﻿@model IEnumerable<Product>
-@inject ICalendarRepository _calendar
+﻿@model IEnumerable<ProductEstimationViewModel>
 @if (Model.Any())
 {
 <style>
@@ -37,57 +36,59 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.OrderBy(x => x.DisplayName.TrimStart()))
+        @{
+            var array = Model.OrderBy(x => x.DisplayName.TrimStart()).ToArray();
+            for (int i = 0; i < array.Length; i++)
             {
                 <tr>
                     <td width="60" class="small">
                         <div style="font-size: large; color: #883636">
-                            @item.DisplayName.TrimStart()
+                            @array[i].DisplayName.TrimStart()
                         </div>
                         <div class="text-muted text-capitalize" style="font-style:italic;">
-                            <div>@item.DisplayDescription</div>
+                            <div>@array[i].DisplayDescription</div>
                         </div>
                         <div>
-                            Prociones aprox.: @item.Portions <span class="fa fa-pie-chart"></span>
+                            Prociones aprox.: @array[i].Portions <span class="fa fa-pie-chart"></span>
                         </div>
                         <div style="color: #883636">
-                            @Html.Raw(_calendar.GetSoonestPickupEstimateForUsers(item.PreparationTime))
-                            @*Preparación: @item.PreparationTime hs*@
+                            @Html.Raw(array[i].Estimation)
                         </div>
                     </td>
                     <td width="40">
                         <div class="text-center">
-                            @if (item.PriceInStore > item.Price)
+                            @if (array[i].PriceInStore > array[i].Price)
                             {
-                                var perc = Decimal.Floor(100 - (item.Price / item.PriceInStore * 100));
+                                var perc = Decimal.Floor(100 - (array[i].Price / array[i].PriceInStore * 100));
 
                                 <div style="font-size: larger; ">
                                     <div>
-                                        <strong>$@item.Price </strong>
+                                        <strong>$@array[i].Price </strong>
 
                                         <strong style="color: green;">@Html.Raw((perc >= 10 ? $"-{perc}% " : "") + "Online")</strong>
                                     </div>
                                 </div>
                                 <div style="font-size: smaller;">
                                     <div>
-                                        <strong style="color: red;">$@item.PriceInStore </strong>
+                                        <strong style="color: red;">$@array[i].PriceInStore </strong>
                                         <strong>En sucursal</strong>
                                     </div>
                                 </div>
                             }
                             else
                             {
-                                <div style="font-size: larger; ">$@item.Price</div>
+                                <div style="font-size: larger; ">$@array[i].Price</div>
                             }
                             <div style="margin: 5px;">
                                 <a title="Comprar" asp-controller="ShoppingCart" asp-action="AddProductToShoppingCart"
-                                   asp-route-id="@item.ProductId" class="btn btn-primary">
+                                   asp-route-id="@array[i].ProductId" class="btn btn-primary">
                                     Comprar
                                 </a>
                             </div>
                         </div>
                     </td>
                 </tr>
+                }
             }
         </tbody>
     </table>

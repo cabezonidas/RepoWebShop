@@ -20,12 +20,14 @@ namespace RepoWebShop.Controllers
         private readonly IPieRepository _pieRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly ICatalogRepository _catalogRepository;
+        private readonly ICalendarRepository _calendar;
         private readonly IFlickrRepository _flickrRepository;
         private readonly AppDbContext _appDbContext;
         private readonly IMapper _mapper;
 
-        public PieDetailController(ICatalogRepository catalogRepository, IMapper mapper, IFlickrRepository flickrRepository, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
+        public PieDetailController(ICalendarRepository calendar, ICatalogRepository catalogRepository, IMapper mapper, IFlickrRepository flickrRepository, AppDbContext appDbContext, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository)
         {
+            _calendar = calendar;
             _catalogRepository = catalogRepository;
             _pieDetailRepository = pieDetailRepository;
             _categoryRepository = categoryRepository;
@@ -35,37 +37,28 @@ namespace RepoWebShop.Controllers
             _flickrRepository = flickrRepository;
         }
 
-        public ViewResult List(string category)
+        public ViewResult List()
         {
+            var viewProducts = _pieDetailRepository.PieDetailsWithChildren.OrderBy(p => p.Name).Select(x => (_pieDetailRepository.MapDbPieDetailToPieDetailViewModel(x)));
 
-            IEnumerable<PieDetail> pieDetails;
-            string currentCategory = string.Empty;
+            var products = _catalogRepository.GetAvailableToBuyOnline()
+                .Where(x => x.Category.ToLower() != "lunch" && x.Category.ToLower() != "appetizer");
 
+            Dictionary<int, string> times = _pieDetailRepository.TimeEstimations(products);
+
+            foreach(var partialView in viewProducts)
+            {
             
-            pieDetails = _pieDetailRepository.PieDetailsWithChildren.OrderBy(p => p.Name);
-            currentCategory = "Ver todos";
-
-
-            var viewProducts = pieDetails.Select(x => (MapDbPieDetailToPieDetailViewModel(x)));
+            }
 
             return View(new PieDetailsListViewModel
             {
                 PieDetails = viewProducts,
-                CurrentCategory = currentCategory,
-                CatalogProducts = _catalogRepository.GetAvailableToBuyOnline().Where(x => x.Category.ToLower() != "lunch")
+                CurrentCategory = "Todos los productos",
+                CatalogProducts = products.Select(x => _mapper.Map<Product, ProductEstimationViewModel>(x)).Select(x => { x.Estimation = times[x.PreparationTime]; return x; })
             });
         }
 
-        private PieDetailViewModel MapDbPieDetailToPieDetailViewModel(PieDetail dbPieDetail)
-        {
-            return new PieDetailViewModel()
-            {
-                IsMobile = this.Request.IsMobile(),
-                PrimaryPicture = _flickrRepository.GetAlbumPictures(dbPieDetail.FlickrAlbumId).PrimaryPicture,
-                PieDetail = dbPieDetail,
-                Pies = _pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == dbPieDetail.PieDetailId)
-            };
-        }
 
         public IActionResult Details(int id)
         {

@@ -20,10 +20,13 @@
         </div>
     </div>
     <div id="products" class="">
-        @foreach (var partialView in Model.PieDetails)
+    @{
+        var array = Model.PieDetails.ToArray();
+        for (int i = 0; i < array.Length; i++)
         {
-            @Html.Partial("PieOverviewSummary", partialView)
+            @Html.Partial("PieOverviewSummary", array[i])
         }
+    }
     </div>
 </div>
 
@@ -31,9 +34,6 @@
     @Html.Partial("~/Views/PieDetail/Catalog.cshtml", Model.CatalogProducts)
 </div>
 
-@*<div class="container text-center">
-        <h3><a asp-action="FullCatalog" asp-controller="Services" style="color:black">Ver catálogo completo</a></h3>
-    </div>*@
 
 <script type="text/javascript">
     $(function () {
