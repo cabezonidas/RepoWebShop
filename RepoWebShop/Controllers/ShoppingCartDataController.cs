@@ -21,9 +21,11 @@ namespace RepoWebShop.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly AppDbContext _appDbContext;
+        private readonly IElectronicBillingRepository _billing;
 
-        public ShoppingCartDataController(ICalendarRepository calendarRepository, AppDbContext appDbContext, IShoppingCartRepository shoppingCart, IMercadoPago mp, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public ShoppingCartDataController(IElectronicBillingRepository billing, ICalendarRepository calendarRepository, AppDbContext appDbContext, IShoppingCartRepository shoppingCart, IMercadoPago mp, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
+            _billing = billing;
             _calendarRepository = calendarRepository;
             _appDbContext = appDbContext;
             _mp = mp;
@@ -38,6 +40,28 @@ namespace RepoWebShop.Controllers
         {
             _cartRepository.AcknowledgeSystemTime(null);
             
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("SaveCuit/{cuit}")]
+        public async Task<IActionResult> SaveCuit(long cuit)
+        {
+            var validCuit = await _billing.ValidPersonaAsync(cuit);
+            if (validCuit)
+            {
+                _cartRepository.AddCuitToCart(null, cuit);
+                return Ok();
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost]
+        [Route("ClearCuit")]
+        public IActionResult ClearCuit()
+        {
+            _cartRepository.RemoveCuitFromCart(null);
             return Ok();
         }
 

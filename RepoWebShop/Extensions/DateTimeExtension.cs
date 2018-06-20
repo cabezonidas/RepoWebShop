@@ -9,7 +9,7 @@ namespace RepoWebShop.Extensions
     {
         public static DateTime Zoned(this DateTime time, string timeZoneId)
         {
-            return TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById(timeZoneId));
+            return TimeZoneInfo.ConvertTime(time, TimeZoneInfo.FindSystemTimeZoneById(timeZoneId));
         }
     }
 }

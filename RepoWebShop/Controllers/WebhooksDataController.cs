@@ -34,7 +34,7 @@ namespace RepoWebShop.Controllers
         {
             try
             {
-                await CheckPayments();
+                //await CheckPayments();
                 return Ok();
             }
             catch

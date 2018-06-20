@@ -1,8 +1,6 @@
 ﻿using RepoWebShop.Interfaces;
 using System.IO;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using RepoWebShop.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using System.Xml;
@@ -11,12 +9,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using Org.BouncyCastle.Cms;
-using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509.Store;
 using System.Collections.Generic;
-using System.Collections;
 using Org.BouncyCastle.Asn1.Pkcs;
+using Microsoft.Extensions.Caching.Distributed;
+using RepoWebShop.Models;
+using AutoMapper;
+using System.Globalization;
 
 namespace RepoWebShop.Repositories
 {
@@ -25,106 +25,155 @@ namespace RepoWebShop.Repositories
         private readonly IHostingEnvironment _env;
         private readonly IConfiguration _config;
         private readonly ICalendarRepository _calendar;
-        private readonly bool prod;
+        private readonly IDistributedCache _serverCache;
+        private readonly IMapper _mapper;
+        private readonly bool _isProd;
+        private const string AfipLoginTicketWsFe = "AfipLoginTicketWsFe";
+        private const string AfipSignTicketWsFe = "AfipSignTicketWsFe";
+        private const string AfipLoginTicketWsPersona = "AfipLoginTicketWsPersona";
+        private const string AfipSignTicketWsPersona = "AfipSignTicketWsPersona";
+        private const string AfipWsPersona = "ws_sr_constancia_inscripcion";
+        private const string AfipWsFe = "wsfe";
 
-        private string LoginTicketRequestForElectronicBilling
+        private XmlDocument LoginTicketRequestForElectronicBilling(string ws, bool isProd)
         {
-            get
-            {
-                string XmlStrLoginTicketRequestTemplate = 
-                    "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
-                    "<loginTicketRequest version=\"1.0\">" +
-                        "<header>" +
-                            "<destination></destination>" +
-                            "<uniqueId></uniqueId>" +
-                            "<generationTime></generationTime>" +
-                            "<expirationTime></expirationTime>" +
-                        "</header>" +
-                        "<service></service>" +
-                    "</loginTicketRequest>".Trim();
-                XmlDocument XmlLoginTicketRequest = new XmlDocument();
-                XmlLoginTicketRequest.LoadXml(XmlStrLoginTicketRequestTemplate);
-                XmlLoginTicketRequest.SelectSingleNode("//destination").InnerText = $"CN=wsaa{(!prod ? "homo" : string.Empty)}, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239";
-                var id = string.Concat(_calendar.LocalTime().ToUniversalTime().Ticks.ToString().ToCharArray().TakeLast(7));
-                XmlLoginTicketRequest.SelectSingleNode("//uniqueId").InnerText = id;
-                XmlLoginTicketRequest.SelectSingleNode("//generationTime").InnerText = _calendar.LocalTime().AddMinutes(-10).ToString("s");
-                XmlLoginTicketRequest.SelectSingleNode("//expirationTime").InnerText = _calendar.LocalTime().AddMinutes(+10).ToString("s");
-                XmlLoginTicketRequest.SelectSingleNode("//service").InnerText = "wsfe";
-                var result = XmlLoginTicketRequest.OuterXml;
-                return result;
-            }
+            string XmlStrLoginTicketRequestTemplate = 
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
+                "<loginTicketRequest version=\"1.0\">" +
+                    "<header>" +
+                        "<destination></destination>" +
+                        "<uniqueId></uniqueId>" +
+                        "<generationTime></generationTime>" +
+                        "<expirationTime></expirationTime>" +
+                    "</header>" +
+                    "<service></service>" +
+                "</loginTicketRequest>".Trim();
+            XmlDocument XmlLoginTicketRequest = new XmlDocument();
+            XmlLoginTicketRequest.LoadXml(XmlStrLoginTicketRequestTemplate);
+            XmlLoginTicketRequest.SelectSingleNode("//destination").InnerText = $"CN=wsaa{(!isProd ? "homo" : string.Empty)}, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239";
+            var id = string.Concat(_calendar.LocalTime().ToUniversalTime().Ticks.ToString().ToCharArray().TakeLast(7));
+            XmlLoginTicketRequest.SelectSingleNode("//uniqueId").InnerText = id;
+            XmlLoginTicketRequest.SelectSingleNode("//generationTime").InnerText = _calendar.LocalTime().AddMinutes(-10).ToString("s");
+            XmlLoginTicketRequest.SelectSingleNode("//expirationTime").InnerText = _calendar.LocalTime().AddMinutes(+10).ToString("s");
+            XmlLoginTicketRequest.SelectSingleNode("//service").InnerText = ws; // "wsfe";
+            return XmlLoginTicketRequest;
         }
 
-        public ElectronicBillingRepository(IHostingEnvironment env, IConfiguration config, ICalendarRepository calendar)
+        public ElectronicBillingRepository(IMapper mapper, IDistributedCache serverCache, IHostingEnvironment env, IConfiguration config, ICalendarRepository calendar)
         {
+            _mapper = mapper;
             _calendar = calendar;
             _env = env;
             _config = config;
-            prod = _env.IsProduction();
+            _serverCache = serverCache;
+            _isProd = _env.IsProduction();
         }
 
-        public async Task<string> GetLoginTicket()
+        public async Task<FECAEResponse> FECAESolicitarAsync(Order order)
         {
-          var sample = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
-            "<loginTicketResponse version=\"1.0\">" +
-                "<header>" +
-                    "<source>CN=wsaahomo, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239</source>" +
-                    "<destination>SERIALNUMBER=CUIT 27148090330, CN=repotest</destination>" +
-                    "<uniqueId>1147735260</uniqueId>" +
-                    "<generationTime>2018-06-11T06:34:51.858-03:00</generationTime>" +
-                    "<expirationTime>2018-06-11T18:34:51.858-03:00</expirationTime>" +
-                "</header>" +
-                "<credentials>" +
-                    "<token>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/Pgo8c3NvIHZlcnNpb249IjIuMCI+CiAgICA8aWQgc3JjPSJDTj13c2FhaG9tbywgTz1BRklQLCBDPUFSLCBTRVJJQUxOVU1CRVI9Q1VJVCAzMzY5MzQ1MDIzOSIgZHN0PSJDTj13c2ZlLCBPPUFGSVAsIEM9QVIiIHVuaXF1ZV9pZD0iMTgxMDg4OTc1OSIgZ2VuX3RpbWU9IjE1Mjg3MDk2MzEiIGV4cF90aW1lPSIxNTI4NzUyODkxIi8+CiAgICA8b3BlcmF0aW9uIHR5cGU9ImxvZ2luIiB2YWx1ZT0iZ3JhbnRlZCI+CiAgICAgICAgPGxvZ2luIGVudGl0eT0iMzM2OTM0NTAyMzkiIHNlcnZpY2U9IndzZmUiIHVpZD0iU0VSSUFMTlVNQkVSPUNVSVQgMjcxNDgwOTAzMzAsIENOPXJlcG90ZXN0IiBhdXRobWV0aG9kPSJjbXMiIHJlZ21ldGhvZD0iMjIiPgogICAgICAgICAgICA8cmVsYXRpb25zPgogICAgICAgICAgICAgICAgPHJlbGF0aW9uIGtleT0iMjcxNDgwOTAzMzAiIHJlbHR5cGU9IjQiLz4KICAgICAgICAgICAgPC9yZWxhdGlvbnM+CiAgICAgICAgPC9sb2dpbj4KICAgIDwvb3BlcmF0aW9uPgo8L3Nzbz4K</token>" +
-                    "<sign>JTPsX/KPyfl2sw35eqEdHQKX/HsCA43iJqUW7hrZdr5V/bwY9TaMRT9LNUKYrHrzG7vYszHWJbMYTo2xlex8NqvHtdPZqAOmeDA+kqwg9oVHxvZyh2nu/hRycGMtaYnnHkA9WetQ88wwHsrH9VsYH2hVTxGlNTnZBWKZgmINLb8=</sign>" +
-                "</credentials>" +
-            "</loginTicketResponse>";
+            var payerData = new PayerDataRevenue(order);
 
+            var requestInfo = new FECAERequestInfo(payerData, _calendar.LocalTime(), _config.GetValue<int>("Iva"), _config.GetValue<long>("CUIT"), await GetSignTicket(AfipWsFe, _isProd), await GetTokenTicket(AfipWsFe, _isProd), _config.GetValue<int>("PtoVtaAfip"));
 
-            XmlDocument xml = new XmlDocument();
-            xml.LoadXml(sample);
-            var source = xml.SelectSingleNode("//source").InnerText;
-            var destination = xml.SelectSingleNode("//destination").InnerText;
-            var uniqueId = xml.SelectSingleNode("//uniqueId").InnerText;
+            FECAEResponse result = await FECAESolicitarAsync(requestInfo);
 
-            //var generationTime = TimeZoneInfo.ConvertTime(DateTime.Parse(xml.SelectSingleNode("//generationTime").InnerText),
-            //    TimeZoneInfo.FindSystemTimeZoneById(_config.GetSection("LocalZone").Value));
-            //var expirationTime = TimeZoneInfo.ConvertTime(DateTime.Parse(xml.SelectSingleNode("//generationTime").InnerText),
-            //    TimeZoneInfo.FindSystemTimeZoneById(_config.GetSection("LocalZone").Value));
-
-            var token = xml.SelectSingleNode("//token").InnerText;
-            var sign = xml.SelectSingleNode("//sign").InnerText;
-
-
-
-
-            var msg = SignMessage(LoginTicketRequestForElectronicBilling);
-            try
-            {
-                if (prod)
-                {
-                    var LoginCMS = new LoginCMSProd.LoginCMSClient();
-                    var response = await LoginCMS.loginCmsAsync(msg);
-                    return response.loginCmsReturn;
-                }
-                else
-                {
-                    var LoginCMS = new LoginCMSTest.LoginCMSClient();
-                    var response = await LoginCMS.loginCmsAsync(msg);
-                    return response.loginCmsReturn;
-                }
-            }
-            catch(Exception ex)
-            {
-                return ex.Message;
-            }
-            
+            return result;
         }
 
-        private string SignMessage(string msg)
+        private FECAEResponse ParseFeCaeResponse(ElectronicInvoiceTest.FECAESolicitarResponse input)
+        {
+            var errs = input.Body.FECAESolicitarResult.Errors?.Select(x => _mapper.Map<ElectronicInvoiceTest.Err, FECAEResponse.CodeMessage>(x));
+            var events = input.Body.FECAESolicitarResult.Events?.Select(x => _mapper.Map<ElectronicInvoiceTest.Evt, FECAEResponse.CodeMessage>(x));
+            var feCaeCabResponse = _mapper.Map<ElectronicInvoiceTest.FECAECabResponse, FECAEResponse.FECAECabResponse>(input.Body.FECAESolicitarResult.FeCabResp);
+            var feDetResp = input.Body.FECAESolicitarResult.FeDetResp?.Select(x => _mapper.Map <ElectronicInvoiceTest.FECAEDetResponse, FECAEResponse.FECAEDetResponse>(x));
+
+            return new FECAEResponse(errs, events, feCaeCabResponse, feDetResp);
+        }
+
+        private FECAEResponse ParseFeCaeResponse(ElectronicInvoiceProd.FECAESolicitarResponse input)
+        {
+            var errs = input.Body.FECAESolicitarResult.Errors?.Select(x => _mapper.Map<ElectronicInvoiceProd.Err, FECAEResponse.CodeMessage>(x));
+            var events = input.Body.FECAESolicitarResult.Events?.Select(x => _mapper.Map<ElectronicInvoiceProd.Evt, FECAEResponse.CodeMessage>(x));
+            var feCaeCabResponse = _mapper.Map<ElectronicInvoiceProd.FECAECabResponse, FECAEResponse.FECAECabResponse>(input.Body.FECAESolicitarResult.FeCabResp);
+            var feDetResp = input.Body.FECAESolicitarResult.FeDetResp?.Select(x => _mapper.Map<ElectronicInvoiceProd.FECAEDetResponse, FECAEResponse.FECAEDetResponse>(x));
+
+            return new FECAEResponse(errs, events, feCaeCabResponse, feDetResp);
+        }
+
+        public async Task<string> GetTokenTicket(string ws, bool isProd)
+        {
+            var tokenName = "";
+            switch (ws)
+            {
+                case AfipWsFe:
+                    tokenName = AfipLoginTicketWsFe;
+                    break;
+                case AfipWsPersona:
+                    tokenName = AfipLoginTicketWsPersona;
+                    break;
+            }
+
+            var loginTicket = await _serverCache.GetStringAsync(tokenName);
+            if (!string.IsNullOrEmpty(loginTicket))
+                return loginTicket;
+
+            await FetchAfipAuthorizationTokens(ws, isProd);
+
+            return await _serverCache.GetStringAsync(tokenName);
+        }
+
+        public async Task<string> GetSignTicket(string ws, bool isProd)
+        {
+            var signName = "";
+            switch (ws)
+            {
+                case AfipWsFe:
+                    signName = AfipSignTicketWsFe;
+                    break;
+                case AfipWsPersona:
+                    signName = AfipSignTicketWsPersona;
+                    break;
+            }
+
+            var loginTicket = await _serverCache.GetStringAsync(signName);
+            if (!string.IsNullOrEmpty(loginTicket))
+                return loginTicket;
+
+            await FetchAfipAuthorizationTokens(ws, isProd);
+            return await _serverCache.GetStringAsync(signName);
+        }
+
+        private async Task FetchAfipAuthorizationTokens(string ws, bool isProd)
+        {
+            var loginCms = await GetLoginCmsAsync(ws, isProd);
+
+            var token = loginCms.SelectSingleNode("//token").InnerText;
+            var sign = loginCms.SelectSingleNode("//sign").InnerText;
+            var expirationTime = loginCms.SelectSingleNode("//expirationTime").InnerText;
+            DateTime Expiration = _calendar.ToLocalTime(DateTime.ParseExact(expirationTime, "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffK", null));
+
+            var options = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = Expiration - _calendar.LocalTime()
+            };
+
+            switch(ws)
+            {
+                case AfipWsFe:
+                    await _serverCache.SetStringAsync(AfipSignTicketWsFe, sign, options);
+                    await _serverCache.SetStringAsync(AfipLoginTicketWsFe, token, options);
+                    break;
+                case AfipWsPersona:
+                    await _serverCache.SetStringAsync(AfipSignTicketWsPersona, sign, options);
+                    await _serverCache.SetStringAsync(AfipLoginTicketWsPersona, token, options);
+                    break;
+            }
+        }
+
+        private string SignMessage(string msg, bool isProd)
         {
             var gen = new CmsSignedDataGenerator();
-            X509Certificate2 certificate = GetCertificate();
+            X509Certificate2 certificate = GetCertificate(isProd);
             var privKey = DotNetUtilities.GetRsaKeyPair(certificate.GetRSAPrivateKey()).Private;
             var cert = DotNetUtilities.FromX509Certificate(certificate);
             gen.AddSigner(privKey, cert, CmsSignedDataGenerator.DigestSha1);
@@ -142,13 +191,96 @@ namespace RepoWebShop.Repositories
             return Convert.ToBase64String(result);
         }
 
-        private X509Certificate2 GetCertificate()
+        private async Task<XmlDocument> GetLoginCmsAsync(string ws, bool isProd)
         {
-            var certPath = $"{_env.ContentRootPath}\\Certs\\{(prod ? "RepoProd.p12" : "RepoTest.pfx")}" ;
+            XmlDocument xml = new XmlDocument();
+            var msg = SignMessage(LoginTicketRequestForElectronicBilling(ws, isProd).OuterXml, isProd);
+            if (isProd)
+            {
+                var LoginCMS = new LoginCMSProd.LoginCMSClient();
+                var response = await LoginCMS.loginCmsAsync(msg);
+                xml.LoadXml(response.loginCmsReturn);
+            }
+            else
+            {
+                var LoginCMS = new LoginCMSTest.LoginCMSClient();
+                var response = await LoginCMS.loginCmsAsync(msg);
+                xml.LoadXml(response.loginCmsReturn);
+            }
+            return xml;
+        }
+
+        private X509Certificate2 GetCertificate(bool isProd)
+        {
+            var certPath = $"{_env.ContentRootPath}\\Certs\\{(isProd ? "RepoProd.p12" : "RepoTest.pfx")}" ;
             var key = _config.GetValue<string>("AfipKeyCert");
             
             var cert = new X509Certificate2(File.ReadAllBytes(certPath), key, X509KeyStorageFlags.Exportable);
             return cert;
+        }
+
+        private async Task<FECAEResponse> FECAESolicitarAsync(FECAERequestInfo requestInfo)
+        {
+            if (_isProd)
+            {
+                var config = new ElectronicInvoiceProd.ServiceSoapClient.EndpointConfiguration();
+                var soapClient = new ElectronicInvoiceProd.ServiceSoapClient(config);
+
+                var fECompUltimo = await soapClient.FECompUltimoAutorizadoAsync(
+                    _mapper.Map<FEAuthRequest, ElectronicInvoiceProd.FEAuthRequest>(requestInfo.AuthRequest),
+                    requestInfo.FeCabReq.PtoVta, requestInfo.FeCabReq.CbteTipo);
+
+                requestInfo.CbteDesde = fECompUltimo.Body.FECompUltimoAutorizadoResult.CbteNro + 1;
+                requestInfo.CbteHasta = requestInfo.CbteDesde;
+
+                var feCaeRequest = new ElectronicInvoiceProd.FECAERequest();
+                feCaeRequest.FeCabReq = _mapper.Map<FECAECabRequest, ElectronicInvoiceProd.FECAECabRequest>(requestInfo.FeCabReq);
+                feCaeRequest.FeDetReq = new List<ElectronicInvoiceProd.FECAEDetRequest> {
+                    _mapper.Map<FECAEDetRequest, ElectronicInvoiceProd.FECAEDetRequest>(new FECAEDetRequest(requestInfo))
+                }.ToArray();
+
+                var response = await soapClient.FECAESolicitarAsync(_mapper.Map<FEAuthRequest, ElectronicInvoiceProd.FEAuthRequest>(requestInfo.AuthRequest), feCaeRequest);
+
+                return ParseFeCaeResponse(response);
+            }
+            else
+            {
+                var config = new ElectronicInvoiceTest.ServiceSoapClient.EndpointConfiguration();
+                var soapClient = new ElectronicInvoiceTest.ServiceSoapClient(config);
+
+                var fECompUltimo = await soapClient.FECompUltimoAutorizadoAsync(
+                    _mapper.Map<FEAuthRequest, ElectronicInvoiceTest.FEAuthRequest>(requestInfo.AuthRequest),
+                    requestInfo.FeCabReq.PtoVta, requestInfo.FeCabReq.CbteTipo);
+
+                requestInfo.CbteDesde = fECompUltimo.Body.FECompUltimoAutorizadoResult.CbteNro + 1;
+                requestInfo.CbteHasta = requestInfo.CbteDesde;
+
+                var feCaeRequest = new ElectronicInvoiceTest.FECAERequest();
+                feCaeRequest.FeCabReq = _mapper.Map<FECAECabRequest, ElectronicInvoiceTest.FECAECabRequest>(requestInfo.FeCabReq);
+                feCaeRequest.FeDetReq = new List<ElectronicInvoiceTest.FECAEDetRequest> {
+                    _mapper.Map<FECAEDetRequest, ElectronicInvoiceTest.FECAEDetRequest>(new FECAEDetRequest(requestInfo))
+                }.ToArray();
+
+                var response = await soapClient.FECAESolicitarAsync(_mapper.Map<FEAuthRequest, ElectronicInvoiceTest.FEAuthRequest>(requestInfo.AuthRequest), feCaeRequest);
+
+                return ParseFeCaeResponse(response);
+            }
+        }
+
+        public async Task<bool> ValidPersonaAsync(long id)
+        {
+            //Puedo omitir el ambiente de homologacion y hacerlo siempre en prod.
+            var endpoint = new PadronProd.PersonaServiceA5Client.EndpointConfiguration();
+            var client = new PadronProd.PersonaServiceA5Client(endpoint);
+            try
+            {
+                var getPersonaResponse = await client.getPersonaAsync(await GetTokenTicket(AfipWsPersona, true), await GetSignTicket(AfipWsPersona, true), _config.GetValue<long>("CUIT"), id);
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

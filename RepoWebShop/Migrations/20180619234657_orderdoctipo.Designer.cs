@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180619234657_orderdoctipo")]
+    partial class orderdoctipo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -538,19 +539,17 @@ namespace RepoWebShop.Migrations
 
                     b.Property<bool>("Cancelled");
 
-                    b.Property<string>("CardHolderName");
-
-                    b.Property<string>("CardHolderNumber");
-
-                    b.Property<string>("CardHolderType");
-
-                    b.Property<long>("Cuit");
+                    b.Property<int>("ComprobanteTipo");
 
                     b.Property<string>("CustomerComments");
 
                     b.Property<int?>("DeliveryAddressId");
 
                     b.Property<int?>("DiscountId");
+
+                    b.Property<long>("DocNro");
+
+                    b.Property<int>("DocTipo");
 
                     b.Property<int?>("EmailId");
 
@@ -571,10 +570,6 @@ namespace RepoWebShop.Migrations
                     b.Property<DateTime>("OrderPlaced");
 
                     b.Property<decimal>("OrderTotal");
-
-                    b.Property<string>("PayerIdNumber");
-
-                    b.Property<string>("PayerIdType");
 
                     b.Property<bool>("PaymentReceived");
 
@@ -715,12 +710,6 @@ namespace RepoWebShop.Migrations
 
                     b.Property<string>("BookingId");
 
-                    b.Property<string>("CardHolderName");
-
-                    b.Property<string>("CardHolderNumber");
-
-                    b.Property<string>("CardHolderType");
-
                     b.Property<decimal>("Concept_Amount");
 
                     b.Property<string>("Currency_Id");
@@ -754,10 +743,6 @@ namespace RepoWebShop.Migrations
                     b.Property<decimal>("OrderTotal");
 
                     b.Property<string>("Order_Id");
-
-                    b.Property<string>("PayerIdNumber");
-
-                    b.Property<string>("PayerIdType");
 
                     b.Property<bool>("PaymentReceived");
 
@@ -1033,20 +1018,6 @@ namespace RepoWebShop.Migrations
                     b.HasKey("ShoppingCartCommentId");
 
                     b.ToTable("ShoppingCartComments");
-                });
-
-            modelBuilder.Entity("RepoWebShop.Models.ShoppingCartCuit", b =>
-                {
-                    b.Property<int>("ShoppingCartCuitId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long>("Cuit");
-
-                    b.Property<string>("ShoppingCartId");
-
-                    b.HasKey("ShoppingCartCuitId");
-
-                    b.ToTable("ShoppingCartCuits");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.ShoppingCartData", b =>

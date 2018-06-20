@@ -40,11 +40,16 @@
                 </div>
             </div>
             <div style="height:80px" class="hidden" id="mercadolink-container">
+                <div class="text-muted" id="cuit-warning" style="display:none;">
+                    Completa el CUIT para poder comprar con factura A.
+                </div>
                 <a id="mercadolink" href="#" name="MP-Checkout" mp-mode="redirect" class="blue-L-Rn-Ar">
                     Pagar
                 </a>
             </div>
             <img src="~/Pictures/Loader.gif" id="mpLoader" />
+
+            @Html.Partial("~/Views/ShoppingCart/Cuit.cshtml", Model.Cuit)
         </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">

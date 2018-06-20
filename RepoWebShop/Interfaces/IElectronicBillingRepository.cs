@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using RepoWebShop.Models;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Interfaces
 {
     public interface IElectronicBillingRepository
     {
-        Task<string> GetLoginTicket();
+        Task<FECAEResponse> FECAESolicitarAsync(Order order);
+        Task<bool> ValidPersonaAsync(long id);
     }
 }

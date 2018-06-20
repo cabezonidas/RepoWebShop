@@ -13,15 +13,18 @@
             <text smooth="true" />
             <text align="center" />
             @if (!_env.IsProduction())
-    {
-        <text>
-        <text font="font_b" />
-        <text width="2" height="2" />
-        <text reverse="false" ul="false" em="true" color="color_1" />
-        <text>-- PRUEBA --&#10;</text>
-        <feed unit="12" />
-        </text>
-}
+            {
+                <text>
+                    <text font="font_b" />
+                    <text width="2" height="2" />
+                    <text reverse="false" ul="false" em="true" color="color_1" />
+                    <text>-- PRUEBA --&#10;</text>
+                    <feed unit="12" />
+                </text>
+            }
+            <feed unit="6" />
+            <logo key1="32" key2="32" />
+            <feed unit="12" />
             <text font="font_b" />
             <text width="2" height="2" />
             <text reverse="false" ul="false" em="true" color="color_1" />
@@ -40,26 +43,26 @@
             <text>Entrega&#9;@Html.Raw($"{_calendar.FriendlyDate(Model.PickUpTimeFrom)} {Model.PickUpTimeFrom.Value.ToString("HH:ss")}")&#10;</text>
 
             @if (!string.IsNullOrEmpty(Model.CustomerComments))
-    {
-        <text>
-        <text>Notas&#10;</text>
-        <text align="center" />
-        <text>@Model.CustomerComments&#10;</text>
-        <text align="left" />
-        </text>
-}
+            {
+                <text>
+                    <text>Notas&#10;</text>
+                    <text align="center" />
+                    <text>@Model.CustomerComments&#10;</text>
+                    <text align="left" />
+                </text>
+            }
 
             <text>&#10;</text>
             <text width="1" height="1" />
             <text reverse="false" ul="false" em="false" color="color_1" />
 
             @foreach (var item in Model.ItemDetails)
-    {
-        <text>
-        <text>@item.Key&#9;@item.Value&#10;</text>
-        <text>&#10;</text>
-        </text>
-}
+            {
+                <text>
+                    <text>@item.Key&#9;@item.Value&#10;</text>
+                    <text>&#10;</text>
+                </text>
+            }
 
             <text reverse="false" ul="false" em="true" />
 
@@ -74,39 +77,39 @@
             <feed line="3" />
 
             @if (Model.DeliveryAddress != null)
-    {
-        <text>
-        <text align="center" />
-        <text font="font_b" />
-        <text width="2" height="2" />
-        <text reverse="false" ul="false" em="true" color="color_1" />
-        <text>Delivery&#10;</text>
-        <feed unit="12" />
+            {
+                <text>
+                    <text align="center" />
+                    <text font="font_b" />
+                    <text width="2" height="2" />
+                    <text reverse="false" ul="false" em="true" color="color_1" />
+                    <text>Delivery&#10;</text>
+                    <feed unit="12" />
 
-        <text>&#10;</text>
-        <text font="font_a" />
-        <text width="1" height="1" />
-        <text reverse="false" ul="false" em="false" color="color_1" />
-        <text>@Model.DeliveryAddress.AddressLine1&#10;</text>
-        <feed line="3" />
-        <text>@Model.DeliveryAddress.DeliveryInstructions&#10;</text>
-        <feed unit="12" />
-        <text align="center" />
-        <feed line="3" />
-        </text>
-}
+                    <text>&#10;</text>
+                    <text font="font_a" />
+                    <text width="1" height="1" />
+                    <text reverse="false" ul="false" em="false" color="color_1" />
+                    <text>@Model.DeliveryAddress.AddressLine1&#10;</text>
+                    <feed line="3" />
+                    <text>@Model.DeliveryAddress.DeliveryInstructions&#10;</text>
+                    <feed unit="12" />
+                    <text align="center" />
+                    <feed line="3" />
+                </text>
+            }
             @if (Model.Status == "reservation")
-    {
-        <text>
-        <text align="center" />
-        <text font="font_b" />
-        <text width="2" height="2" />
-        <text reverse="false" ul="false" em="true" color="color_1" />
-        <text>Pago Pendiente&#10;</text>
-        <feed unit="12" />
-        </text>
+            {
+                <text>
+                    <text align="center" />
+                    <text font="font_b" />
+                    <text width="2" height="2" />
+                    <text reverse="false" ul="false" em="true" color="color_1" />
+                    <text>Pago Pendiente&#10;</text>
+                    <feed unit="12" />
+                </text>
 
-}
+            }
 
 
             <cut type="feed" />

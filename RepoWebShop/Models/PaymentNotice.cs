@@ -50,6 +50,23 @@ namespace RepoWebShop.Models
             PhoneNumber = payerPhoneInfo.GetValue("number", typeof(string)); //Mapped
             PhoneNumber = string.IsNullOrEmpty(PhoneNumber) ? "-" : PhoneNumber;
 
+            /***********************/
+            try
+            {
+                var payerIdentinfoInfo = payerInfo["identification"] as Hashtable;
+                PayerIdType = payerIdentinfoInfo.GetValue("type", typeof(string));//Mapped
+                PayerIdNumber = payerIdentinfoInfo.GetValue("number", typeof(string));//Mapped
+            } catch { }
+            try
+            {
+                var cardHolder = (paymentInfo["cardholder"] as Hashtable);
+                CardHolderName = cardHolder.GetValue("name", typeof(string));//Mapped
+                var cardHolderIdentification = cardHolder["identification"] as Hashtable;
+                CardHolderType = cardHolderIdentification.GetValue("type", typeof(string));//Mapped
+                CardHolderNumber = cardHolderIdentification.GetValue("number", typeof(string));//Mapped
+            }
+            catch { }
+
             PaymentReceived = Status == "approved" || Status_Detail == "accredited"; //Revisar con refunds // Puede ser 'acreditted' en status_detail
             Payout = Date_Approved;
         }
@@ -129,5 +146,11 @@ namespace RepoWebShop.Models
                 }
             }
         }
+
+        public string PayerIdType { get; private set; }
+        public string PayerIdNumber { get; private set; }
+        public string CardHolderName { get; private set; }
+        public string CardHolderType { get; private set; }
+        public string CardHolderNumber { get; private set; }
     }
 }

@@ -156,5 +156,11 @@ namespace RepoWebShop.Repositories
                 var text = $"Disponible {datevalue} {date.ToString("HH:ss")} hs.";
                 return text;
         }
+
+        public DateTime ToLocalTime(DateTime dateTime)
+        {
+            var result = dateTime.Zoned(_config.GetSection("LocalZone").Value);
+            return result;
+        }
     }
 }

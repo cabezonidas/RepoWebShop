@@ -16,11 +16,8 @@ namespace RepoWebShop.Controllers
             _billing = billing;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            await _billing.GetLoginTicket();
-
-
             return View();
         }
     }

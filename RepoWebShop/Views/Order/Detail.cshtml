@@ -116,6 +116,7 @@
             }
         }
         <a class="btn btn-primary " onclick="printOrder()" id="print-ticket">Ticket</a>
+        <a class="btn btn-primary " onclick="invoiceOrder()" id="print-ticket">Emitir Factura</a>
     </div>
 
     <br />
@@ -267,6 +268,11 @@
     function printOrder() {
         loaderOn();
         $.post("/api/OrderData/PrintOnlineOrder/@Model.Order.OrderId").fail(() => "No se pudo mandar a imprimir").always(() => loaderOff());
+    }
+
+    function invoiceOrder() {
+        loaderOn();
+        $.post("/api/OrderData/InvoiceOrder/@Model.Order.OrderId").fail(() => "No se pudo realizar la factura").always(() => loaderOff());
     }
 
     var datetimepickertemp;

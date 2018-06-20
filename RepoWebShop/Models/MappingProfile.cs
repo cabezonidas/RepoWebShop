@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using RepoWebShop.Extensions;
 using RepoWebShop.ViewModels;
 using System;
+using System.Linq;
 using System.Security.Claims;
 
 namespace RepoWebShop.Models
@@ -11,6 +12,26 @@ namespace RepoWebShop.Models
     {
         public MappingProfile()
         {
+            CreateMap<ElectronicInvoiceTest.Err, FECAEResponse.CodeMessage>();
+            CreateMap<ElectronicInvoiceTest.Evt, FECAEResponse.CodeMessage>();
+            CreateMap<ElectronicInvoiceTest.FECAECabResponse, FECAEResponse.FECAECabResponse>();
+            CreateMap<ElectronicInvoiceTest.FECAEDetResponse, FECAEResponse.FECAEDetResponse>().ForMember(x => x.Observaciones,
+                opt => opt.MapFrom(src => src.Observaciones.Select(x => new FECAEResponse.CodeMessage { Code = x.Code, Msg = x.Msg })));
+            CreateMap<FECAEDetRequest, ElectronicInvoiceTest.FECAEDetRequest>().ForMember(x => x.Iva,
+                opt => opt.MapFrom(src => src.Iva.Select(x => new ElectronicInvoiceTest.AlicIva { Id = x.Id, BaseImp = x.BaseImp, Importe = x.Importe })));
+            CreateMap<FECAECabRequest, ElectronicInvoiceTest.FECAECabRequest>();
+            CreateMap<FEAuthRequest, ElectronicInvoiceTest.FEAuthRequest>();
+
+            CreateMap<ElectronicInvoiceProd.Err, FECAEResponse.CodeMessage>();
+            CreateMap<ElectronicInvoiceProd.Evt, FECAEResponse.CodeMessage>();
+            CreateMap<ElectronicInvoiceProd.FECAECabResponse, FECAEResponse.FECAECabResponse>();
+            CreateMap<ElectronicInvoiceProd.FECAEDetResponse, FECAEResponse.FECAEDetResponse>().ForMember(x => x.Observaciones,
+                opt => opt.MapFrom(src => src.Observaciones.Select(x => new FECAEResponse.CodeMessage { Code = x.Code, Msg = x.Msg })));
+            CreateMap<FECAEDetRequest, ElectronicInvoiceProd.FECAEDetRequest>().ForMember(x => x.Iva,
+                opt => opt.MapFrom(src => src.Iva.Select(x => new ElectronicInvoiceProd.AlicIva { Id = x.Id, BaseImp = x.BaseImp, Importe = x.Importe })));
+            CreateMap<FECAECabRequest, ElectronicInvoiceProd.FECAECabRequest >();
+            CreateMap<FEAuthRequest, ElectronicInvoiceProd.FEAuthRequest>();
+
             CreateMap<Lunch, LunchTicketViewModel>();
             CreateMap<LunchTicketViewModel, Lunch>();
             CreateMap<Product, ProductEstimationViewModel>();

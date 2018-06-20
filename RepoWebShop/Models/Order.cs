@@ -226,5 +226,12 @@ namespace RepoWebShop.Models
                 return result;
             }
         }
+
+        public string PayerIdType { get; set; }
+        public string PayerIdNumber { get; set; }
+        public string CardHolderName { get; set; }
+        public string CardHolderType { get; set; }
+        public string CardHolderNumber { get; set; }
+        public long Cuit { get; set; }
     }
 }

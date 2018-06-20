@@ -118,7 +118,7 @@ namespace RepoWebShop.Controllers
         public IActionResult Errors()
         {
             var exceptions = _appDbContext.Exceptions.OrderByDescending(x => x.SiteExceptionId).ToList();
-            var bookingRecords = _appDbContext.BookingRecords.Where(x => x.Created > _calendar.LocalTime().AddDays(-7)).ToList();
+            var bookingRecords = _appDbContext.BookingRecords.Where(x => x.Created > _calendar.LocalTime().AddDays(-7)).Take(200).ToList();
 
             SessionDetailsViewModel sessionDetails = _cart.SessionsDetails();
 

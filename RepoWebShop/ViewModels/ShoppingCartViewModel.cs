@@ -32,5 +32,6 @@ namespace RepoWebShop.ViewModels
         public List<ShoppingCartCatalogItem> CatalogItems { get; internal set; }
         public List<ShoppingCartComboCatering> Caterings { get; internal set; }
         public ShoppingCartLunch CustomCatering { get; internal set; }
+        public long Cuit { get; internal set; }
     }
 }

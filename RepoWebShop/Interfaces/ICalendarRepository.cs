@@ -15,5 +15,6 @@ namespace RepoWebShop.Interfaces
         string SuperFriendlyDate(DateTime? date);
         string FriendlyDate(DateTime? date);
         IEnumerable<KeyValuePair<DateTime, TimeSpan>> GetPickUpOption(int preparationTime, Discount discount);
+        DateTime ToLocalTime(DateTime dateTime);
     }
 }

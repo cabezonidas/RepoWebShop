@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180620022103_orderdoctipo2")]
+    partial class orderdoctipo2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -544,13 +545,17 @@ namespace RepoWebShop.Migrations
 
                     b.Property<string>("CardHolderType");
 
-                    b.Property<long>("Cuit");
+                    b.Property<int>("ComprobanteTipo");
 
                     b.Property<string>("CustomerComments");
 
                     b.Property<int?>("DeliveryAddressId");
 
                     b.Property<int?>("DiscountId");
+
+                    b.Property<long>("DocNro");
+
+                    b.Property<int>("DocTipo");
 
                     b.Property<int?>("EmailId");
 
@@ -575,6 +580,8 @@ namespace RepoWebShop.Migrations
                     b.Property<string>("PayerIdNumber");
 
                     b.Property<string>("PayerIdType");
+
+                    b.Property<string>("PayerName");
 
                     b.Property<bool>("PaymentReceived");
 
@@ -758,6 +765,8 @@ namespace RepoWebShop.Migrations
                     b.Property<string>("PayerIdNumber");
 
                     b.Property<string>("PayerIdType");
+
+                    b.Property<string>("PayerName");
 
                     b.Property<bool>("PaymentReceived");
 
@@ -1033,20 +1042,6 @@ namespace RepoWebShop.Migrations
                     b.HasKey("ShoppingCartCommentId");
 
                     b.ToTable("ShoppingCartComments");
-                });
-
-            modelBuilder.Entity("RepoWebShop.Models.ShoppingCartCuit", b =>
-                {
-                    b.Property<int>("ShoppingCartCuitId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long>("Cuit");
-
-                    b.Property<string>("ShoppingCartId");
-
-                    b.HasKey("ShoppingCartCuitId");
-
-                    b.ToTable("ShoppingCartCuits");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.ShoppingCartData", b =>

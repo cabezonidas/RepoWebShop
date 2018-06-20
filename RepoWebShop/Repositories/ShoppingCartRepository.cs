@@ -133,6 +133,8 @@ namespace RepoWebShop.Repositories
         {
             bookingId = bookingId ?? _cartSession.BookingId;
 
+            RemoveCuitFromCart(bookingId);
+
             _appDbContext.ShoppingCartPickUpDates.RemoveRange(_appDbContext.ShoppingCartPickUpDates.Where(cart => cart.BookingId == bookingId));
             _appDbContext.ShoppingCartItems.RemoveRange(_appDbContext.ShoppingCartItems.Where(cart => cart.ShoppingCartId == bookingId));
             _appDbContext.ShoppingCartCatalogProducts.RemoveRange(_appDbContext.ShoppingCartCatalogProducts.Where(cart => cart.ShoppingCartId == bookingId));
@@ -780,6 +782,35 @@ namespace RepoWebShop.Repositories
             result.AddRange(_appDbContext.ShoppingCartItems.Select(x => x.ShoppingCartId));
             result.AddRange(_appDbContext.ShoppingCartPickUpDates.Select(x => x.BookingId));
             return result.Distinct().OrderBy(x => x).ToList();
+        }
+
+        public void AddCuitToCart(string bookingId, long cuit)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            var shoppingCuit = _appDbContext.ShoppingCartCuits.FirstOrDefault(x => x.ShoppingCartId == bookingId);
+            if(shoppingCuit != null)
+            {
+                shoppingCuit.Cuit = cuit;
+                _appDbContext.ShoppingCartCuits.Update(shoppingCuit);
+            }
+            else
+                _appDbContext.ShoppingCartCuits.Add(new ShoppingCartCuit { Cuit = cuit, ShoppingCartId = bookingId });
+
+            _appDbContext.SaveChanges();
+        }
+
+        public void RemoveCuitFromCart(string bookingId)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            _appDbContext.ShoppingCartCuits.RemoveRange(_appDbContext.ShoppingCartCuits.Where(x => x.ShoppingCartId == bookingId));
+            _appDbContext.SaveChanges();
+        }
+
+        public long GetCuit(string bookingId)
+        {
+            bookingId = bookingId ?? _cartSession.BookingId;
+            var cuit = _appDbContext.ShoppingCartCuits.FirstOrDefault(x => x.ShoppingCartId == bookingId)?.Cuit ?? 0;
+            return cuit;
         }
     }
 }

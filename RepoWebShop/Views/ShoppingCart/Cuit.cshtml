@@ -1,0 +1,190 @@
+﻿@model long
+<style>
+    td.col1, td.col3 {
+    }
+
+    td.col2 {
+    }
+</style>
+<div class="" style="margin: auto;">
+    <table style="width: 100%">
+        <tbody>
+            <tr>
+                <td  class="col1">
+                    <div>¿Factura A?</div>
+                </td>
+                <td  class="col2">
+                    <div class="@Html.Raw(Model > 0 ? "" : "hidden") cuit-title">CUIT</div>
+                </td>
+                <td  class="col3"></td>
+            </tr>
+            <tr>
+                <td  class="col1">
+                    <div style="margin-top: 10px; ">
+                        <label class="switch">
+                            @if (Model > 0)
+                            {
+                                <input type="checkbox" id="invoice-toggle" checked="checked">
+                            }
+                            else
+                            {
+                                <input type="checkbox" id="invoice-toggle">
+                            }
+                            <span class="slider round"></span>
+
+                        </label>
+                    </div>
+                </td>
+                <td  class="col2">
+                    <div style="margin: auto;">
+                        <div style="text-align:center; margin: auto;max-width: 150px;">
+                            <input style="" class="@Html.Raw(Model > 0 ? "" : "hidden") form-control claim-FeA-form" type="number" step="1" id="afip-cuit" placeholder="20345400444" disabled="disabled" value="@Html.Raw(Model > 0 ? Model.ToString() : "")" />
+                        </div>
+                    </div>
+                </td>
+                <td  class="col3">
+                    <a class="hidden claim-FeA btn btn-primary" onclick="addCuit()">Buscar</a>
+                    <span style="min-width: 75px; font-size: x-large; color: green" class="fa fa-check-circle cuit-valid @Html.Raw(Model > 0 ? "" : "hidden")">
+
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<style>
+    /* The switch - the box around the slider */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+            display: none;
+        }
+
+    /* The slider */
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+    input:checked + .slider {
+        background-color: #80a572;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+</style>
+<script>
+    $(document).ready(() => {
+        $('#invoice-toggle').change(function() {
+            chooseCuit();
+        })
+    });
+
+    function chooseCuit(){
+        if($('#invoice-toggle').is(":checked")) {
+            $('.claim-FeA').removeClass('hidden');
+            $('.claim-FeA-form').removeAttr('disabled');
+            $('.claim-FeA-form').removeClass('hidden');
+            $('.cuit-title').removeClass('hidden');
+            $('#mercadolink').hide();
+            $('#cuit-warning').show();
+        } else {
+            loaderOn();
+            $.post("/api/ShoppingCartData/ClearCuit/").then(() => onCuitCleared());
+        }
+    }
+
+    function addCuit() {
+        var cuit = $('#afip-cuit').val();
+        if(!cuit) {
+            alert('Ingresa un cuit válido');
+            return;
+        } else {
+            $('#error-cuit').empty();
+            loaderOn();
+            $.post("/api/ShoppingCartData/SaveCuit/" + cuit).then(() => onCuitAdded()).fail(() => onCuitFailed()).always(() => loaderOff());
+        }
+    }
+
+    function onCuitAdded() {
+        $('.claim-FeA-form').attr('disabled', 'disabled');
+        $('.claim-FeA').addClass('hidden');
+        $('.cuit-valid').removeClass('hidden');
+        $('.cuit-title').removeClass('hidden');
+        $('#mercadolink').show();
+        $('#cuit-warning').hide();
+        loaderOff();
+    }
+    function onCuitFailed() {
+        $('#errorCuitModal').modal('show');
+        loaderOff();
+    }
+    function onCuitCleared() {
+        $('.cuit-title').addClass('hidden');
+        $('.claim-FeA-form').addClass('hidden');
+        $('.claim-FeA').addClass('hidden');
+        $('.cuit-valid').addClass('hidden');
+        $('#mercadolink').show();
+        $('#cuit-warning').hide();
+        loaderOff();
+    }
+</script>
+<div class="modal fade" id="errorCuitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">No se pudo encontrar número de CUIT</h4>
+                </div>
+
+                <div class="modal-body">
+                    Por favor, revisa el CUIT informado
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

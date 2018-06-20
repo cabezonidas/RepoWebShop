@@ -7,6 +7,9 @@ namespace RepoWebShop.Interfaces
 {
     public interface IShoppingCartRepository
     {
+        long GetCuit(string bookingId);
+        void AddCuitToCart(string bookingId, long cuit);
+        void RemoveCuitFromCart(string bookingId);
         IEnumerable<ShoppingCartItem> GetItems(string bookingId);
         IEnumerable<ShoppingCartCatalogItem> GetCatalogItems(string bookingId);
         IEnumerable<ShoppingCartComboCatering> GetShoppingCaterings(string bookingId);

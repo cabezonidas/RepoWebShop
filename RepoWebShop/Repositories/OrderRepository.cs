@@ -19,6 +19,7 @@ namespace RepoWebShop.Models
 {
     public class OrderRepository : IOrderRepository
     {
+        private readonly IElectronicBillingRepository _billing;
         private readonly AppDbContext _appDbContext;
         private readonly IShoppingCartRepository _cartRepository;
         private readonly ICalendarRepository _calendarRepository;
@@ -32,8 +33,9 @@ namespace RepoWebShop.Models
         private readonly IPrinterRepository _printer;
         private readonly string host;
 
-        public OrderRepository(IHostingEnvironment env, IPrinterRepository printer, ILunchRepository lunchRep, UserManager<ApplicationUser> userManager, IHttpContextAccessor contextAccessor, IEmailRepository emailRepository, ISmsRepository smsRepository, AppDbContext appDbContext, IMercadoPago mp, ICalendarRepository calendarRepository, IShoppingCartRepository shoppingCartRepository, IMapper mapper)
+        public OrderRepository(IElectronicBillingRepository billing, IHostingEnvironment env, IPrinterRepository printer, ILunchRepository lunchRep, UserManager<ApplicationUser> userManager, IHttpContextAccessor contextAccessor, IEmailRepository emailRepository, ISmsRepository smsRepository, AppDbContext appDbContext, IMercadoPago mp, ICalendarRepository calendarRepository, IShoppingCartRepository shoppingCartRepository, IMapper mapper)
         {
+            _billing = billing;
             _printer = printer;
             _env = env;
             _lunchRep = lunchRep;
@@ -103,7 +105,7 @@ namespace RepoWebShop.Models
 
                 foreach (var orderLine in order.OrderCatalogItems)
                     orderLine.Product = _appDbContext.Products.Include(x => x.PieDetail).First(x => x.ProductId == orderLine.ProductId);
-                
+
                 foreach (var catering in order.OrderCaterings)
                     catering.Lunch = (await _lunchRep.GetAllLunchesAsync(x => x.LunchId == catering.LunchId)).FirstOrDefault();
             }
@@ -111,7 +113,7 @@ namespace RepoWebShop.Models
             return orders;
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersInProgressAsync() => 
+        public async Task<IEnumerable<Order>> GetOrdersInProgressAsync() =>
             await GetAllAsync(x => x.OrderProgressState.GetType() == typeof(OrderInProgress) || x.OrderProgressState.GetType() == typeof(OrderComplete));
 
         public async Task<IEnumerable<Order>> GetOrdersCancelledAsync() => await GetAllAsync(x => x.OrderProgressState.GetType() == typeof(OrderCancelled));
@@ -131,13 +133,16 @@ namespace RepoWebShop.Models
         public Order CreateOrder(Order order)
         {
             var customLunch = _cartRepository.GetSessionLunchIfNotEmpty(order.BookingId);
-            if(customLunch != null)
+            if (customLunch != null)
             {
                 _lunchRep.SaveLunch(order.BookingId);
                 _cartRepository.AddCateringToOrder(customLunch);
             }
 
             order.BookingId = order.BookingId ?? _cartRepository.GetSessionCartId();
+
+            order.Cuit = _cartRepository.GetCuit(order.BookingId);
+
             order.PhoneNumber = order.Registration?.PhoneNumber;
             order.OrderTotal = _cartRepository.GetTotal(order.BookingId);
             order.TotalInStore = _cartRepository.GetTotalInStore(order.BookingId);
@@ -155,9 +160,9 @@ namespace RepoWebShop.Models
 
             _appDbContext.Orders.Add(order);
             _appDbContext.SaveChanges();
-         
+
             /**********************/
-            
+
             var shoppingItems = _cartRepository.GetItems(order.BookingId);
             _appDbContext.OrderDetails.AddRange(shoppingItems.Select(x => new OrderDetail()
             {
@@ -184,7 +189,7 @@ namespace RepoWebShop.Models
             /**********************/
 
             var shoppingLunches = _cartRepository.GetShoppingCaterings(order.BookingId).Select(x => _mapper.Map<ShoppingCartComboCatering, OrderCatering>(x)).ToList();
-            foreach(var lunch in shoppingLunches)
+            foreach (var lunch in shoppingLunches)
             {
                 lunch.Order = order;
                 lunch.OrderId = order.OrderId;
@@ -206,7 +211,7 @@ namespace RepoWebShop.Models
             return emailData;
         }
 
-        public async Task<Order> GetOrderByIdAsync(int id) =>  (await GetAllAsync(x => x.OrderId == id)).FirstOrDefault();
+        public async Task<Order> GetOrderByIdAsync(int id) => (await GetAllAsync(x => x.OrderId == id)).FirstOrDefault();
 
         public async Task<Order> GetOrderByBookingIdAsync(string id) => (await GetAllAsync(x => x.BookingId == id)).FirstOrDefault();
 
@@ -224,7 +229,7 @@ namespace RepoWebShop.Models
             emailData.OrderReady = order.PickUpTimeFrom ?? order.PickUpTime;
             emailData.TimeLeftUntilStoreCloses = order.TimeLeftUntilStoreCloses;
             emailData.OrderTotal = order.OrderTotal; //Without MP interests
-            emailData.TotalInStore = order.TotalInStore; 
+            emailData.TotalInStore = order.TotalInStore;
             emailData.OrderType = String.IsNullOrEmpty(order.MercadoPagoTransaction) ? "Reserva" : "Compra";
             emailData.PreparationTime = order.PreparationTime;
             emailData.FriendlyBookingId = order.FriendlyBookingId;
@@ -248,8 +253,9 @@ namespace RepoWebShop.Models
                 order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - {eventDesc}";
                 _appDbContext.SaveChanges();
             },
-            async () => {
-                if(_env.IsProduction())
+            async () =>
+            {
+                if (_env.IsProduction())
                 {
                     if (order.Registration != null && order.Registration.PhoneNumberConfirmed)
                     {
@@ -310,7 +316,7 @@ namespace RepoWebShop.Models
                 order.PaymentReceived = false;
                 order.Cancelled = true;
                 _appDbContext.SaveChanges();
-            }, 
+            },
             () =>
             {
                 _mp.RefundPaymentAsync(order.MercadoPagoTransaction);
@@ -346,7 +352,7 @@ namespace RepoWebShop.Models
                 _appDbContext.SaveChanges();
             });
         }
-      
+
         public async Task<Order> PaymentNotifiedAsync(PaymentNotice payment)
         {
             Order order = await GetOrderByBookingIdAsync(payment.BookingId);
@@ -354,14 +360,14 @@ namespace RepoWebShop.Models
             var orderStatusBefore = order?.Status;
 
             if (order == null)
-                if(payment.Status == "approved" || payment.Status == "in_process")
+                if (payment.Status == "approved" || payment.Status == "in_process")
                 {
                     order = _mapper.Map<PaymentNotice, Order>(payment);
                     order.Registration = await _userManager.FindByIdAsync(payment.User_Id ?? string.Empty);
                     order = CreateOrder(order);
                 }
 
-            if(order != null && orderStatusBefore != "approved" && (order.Status == "approved" || payment.Status == "approved"))
+            if (order != null && orderStatusBefore != "approved" && (order.Status == "approved" || payment.Status == "approved"))
             {
                 order.PickUpTime = _calendarRepository.GetPickupEstimate(order.PreparationTime);
                 order.Status = "approved";
@@ -369,6 +375,7 @@ namespace RepoWebShop.Models
                 _appDbContext.Orders.Update(order);
                 _appDbContext.SaveChanges();
                 await AfterOrderConfirmedAsync(order);
+                await _billing.FECAESolicitarAsync(order);
             }
 
             return order;
@@ -376,8 +383,8 @@ namespace RepoWebShop.Models
 
         public Order LatestReservationInProgress(ApplicationUser currentUser)
         {
-            return _appDbContext.Orders.Include(x => x.Registration).FirstOrDefault(x => 
-                    x.Registration == currentUser 
+            return _appDbContext.Orders.Include(x => x.Registration).FirstOrDefault(x =>
+                    x.Registration == currentUser
                     && x.OrderProgressState.GetType() == typeof(OrderInProgress)
                     && x.OrderPaymentStatus.GetType() == typeof(OrderReservationNotPaid));
         }
@@ -395,6 +402,10 @@ namespace RepoWebShop.Models
             await _printer.AddToQueueAsync(order.OrderId);
             await _emailRepository.SendOrderConfirmationAsync(order);
             await _smsRepository.NotifyAdminsAsync($"¡Pedido nuevo! Código {order.FriendlyBookingId}");
+        }
+        public async Task<FECAEResponse> FECAESolicitarAsync(Order order)
+        {
+            return await _billing.FECAESolicitarAsync(order);
         }
     }
 }

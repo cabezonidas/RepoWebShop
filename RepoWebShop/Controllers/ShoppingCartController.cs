@@ -73,6 +73,7 @@ namespace RepoWebShop.Controllers
 
             var shoppingCartViewModel = new ShoppingCartViewModel
             {
+                Cuit = _cartRepository.GetCuit(null),
                 Items = _cartRepository.GetItems(null).ToList(),
                 CatalogItems = _cartRepository.GetCatalogItems(null).ToList(),
                 CustomCatering = _cartRepository.GetSessionLunchIfNotEmpty(null),
