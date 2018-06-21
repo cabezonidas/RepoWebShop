@@ -16,12 +16,13 @@ using Org.BouncyCastle.Asn1.Pkcs;
 using Microsoft.Extensions.Caching.Distributed;
 using RepoWebShop.Models;
 using AutoMapper;
-using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 
 namespace RepoWebShop.Repositories
 {
     public class ElectronicBillingRepository : IElectronicBillingRepository
     {
+        private readonly AppDbContext _dbCtx;
         private readonly IHostingEnvironment _env;
         private readonly IConfiguration _config;
         private readonly ICalendarRepository _calendar;
@@ -59,8 +60,9 @@ namespace RepoWebShop.Repositories
             return XmlLoginTicketRequest;
         }
 
-        public ElectronicBillingRepository(IMapper mapper, IDistributedCache serverCache, IHostingEnvironment env, IConfiguration config, ICalendarRepository calendar)
+        public ElectronicBillingRepository(AppDbContext dbCtx, IMapper mapper, IDistributedCache serverCache, IHostingEnvironment env, IConfiguration config, ICalendarRepository calendar)
         {
+            _dbCtx = dbCtx;
             _mapper = mapper;
             _calendar = calendar;
             _env = env;
@@ -69,7 +71,7 @@ namespace RepoWebShop.Repositories
             _isProd = _env.IsProduction();
         }
 
-        public async Task<FECAEResponse> FECAESolicitarAsync(Order order)
+        private async Task<FECAEResponse> FECAESolicitarAsync(Order order)
         {
             var payerData = new PayerDataRevenue(order);
 
@@ -78,6 +80,48 @@ namespace RepoWebShop.Repositories
             FECAEResponse result = await FECAESolicitarAsync(requestInfo);
 
             return result;
+        }
+
+        public async Task<InvoiceData> Facturar(Order order)
+        {
+            var invoiceData = new InvoiceData();
+            try
+            {
+                FECAEResponse factura = await FECAESolicitarAsync(order);
+                invoiceData = _mapper.Map<FECAEResponse.FECAECabResponse, InvoiceData>(factura.FeCabResp);
+
+                if (factura.Errs != null)
+                    invoiceData.AddInvoiceDetailRange(factura.Errs.Select(x => new InvoiceDetail("Error" , invoiceData, x)));
+                if (factura.Events != null)
+                    invoiceData.AddInvoiceDetailRange(factura.Errs.Select(x => new InvoiceDetail("Evento", invoiceData, x)));
+
+                if (factura.FeDetResp != null)
+                {
+                    var obs = new List<FECAEResponse.CodeMessage>();
+                    foreach (var ob in factura.FeDetResp.Where(o => o.Observaciones != null))
+                        obs.AddRange(ob.Observaciones);
+                    invoiceData.AddInvoiceDetailRange(obs.Select(x => new InvoiceDetail("Observacion", invoiceData, x)));
+                    invoiceData.AddCaeRange(factura.FeDetResp.Select(x => {var cae = _mapper.Map<FECAEResponse.FECAEDetResponse, Cae>(x);
+                        cae.InvoiceData = invoiceData; return cae;}));
+                }
+            }
+            catch (Exception ex)
+            {
+                var errs = new List<FECAEResponse.CodeMessage>
+                {
+                    new FECAEResponse.CodeMessage { Code = ex.HResult, Msg = ex.Message }
+                };
+                invoiceData.AddInvoiceDetailRange(errs.Select(x => new InvoiceDetail("Excepción", invoiceData, x)));
+            }
+            finally
+            {
+                invoiceData.Order = order;
+                invoiceData.OrderId = order.OrderId;
+                invoiceData.Created = _calendar.LocalTime();
+            }
+            await _dbCtx.InvoiceData.AddAsync(invoiceData);
+            await _dbCtx.SaveChangesAsync();
+            return invoiceData;
         }
 
         private FECAEResponse ParseFeCaeResponse(ElectronicInvoiceTest.FECAESolicitarResponse input)
@@ -100,7 +144,7 @@ namespace RepoWebShop.Repositories
             return new FECAEResponse(errs, events, feCaeCabResponse, feDetResp);
         }
 
-        public async Task<string> GetTokenTicket(string ws, bool isProd)
+        private async Task<string> GetTokenTicket(string ws, bool isProd)
         {
             var tokenName = "";
             switch (ws)
@@ -122,7 +166,7 @@ namespace RepoWebShop.Repositories
             return await _serverCache.GetStringAsync(tokenName);
         }
 
-        public async Task<string> GetSignTicket(string ws, bool isProd)
+        private async Task<string> GetSignTicket(string ws, bool isProd)
         {
             var signName = "";
             switch (ws)
@@ -269,18 +313,41 @@ namespace RepoWebShop.Repositories
 
         public async Task<bool> ValidPersonaAsync(long id)
         {
+            Cuit cuit = new Cuit
+            {
+                Created = _calendar.LocalTime(),
+                Number = id,
+                Valid = true
+            };
             //Puedo omitir el ambiente de homologacion y hacerlo siempre en prod.
             var endpoint = new PadronProd.PersonaServiceA5Client.EndpointConfiguration();
             var client = new PadronProd.PersonaServiceA5Client(endpoint);
             try
             {
                 var getPersonaResponse = await client.getPersonaAsync(await GetTokenTicket(AfipWsPersona, true), await GetSignTicket(AfipWsPersona, true), _config.GetValue<long>("CUIT"), id);
-                return true;
             }
-            catch(Exception ex)
+            catch
             {
-                return false;
+                cuit.Valid = false;
             }
+            _dbCtx.Cuits.Add(cuit);
+            _dbCtx.SaveChanges();
+
+            return cuit.Valid;
+        }
+
+        public async Task<IEnumerable<InvoiceData>> GetAll(Func<InvoiceData, bool> condition = null)
+        {
+            return await _dbCtx.InvoiceData.Where(x => condition == null || condition(x))
+                    .Include(x => x.Caes)
+                    .Include(x => x.InvoiceDetails)
+                    .Include(x => x.Order)
+                    .ToListAsync();
+        }
+
+        public async Task<InvoiceData> GetById(int id)
+        {
+            return (await GetAll(x => x.InvoiceDataId == id))?.FirstOrDefault();
         }
     }
 }

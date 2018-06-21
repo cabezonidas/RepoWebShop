@@ -8,7 +8,6 @@ namespace RepoWebShop.Interfaces
 {
     public interface IOrderRepository
     {
-        Task<FECAEResponse> FECAESolicitarAsync(Order order);
         void UpdateManagementComments(int orderId, string comments);
         void UpdatePickUpDate(int orderId, DateTime pickUp);
         void UpdateOrderStatus(int orderId, string status);

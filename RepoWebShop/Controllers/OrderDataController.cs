@@ -39,16 +39,16 @@ namespace RepoWebShop.Controllers
         }
 
 
-        [Route("InvoiceOrder/{id}")]
-        [HttpPost]
-        public async Task<IActionResult> InvoiceOrder(int id)
-        {
-            Order order = await _orderRepository.GetOrderByIdAsync(id);
+        //[Route("InvoiceOrder/{id}")]
+        //[HttpPost]
+        //public async Task<IActionResult> InvoiceOrder(int id)
+        //{
+        //    Order order = await _orderRepository.GetOrderByIdAsync(id);
 
-            var result = await _orderRepository.FECAESolicitarAsync(order);
+        //    var result = await _orderRepository.FECAESolicitarAsync(order);
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
         [Route("PrintOnlineOrder/{id}")]
         [HttpPost]

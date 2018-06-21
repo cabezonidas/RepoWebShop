@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180621040905_afipdata")]
+    partial class afipdata
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -327,22 +328,6 @@ namespace RepoWebShop.Migrations
                     b.HasKey("ContactId");
 
                     b.ToTable("Contacts");
-                });
-
-            modelBuilder.Entity("RepoWebShop.Models.Cuit", b =>
-                {
-                    b.Property<int>("CuitId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("Created");
-
-                    b.Property<long>("Number");
-
-                    b.Property<bool>("Valid");
-
-                    b.HasKey("CuitId");
-
-                    b.ToTable("Cuits");
                 });
 
             modelBuilder.Entity("RepoWebShop.Models.DeliveryAddress", b =>

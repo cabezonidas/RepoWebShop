@@ -1,0 +1,168 @@
+﻿@model InvoiceData
+<style>
+    table.subitmes thead tr th {
+        text-align: center;
+        padding-right: 5px;
+    }
+
+    table.subitmes tbody tr td {
+        text-align: center;
+        padding-right: 5px;
+    }
+</style>
+@{ 
+    string Concepto(int nro)
+    {
+        if (nro == 1)
+            return "Factura A";
+        if (nro == 6)
+            return "Factura B";
+        return nro.ToString();
+    }
+
+    string DocType(int nro)
+    {
+        if (nro == 80)
+            return "CUIT";
+        if (nro == 86)
+            return "CUIL";
+        if (nro == 87)
+            return "CDI";
+        if (nro == 96)
+            return "DNI";
+        return nro.ToString();
+    }
+    string Resultado(string result)
+    {
+        switch(result)
+        {
+            case "A":
+                return "A - Aprobado";
+            case "R":
+                return "R - Rechazado";
+            default:
+                return result;
+        }
+    }
+}
+<div class="container">
+    <h2>Detalle de Factura</h2>
+    <table class="table">
+        <tbody>
+            <tr>
+                <td class="subject">Creado</td>
+                <td>@Model.Created</td>
+            </tr>
+            <tr>
+                <td class="subject">Pedido</td>
+                <td>
+                    <a asp-action="Detail" asp-route-id="@Model.Order.OrderId" asp-controller="Order">
+                        @Model.Order.FriendlyBookingId
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td class="subject">Total</td>
+                <td>
+                    @Model.Order.OrderTotal.ToString("c")
+                </td>
+            </tr>
+            <tr>
+                <td class="subject">Cuit</td>
+                <td>@Model.Cuit</td>
+            </tr>
+            <tr>
+                <td class="subject">Punto de Venta</td>
+                <td>@Model.PtoVta</td>
+            </tr>
+            <tr>
+                <td class="subject">Tipo de Comprobante</td>
+                <td>@Concepto(Model.CbteTipo)</td>
+            </tr>
+            <tr>
+                <td class="subject">Fecha de Proceso</td>
+                <td>@Model.FchProceso</td>
+            </tr>
+            <tr>
+                <td class="subject">Cantidad de Registros</td>
+                <td>@Model.CantReg</td>
+            </tr>
+            <tr>
+                <td class="subject">Resultado</td>
+                <td>@Resultado(Model.Resultado)</td>
+            </tr>
+            <tr>
+                <td class="subject">Reproceso</td>
+                <td>@Model.Reproceso</td>
+            </tr>
+            @if(Model.Caes.Any())
+            { 
+            <tr>
+                <td class="subject">CAE</td>
+                <td>
+                    <table class="subitmes table table-striped">
+                        <thead>
+                            <tr>
+                                <th colspan="3">
+                                    CAE
+                                </th>
+                                <th colspan="3">
+                                    Comprobante
+                                </th>
+                                <th colspan="2">
+                                    Documento
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Número</td>
+                                <td title="Fecha límite para informar al cliente el CAE">Vencimiento</td>
+                                <td>Concepto</td>
+                                <td>Desde</td>
+                                <td>Hasta</td>
+                                <td>Fecha</td>
+                                <td>Tipo</td>
+                                <td>Número</td>
+                            </tr>
+                            @{
+                                foreach (var cae in Model.Caes)
+                                {
+                                    <tr>
+                                        <td>@cae.CAE</td>
+                                        <td>@cae.CAEFchVto</td>
+                                        <td>@Concepto(cae.Concepto)</td>
+                                        <td>@cae.CbteDesde</td>
+                                        <td>@cae.CbteHasta</td>
+                                        <td>@cae.CbteFch</td>
+                                        <td>@DocType(cae.DocTipo)</td>
+                                        <td>@cae.DocNro</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            }
+            @if (Model.InvoiceDetails.Any())
+            {
+            <tr>
+                <td class="subject">Notas</td>
+                <td>
+                @foreach (var detail in Model.InvoiceDetails)
+                {
+                    <div>
+                        <strong>@detail.Type @detail.Code</strong>
+                    </div>
+                    <div>
+                        @detail.Msg
+                    </div>
+                    <br />
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

@@ -12,6 +12,9 @@ namespace RepoWebShop.Models
     {
         public MappingProfile()
         {
+            CreateMap<FECAEResponse.FECAECabResponse, InvoiceData>();
+            CreateMap<FECAEResponse.FECAEDetResponse, Cae>();
+
             CreateMap<ElectronicInvoiceTest.Err, FECAEResponse.CodeMessage>();
             CreateMap<ElectronicInvoiceTest.Evt, FECAEResponse.CodeMessage>();
             CreateMap<ElectronicInvoiceTest.FECAECabResponse, FECAEResponse.FECAECabResponse>();

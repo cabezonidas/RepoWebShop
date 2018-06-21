@@ -233,5 +233,6 @@ namespace RepoWebShop.Models
         public string CardHolderType { get; set; }
         public string CardHolderNumber { get; set; }
         public long Cuit { get; set; }
+        public InvoiceData Factura { get; internal set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
@@ -14,14 +15,16 @@ namespace RepoWebShop.Controllers
     [Route("api/[controller]")]
     public class WebhooksDataController : Controller
     {
+        private readonly IHostingEnvironment _env;
         private readonly IPaymentNoticeRepository _paymentNoticeRepository;
         private readonly IShoppingCartRepository _shoppingCart;
         private readonly AppDbContext _appDbContext;
         private readonly IMercadoPago _mp;
         private readonly IConfiguration _config;
 
-        public WebhooksDataController(IShoppingCartRepository shoppingCart, IConfiguration config, IPaymentNoticeRepository paymentNoticeRepository, IMercadoPago mp, AppDbContext appDbContext)
+        public WebhooksDataController(IHostingEnvironment env, IShoppingCartRepository shoppingCart, IConfiguration config, IPaymentNoticeRepository paymentNoticeRepository, IMercadoPago mp, AppDbContext appDbContext)
         {
+            _env = env;
             _shoppingCart = shoppingCart;
             _config = config;
             _paymentNoticeRepository = paymentNoticeRepository;
@@ -34,7 +37,8 @@ namespace RepoWebShop.Controllers
         {
             try
             {
-                //await CheckPayments();
+                if(_env.IsProduction())
+                    await CheckPayments();
                 return Ok();
             }
             catch

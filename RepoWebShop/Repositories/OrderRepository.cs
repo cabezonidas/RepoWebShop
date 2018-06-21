@@ -372,10 +372,10 @@ namespace RepoWebShop.Models
                 order.PickUpTime = _calendarRepository.GetPickupEstimate(order.PreparationTime);
                 order.Status = "approved";
                 order.Payout = _calendarRepository.LocalTime();
+                order.Factura = await _billing.Facturar(order);
                 _appDbContext.Orders.Update(order);
                 _appDbContext.SaveChanges();
                 await AfterOrderConfirmedAsync(order);
-                await _billing.FECAESolicitarAsync(order);
             }
 
             return order;
@@ -402,10 +402,6 @@ namespace RepoWebShop.Models
             await _printer.AddToQueueAsync(order.OrderId);
             await _emailRepository.SendOrderConfirmationAsync(order);
             await _smsRepository.NotifyAdminsAsync($"¡Pedido nuevo! Código {order.FriendlyBookingId}");
-        }
-        public async Task<FECAEResponse> FECAESolicitarAsync(Order order)
-        {
-            return await _billing.FECAESolicitarAsync(order);
         }
     }
 }

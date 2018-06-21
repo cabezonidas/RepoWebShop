@@ -1,5 +1,59 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model IEnumerable<InvoiceData>
+
+<div class="container">
+    <h2>
+        Historial de Comprobantes Autorizados Electrónicos
+    </h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Registro
+                </th>
+                <th>
+                    Pedido
+                </th>
+                <th>
+                    Total
+                </th>
+                <th>
+                    Fecha de Proceso
+                </th>
+                <th>
+                    Detalles
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+    @{ 
+        foreach(var invoice in Model.OrderByDescending(x => x.Created))
+        {
+            <tr>
+                <td>
+                    <a asp-action="Detail" asp-route-id="@invoice.InvoiceDataId" asp-controller="Billing">
+                        @invoice.InvoiceDataId
+                    </a>
+                </td>
+                <td>
+                    <a asp-action="Detail" asp-route-id="@invoice.Order.OrderId" asp-controller="Order">
+                        @invoice.Order.FriendlyBookingId
+                    </a>
+                </td>
+                <td>
+                    @invoice.Order.OrderTotal.ToString("c")
+                </td>
+                <td>
+                    @invoice.FchProceso
+                </td>
+                <td>
+                    <a asp-action="Detail" asp-route-id="@invoice.InvoiceDataId" asp-controller="Billing">
+                        Ver
+                    </a>
+                </td>
+            </tr>
+
+        }
+    }
+        </tbody>
+    </table>
+</div>

@@ -18,6 +18,11 @@ namespace RepoWebShop.Models
         //        .IsUnique(true);
         //}
 
+        public DbSet<Cuit> Cuits { get; set; }
+        public DbSet<Cae> Caes { get; set; }
+        public DbSet<InvoiceData> InvoiceData { get; set; }
+        public DbSet<InvoiceDetail> InvoiceDetails { get; set; }
+
         public DbSet<ShoppingCartCuit> ShoppingCartCuits { get; set; }
 
         public DbSet<PrintQueue> PrintQueue { get; set; }

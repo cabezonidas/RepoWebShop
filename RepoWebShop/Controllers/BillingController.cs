@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Interfaces;
+using RepoWebShop.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,16 @@ namespace RepoWebShop.Controllers
             _billing = billing;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            IEnumerable<InvoiceData> result = await _billing.GetAll();
+            return View(result);
+        }
+
+        public async Task<IActionResult> Detail(int id)
+        {
+            InvoiceData result = await _billing.GetById(id);
+            return View(result);
         }
     }
 }

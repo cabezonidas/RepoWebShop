@@ -7,8 +7,6 @@ namespace RepoWebShop.Models
 {
     public class FECAEDetRequest
     {
-        private FECAERequestInfo requestInfo;
-
         public int Concepto { get; set; }
         public int DocTipo { get; set; }
         public long DocNro { get; set; }
