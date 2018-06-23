@@ -41,7 +41,7 @@
                 }
                 <tr style='color:@background_color; ' id="tr-@order.OrderId">
                     <td style="text-align: center;">
-                        <a style="font-size:large; color: @background_color" asp-action="Detail" asp-controller="Order" asp-route-id="@order.OrderId">@order.FriendlyBookingId</a>
+                        <a style=" color: @background_color" asp-action="Detail" asp-controller="Order" asp-route-id="@order.OrderId">@order.FriendlyBookingId
                         @if (order.Finished)
                         {
                             <div style="font-size:smaller">Esperando ser entregada</div>
@@ -50,12 +50,21 @@
                         {
                             <div style="font-size:smaller">Elaboración en proceso</div>
                         }
+                        </a>
                     </td>
                     <td style="color: grey; text-align:center">
                         @order.StatusSpanish
                         <div style="color: green;">
                             @order.Discount?.Phrase
                         </div>
+                        @{
+                            var statehidden = order.Factura != null && order.Factura.Resultado != "A" ? "" : "hidden";
+                        }
+                        <a class="@statehidden" asp-action="Detail" asp-controller="Billing" asp-route-id="@order.Factura?.InvoiceDataId">
+                            <div style="color: red; font-size: small">
+                                <span title='Hubo un error en la facturación electrónica'>Revisar Factura</span>
+                            </div>
+                        </a>
                     </td>
                     <td style="color: grey;">@Html.Raw(order.ContactDataAsHtml)</td>
                     <td>
@@ -78,7 +87,7 @@
                             }
                         }
                     </td>
-                    <td style="text-align:center;">
+                    <td style="text-align:center; color: black;">
                         @{
                             List<string> items = new List<string>();
                         }
@@ -107,7 +116,7 @@
                         }
                         @Html.Raw(String.Join("<br/>", items.ToArray()))
                     </td>
-                    <td>$@order.OrderTotal</td>
+                    <td style="color: green;">$@order.OrderTotal</td>
 
                     <td style="max-width:200px; " class="text-center">
                         <div class="ready @Html.Raw(order.Finished ? "hidden" : "")" id="ready-@order.OrderId">

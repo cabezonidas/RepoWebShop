@@ -17,6 +17,8 @@ using Microsoft.Extensions.Caching.Distributed;
 using RepoWebShop.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using RepoWebShop.Extensions;
+using System.Collections.ObjectModel;
 
 namespace RepoWebShop.Repositories
 {
@@ -73,7 +75,7 @@ namespace RepoWebShop.Repositories
 
         private async Task<FECAEResponse> FECAESolicitarAsync(Order order)
         {
-            var payerData = new PayerDataRevenue(order);
+            var payerData = new PayerDataRevenue(order, _config.GetValue<int>("LimiteFacturaB"));
 
             var requestInfo = new FECAERequestInfo(payerData, _calendar.LocalTime(), _config.GetValue<int>("Iva"), _config.GetValue<long>("CUIT"), await GetSignTicket(AfipWsFe, _isProd), await GetTokenTicket(AfipWsFe, _isProd), _config.GetValue<int>("PtoVtaAfip"));
 
@@ -102,7 +104,8 @@ namespace RepoWebShop.Repositories
                         obs.AddRange(ob.Observaciones);
                     invoiceData.AddInvoiceDetailRange(obs.Select(x => new InvoiceDetail("Observacion", invoiceData, x)));
                     invoiceData.AddCaeRange(factura.FeDetResp.Select(x => {var cae = _mapper.Map<FECAEResponse.FECAEDetResponse, Cae>(x);
-                        cae.InvoiceData = invoiceData; return cae;}));
+                        cae.InvoiceData = invoiceData;
+                        return cae;}));
                 }
             }
             catch (Exception ex)
@@ -124,24 +127,81 @@ namespace RepoWebShop.Repositories
             return invoiceData;
         }
 
-        private FECAEResponse ParseFeCaeResponse(ElectronicInvoiceTest.FECAESolicitarResponse input)
+        private async Task<FECAEResponse> ParseFeCaeResponseAsync(ElectronicInvoiceTest.FECAESolicitarResponse input, 
+            ElectronicInvoiceTest.FEAuthRequest _auth,
+            ElectronicInvoiceTest.ServiceSoapClient soapClient,  
+            FECAERequestInfo requestInfo)
         {
             var errs = input.Body.FECAESolicitarResult.Errors?.Select(x => _mapper.Map<ElectronicInvoiceTest.Err, FECAEResponse.CodeMessage>(x));
             var events = input.Body.FECAESolicitarResult.Events?.Select(x => _mapper.Map<ElectronicInvoiceTest.Evt, FECAEResponse.CodeMessage>(x));
             var feCaeCabResponse = _mapper.Map<ElectronicInvoiceTest.FECAECabResponse, FECAEResponse.FECAECabResponse>(input.Body.FECAESolicitarResult.FeCabResp);
-            var feDetResp = input.Body.FECAESolicitarResult.FeDetResp?.Select(x => _mapper.Map <ElectronicInvoiceTest.FECAEDetResponse, FECAEResponse.FECAEDetResponse>(x));
-
+            var feDetResp = await Task.WhenAll(input.Body.FECAESolicitarResult.FeDetResp?.Select(x => GetComprobanteTest(input, _auth, soapClient, requestInfo, x, feCaeCabResponse)));
             return new FECAEResponse(errs, events, feCaeCabResponse, feDetResp);
         }
 
-        private FECAEResponse ParseFeCaeResponse(ElectronicInvoiceProd.FECAESolicitarResponse input)
+        private async Task<FECAEResponse> ParseFeCaeResponseAsync(ElectronicInvoiceProd.FECAESolicitarResponse input,
+            ElectronicInvoiceProd.FEAuthRequest _auth,
+            ElectronicInvoiceProd.ServiceSoapClient soapClient,
+            FECAERequestInfo requestInfo)
         {
             var errs = input.Body.FECAESolicitarResult.Errors?.Select(x => _mapper.Map<ElectronicInvoiceProd.Err, FECAEResponse.CodeMessage>(x));
             var events = input.Body.FECAESolicitarResult.Events?.Select(x => _mapper.Map<ElectronicInvoiceProd.Evt, FECAEResponse.CodeMessage>(x));
             var feCaeCabResponse = _mapper.Map<ElectronicInvoiceProd.FECAECabResponse, FECAEResponse.FECAECabResponse>(input.Body.FECAESolicitarResult.FeCabResp);
-            var feDetResp = input.Body.FECAESolicitarResult.FeDetResp?.Select(x => _mapper.Map<ElectronicInvoiceProd.FECAEDetResponse, FECAEResponse.FECAEDetResponse>(x));
+            var feDetResp = await Task.WhenAll(input.Body.FECAESolicitarResult.FeDetResp?.Select(x => GetComprobanteProd(input, _auth, soapClient, requestInfo, x, feCaeCabResponse)));
 
             return new FECAEResponse(errs, events, feCaeCabResponse, feDetResp);
+        }
+
+        private async Task<FECAEResponse.FECAEDetResponse> GetComprobanteTest(ElectronicInvoiceTest.FECAESolicitarResponse input, ElectronicInvoiceTest.FEAuthRequest _auth, ElectronicInvoiceTest.ServiceSoapClient soapClient, FECAERequestInfo requestInfo, ElectronicInvoiceTest.FECAEDetResponse x, FECAEResponse.FECAECabResponse feCaeCabResponse)
+        {
+            var result = _mapper.Map<ElectronicInvoiceTest.FECAEDetResponse, FECAEResponse.FECAEDetResponse>(x);
+            if (feCaeCabResponse.Resultado == "A")
+            {
+                if (input.Body.FECAESolicitarResult.FeDetResp.Count() == 1)
+                    result.ImpTotal = Convert.ToDouble(requestInfo.Invoices.Sum());
+                else
+                {
+                    var consultar = new ElectronicInvoiceTest.FECompConsultaReq
+                    {
+                        CbteNro = x.CbteDesde,
+                        CbteTipo = feCaeCabResponse.CbteTipo,
+                        PtoVta = feCaeCabResponse.PtoVta
+                    };
+                    try
+                    {
+                        var comprobate = await soapClient.FECompConsultarAsync(_auth, consultar);
+                        result.ImpTotal = comprobate.Body.FECompConsultarResult.ResultGet.ImpTotal;
+                    }
+                    catch { }
+                }
+            }
+            return result;
+        }
+
+        private async Task<FECAEResponse.FECAEDetResponse> GetComprobanteProd(ElectronicInvoiceProd.FECAESolicitarResponse input, ElectronicInvoiceProd.FEAuthRequest _auth, ElectronicInvoiceProd.ServiceSoapClient soapClient, FECAERequestInfo requestInfo, ElectronicInvoiceProd.FECAEDetResponse x, FECAEResponse.FECAECabResponse feCaeCabResponse)
+        {
+            var result = _mapper.Map<ElectronicInvoiceProd.FECAEDetResponse, FECAEResponse.FECAEDetResponse>(x);
+            if (feCaeCabResponse.Resultado == "A")
+            {
+                if (input.Body.FECAESolicitarResult.FeDetResp.Count() == 1)
+                    result.ImpTotal = Convert.ToDouble(requestInfo.Invoices.Sum());
+                else
+                {
+                    var consultar = new ElectronicInvoiceProd.FECompConsultaReq
+                    {
+                        CbteNro = x.CbteDesde,
+                        CbteTipo = feCaeCabResponse.CbteTipo,
+                        PtoVta = feCaeCabResponse.PtoVta
+                    };
+                    try
+                    {
+                        var comprobate = await soapClient.FECompConsultarAsync(_auth, consultar);
+                        result.ImpTotal = comprobate.Body.FECompConsultarResult.ResultGet.ImpTotal;
+                    }
+                    catch { }
+                }
+            }
+            return result;
         }
 
         private async Task<string> GetTokenTicket(string ws, bool isProd)
@@ -269,28 +329,29 @@ namespace RepoWebShop.Repositories
             {
                 var config = new ElectronicInvoiceProd.ServiceSoapClient.EndpointConfiguration();
                 var soapClient = new ElectronicInvoiceProd.ServiceSoapClient(config);
+                var _auth = _mapper.Map<FEAuthRequest, ElectronicInvoiceProd.FEAuthRequest>(requestInfo.AuthRequest);
 
                 var fECompUltimo = await soapClient.FECompUltimoAutorizadoAsync(
                     _mapper.Map<FEAuthRequest, ElectronicInvoiceProd.FEAuthRequest>(requestInfo.AuthRequest),
                     requestInfo.FeCabReq.PtoVta, requestInfo.FeCabReq.CbteTipo);
 
                 requestInfo.CbteDesde = fECompUltimo.Body.FECompUltimoAutorizadoResult.CbteNro + 1;
-                requestInfo.CbteHasta = requestInfo.CbteDesde;
+                requestInfo.CbteHasta = fECompUltimo.Body.FECompUltimoAutorizadoResult.CbteNro + requestInfo.FeCabReq.CantReg;
 
                 var feCaeRequest = new ElectronicInvoiceProd.FECAERequest();
                 feCaeRequest.FeCabReq = _mapper.Map<FECAECabRequest, ElectronicInvoiceProd.FECAECabRequest>(requestInfo.FeCabReq);
-                feCaeRequest.FeDetReq = new List<ElectronicInvoiceProd.FECAEDetRequest> {
-                    _mapper.Map<FECAEDetRequest, ElectronicInvoiceProd.FECAEDetRequest>(new FECAEDetRequest(requestInfo))
-                }.ToArray();
 
-                var response = await soapClient.FECAESolicitarAsync(_mapper.Map<FEAuthRequest, ElectronicInvoiceProd.FEAuthRequest>(requestInfo.AuthRequest), feCaeRequest);
+                feCaeRequest.FeDetReq = requestInfo.ToFECAEDetRequestList().Select(x => _mapper.Map<FECAEDetRequest, ElectronicInvoiceProd.FECAEDetRequest>(x)).ToArray();
 
-                return ParseFeCaeResponse(response);
+                var response = await soapClient.FECAESolicitarAsync(_auth, feCaeRequest);
+
+                return await ParseFeCaeResponseAsync(response, _auth, soapClient, requestInfo);
             }
             else
             {
                 var config = new ElectronicInvoiceTest.ServiceSoapClient.EndpointConfiguration();
                 var soapClient = new ElectronicInvoiceTest.ServiceSoapClient(config);
+                var _auth = _mapper.Map<FEAuthRequest, ElectronicInvoiceTest.FEAuthRequest>(requestInfo.AuthRequest);
 
                 var fECompUltimo = await soapClient.FECompUltimoAutorizadoAsync(
                     _mapper.Map<FEAuthRequest, ElectronicInvoiceTest.FEAuthRequest>(requestInfo.AuthRequest),
@@ -301,23 +362,23 @@ namespace RepoWebShop.Repositories
 
                 var feCaeRequest = new ElectronicInvoiceTest.FECAERequest();
                 feCaeRequest.FeCabReq = _mapper.Map<FECAECabRequest, ElectronicInvoiceTest.FECAECabRequest>(requestInfo.FeCabReq);
-                feCaeRequest.FeDetReq = new List<ElectronicInvoiceTest.FECAEDetRequest> {
-                    _mapper.Map<FECAEDetRequest, ElectronicInvoiceTest.FECAEDetRequest>(new FECAEDetRequest(requestInfo))
-                }.ToArray();
+                feCaeRequest.FeDetReq = requestInfo.ToFECAEDetRequestList().Select(x => _mapper.Map<FECAEDetRequest, ElectronicInvoiceTest.FECAEDetRequest>(x)).ToArray();
 
-                var response = await soapClient.FECAESolicitarAsync(_mapper.Map<FEAuthRequest, ElectronicInvoiceTest.FEAuthRequest>(requestInfo.AuthRequest), feCaeRequest);
+                var response = await soapClient.FECAESolicitarAsync(_auth, feCaeRequest);
 
-                return ParseFeCaeResponse(response);
+                return await ParseFeCaeResponseAsync(response, _auth, soapClient, requestInfo);
+
             }
         }
 
-        public async Task<bool> ValidPersonaAsync(long id)
+        public async Task<Cuit> ValidPersonaAsync(long id)
         {
             Cuit cuit = new Cuit
             {
                 Created = _calendar.LocalTime(),
                 Number = id,
-                Valid = true
+                Valid = false,
+                CuitDetails = new Collection<CuitDetail>()
             };
             //Puedo omitir el ambiente de homologacion y hacerlo siempre en prod.
             var endpoint = new PadronProd.PersonaServiceA5Client.EndpointConfiguration();
@@ -325,17 +386,28 @@ namespace RepoWebShop.Repositories
             try
             {
                 var getPersonaResponse = await client.getPersonaAsync(await GetTokenTicket(AfipWsPersona, true), await GetSignTicket(AfipWsPersona, true), _config.GetValue<long>("CUIT"), id);
+                cuit.Valid = true;
+                var parse1 = getPersonaResponse.personaReturn.datosGenerales;
+                var parse2 = getPersonaResponse.personaReturn.datosGenerales.domicilioFiscal;
+                var personaTypeProperties = parse1.GetType().GetProperties();
+                var domicilioFiscalProperties = parse2.GetType().GetProperties();
+
+                var props1 = personaTypeProperties.Where(x => x.CanRead && x.CanWrite && x.PropertyType == typeof(string) && !x.Name.EndsWith("Specified")).Select(x => new KeyValuePair<string, string>(x.Name.CamelCaseString(), x.GetValue(parse1)?.ToString().ToLower().ToTitleCase()));
+                var props2 = domicilioFiscalProperties.Where(x => x.CanRead && x.CanWrite && x.PropertyType == typeof(string) && !x.Name.EndsWith("Specified")).Select(x => new KeyValuePair<string, string>(x.Name.CamelCaseString(), x.GetValue(parse2)?.ToString().ToLower().ToTitleCase()));
+
+                var allProps = new List<KeyValuePair<string, string>>();
+                allProps.AddRange(props1.Where(x => !string.IsNullOrEmpty(x.Value)));
+                allProps.AddRange(props2.Where(x => !string.IsNullOrEmpty(x.Value)));
+                foreach (var property in allProps)
+                    cuit.CuitDetails.Add(new CuitDetail { Property = property.Key, Value = property.Value, Cuit = cuit } );
             }
             catch
-            {
-                cuit.Valid = false;
-            }
+            { }
             _dbCtx.Cuits.Add(cuit);
             _dbCtx.SaveChanges();
 
-            return cuit.Valid;
+            return cuit;
         }
-
         public async Task<IEnumerable<InvoiceData>> GetAll(Func<InvoiceData, bool> condition = null)
         {
             return await _dbCtx.InvoiceData.Where(x => condition == null || condition(x))
@@ -348,6 +420,20 @@ namespace RepoWebShop.Repositories
         public async Task<InvoiceData> GetById(int id)
         {
             return (await GetAll(x => x.InvoiceDataId == id))?.FirstOrDefault();
+        }
+
+        public IEnumerable<Cuit> CuitInfo(InvoiceData invoice)
+        {
+            var result = new List<Cuit>();
+            var cuits = invoice.Caes.Where(x => x.DocTipo == 80).Select(x => x.DocNro);
+            foreach (var cuit in cuits)
+            {
+                var cuitfound = _dbCtx.Cuits.Where(x => x.Number == cuit).Include(x => x.CuitDetails).LastOrDefault();
+                if (cuitfound != null)
+                    result.Add(cuitfound);
+            }
+
+            return result.AsEnumerable();
         }
     }
 }

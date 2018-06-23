@@ -9,6 +9,27 @@ namespace RepoWebShop.Extensions
 {
     public static class StringExtension
     {
+        public static string CamelCaseString(this string camelCase)
+        {
+            if (string.IsNullOrEmpty(camelCase) || camelCase.Length < 2)
+                return camelCase;
+
+            List<char> chars = new List<char>();
+            chars.Add(char.ToUpper(camelCase[0]));
+            foreach (char c in camelCase.Skip(1))
+            {
+                if (char.IsUpper(c))
+                {
+                    chars.Add(' ');
+                    chars.Add(char.ToLower(c));
+                }
+                else
+                    chars.Add(c);
+            }
+
+            return new string(chars.ToArray());
+        }
+
         public static bool ContainsSubstring(this string text, string substring, bool ignorecase)
         {
             if (string.IsNullOrEmpty(substring))

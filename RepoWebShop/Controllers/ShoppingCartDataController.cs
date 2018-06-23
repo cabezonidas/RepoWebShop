@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
@@ -43,15 +44,15 @@ namespace RepoWebShop.Controllers
             return Ok();
         }
 
-        [HttpPost]
-        [Route("SaveCuit/{cuit}")]
-        public async Task<IActionResult> SaveCuit(long cuit)
+        [HttpGet]
+        [Route("GetCuit/{cuit}")]
+        public async Task<IActionResult> GetCuit(long cuit)
         {
             var validCuit = await _billing.ValidPersonaAsync(cuit);
-            if (validCuit)
+            if (validCuit.Valid)
             {
                 _cartRepository.AddCuitToCart(null, cuit);
-                return Ok();
+                return Ok(validCuit.CuitDetails.Select(x => new { detail = x.Property, value = x.Value }));
             }
 
             return NotFound();

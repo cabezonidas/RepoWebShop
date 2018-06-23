@@ -116,7 +116,6 @@
             }
         }
         <a class="btn btn-primary " onclick="printOrder()" id="print-ticket">Ticket</a>
-        <a class="btn btn-primary " onclick="invoiceOrder()" id="print-ticket">Emitir Factura</a>
     </div>
 
     <br />
@@ -220,6 +219,43 @@
                     <div>
                         <p>@Html.Raw(string.Join("<br/>", Model.Estados))</p>
                     </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Factura Electrónica</strong>
+                    <div>
+                        Régimen de Emisión de Comprobantes Electrónicos
+                    </div>
+                </td>
+                <td>
+                    @{
+                        var factura = "";
+                        switch (Model.Order.Factura?.Resultado)
+                        {
+                            case "A":
+                                factura = "Aprobada";
+                                break;
+                            case "P":
+                                factura = "Parcialmente Aprobada";
+                                break;
+                            case "R":
+                                factura = "Rechazada";
+                                break;
+                            default:
+                                factura = "Ticket fiscal emitido / Comprobante en línea emitido";
+                                break;
+                        }
+                    }
+                    <div>
+                        @factura
+                    </div>
+                    @if(Model.Order.Factura != null)
+                    {
+                        <div>
+                            <a asp-action="Detail" asp-controller="Billing" asp-route-id="@Model.Order.Factura.InvoiceDataId">Ver detalles</a>
+                        </div>
+                    }
                 </td>
             </tr>
             <tr>

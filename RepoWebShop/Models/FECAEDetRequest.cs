@@ -17,7 +17,7 @@ namespace RepoWebShop.Models
         public double ImpNeto { get; set; }
         public double ImpOpEx { get; set; }
         public double ImpTrib { get; set; }
-        public string CbteFch { get; }
+        public string CbteFch { get; set; }
         public double ImpIVA { get; set; }
         public string MonId { get; set; }
         public double MonCotiz { get; set; }
@@ -27,25 +27,6 @@ namespace RepoWebShop.Models
             public int Id { get; set; }
             public double BaseImp { get; set; }
             public double Importe { get; set; }
-        }
-
-        public FECAEDetRequest(FECAERequestInfo requestInfo)
-        {
-            Concepto = 1;
-            DocTipo = requestInfo.DocTipo;
-            DocNro = requestInfo.DocNro;
-            CbteDesde = requestInfo.CbteDesde;
-            CbteHasta = requestInfo.CbteHasta;
-            ImpTotal = requestInfo.ImpTotal;
-            ImpTotConc = 0;
-            ImpNeto = requestInfo.BaseImpositiva;
-            ImpOpEx = 0;
-            ImpTrib = 0;
-            CbteFch = requestInfo.CbteFecha;
-            ImpIVA = requestInfo.ImporteIva;
-            MonId = "PES";
-            MonCotiz = 1;
-            Iva = requestInfo.Alicuotas.ToArray();
         }
     }
 }

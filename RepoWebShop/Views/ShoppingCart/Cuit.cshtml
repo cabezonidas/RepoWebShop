@@ -10,16 +10,16 @@
     <table style="width: 100%">
         <tbody>
             <tr>
-                <td  class="col1">
+                <td class="col1">
                     <div>¿Factura A?</div>
                 </td>
-                <td  class="col2">
+                <td class="col2">
                     <div class="@Html.Raw(Model > 0 ? "" : "hidden") cuit-title">CUIT</div>
                 </td>
-                <td  class="col3"></td>
+                <td class="col3"></td>
             </tr>
             <tr>
-                <td  class="col1">
+                <td class="col1">
                     <div style="margin-top: 10px; ">
                         <label class="switch">
                             @if (Model > 0)
@@ -35,16 +35,16 @@
                         </label>
                     </div>
                 </td>
-                <td  class="col2">
+                <td class="col2">
                     <div style="margin: auto;">
-                        <div style="text-align:center; margin: auto;max-width: 150px;">
+                        <div style="text-align:center; margin: auto;max-width: 170px;">
                             <input style="" class="@Html.Raw(Model > 0 ? "" : "hidden") form-control claim-FeA-form" type="number" step="1" id="afip-cuit" placeholder="20345400444" disabled="disabled" value="@Html.Raw(Model > 0 ? Model.ToString() : "")" />
                         </div>
                     </div>
                 </td>
-                <td  class="col3">
-                    <a class="hidden claim-FeA btn btn-primary" onclick="addCuit()">Buscar</a>
-                    <span style="min-width: 75px; font-size: x-large; color: green" class="fa fa-check-circle cuit-valid @Html.Raw(Model > 0 ? "" : "hidden")">
+                <td class="col3 text-left">
+                    <a class="hidden claim-FeA" style="cursor: pointer" onclick="addCuit()">Agregar</a>
+                    <span style="min-width: 50px; font-size: x-large; color: green" class="fa fa-check-circle cuit-valid @Html.Raw(Model > 0 ? "" : "hidden")">
 
                     </span>
                 </td>
@@ -124,6 +124,7 @@
     });
 
     function chooseCuit(){
+        $("#cuit-success").empty();
         if($('#invoice-toggle').is(":checked")) {
             $('.claim-FeA').removeClass('hidden');
             $('.claim-FeA-form').removeAttr('disabled');
@@ -145,24 +146,35 @@
         } else {
             $('#error-cuit').empty();
             loaderOn();
-            $.post("/api/ShoppingCartData/SaveCuit/" + cuit).then(() => onCuitAdded()).fail(() => onCuitFailed()).always(() => loaderOff());
+
+            $.get("/api/ShoppingCartData/GetCuit/" + cuit).then((data) => onCuitAdded(data)).fail(() => onCuitFailed()).always(() => loaderOff());
         }
     }
 
-    function onCuitAdded() {
+    function onCuitAdded(data) {
         $('.claim-FeA-form').attr('disabled', 'disabled');
         $('.claim-FeA').addClass('hidden');
         $('.cuit-valid').removeClass('hidden');
         $('.cuit-title').removeClass('hidden');
         $('#mercadolink').show();
         $('#cuit-warning').hide();
+        data.forEach(function (element) {
+            var row = `<div>
+                <span><strong>` + element.detail + `</strong></span>
+                <span>` + element.value + `</span>
+                </div>`;
+            $('#cuit-success').append(row);
+        })
+        $('#successCuitModal').modal('show');
         loaderOff();
     }
     function onCuitFailed() {
+        $("#cuit-success").empty();
         $('#errorCuitModal').modal('show');
         loaderOff();
     }
     function onCuitCleared() {
+        $("#cuit-success").empty();
         $('.cuit-title').addClass('hidden');
         $('.claim-FeA-form').addClass('hidden');
         $('.claim-FeA').addClass('hidden');
@@ -173,16 +185,34 @@
     }
 </script>
 <div class="modal fade" id="errorCuitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog alert alert-danger" role="document">
         <div class="">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">No se pudo encontrar número de CUIT</h4>
+                    <h4 class="modal-title">No se pudo encontrar en AFIP el número de CUIT</h4>
                 </div>
 
                 <div class="modal-body">
                     Por favor, revisa el CUIT informado
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="successCuitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog alert alert-success" role="document">
+        <div class="">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Cuit encontrado</h4>
+                </div>
+
+                <div class="modal-body" id="cuit-success">
+
                 </div>
             </div>
         </div>

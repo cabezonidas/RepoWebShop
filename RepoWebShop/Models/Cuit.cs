@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RepoWebShop.Models
 {
@@ -11,5 +9,6 @@ namespace RepoWebShop.Models
         public long Number { get; set; }
         public bool Valid { get; set; }
         public DateTime Created { get; set; }
+        public virtual ICollection<CuitDetail> CuitDetails { get; set; }
     }
 }

@@ -18,6 +18,7 @@ namespace RepoWebShop.Models
         //        .IsUnique(true);
         //}
 
+        public DbSet<CuitDetail> CuitDetails { get; set; }
         public DbSet<Cuit> Cuits { get; set; }
         public DbSet<Cae> Caes { get; set; }
         public DbSet<InvoiceData> InvoiceData { get; set; }

@@ -90,6 +90,10 @@ namespace RepoWebShop.Models
         {
             List<Order> orders = await _appDbContext.Orders
                 .Where(x => (condition == null || condition(x)) && x.Status != "draft")
+                .Include(x => x.Factura)
+                .Include(x => x.Factura.InvoiceDetails)
+                .Include(x => x.Factura.Caes)
+                .Include(x => x.Email)
                 .Include(x => x.Registration)
                 .Include(x => x.OrderLines)
                 .Include(x => x.DeliveryAddress)
@@ -236,6 +240,7 @@ namespace RepoWebShop.Models
             emailData.OrderId = order.OrderId.ToString();
             emailData.Delivery = order.DeliveryAddress;
             emailData.Discount = order.Discount;
+            emailData.Factura = order.Factura;
 
             emailData.CustomarAlias = order.Registration == null ? order.MercadoPagoName : order.Registration.FirstName;
             emailData.CustomarAlias = Regex.Replace(emailData.CustomarAlias.ToLower(), @"(^\w)|(\s\w)", m => m.Value.ToUpper());

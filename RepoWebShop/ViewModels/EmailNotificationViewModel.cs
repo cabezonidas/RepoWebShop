@@ -25,5 +25,6 @@ namespace RepoWebShop.ViewModels
         public TimeSpan? TimeLeftUntilStoreCloses { get; internal set; }
         public IEnumerable<OrderCatalogItem> OrderCatalogItems { get; internal set; }
         public IEnumerable<OrderCatering> OrderCaterings { get; internal set; }
+        public InvoiceData Factura { get; internal set; }
     }
 }

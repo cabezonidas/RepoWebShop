@@ -51,7 +51,7 @@ namespace RepoWebShop.Controllers
         {
             var payments = await _mp.SearchPaymentAsync(new Dictionary<string, string>(), 0, 0);
             var totalPayments = Int32.Parse(((payments["response"] as Hashtable)["paging"] as Hashtable)["total"].ToString());
-            var chunckSize = 10;
+            var chunckSize = 1000;
             for (int i = 0; i < totalPayments / chunckSize; i++)
                 await CheckPaymentsChunck(totalPayments - ((i+1) * chunckSize), chunckSize);
             var left = totalPayments % chunckSize;

@@ -1,0 +1,131 @@
+﻿@model InvoiceData
+@inject IElectronicBillingRepository _billing
+
+@if (Model != null && Model.Resultado == "A")
+{
+    <div style="text-align: center;">
+        <div>
+            <table style="width: 100%">
+                <thead>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <td colspan="2" style="height: 15px;"></td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="1" style="text-align: left; font-size:smaller; vertical-align:top">
+                            <table>
+                                <thead></thead>
+                                <tbody>
+                                    <tr style="font-size:small;">
+                                        <td>
+                                            <span><strong>@Model.Factura</strong></span>
+                                        </td>
+                                    </tr>
+                                    <tr style="font-size:small;">
+                                        <td>
+                                            <span><strong>Cuit</strong></span>
+                                            <span>@Model.Cuit</span>
+                                        </td>
+                                    </tr>
+                                    <tr style="font-size:small;">
+                                        <td>
+                                            <span><strong>Punto de Venta</strong></span>
+                                            <span>@Model.PtoVta</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td colspan="1" style="vertical-align: top">
+                            <table style="width: 100%;">
+                                <thead></thead>
+                                <tbody>
+                                    <tr style="font-size:smaller;">
+                                        <td style="text-align: center; font-size:small; width: 40%">
+                                            <span><strong>Comprobante / CAE</strong></span>
+                                        </td>
+                                        <td style="text-align: center; font-size:small; width: 30%">
+                                            <span><strong>Emisión</strong></span>
+                                        </td>
+                                        <td style="text-align: center; font-size:small; width: 30%">
+                                            <span><strong>Importe Total</strong></span>
+                                        </td>
+                                    </tr>
+                                    @foreach (var cuit in Model.Caes.OrderBy(x => x.CbteDesde))
+                                    {
+                                        <tr>
+                                            <td style="text-align: center; font-size:smaller; width: 40%">
+                                                <div>@cuit.CbteHasta / @cuit.CAE</div>
+                                            </td>
+                                            <td style="text-align: center; font-size:smaller; width: 30%">
+                                                @{
+                                                    DateTime dt1;
+                                                    if (DateTime.TryParseExact(cuit.CbteFch, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
+                                                    {
+                                                        cuit.CbteFch = dt1.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+                                                    }
+                                                }
+                                                <div>@cuit.CbteFch</div>
+                                            </td>
+                                            <td style="text-align: center; font-size:smaller; width: 30%">
+                                                <div>@cuit.ImpTotal.ToString("c")</div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </td>
+                    </tr>
+                    @if (Model.CbteTipo == 1)
+                    {
+
+                        <tr>
+                            <td colspan="2" style="height: 15px;"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="font-size:small; text-align: left; "><strong>Consumidor</strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="font-size:small; text-align: left; ">
+                                @foreach (var cuitdetail in _billing.CuitInfo(Model))
+                                {
+                                    <span style="text-align: left; font-size: smaller"><strong>Cuit:</strong></span>
+                                    <span style="text-align: left; font-size: smaller">@Html.Raw(cuitdetail.Number)</span>
+
+                                    foreach (var detail in cuitdetail.CuitDetails)
+                                    {
+                                        <span style="text-align: left; font-size: smaller"><strong>@detail.Property:</strong></span>
+                                        <span style="text-align: left; font-size: smaller">@Html.Raw(detail.Value)</span>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                    @if (Model.CbteTipo == 6 && Model.Caes.Count() > 1)
+                    {
+                        <tr>
+                            <td colspan="2" style="height: 15px;"></td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2">
+                                <div style="text-align: left; font-size: small">
+                                    <strong>Nota</strong>
+                                </div>
+                                <div style="text-align: left; font-size: x-small">
+                                    No se pudo determinar documentación fiscal del comprador y dado que el pago fue efectuado a través de un medio electrónico, no se precisa informar a la AFIP los detalles del comprador.
+                                    Para autorizar la operación, se procedió a la creación de múltiples facturas con valor menor al monto máximo permitido por la AFIP para operaciones sin informar detalles del comprador.
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br />
+        </div>
+    </div>
+}

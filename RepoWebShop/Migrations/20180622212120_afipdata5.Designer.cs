@@ -11,9 +11,10 @@ using System;
 namespace RepoWebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180622212120_afipdata5")]
+    partial class afipdata5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -273,8 +274,6 @@ namespace RepoWebShop.Migrations
                     b.Property<long>("DocNro");
 
                     b.Property<int>("DocTipo");
-
-                    b.Property<double>("ImpTotal");
 
                     b.Property<int?>("InvoiceDataId");
 

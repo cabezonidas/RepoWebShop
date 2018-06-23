@@ -1,4 +1,5 @@
 ﻿@model InvoiceData
+@inject IElectronicBillingRepository _billing
 <style>
     table.subitmes thead tr th {
         text-align: center;
@@ -11,39 +12,7 @@
     }
 </style>
 @{ 
-    string Concepto(int nro)
-    {
-        if (nro == 1)
-            return "Factura A";
-        if (nro == 6)
-            return "Factura B";
-        return nro.ToString();
-    }
-
-    string DocType(int nro)
-    {
-        if (nro == 80)
-            return "CUIT";
-        if (nro == 86)
-            return "CUIL";
-        if (nro == 87)
-            return "CDI";
-        if (nro == 96)
-            return "DNI";
-        return nro.ToString();
-    }
-    string Resultado(string result)
-    {
-        switch(result)
-        {
-            case "A":
-                return "A - Aprobado";
-            case "R":
-                return "R - Rechazado";
-            default:
-                return result;
-        }
-    }
+    var cuits = _billing.CuitInfo(Model);
 }
 <div class="container">
     <h2>Detalle de Factura</h2>
@@ -77,7 +46,7 @@
             </tr>
             <tr>
                 <td class="subject">Tipo de Comprobante</td>
-                <td>@Concepto(Model.CbteTipo)</td>
+                <td>@Model.Factura</td>
             </tr>
             <tr>
                 <td class="subject">Fecha de Proceso</td>
@@ -89,7 +58,7 @@
             </tr>
             <tr>
                 <td class="subject">Resultado</td>
-                <td>@Resultado(Model.Resultado)</td>
+                <td>@Model.FriendlyResultado</td>
             </tr>
             <tr>
                 <td class="subject">Reproceso</td>
@@ -124,6 +93,8 @@
                                 <td>Fecha</td>
                                 <td>Tipo</td>
                                 <td>Número</td>
+                                <td>Resultado</td>
+                                <td>Importe</td>
                             </tr>
                             @{
                                 foreach (var cae in Model.Caes)
@@ -131,12 +102,14 @@
                                     <tr>
                                         <td>@cae.CAE</td>
                                         <td>@cae.CAEFchVto</td>
-                                        <td>@Concepto(cae.Concepto)</td>
+                                        <td>@cae.FriendlyConcepto</td>
                                         <td>@cae.CbteDesde</td>
                                         <td>@cae.CbteHasta</td>
                                         <td>@cae.CbteFch</td>
-                                        <td>@DocType(cae.DocTipo)</td>
+                                        <td>@cae.Documento</td>
                                         <td>@cae.DocNro</td>
+                                        <td>@cae.FriendlyResultado</td>
+                                        <td>@cae.ImpTotal.ToString("c")</td>
                                     </tr>
                                 }
                             }
@@ -158,6 +131,26 @@
                     <div>
                         @detail.Msg
                     </div>
+                    <br />
+                }
+            </tr>
+            }
+            @if (cuits.Any())
+            {
+            <tr>
+                <td class="subject">Detalles de CUIT</td>
+                <td>
+                @foreach (var cuit in cuits)
+                {
+                    <div>
+                        <strong>@cuit.Number</strong>
+                    </div>
+                    @foreach(var detail in cuit.CuitDetails)
+                    {
+                        <div>
+                            @detail.Property: @detail.Value
+                        </div>
+                    }
                     <br />
                 }
             </tr>

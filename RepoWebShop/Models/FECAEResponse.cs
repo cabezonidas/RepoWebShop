@@ -31,6 +31,7 @@ namespace RepoWebShop.Models
             public string Resultado { get; set; }
             public string CAE { get; set; }
             public string CAEFchVto { get; set; }
+            public double ImpTotal { get; set; }
             public IEnumerable<CodeMessage> Observaciones { get; set; }
         }
 

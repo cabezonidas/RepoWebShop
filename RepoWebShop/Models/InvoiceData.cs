@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -39,6 +40,38 @@ namespace RepoWebShop.Models
 
             foreach (var cae in caes)
                 Caes.Add(cae);
+        }
+
+        [BindNever]
+        public string Factura
+        { 
+            get
+            {
+                if (CbteTipo == 1)
+                    return "Factura A";
+                if (CbteTipo == 6)
+                    return "Factura B";
+                return CbteTipo.ToString();
+            }
+        }
+
+        [BindNever]
+        public string FriendlyResultado
+        {
+            get
+            {
+                switch (Resultado)
+                {
+                    case "A":
+                        return "A - Aprobado";
+                    case "P":
+                        return "P - Parcialmente Aprobado";
+                    case "R":
+                        return "R - Rechazado";
+                    default:
+                        return Resultado;
+                }
+            }
         }
     }
 }

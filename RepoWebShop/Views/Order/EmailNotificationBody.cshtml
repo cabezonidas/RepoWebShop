@@ -4,7 +4,7 @@
 @inject ILunchRepository _lunch
 <div style="max-width: 750px;margin: auto;">
     <div style="text-align:center; font-family: 'Trebuchet MS'; ">
-        <section style='padding: 20px; width:90%; min-width:300px; ' id='body'>
+        <section style='padding: 20px; width:90%; min-width:400px; ' id='body'>
             <div style=" background-color: #883636; color: papayawhip; border-top-left-radius: 10px;border-top-right-radius: 10px;">
                 <br />
                 <a href="@Model.AbsoluteUrl" target="_blank" style="text-decoration: none; ">
@@ -13,40 +13,15 @@
                     </div>
                 </a>
 
-                <div style="font-size: 20px;">
+                <div style="font-size: 20px; padding-bottom:25px;">
                     <strong>¡Gracias @Model.CustomarAlias!</strong>
-                </div>
-                <div style="font-size: 15px; padding:5px;">
-                    <div>
-                        <br />
-                        Tu pedido
-                        <a href="@Model.AbsoluteUrl/Order/Status/@Model.FriendlyBookingId" target="_blank" style="color: papayawhip ; text-decoration: none;">
-                            @Model.FriendlyBookingId
-                        </a>
-                        está confirmado
-                    </div>
-                    @if (Model.OrderReady.HasValue)
-                    {
-                        <div>
-                            <br />
-                            Entrega: A partir del @_calendar.FriendlyDate(Model.OrderReady) a las @Model.OrderReady.Value.ToString("HH\\:mm").ToLower()
-                            @if (Model.TimeLeftUntilStoreCloses.HasValue)
-                            {
-                                <br />
-                                <div>
-                                    Recordá que a las @Model.OrderReady.Value.Add(Model.TimeLeftUntilStoreCloses.Value).ToString("HH\\:mm").ToLower() cerramos.
-                                </div>
-                            }
-                        </div>
-                    }
-                    <br />
                 </div>
             </div>
 
             <div style=" background-color: papayawhip; ">
                 <div style="width: 90%; margin: auto;">
                     <br />
-                    <div style="font-size: 30px; color:#883636">
+                    <div style="font-size: 30px; color:black;">
                         <strong>
                             Pedido
                             <a href="@Model.AbsoluteUrl/Order/Status/@Model.FriendlyBookingId" target="_blank" style="color: #883636 ; text-decoration: none;">
@@ -54,6 +29,26 @@
                             </a>
                         </strong>
                     </div>
+                    <div style="font-size: 15px; padding:5px;">
+                        <div>
+                        </div>
+                        @if (Model.OrderReady.HasValue)
+                        {
+                            <div>
+                                <br />
+                                Entrega: A partir del @_calendar.FriendlyDate(Model.OrderReady) a las @Model.OrderReady.Value.ToString("HH\\:mm").ToLower()
+                                @if (Model.TimeLeftUntilStoreCloses.HasValue)
+                                {
+                                    <br />
+                                    <div>
+                                        Recordá que <span style="text-decoration: underline">a las @Model.OrderReady.Value.Add(Model.TimeLeftUntilStoreCloses.Value).ToString("HH\\:mm").ToLower() cerramos</span>.
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+
+
                     <br />
                     <table style="margin: auto; max-width:400px; padding-left: 10px; padding-right: 10px; border-collapse:collapse;">
                         <thead>
@@ -125,14 +120,14 @@
                                     </td>
                                     <td style='padding:2px; text-align:left;  padding-left: 10px; padding-right: 10px;'>
                                         <a href="@itemref">
-                                            <div>
-                                                <div>@item.Product.DisplayName</div>
-                                                <div>
-                                                    Precio: $@item.Price
-                                                </div>
-                                                <div>Cantidad: @item.Amount</div>
-                                            </div>
+                                            <div>@item.Product.DisplayName</div>
                                         </a>
+                                        <div>
+                                            <div>
+                                                Precio: $@item.Price
+                                            </div>
+                                            <div>Cantidad: @item.Amount</div>
+                                        </div>
                                     </td>
                                     @{var subtotal = item.Price * item.Amount;}
                                     <td style='padding:2px; text-align:right; '>
@@ -164,15 +159,17 @@
                                     <td style='padding:2px; text-align:left; padding-left: 10px; padding-right: 10px;'>
                                         <a href="@itemref" style="text-decoration: none; color: black">
                                             <div>
-                                                @Html.Raw(string.IsNullOrEmpty(item.Lunch.Title) ? $"Catering Personalizado" : item.Lunch.Title)<br />
+                                                @Html.Raw(string.IsNullOrEmpty(item.Lunch.Title) ? $"Catering Personalizado" : item.Lunch.Title)
                                                 @{
                                                     var total = _lunch.GetTotal(item.Lunch);
                                                     var subtotalInStore = _lunch.GetLunchTotalInStore(item.Lunch);
                                                 }
-                                                Precio: $@total<br />
-                                                Cantidad: @item.Amount
                                             </div>
                                         </a>
+                                        <div>
+                                            Precio: $@total<br />
+                                            Cantidad: @item.Amount
+                                        </div>
                                     </td>
                                     @{var subtotal = _lunch.GetTotal(item.Lunch) * item.Amount;}
                                     <td style='padding:2px; text-align:right; font-size: large; '>
@@ -241,11 +238,11 @@
                                 {
                                     {
                                         var dif = Model.TotalInStore - Model.OrderTotal;
-                                    <tr style="">
-                                        <td colspan="3" style="font-size: 20px;text-align: center; color: green;">
-                                            Ahorro @dif.ToString("c")
-                                        </td>
-                                    </tr>
+                                        <tr style="">
+                                            <td colspan="3" style="font-size: 20px;text-align: center; color: green;">
+                                                Ahorro @dif.ToString("c")
+                                            </td>
+                                        </tr>
                                     }
                                 }
                             }
@@ -284,6 +281,7 @@
                         </div>
                     }
                     <br />
+
                 </div>
                 <div style="margin: auto; width: 90%; text-align: left">
                     <div style="font-size: larger; text-align: left"><strong style="">Importante</strong></div>
@@ -296,7 +294,13 @@
                         Ante cualquier duda o alteración, podés <a href='@Model.AbsoluteUrl/Contact' target="_blank" style="color: #883636">contactarnos</a> o
                         visitarnos o llamarnos en nuestros <a href='@Model.AbsoluteUrl/Calendar/OpenHours' target="_blank" style="color: #883636">horarios de atención</a>.
                     </div>
+                    <div>
+                        <br />
+                        Todos los precios incluyen IVA.
+                        <br />
+                    </div>
                     <br />
+                    @Html.Partial("~/Views/Billing/CAEForCustomer.cshtml", Model.Factura)
                 </div>
             </div>
             <div style=" background-color: #883636; color: papayawhip; text-align:left; border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">

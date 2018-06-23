@@ -308,7 +308,7 @@
             $('#children').empty();
             data.products.forEach(function (element) {
                 var style = element.productId == @Model.ProductId ? "bold" : "unset";
-                var row = `<tr + style="font-weight:` + style +`;">
+                var row = `<tr  style="font-weight:` + style +`;">
                     <td>` + element.sizeDescription + `</td>
                     <td>` + element.flavour + `</td>
                     <td>` + element.price + `</td>
