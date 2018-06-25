@@ -1,6 +1,10 @@
 ﻿@model Order
 @inject ICalendarRepository _calendar
 @inject IHostingEnvironment _env
+@inject IConfiguration _config
+@{
+    var _iva = (decimal)_config.GetValue<int>("Iva");
+}
 
 <ePOSPrint>
     <Parameter>
@@ -102,16 +106,39 @@
 
             <text reverse="false" ul="false" em="true" />
 
-            <text width="2" height="1" />
-            <text>TOTAL</text>
-            <text x="300" />
-            <text>@Model.OrderTotal.ToString("c")&#10;</text>
+            @if (Model.Factura != null && Model.Factura.Resultado == "A" && Model.Factura.CbteTipo == 1)
+            {
+                foreach (var cae in Model.Factura.Caes)
+                {
+                    var iva = Decimal.Round(Convert.ToDecimal(cae.ImpTotal) * (_iva / 100), 2);
+                    var neto = Convert.ToDecimal(cae.ImpTotal) - iva;
+
+                    <text>
+                        <text width="2" height="1" />
+                        <text>NETO</text>
+                        <text x="300" />
+                        <text>@neto.ToString("c")&#10;</text>
+                        <text>IVA</text>
+                        <text x="300" />
+                        <text>@iva.ToString("c")&#10;</text>
+
+                    </text>
+                }
+            }
+            else
+            {
+                <text>
+                    <text width="2" height="1" />
+                    <text>TOTAL</text>
+                    <text x="300" />
+                    <text>@Model.OrderTotal.ToString("c")&#10;</text>
+                </text>
+            }
             <text reverse="false" ul="false" em="false" />
             <text width="1" height="1" />
             <feed unit="12" />
             <text align="center" />
             <feed line="2" />
-
             @if (Model.DeliveryAddress != null)
             {
                 <text>
@@ -161,7 +188,7 @@
     {
         var splits = Convert.ToInt32(Math.Ceiling(name.Length / (decimal)nameCharsLength));
         var result = new string[splits];
-        for(int i = 0; i < result.Length; i++)
+        for (int i = 0; i < result.Length; i++)
         {
             result[i] = new string(name.Substring(i * nameCharsLength).ToArray().Take(nameCharsLength).ToArray());
         }

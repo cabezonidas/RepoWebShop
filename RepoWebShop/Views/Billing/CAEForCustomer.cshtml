@@ -1,5 +1,9 @@
 ﻿@model InvoiceData
 @inject IElectronicBillingRepository _billing
+@inject IConfiguration _config
+@{
+    var _iva = (decimal)_config.GetValue<int>("Iva");
+}
 
 @if (Model != null && Model.Resultado == "A")
 {
@@ -51,7 +55,7 @@
                                             <span><strong>Emisión</strong></span>
                                         </td>
                                         <td style="text-align: center; font-size:small; width: 30%">
-                                            <span><strong>Importe Total</strong></span>
+                                            <span><strong>@Html.Raw(Model.CbteTipo == 1 ? "Neto / Iva" : "Importe Total")</strong></span>
                                         </td>
                                     </tr>
                                     @foreach (var cuit in Model.Caes.OrderBy(x => x.CbteDesde))
@@ -71,7 +75,18 @@
                                                 <div>@cuit.CbteFch</div>
                                             </td>
                                             <td style="text-align: center; font-size:smaller; width: 30%">
-                                                <div>@cuit.ImpTotal.ToString("c")</div>
+                                                <div>
+                                                    @if (Model.CbteTipo == 1)
+                                                    {
+                                                        var iva = Decimal.Round(Convert.ToDecimal(cuit.ImpTotal) * (_iva / 100), 2);
+                                                        var neto = Convert.ToDecimal(cuit.ImpTotal) - iva;
+                                                        <div>@neto.ToString("c") / @iva.ToString("c")</div>
+                                                    }
+                                                    else
+                                                    {
+                                                    <div>@cuit.ImpTotal.ToString("c")</div>
+                                                    }
+                                                </div>
                                             </td>
                                         </tr>
                                     }
