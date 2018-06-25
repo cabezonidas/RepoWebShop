@@ -449,11 +449,14 @@ namespace RepoWebShop.Repositories
             
             if(validSlot)
             {
+                var offset = pickUpDate - validSelectedSlots.First().Key;
+                var closingTime = validSelectedSlots.First().Value - offset;
+
                 var pickUp = new ShoppingCartPickUpDate
                 {
                     BookingId = bookingId,
-                    From = validSelectedSlots.First().Key,
-                    To = validSelectedSlots.First().Value,
+                    From = pickUpDate,
+                    To = closingTime,
                     UserSubmitted = true
                 };
                 _appDbContext.ShoppingCartPickUpDates.Add(pickUp);

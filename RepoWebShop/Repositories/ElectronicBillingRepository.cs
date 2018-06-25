@@ -389,9 +389,9 @@ namespace RepoWebShop.Repositories
             //Puedo omitir el ambiente de homologacion y hacerlo siempre en prod.
             var endpoint = new PadronProd.PersonaServiceA5Client.EndpointConfiguration();
             var client = new PadronProd.PersonaServiceA5Client(endpoint);
-            var getPersonaResponse = await client.getPersonaAsync(await GetTokenTicket(AfipWsPersona, true), await GetSignTicket(AfipWsPersona, true), _config.GetValue<long>("CUIT"), id);
             try
             {
+                var getPersonaResponse = await client.getPersonaAsync(await GetTokenTicket(AfipWsPersona, true), await GetSignTicket(AfipWsPersona, true), _config.GetValue<long>("CUIT"), id);
                 cuit.Valid = true;
                 var parse1 = getPersonaResponse.personaReturn.datosGenerales;
                 var parse2 = getPersonaResponse.personaReturn.datosGenerales.domicilioFiscal;

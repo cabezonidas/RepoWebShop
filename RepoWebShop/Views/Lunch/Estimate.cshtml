@@ -180,15 +180,13 @@
     function getTotals() {
         $.get('/api/LunchData/GetTotals/').done((data) => {
             $('#totals').empty().append(data);
-            loaderOff();
-            chooseMode();
-        });
+        }).always(() => { loaderOff();});
 
     }
 
     function appendItem(id) {
         loaderOn();
-        $.post('/api/LunchData/AddProduct/' + id).then((data) => {
+        $.post('/api/LunchData/AddProduct/' + id).done((data) => {
             pasteItem('product', data, id);
         });
     }

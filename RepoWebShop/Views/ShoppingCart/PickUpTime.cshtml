@@ -102,9 +102,25 @@
                                                         {
                                                             if (slot.Key.Date == date.Date)
                                                             {
-                                                                <option value="@slot.Key.Ticks">
-                                                                    las @string.Format("{0:HH:mm}", slot.Key).ToLower() y las @string.Format("{0:HH:mm}", slot.Key.Add(slot.Value)).ToLower()
-                                                                </option>
+                                                                var grouping = 120;
+                                                                var iterations = Convert.ToInt32(Math.Ceiling(slot.Value.TotalMinutes / (double)grouping));
+                                                                var options = new int[iterations];
+                                                                for(int i = 0; i < iterations; i++)
+                                                                {
+                                                                    DateTime starting = slot.Key.AddMinutes(grouping * i);
+                                                                    double minutes;
+                                                                    if(i ==  iterations - 1)
+                                                                    {
+                                                                        minutes = slot.Value.TotalMinutes - (grouping * i);
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        minutes = grouping;
+                                                                    }
+                                                                    <option value="@starting.Ticks">
+                                                                        las @string.Format("{0:HH:mm}", starting).ToLower() y las @string.Format("{0:HH:mm}", starting.AddMinutes(minutes)).ToLower()
+                                                                    </option>
+                                                                }
                                                             }
                                                         }
                                                     </optgroup>
