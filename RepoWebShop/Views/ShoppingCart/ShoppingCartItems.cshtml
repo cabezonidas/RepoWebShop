@@ -1,6 +1,10 @@
 ﻿@model ShoppingCartViewModel
 @inject ICalendarRepository calendar
 @inject ILunchRepository lunch
+@inject IConfiguration _config
+@{ 
+    var _cateringMinPrepTiem = _config.GetValue<int>("CateringDefaultPreparationTime");
+}
 
     <h1 class="text-center" style="font-family: Noto serif; margin-top:0px; margin-bottom:0px;">Items</h1>
     <div style="font-size:small;" class="text-center text-muted">
@@ -72,7 +76,7 @@
                     </td>
                     <td class="text-left text-muted">
                         <a class="text-muted" asp-action="Special" asp-route-id="@line.Lunch.LunchId" asp-controller="Lunch">
-                            @line.Lunch.Title - @line.Lunch.PreparationTime hs
+                            @line.Lunch.Title - @line.Lunch.PreparationTime(_cateringMinPrepTiem) hs
                         </a>
                     </td>
                     
@@ -97,7 +101,7 @@
                     </td>
                     <td class="text-left text-muted">
                         <a class="text-muted" asp-action="Estimate" asp-controller="Lunch">
-                            @Html.Raw($"Catering Personalizado - {Model.CustomCatering.Lunch.PreparationTime} hs")
+                            @Html.Raw($"Catering Personalizado - {Model.CustomCatering.Lunch.PreparationTime(_cateringMinPrepTiem)} hs")
                         </a>
                     </td>
                     @{ 

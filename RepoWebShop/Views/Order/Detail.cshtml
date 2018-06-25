@@ -130,19 +130,12 @@
             {
                 <tr>
                     <td><strong>Envío</strong></td>
-                    <td colspan="2">@Model.Order.DeliveryAddress.AddressLine1</td>
+                    <td colspan="2">@Model.Order.DeliveryAddress.AddressLine1 @Model.Order.DeliveryAddress.DeliveryInstructions</td>
                 </tr>
                 <tr>
                     <td><strong>Costo envío</strong></td>
                     <td colspan="2">@Model.Order.DeliveryAddress.DeliveryCost</td>
                 </tr>
-                @if(!String.IsNullOrWhiteSpace(Model.Order.DeliveryAddress.DeliveryInstructions))
-                {
-                <tr>
-                    <td><strong>Instrucciones de envío</strong></td>
-                    <td colspan="2">@Model.Order.DeliveryAddress.DeliveryInstructions</td>
-                </tr>
-                }
             }
 
 

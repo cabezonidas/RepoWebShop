@@ -159,7 +159,7 @@
             $('#cost').append("<span class='fa fa-check' style='margin: 5px;'></span>Estás dentro del radio. Costo de envío $" + data.cost);
             $('.allerrors').empty();
             loaderOff();
-        }).fail((XMLHttpRequest, textStatus, errorThrown) => {
+        }, (XMLHttpRequest, textStatus, errorThrown) => {
             console.log(XMLHttpRequest);
             console.log(textStatus);
             console.log(errorThrown);

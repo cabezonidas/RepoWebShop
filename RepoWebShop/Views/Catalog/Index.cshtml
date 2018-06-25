@@ -97,7 +97,7 @@
             $('#delete-' + productId).addClass("hidden");
             $('#restore-' + productId).removeClass("hidden");
             $('#state-' + productId).empty().append("Inactivo");
-        }).fail(() => alert("No se pudo hacer el cambio."))
+        }, () => alert("No se pudo hacer el cambio."))
     }
 
     function restoreProduct(productId) {
@@ -105,7 +105,7 @@
             $('#delete-' + productId).removeClass("hidden");
             $('#restore-' + productId).addClass("hidden");
             $('#state-' + productId).empty();
-        }).fail(() => alert("No se pudo hacer el cambio."))
+        }, () => alert("No se pudo hacer el cambio."))
     }
 
     $('#products').DataTable({

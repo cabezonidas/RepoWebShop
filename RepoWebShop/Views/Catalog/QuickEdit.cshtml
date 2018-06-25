@@ -17,7 +17,7 @@
             function getEstimate() {
                 $.get('/api/CalendarData/GetPickupDateForUsers/' + $('#hours-calculation').val()).then((data) => {
                     $('#result-calculation').empty().append(data.result);
-                });
+                }, () => alert('No se pudo hacer el cálculo'));
             }
         </script>
     </div>

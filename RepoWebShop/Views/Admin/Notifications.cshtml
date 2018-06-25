@@ -82,21 +82,17 @@
         var phone = $("#phone").intlTelInput("getNumber").replace('+', '');
         var username = $('#adminname').val();
 
-        $.post('/api/AdminData/SaveAdminNumber/' + phone + '/' + username).then(
-            () => {
-                window.location.reload();
-            }
-        ).fail(() => alert('No se pudo guardar el teléfono.'));
+        $.post('/api/AdminData/SaveAdminNumber/' + phone + '/' + username).then(() => {
+            window.location.reload();
+        }, () => alert('No se pudo guardar el teléfono.'));
     }
 
     function deletePhone(id){
         $.ajax({
             method: "DELETE",
             url: "/api/AdminData/DeleteAdminNumber/" + id
-        }).then(
-            () => {
+        }).then(() => {
                 window.location.reload();
-            }
-        ).fail(() => alert('No se pudo borrar el teléfono.'));
+        }, () => alert('No se pudo borrar el teléfono.'));
     }
 </script>

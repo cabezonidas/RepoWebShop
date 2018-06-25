@@ -58,7 +58,7 @@
         $.get('/api/MarketingData/GetTemplate/' + templateId).then((data) => {
             $('#email-preview').empty().html(data.bodyHtml);
             $('#sendall').removeClass('hidden');
-        }).fail(() => {
+        }, () => {
             $('#email-preview').empty().append('No se pudo cargar el mail');
         });
     }
@@ -73,7 +73,7 @@
             $.post('/api/MarketingData/SendPromoEmails/' + templateId + '/' + email).then(() => {
                 alert('¡Correo enviado!');
                 window.location = '/Admin';
-            }).fail((data) => {
+            }, () => {
                 alert('No se pudo enviar los correos');
             })
         }
@@ -85,7 +85,7 @@
         $.post('/api/MarketingData/SendPromoEmails/' + templateId).then(() => {
             alert('¡Correo enviado!');
             window.location = '/Admin';
-        }).fail((data) => {
+        }, () => {
             alert('No se pudo enviar los correos');
         })
     }

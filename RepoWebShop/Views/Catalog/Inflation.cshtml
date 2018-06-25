@@ -103,13 +103,13 @@
     function adjustPrices() {
         $.post('/api/CatalogData/Inflation/@Model.Inflation/@Model.RoundTo').then(() => {
             window.location.reload();
-        }).fail(() => alert('No se pudo hacer el cambio'));
+        }, () => alert('No se pudo hacer el cambio'));
     }
 
     function restorePrices() {
         $.post('/api/CatalogData/RestorePrices').then(() => {
             window.location.reload();
-        }).fail(() => ('No se pudo hacer el cambio'));
+        }, () => ('No se pudo hacer el cambio'));
     }
 
 </script>

@@ -1,10 +1,15 @@
 ﻿@model IEnumerable<Lunch>
 @inject ILunchRepository _lunchRepository
+@inject IConfiguration _config
+@{
+    var _cateringMinPrepTiem = _config.GetValue<int>("CateringDefaultPreparationTime");
+}
 
 <style>
     th, td {
         text-align: center;
     }
+
     .handy:hover {
         cursor: pointer;
     }
@@ -52,30 +57,30 @@
                             @_lunchRepository.GetConvitees(lunch)
                         </td>
                         <td>
-                            @if(lunch.IsCombo)
+                            @if (lunch.IsCombo)
                             {
                                 <span class="fa fa-check" style="color: green;"></span>
                             }
                             else
                             {
                                 <span class="fa fa-times"></span>
-                            } 
-                        </td>  
+                            }
+                        </td>
                         <td>
-                            @if(lunch.IsGeneric)
+                            @if (lunch.IsGeneric)
                             {
                                 <span class="fa fa-check" style="color: green;"></span>
                             }
                             else
                             {
                                 <span class="fa fa-times"></span>
-                            } 
-                        </td>     
+                            }
+                        </td>
                         <td>
                             @lunch.Title
-                        </td>  
+                        </td>
                         <td>
-                            @lunch.PreparationTime hs
+                            @lunch.PreparationTime(_cateringMinPrepTiem) hs
                         </td>
                         <td>
                             <a asp-controller="Lunch" asp-action="EditCombo" asp-route-lunchId="@lunch.LunchId">Editar</a>

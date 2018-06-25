@@ -3,9 +3,9 @@
 @inject ILunchRepository _lunchRepository
 @inject SignInManager<ApplicationUser> _signIn
 @inject UserManager<ApplicationUser> _userManager
-@inject ICalendarRepository _calendar
-
+@inject IConfiguration _config
 @{
+    var _cateringMinPrepTiem = _config.GetValue<int>("CateringDefaultPreparationTime");
     var user = await _userManager.GetUser(_signIn);
     var isAdmin = user != null && await _userManager.IsInRoleAsync(user, "Administrator");
 }
@@ -18,7 +18,7 @@ else
     <div class="row " style="border-bottom-left-radius:5px; border-bottom-right-radius:5px; max-width: 500px; margin: auto; background-color: #883636; color:papayawhip">
         <div class="selecteItem">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-left">
-                @Html.Raw(_calendar.GetSoonestPickupEstimateForUsers(Model.PreparationTime))
+                @Html.Raw(_calendar.GetSoonestPickupEstimateForUsers(Model.PreparationTime(_cateringMinPrepTiem)))
             </div>
             <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-left">
                 @if (isAdmin)

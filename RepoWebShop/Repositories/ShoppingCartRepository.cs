@@ -74,9 +74,6 @@ namespace RepoWebShop.Repositories
                 {
                     BookingId = bookingId,
                     Lunch = new Lunch()
-                    {
-                        PreparationTime = _cateringMinPrepTime,
-                    }
                 };
                 _appDbContext.ShoppingCartCustomLunch.Add(result);
                 _appDbContext.SaveChanges();
@@ -111,9 +108,9 @@ namespace RepoWebShop.Repositories
             var caterings = GetShoppingCaterings(bookingId);
             var customCatering = GetSessionLunchIfNotEmpty(bookingId);
             //var itemsPrepTime = items.Count() == 0 ? 0 : items.OrderByDescending(x => x.Pie.PieDetail.PreparationTime).First().Pie.PieDetail.PreparationTime;
-            var cateringsPrepTime = caterings.Count() == 0 ? 0 : caterings.OrderByDescending(x => x.Lunch.PreparationTime).First().Lunch.PreparationTime;
+            var cateringsPrepTime = caterings.Count() == 0 ? 0 : caterings.Select(x => x.Lunch.PreparationTime(_cateringMinPrepTime)).OrderByDescending(x => x).First();
             var catalogItemsPrepTime = catalogItems.Count() == 0 ? 0 : catalogItems.OrderByDescending(x => x.Product.PreparationTime).First().Product.PreparationTime;
-            var customCateringPrepTime = customCatering?.Lunch?.PreparationTime ?? 0;
+            var customCateringPrepTime =  customCatering?.Lunch?.PreparationTime(_cateringMinPrepTime) ?? 0;
             var hours = new List<int>();
             hours.Add(0);
             //hours.Add(itemsPrepTime);
@@ -122,7 +119,7 @@ namespace RepoWebShop.Repositories
             hours.Add(customCateringPrepTime);
             return hours.OrderByDescending(x => x).First();
         }
-
+        
         public IEnumerable<ShoppingCartCatalogItem> GetCatalogItems(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;

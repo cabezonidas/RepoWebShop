@@ -27,7 +27,11 @@ namespace RepoWebShop.Models
 
         public string ThumbnailUrl { get; set; }
         
-        public int PreparationTime { get; set; }
+        public int PreparationTime(int _cateringMinPrepTime)
+        {
+            var itselfPrepTime =  Items?.OrderBy(x => x.Product?.PreparationTime).LastOrDefault()?.Product?.PreparationTime ?? 0;
+            return itselfPrepTime > _cateringMinPrepTime ? itselfPrepTime : _cateringMinPrepTime;
+        }
         
         public int EventDuration { get; set; }
         

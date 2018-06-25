@@ -24,17 +24,15 @@ namespace RepoWebShop.ViewModels
 
         [Display(Name = "Descripción")]
         public string Description { get; set; }
-
-        [Display(Name = "Tiempo de preparación (hs)")]
-        [Required]
-        public int PreparationTime { get; set; }
-
+        
         [Display(Name = "Duración del Evento (hs)")]
         [Required]
+        [Range(1, int.MaxValue)]
         public int EventDuration { get; set; }
 
         [Display(Name = "Invitados")]
         [Required]
+        [Range(1, int.MaxValue)]
         public int Attendants { get; set; }
 
         [Display(Name = "Imagen preliminar")]

@@ -60,10 +60,8 @@
         $.ajax({
             method: "DELETE",
             url: "/api/AdminData/DeleteContact/" + id
-        }).then(
-            () => {
-                window.location.reload();
-            }
-        ).fail(() => alert('No se pudo borrar el teléfono.'));
+        }).then(() => {
+            window.location.reload();
+        }, () => alert('No se pudo borrar el teléfono.'));
     }
 </script>

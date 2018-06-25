@@ -49,24 +49,11 @@ namespace RepoWebShop.Repositories
                 _appDbContext.LunchItems.Update(shoppingCartLunchItem);
             }
 
-            UpdatePreparationTime(lunch);
-
 
             _appDbContext.SaveChanges();
             return shoppingCartLunchItem;
         }
 
-        private void UpdatePreparationTime(Lunch lunch)
-        {
-            var longestPrepTime = lunch.Items.OrderByDescending(x => x.Product.PreparationTime).FirstOrDefault()?.Product?.PreparationTime ?? _cateringMinPrepTime;
-            longestPrepTime = longestPrepTime < _cateringMinPrepTime ? _cateringMinPrepTime : longestPrepTime;
-            if(lunch.PreparationTime != longestPrepTime)
-            {
-                lunch.PreparationTime = longestPrepTime;
-                _appDbContext.Lunch.Update(lunch);
-                _appDbContext.SaveChanges();
-            }
-        }
 
         public async Task<LunchItem> AddItemAsync(int lunchId, int productId)
         {
@@ -81,7 +68,7 @@ namespace RepoWebShop.Repositories
                 _appDbContext.LunchItems.Add(shoppingCartLunchItem);
                 _appDbContext.SaveChanges();
             }
-            UpdatePreparationTime(lunch);
+            
             return shoppingCartLunchItem;
         }
 
@@ -107,9 +94,7 @@ namespace RepoWebShop.Repositories
                 }
                 _appDbContext.SaveChanges();
             }
-
-            UpdatePreparationTime(lunch);
-
+            
             return result;
         }
 
@@ -126,8 +111,6 @@ namespace RepoWebShop.Repositories
                 _appDbContext.LunchItems.Remove(shoppingCartLunchItem);
                 _appDbContext.SaveChanges();
             }
-
-            UpdatePreparationTime(lunch);
 
             return result;
         }
@@ -224,7 +207,6 @@ namespace RepoWebShop.Repositories
                 .ThenInclude(x => x.PieDetail)
                 .ToListAsync();
 
-            //return result.Where(x => GetTotal(x) > 0);
             return result;
         }
 

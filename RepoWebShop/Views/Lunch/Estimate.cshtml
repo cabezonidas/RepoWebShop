@@ -98,7 +98,7 @@
 <script>
     loaderOn();
     $(document).ready(() => {
-        $.get('/api/LunchData/GetProducts/').then((data) => {
+        $.get('/api/LunchData/GetProducts/').done((data) => {
             initializeSelector(data);
         });
     });
@@ -158,7 +158,7 @@
     }
 
     function save() {
-        $.post('/api/LunchData/SaveLunch/').then((data) => {
+        $.post('/api/LunchData/SaveLunch/').done((data) => {
             @{
                 if(!await _account.IsAdmin())
                 {
@@ -178,7 +178,7 @@
 
 
     function getTotals() {
-        $.get('/api/LunchData/GetTotals/').then((data) => {
+        $.get('/api/LunchData/GetTotals/').done((data) => {
             $('#totals').empty().append(data);
             loaderOff();
             chooseMode();
@@ -276,7 +276,7 @@
             url: '/api/LunchData/AddMiscellaneous/' + ($('#miscDesc').val()).replace("/", "__") + '/' + $('#miscPrice').val(),
             type: 'POST',
             success: function (id) {
-                $.get('/api/LunchData/GetMiscellaneous/' + id).then((data) => {
+                $.get('/api/LunchData/GetMiscellaneous/' + id).done((data) => {
                     pasteItem('miscellaneous', data, id);
                     $('#miscDesc').val('');
                     $('#miscPrice').val('');

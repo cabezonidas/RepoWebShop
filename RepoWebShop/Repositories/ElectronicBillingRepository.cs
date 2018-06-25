@@ -19,6 +19,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using RepoWebShop.Extensions;
 using System.Collections.ObjectModel;
+using Org.BouncyCastle.Crypto;
 
 namespace RepoWebShop.Repositories
 {
@@ -280,6 +281,7 @@ namespace RepoWebShop.Repositories
             X509Certificate2 certificate = GetCertificate(isProd);
             var privKey = DotNetUtilities.GetRsaKeyPair(certificate.GetRSAPrivateKey()).Private;
             var cert = DotNetUtilities.FromX509Certificate(certificate);
+            
             gen.AddSigner(privKey, cert, CmsSignedDataGenerator.DigestSha1);
             var certX509 = DotNetUtilities.ToX509Certificate(cert.CertificateStructure);
             var certList = new List<Org.BouncyCastle.X509.X509Certificate>();
@@ -316,10 +318,14 @@ namespace RepoWebShop.Repositories
 
         private X509Certificate2 GetCertificate(bool isProd)
         {
-            var certPath = $"{_env.ContentRootPath}\\Certs\\{(isProd ? "RepoProd.p12" : "RepoTest.pfx")}" ;
+            var certPath = $"{_env.WebRootPath}\\Certs\\{(isProd ? "RepoProd.p12" : "RepoTest.pfx")}";
             var key = _config.GetValue<string>("AfipKeyCert");
-            
-            var cert = new X509Certificate2(File.ReadAllBytes(certPath), key, X509KeyStorageFlags.Exportable);
+            Byte[] file = File.ReadAllBytes(certPath);
+            X509Certificate2 cert = new X509Certificate2(file, key,
+                X509KeyStorageFlags.MachineKeySet |
+                X509KeyStorageFlags.PersistKeySet |
+                X509KeyStorageFlags.Exportable);
+
             return cert;
         }
 
@@ -383,9 +389,9 @@ namespace RepoWebShop.Repositories
             //Puedo omitir el ambiente de homologacion y hacerlo siempre en prod.
             var endpoint = new PadronProd.PersonaServiceA5Client.EndpointConfiguration();
             var client = new PadronProd.PersonaServiceA5Client(endpoint);
+            var getPersonaResponse = await client.getPersonaAsync(await GetTokenTicket(AfipWsPersona, true), await GetSignTicket(AfipWsPersona, true), _config.GetValue<long>("CUIT"), id);
             try
             {
-                var getPersonaResponse = await client.getPersonaAsync(await GetTokenTicket(AfipWsPersona, true), await GetSignTicket(AfipWsPersona, true), _config.GetValue<long>("CUIT"), id);
                 cuit.Valid = true;
                 var parse1 = getPersonaResponse.personaReturn.datosGenerales;
                 var parse2 = getPersonaResponse.personaReturn.datosGenerales.domicilioFiscal;

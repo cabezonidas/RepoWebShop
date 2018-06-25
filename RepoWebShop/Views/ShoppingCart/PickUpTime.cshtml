@@ -184,7 +184,7 @@
                     $.get('/api/ShoppingCartData/GetTimeSlots/', function (data) {
                         $('#pickuptime-webpart').replaceWith(data);
                     });
-                }).fail(() => alert('failure'));
+                }, () => alert('No se pudo actualizar el horario'));
             }
         });
 

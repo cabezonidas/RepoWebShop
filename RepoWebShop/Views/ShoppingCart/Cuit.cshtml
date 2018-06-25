@@ -38,7 +38,7 @@
                 <td class="col2">
                     <div style="margin: auto;">
                         <div style="text-align:center; margin: auto;max-width: 170px;">
-                            <input style="" class="@Html.Raw(Model > 0 ? "" : "hidden") form-control claim-FeA-form" type="number" step="1" id="afip-cuit" placeholder="20345400444" disabled="disabled" value="@Html.Raw(Model > 0 ? Model.ToString() : "")" />
+                            <input style="" class="@Html.Raw(Model > 0 ? "" : "hidden") form-control claim-FeA-form" type="number" step="1" id="afip-cuit" placeholder="27148090330" disabled="disabled" value="@Html.Raw(Model > 0 ? Model.ToString() : "")" />
                         </div>
                     </div>
                 </td>
@@ -134,9 +134,10 @@
             $('#cuit-warning').show();
         } else {
             loaderOn();
-            $.post("/api/ShoppingCartData/ClearCuit/").then(() => onCuitCleared());
+            $.post("/api/ShoppingCartData/ClearCuit/").always(() => onCuitCleared());
         }
     }
+
 
     function addCuit() {
         var cuit = $('#afip-cuit').val();
@@ -147,7 +148,9 @@
             $('#error-cuit').empty();
             loaderOn();
 
-            $.get("/api/ShoppingCartData/GetCuit/" + cuit).then((data) => onCuitAdded(data)).fail(() => onCuitFailed()).always(() => loaderOff());
+            $.get("/api/ShoppingCartData/GetCuit/" + cuit)
+                .then((data) => onCuitAdded(data), () => onCuitFailed())
+                .always(() => loaderOff());
         }
     }
 

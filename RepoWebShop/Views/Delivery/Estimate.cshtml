@@ -86,7 +86,7 @@
         $.get("/api/DeliveryData/GetCost/" + location).then((data) => {
             $('#cost').append("Costo de envío $" + data.cost);
             loaderOff();
-        }).fail((XMLHttpRequest, textStatus, errorThrown) => {
+        }, (XMLHttpRequest, textStatus, errorThrown) => {
             console.log(XMLHttpRequest);
             console.log(textStatus);
             console.log(errorThrown);

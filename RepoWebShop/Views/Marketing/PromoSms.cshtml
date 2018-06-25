@@ -58,7 +58,7 @@
         loaderOn();
         $.post('/api/MarketingData/SendPromoSms/' + $("#phone").intlTelInput("getNumber").replace('+', '') + "/" + $('#textarea-body').val()).then(() => {
             msgSent();
-        }).fail(() => {
+        }, () => {
             msgNotSent();
         });
     }

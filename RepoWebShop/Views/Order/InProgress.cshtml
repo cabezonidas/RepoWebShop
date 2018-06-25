@@ -113,6 +113,10 @@
                         @if (order.DeliveryAddress != null)
                         {
                             items.Add("Envío: " + order.DeliveryAddress.AddressLine1?.Split(",")?.FirstOrDefault() ?? "");
+                            if (!String.IsNullOrEmpty(order.DeliveryAddress.DeliveryInstructions))
+                            {
+                                items.Add(order.DeliveryAddress.DeliveryInstructions);
+                            }
                         }
                         @Html.Raw(String.Join("<br/>", items.ToArray()))
                     </td>

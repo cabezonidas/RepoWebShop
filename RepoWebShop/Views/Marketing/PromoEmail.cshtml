@@ -100,7 +100,7 @@
                 'data': JSON.stringify($('#email-template').html())
             }).then(function () {
                 window.location = '/Marketing/Index'
-            }).fail(function () {
+            }, function () {
                 alert('No se pudo guardar.');
             });
         }
@@ -168,7 +168,7 @@
     }
 
     function albumselected(albumId) {
-        $.get("/api/PhotosData/SmallCarrouselDynamic/" + albumId).then((data) => {
+        $.get("/api/PhotosData/SmallCarrouselDynamic/" + albumId).done((data) => {
             $('#album-carousel').empty().append(data);
             linkimgs();
         });

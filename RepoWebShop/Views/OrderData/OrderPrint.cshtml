@@ -27,7 +27,7 @@
             <text font="font_b" />
             <text width="2" height="1" />
             <feed unit="6" line="1" />
-            <text>@Html.Raw($"{_calendar.FriendlyDate(Model.PickUpTimeFrom)} {Model.PickUpTimeFrom.Value.ToString("HH:ss")}")&#10;</text>
+            <text>@Html.Raw($"{_calendar.FriendlyDate(Model.PickUpTimeFrom)} {Model.PickUpTimeFrom.Value.ToString("HH:mm")}")&#10;</text>
 
 
             @if (Model.Factura != null && Model.Factura.Resultado == "A")

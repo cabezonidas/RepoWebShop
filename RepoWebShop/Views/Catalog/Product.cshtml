@@ -283,7 +283,7 @@
             placeholder: 'Elegir...',
             create: (input, callback) => onCreate(input, callback),
             onChange: function (event) {
-                $.get('/api/PieDetailData/Ingredients/' + event).then((data) => {
+                $.get('/api/PieDetailData/Ingredients/' + event).done((data) => {
                     $('#ingredients').empty().val(data);
                     bringChildren();
                 })
@@ -299,7 +299,7 @@
                 value: data.pieDetail,
                 text: input
             })
-        }).fail((data) => {
+        }, (data) => {
             alert('Ocurrió un error al agregar el producto.')
         })
     }
@@ -321,7 +321,7 @@
                 $('.connected').removeClass('hidden');
             else
                 $('.connected').addClass('hidden')
-        }).fail(() => $('.connected').addClass('hidden'));
+        }, () => $('.connected').addClass('hidden'));
     }
 
 </script>
