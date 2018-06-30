@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
@@ -52,9 +52,8 @@ namespace RepoWebShop.Controllers
                 var pieDetail = await _pieDetailRepository.Add(result);
                 return Ok(new { pieDetail } );
             }
-            catch(Exception ex)
+            catch
             {
-
                 return BadRequest();
             }
         }

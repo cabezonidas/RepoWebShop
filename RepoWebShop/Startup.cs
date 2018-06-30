@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +13,10 @@ using RepoWebShop.Interfaces;
 using RepoWebShop.Repositories;
 using React.AspNet;
 using RepoWebShop.Filters;
+using Microsoft.AspNetCore.SpaServices.Webpack;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 
 namespace RepoWebShop
 {
@@ -103,7 +107,13 @@ namespace RepoWebShop
 
             services.AddReact();
 
-            services.AddMvc(o => { o.Filters.Add<GlobalExceptionFilter>(); });
+            services.AddMvc(o => { o.Filters.Add<GlobalExceptionFilter>(); })
+              .SetCompatibilityVersion(CompatibilityVersion.Version_2_1); ;
+
+            services.AddSpaStaticFiles(c =>
+            {
+                c.RootPath = "wwwroot/dist";
+            });
 
             services.AddAutoMapper();
             services.AddMemoryCache();
@@ -133,27 +143,20 @@ namespace RepoWebShop
                 app.UseExceptionHandler("/AppException");
             }
 
+
             app.UseReact(config => {
-                // If you want to use server-side rendering of React components,
-                // add all the necessary JavaScript files here. This includes
-                // your components as well as all of their dependencies.
-                // See http://reactjs.net/ for more information. Example:
                 config
                     .AddScript("~/Scripts/LunchEstimate.jsx")
                     .AddScript("~/Scripts/LunchItem.jsx");
-
-                // If you use an external build too (for example, Babel, Webpack,
-                // Browserify or Gulp), you can improve performance by disabling
-                // ReactJS.NET's version of Babel and loading the pre-transpiled
-                // scripts. Example:
-                //config
-                //    .SetLoadBabel(false)
-                //    .AddScriptWithoutTransform("~/Scripts/bundle.server.js");
             });
 
-            app.UseStaticFiles();
             app.UseSession();
             app.UseAuthentication();
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -164,6 +167,14 @@ namespace RepoWebShop
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "wwwroot";
+
+                if (env.IsDevelopment())
+                    spa.UseAngularCliServer(npmScript: "start");
             });
         }
     }
