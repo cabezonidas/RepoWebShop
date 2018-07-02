@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
 
 
@@ -26,20 +26,12 @@
 
   <ItemGroup>
     <Compile Remove="Helpers\**" />
-    <Compile Remove="wwwroot\Certs\**" />
-    <Compile Remove="wwwroot\dist\test2\**" />
     <Compile Remove="wwwroot\test\**" />
     <Content Remove="Helpers\**" />
-    <Content Remove="wwwroot\Certs\**" />
-    <Content Remove="wwwroot\dist\test2\**" />
     <Content Remove="wwwroot\test\**" />
     <EmbeddedResource Remove="Helpers\**" />
-    <EmbeddedResource Remove="wwwroot\Certs\**" />
-    <EmbeddedResource Remove="wwwroot\dist\test2\**" />
     <EmbeddedResource Remove="wwwroot\test\**" />
     <None Remove="Helpers\**" />
-    <None Remove="wwwroot\Certs\**" />
-    <None Remove="wwwroot\dist\test2\**" />
     <None Remove="wwwroot\test\**" />
   </ItemGroup>
 
@@ -61,6 +53,7 @@
 
   <ItemGroup>
     <None Remove="Properties\PublishProfiles\RepoWebShop-Test - Web Deploy.pubxml" />
+    <None Remove="server.ts" />
     <None Remove="src\hmr.ts" />
   </ItemGroup>
 
@@ -71,7 +64,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" PrivateAssets="All" />
 
     <PackageReference Include="Google.Apis.Gmail.v1" Version="1.32.0.1077" />
@@ -109,6 +102,8 @@
     <None Include="Views\Shared\PiePriceCarouselItem.cshtml" />
     <None Include="Views\Shared\SharedCss.cshtml" />
     <None Include="Views\Shared\_Layout.cshtml" />
+    <None Include="wwwroot\Certs\RepoProd.p12" />
+    <None Include="wwwroot\Certs\RepoTest.pfx" />
   </ItemGroup>
 
   <!--<ItemGroup>
@@ -138,16 +133,20 @@
     <Folder Include="src\app\components\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <TypeScriptCompile Include="src\hmr.ts" />
-  </ItemGroup>
-
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JSONSchema="" appsettings_1staging_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="src\typings.d.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="src\typings.d.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
@@ -157,7 +156,8 @@
     </Exec>
     <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
     <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+    <!--<Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />-->
   </Target>
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">

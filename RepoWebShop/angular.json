@@ -69,6 +69,7 @@
             }
           }
         },
+
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
@@ -104,6 +105,32 @@
             ]
           }
         }
+        //"server": {
+        //  "builder": "@angular-devkit/build-angular:server",
+        //  "options": {
+        //    "outputPath": "wwwroot/dist/dist-server",
+        //    "main": "src/main.server.ts",
+        //    "tsConfig": "src/tsconfig.server.json"
+        //  },
+        //  "configurations": {
+        //    "dev": {
+        //      "optimization": true,
+        //      "outputHashing": "none",
+        //      "sourceMap": false,
+        //      "namedChunks": false,
+        //      "extractLicenses": true,
+        //      "vendorChunk": true
+        //    },
+        //    "production": {
+        //      "optimization": true,
+        //      "outputHashing": "none",
+        //      "sourceMap": false,
+        //      "namedChunks": false,
+        //      "extractLicenses": true,
+        //      "vendorChunk": false
+        //    }
+        //  }
+        //}
       }
     },
     "RepoWebShop-e2e": {

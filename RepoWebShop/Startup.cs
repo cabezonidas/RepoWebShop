@@ -13,7 +13,6 @@ using RepoWebShop.Interfaces;
 using RepoWebShop.Repositories;
 using React.AspNet;
 using RepoWebShop.Filters;
-using Microsoft.AspNetCore.SpaServices.Webpack;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -105,10 +104,10 @@ namespace RepoWebShop
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped(sp => ShoppingCart.GetCart(sp));
 
-            services.AddReact();
-
             services.AddMvc(o => { o.Filters.Add<GlobalExceptionFilter>(); })
               .SetCompatibilityVersion(CompatibilityVersion.Version_2_1); ;
+
+            services.AddReact();
 
             services.AddSpaStaticFiles(c =>
             {
@@ -167,13 +166,29 @@ namespace RepoWebShop
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
             });
 
             app.UseSpa(spa =>
             {
-                spa.Options.SourcePath = "wwwroot";
+                spa.Options.SourcePath = "wwwroot/dist";
 
-                if (env.IsDevelopment())
+                //spa.UseSpaPrerendering(options =>
+                //{
+                //    options.BootModulePath = $"{spa.Options.SourcePath}/dist-server/main.js";
+                //    options.BootModuleBuilder = env.IsDevelopment()
+                //         ? new AngularCliBuilder(npmScript: "build:ssr")
+                //         : null;
+                //    options.ExcludeUrls = new[] { "/sockjs-node" };
+
+                    //options.SupplyData = (context, data) =>
+                    //{
+                    //     // Creates a new value called isHttpsRequest that is passed to TypeScript code
+                    //     data["isHttpsRequest"] = context.Request.IsHttps;
+                    //};
+                  //});
+
+              if (env.IsDevelopment())
                     spa.UseAngularCliServer(npmScript: "start");
             });
         }
