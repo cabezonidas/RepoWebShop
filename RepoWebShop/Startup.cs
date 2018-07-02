@@ -171,11 +171,11 @@ namespace RepoWebShop
 
             app.UseSpa(spa =>
             {
-                spa.Options.SourcePath = "wwwroot/dist";
+                spa.Options.SourcePath = "wwwroot/dist/browser";
 
                 //spa.UseSpaPrerendering(options =>
                 //{
-                //    options.BootModulePath = $"{spa.Options.SourcePath}/dist-server/main.js";
+                //    options.BootModulePath = $"wwwroot/dist/server/main.js";
                 //    options.BootModuleBuilder = env.IsDevelopment()
                 //         ? new AngularCliBuilder(npmScript: "build:ssr")
                 //         : null;

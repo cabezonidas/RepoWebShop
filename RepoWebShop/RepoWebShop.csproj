@@ -142,10 +142,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="src\app\app.server.module.ts" />
+    <None Remove="src\main.server.ts" />
     <None Remove="src\typings.d.ts" />
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="server.ts" />
+    <TypeScriptCompile Include="src\app\app.server.module.ts" />
+    <TypeScriptCompile Include="src\main.server.ts" />
     <TypeScriptCompile Include="src\typings.d.ts" />
   </ItemGroup>
 

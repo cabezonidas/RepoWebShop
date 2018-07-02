@@ -7,13 +7,17 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { AppComponent } from './app.component';
 //import { DisplayMapComponent } from './components/displayMap/displayMap.component';
 
+import { PLATFORM_ID, APP_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+
 @NgModule({
   declarations: [
     AppComponent
     //DisplayMapComponent
   ],
   imports: [
-    BrowserModule,
+    //BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'RepoWebShop' }),
     MDBBootstrapModule.forRoot(),
     //NgxMapboxGLModule.forRoot({
     //  accessToken: 'YOUR ACCESS TOKEN GOES HERE', // Can also be set per map (accessToken input of mgl-map)
@@ -23,4 +27,12 @@ import { AppComponent } from './app.component';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(APP_ID) private appId: string) {
+    const platform = isPlatformBrowser(platformId) ?
+      'in the browser' : 'on the server';
+    console.log(`Running ${platform} with appId=${appId}`);
+  }
+}

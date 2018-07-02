@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "wwwroot/dist",
+            "outputPath": "wwwroot/dist/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -104,33 +104,33 @@
               "**/node_modules/**"
             ]
           }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "wwwroot/dist/server",
+            "main": "src/main.server.ts",
+            "tsConfig": "src/tsconfig.server.json"
+          },
+          "configurations": {
+            "dev": {
+              "optimization": true,
+              "outputHashing": "none",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": true
+            },
+            "production": {
+              "optimization": true,
+              "outputHashing": "none",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false
+            }
+          }
         }
-        //"server": {
-        //  "builder": "@angular-devkit/build-angular:server",
-        //  "options": {
-        //    "outputPath": "wwwroot/dist/dist-server",
-        //    "main": "src/main.server.ts",
-        //    "tsConfig": "src/tsconfig.server.json"
-        //  },
-        //  "configurations": {
-        //    "dev": {
-        //      "optimization": true,
-        //      "outputHashing": "none",
-        //      "sourceMap": false,
-        //      "namedChunks": false,
-        //      "extractLicenses": true,
-        //      "vendorChunk": true
-        //    },
-        //    "production": {
-        //      "optimization": true,
-        //      "outputHashing": "none",
-        //      "sourceMap": false,
-        //      "namedChunks": false,
-        //      "extractLicenses": true,
-        //      "vendorChunk": false
-        //    }
-        //  }
-        //}
       }
     },
     "RepoWebShop-e2e": {
