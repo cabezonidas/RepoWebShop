@@ -107,6 +107,8 @@ namespace RepoWebShop
             services.AddMvc(o => { o.Filters.Add<GlobalExceptionFilter>(); })
               .SetCompatibilityVersion(CompatibilityVersion.Version_2_1); ;
 
+            //services.AddNodeServices();
+
             services.AddReact();
 
             services.AddSpaStaticFiles(c =>
@@ -171,25 +173,27 @@ namespace RepoWebShop
 
             app.UseSpa(spa =>
             {
-                spa.Options.SourcePath = "wwwroot/dist/browser";
-
+                spa.Options.SourcePath = "wwwroot/dist";
+                
                 //spa.UseSpaPrerendering(options =>
                 //{
-                //    options.BootModulePath = $"wwwroot/dist/server/main.js";
-                //    options.BootModuleBuilder = env.IsDevelopment()
-                //         ? new AngularCliBuilder(npmScript: "build:ssr")
-                //         : null;
-                //    options.ExcludeUrls = new[] { "/sockjs-node" };
+                  //options.BootModulePath = "wwwroot/dist/server/main.js";
+                  //options.BootModuleBuilder = env.IsDevelopment()
+                  //       ? new AngularCliBuilder(npmScript: "build:ssr")
+                  //       : null;
+                  //options.ExcludeUrls = new[] { "/sockjs-node" };
 
-                    //options.SupplyData = (context, data) =>
+
+                  //options.SupplyData = (context, data) =>
                     //{
-                    //     // Creates a new value called isHttpsRequest that is passed to TypeScript code
-                    //     data["isHttpsRequest"] = context.Request.IsHttps;
+                        // Creates a new value called isHttpsRequest that is passed to TypeScript code
+                        //data["isHttpsRequest"] = context.Request.IsHttps;
                     //};
-                  //});
+                //});
 
-              if (env.IsDevelopment())
+                if (env.IsDevelopment())
                     spa.UseAngularCliServer(npmScript: "start");
+                    //spa.UseProxyToSpaDevelopmentServer("http://localhost:4000");
             });
         }
     }

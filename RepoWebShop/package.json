@@ -9,7 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:ssr": "npm run build:client-and-server-bundles && npm run webpack:server",
-    "serve:ssr": "node wwwroot/dist/server",
+    "serve:ssr": "node server",
     "build:client-and-server-bundles": "ng build --prod && ng run RepoWebShop:server",
     "webpack:server": "webpack --config webpack.server.config.js --progress --colors"
   },

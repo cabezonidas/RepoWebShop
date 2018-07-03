@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 
 
@@ -15,8 +15,8 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
 
-    <SpaRoot>src\</SpaRoot>
-    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+    
+    <DefaultItemExcludes>$(DefaultItemExcludes)</DefaultItemExcludes>
 
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
@@ -53,7 +53,6 @@
 
   <ItemGroup>
     <None Remove="Properties\PublishProfiles\RepoWebShop-Test - Web Deploy.pubxml" />
-    <None Remove="server.ts" />
     <None Remove="src\hmr.ts" />
   </ItemGroup>
 
@@ -135,11 +134,6 @@
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JSONSchema="" appsettings_1staging_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>
 
-  <ItemGroup>
-    <!-- Don't publish the SPA source files, but do show them in the project files list -->
-    <Content Remove="$(SpaRoot)**" />
-    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Remove="src\app\app.server.module.ts" />
@@ -148,13 +142,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="server.ts" />
     <TypeScriptCompile Include="src\app\app.server.module.ts" />
     <TypeScriptCompile Include="src\main.server.ts" />
     <TypeScriptCompile Include="src\typings.d.ts" />
   </ItemGroup>
 
-  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
+  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
       <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
@@ -166,15 +159,15 @@
   </Target>
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
-    <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build -- --prod" />
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build:ssr -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
+    <!--As part of publishing, ensure the JS resources are freshly built in production mode
+     <Exec WorkingDirectory="" Command="npm install" />
+    <Exec WorkingDirectory="" Command="npm run build - - - -prod" />
+    <Exec WorkingDirectory="" Command="npm run build:ssr - - - -prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />  -->
 
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
-      <DistFiles Include="$(SpaRoot)dist\**; $(SpaRoot)dist-server\**" />
-      <DistFiles Include="$(SpaRoot)node_modules\**" Condition="'$(BuildServerSideRenderer)' == 'true'" />
+      <DistFiles Include="wwwroot\dist\**; wwwroot\dist\server\**; wwwroot\dist\browser\**" />
+      <DistFiles Include="node_modules\**" Exclude="node_modules\.cache\**" Condition="'$(BuildServerSideRenderer)' == 'true'" />
       <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
         <RelativePath>%(DistFiles.Identity)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
