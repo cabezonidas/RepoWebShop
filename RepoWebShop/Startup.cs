@@ -111,9 +111,10 @@ namespace RepoWebShop
 
             services.AddReact();
 
-            services.AddSpaStaticFiles(c =>
+            // In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
             {
-                c.RootPath = "wwwroot/dist";
+                configuration.RootPath = "wwwroot/dist";
             });
 
             services.AddAutoMapper();
@@ -154,9 +155,8 @@ namespace RepoWebShop
             app.UseSession();
             app.UseAuthentication();
 
-            app.UseDefaultFiles();
+            //app.UseDefaultFiles();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
 
             app.UseMvc(routes =>
             {
@@ -171,30 +171,29 @@ namespace RepoWebShop
 
             });
 
-            app.UseSpa(spa =>
+            if(env.IsDevelopment())
             {
-                spa.Options.SourcePath = "wwwroot/dist";
-                
-                //spa.UseSpaPrerendering(options =>
-                //{
-                  //options.BootModulePath = "wwwroot/dist/server/main.js";
-                  //options.BootModuleBuilder = env.IsDevelopment()
-                  //       ? new AngularCliBuilder(npmScript: "build:ssr")
-                  //       : null;
-                  //options.ExcludeUrls = new[] { "/sockjs-node" };
+                  app.UseSpaStaticFiles();
+                  app.UseSpa(spa =>
+                  {
+                      spa.Options.SourcePath = "wwwroot";
 
+                      //spa.UseSpaPrerendering(options =>
+                      //{
+                      //  options.BootModulePath = $"wwwroot/dist/server/main.js";
+                      //  options.BootModuleBuilder = env.IsDevelopment()
+                      //    ? new AngularCliBuilder(npmScript: "build:ssr")
+                      //    : null;
+                      //  options.ExcludeUrls = new[] { "/sockjs-node" };
+                      //});
 
-                  //options.SupplyData = (context, data) =>
-                    //{
-                        // Creates a new value called isHttpsRequest that is passed to TypeScript code
-                        //data["isHttpsRequest"] = context.Request.IsHttps;
-                    //};
-                //});
-
-                if (env.IsDevelopment())
-                    spa.UseAngularCliServer(npmScript: "start");
-                    //spa.UseProxyToSpaDevelopmentServer("http://localhost:4000");
-            });
+                      if (env.IsDevelopment())
+                      {
+                          spa.UseAngularCliServer(npmScript: "start");
+                          //spa.UseProxyToSpaDevelopmentServer("http://localhost:4200/");
+                      }
+                  });
+            }
         }
     }
 }

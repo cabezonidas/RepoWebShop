@@ -17,7 +17,7 @@ import { isPlatformBrowser } from '@angular/common';
   ],
   imports: [
     //BrowserModule,
-    BrowserModule.withServerTransition({ appId: 'RepoWebShop' }),
+    BrowserModule.withServerTransition({ appId: 'repo-server' }),
     MDBBootstrapModule.forRoot(),
     //NgxMapboxGLModule.forRoot({
     //  accessToken: 'YOUR ACCESS TOKEN GOES HERE', // Can also be set per map (accessToken input of mgl-map)
