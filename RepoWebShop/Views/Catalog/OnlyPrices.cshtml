@@ -1,4 +1,4 @@
-﻿@{Layout = string.Empty;}
+@{Layout = string.Empty;}
 @model IEnumerable<Product>
 @inject ICalendarRepository calendar
 <link href="https://fonts.googleapis.com/css?family=Noto+Serif" rel="stylesheet">
@@ -65,7 +65,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var prod in Model.Where(x => x.Category.ToLower() == categories[i]).OrderBy(x => x.Name))
+                    @foreach (var prod in Model.Where(x => x.Category.ToLower() == categories[i]).OrderBy(x => x.PriceInStore).OrderBy(x => x.PieDetail.Name.Trim()))
                     { 
                         <tr>
                             <td class="product">

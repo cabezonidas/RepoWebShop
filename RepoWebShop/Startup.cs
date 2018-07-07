@@ -171,20 +171,20 @@ namespace RepoWebShop
 
             });
 
-            if(env.IsDevelopment())
+            if(!env.IsProduction())
             {
                   app.UseSpaStaticFiles();
                   app.UseSpa(spa =>
                   {
-                      spa.Options.SourcePath = "wwwroot";
+                      spa.Options.SourcePath = "wwwroot/dist";
 
                       //spa.UseSpaPrerendering(options =>
                       //{
-                      //  options.BootModulePath = $"wwwroot/dist/server/main.js";
-                      //  options.BootModuleBuilder = env.IsDevelopment()
-                      //    ? new AngularCliBuilder(npmScript: "build:ssr")
-                      //    : null;
-                      //  options.ExcludeUrls = new[] { "/sockjs-node" };
+                        //options.BootModulePath = $"wwwroot/dist/server.main.js";
+                        //options.BootModuleBuilder = env.IsDevelopment()
+                        //  ? new AngularCliBuilder(npmScript: "build-1:ssr")
+                        //  : null;
+                        //options.ExcludeUrls = new[] { "/sockjs-node" };
                       //});
 
                       if (env.IsDevelopment())

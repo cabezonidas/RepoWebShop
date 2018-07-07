@@ -4,14 +4,14 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start:ssr": "node dist/server",
     "build": "ng build",
-    "build:ssr": "npm run build:client-and-server-bundles && npm run webpack:server",
-    "build2:ssr": "npm run build -- --project=ssr",
-    "build3:ssr": "npm run build -- --project=ssr --output-hashing=media",
-    "build:client-and-server-bundles": "ng build --prod && ng run RepoWebShop:server --output-hashing=media",
-    "build2:client-and-server-bundles": "npm run build -- --project=ssr --output-hashing=media",
+
+    "build-1:ssr": "ng build --prod && ng run RepoWebShop:server -- --output-hashing=media && npm run webpack:server",
+    "build-2:ssr": "ng build --prod && npm run build --prod --project=ssr --output-hashing=media && npm run webpack:server",
+    "build-3:ssr": "ng build --prod && ng run RepoWebShop:server --prod --output-hashing=media",
+    "build-4:ssr": "ng build --prod && npm run build --prod --project=ssr --output-hashing=media",
     "webpack:server": "webpack --config webpack.server.config.js --progress --colors",
+
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
