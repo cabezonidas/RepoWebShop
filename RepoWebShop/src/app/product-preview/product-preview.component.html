@@ -1,0 +1,14 @@
+<mat-card class="card">
+  <div class="header-text">
+    <mat-card-title >{{ product.pieDetail.name }}</mat-card-title>
+    <mat-card-subtitle>{{ product.pieDetail.ingredients }}</mat-card-subtitle>
+  </div>
+  <div [style.backgroundImage]="'url('+product.primaryPicture+')'" class='primaryPicture'></div>
+  <mat-card-content>
+    <p> {{ product.pieDetail.shortDescription }} </p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button (click)="chooseProduct()">Comprar</button>
+    <button mat-button>SHARE</button>
+  </mat-card-actions>
+</mat-card>

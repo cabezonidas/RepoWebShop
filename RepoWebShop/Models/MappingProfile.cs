@@ -1,6 +1,7 @@
 ﻿using AutoMapper;   
 using Microsoft.AspNetCore.Identity;
 using RepoWebShop.Extensions;
+using RepoWebShop.FrontEndModels;
 using RepoWebShop.ViewModels;
 using System;
 using System.Linq;
@@ -11,8 +12,11 @@ namespace RepoWebShop.Models
     public class MappingProfile : Profile
     {
         public MappingProfile()
-        {
-            CreateMap<FECAEResponse.FECAECabResponse, InvoiceData>();
+		{
+			CreateMap<FeItem, Product>();
+			CreateMap<Product, FeItem>();
+
+			CreateMap<FECAEResponse.FECAECabResponse, InvoiceData>();
             CreateMap<FECAEResponse.FECAEDetResponse, Cae>();
 
             CreateMap<ElectronicInvoiceTest.Err, FECAEResponse.CodeMessage>();

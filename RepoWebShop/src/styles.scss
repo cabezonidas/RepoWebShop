@@ -1,1 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '~@angular/material/theming';
+
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Condensed:300,400,500');
+
+$my-typography: mat-typography-config(
+    $font-family: 'Noto Serif'
+);
+    
+@include mat-core($my-typography);
+
+body {
+    background-color: papayawhip;
+    font-family: Courier !important;
+}
+
