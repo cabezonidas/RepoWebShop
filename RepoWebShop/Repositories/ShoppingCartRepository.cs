@@ -812,5 +812,10 @@ namespace RepoWebShop.Repositories
             var cuit = _appDbContext.ShoppingCartCuits.FirstOrDefault(x => x.ShoppingCartId == bookingId)?.Cuit ?? 0;
             return cuit;
         }
-    }
+
+		public void AddCatalogItemToCart(int id)
+		{
+			AddCatalogItemToCart(_appDbContext.Products.First(x => x.ProductId == id), 1);
+		}
+	}
 }

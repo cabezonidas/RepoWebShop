@@ -43,8 +43,8 @@ namespace RepoWebShop.Interfaces
         void AddToCart(Pie pie, int amount);
         void AddCatalogItemToCart(Product product, int v);
         void AddCateringToCart(Lunch catering, int amount);
-
-        int RemoveFromCart(Pie pie);
+		void AddCatalogItemToCart(int id);
+		int RemoveFromCart(Pie pie);
         int RemoveProductFromCart(Product product);
         void RemoveLunchFromCart(Lunch lunch);
 

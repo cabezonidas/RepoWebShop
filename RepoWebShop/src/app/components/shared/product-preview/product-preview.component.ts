@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatBottomSheet, MatBottomSheetRef } from '@angular/material';
-import { IProduct } from '../interfaces/iproduct';
-import { ChooseItemComponent } from '../choose-item/choose-item.component';
-import { IItem } from '../interfaces/iitem';
+import { IProduct } from '../../../interfaces/iproduct';
+import { IItem } from '../../../interfaces/iitem';
+import { ChooseItemComponent } from '../../products/choose-item/choose-item.component';
 
 @Component({
   selector: 'app-product-preview',

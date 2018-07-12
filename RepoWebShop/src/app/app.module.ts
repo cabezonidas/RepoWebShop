@@ -5,25 +5,25 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material';
-import { NavBarComponent } from './nav-bar/nav-bar.component';
-import { ProductPreviewComponent } from './product-preview/product-preview.component';
-import { ProductsComponent } from './products/products.component';
-import { CateringComponent } from './catering/catering.component';
-import { MvcHomeComponent } from './mvc-home/mvc-home.component';
+import { NavBarComponent } from './components/shared/nav-bar/nav-bar.component';
+import { ProductPreviewComponent } from './components/shared/product-preview/product-preview.component';
+import { GridComponent } from './components/products/grid/grid.component';
 import { HttpClientModule } from '@angular/common/http';
-import { DetailsComponent } from './details/details.component';
-import { ChooseItemComponent } from './choose-item/choose-item.component';
+import { DetailsComponent } from './components/products/details/details.component';
+import { ChooseItemComponent } from './components/products/choose-item/choose-item.component';
+import { CateringComponent } from './components/catering/catering.component';
+import { CartComponent } from './components/shared/cart/cart.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavBarComponent,
     ProductPreviewComponent,
-    ProductsComponent,
+    GridComponent,
     CateringComponent,
-    MvcHomeComponent,
     DetailsComponent,
-    ChooseItemComponent
+    ChooseItemComponent,
+    CartComponent
   ],
   imports: [
     BrowserModule,

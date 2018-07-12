@@ -35,7 +35,23 @@ namespace RepoWebShop.ApiControllers
             _cartRepository = shoppingCart;
         }
 
-        [HttpPost]
+		[HttpGet]
+		[Route("GetProductItems")]
+		public IEnumerable<ShoppingCartCatalogItem> GetProductItems() => _cartRepository.GetCatalogItems(null);
+
+		[HttpGet]
+		[Route("GetCaterings")]
+		public IEnumerable<ShoppingCartComboCatering> GetCaterings() => _cartRepository.GetShoppingCaterings(null);
+
+		[HttpPost]
+		[Route("AddProductItem")]
+		public IActionResult AddProductItem([FromBody] int id)
+		{
+			_cartRepository.AddCatalogItemToCart(id);
+			return Ok();
+		}
+
+		[HttpPost]
         [Route("AcknowledgeSystemTime")]
         public IActionResult AcknowledgeSystemTime()
         {

@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductsService } from '../products.service';
-import { IProduct } from '../interfaces/iproduct';
+import { ProductsService } from '../../../services/products.service';
+import { IProduct } from '../../../interfaces/iproduct';
 
 @Component({
   selector: 'app-products',
-  templateUrl: './products.component.html',
-  styleUrls: ['./products.component.scss']
+  templateUrl: './grid.component.html',
+  styleUrls: ['./grid.component.scss']
 })
-export class ProductsComponent implements OnInit {
+export class GridComponent implements OnInit {
 
   products$: Array<IProduct>;
 
