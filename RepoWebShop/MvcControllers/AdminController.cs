@@ -123,7 +123,7 @@ namespace RepoWebShop.MvcControllers
         public IActionResult Errors()
         {
             var exceptions = _appDbContext.Exceptions.OrderByDescending(x => x.SiteExceptionId);
-            var bookingRecords = _appDbContext.BookingRecords.Where(x => x.Created > _calendar.LocalTime().AddDays(-7)).Take(100);
+            //var bookingRecords = _appDbContext.BookingRecords.Where(x => x.Created > _calendar.LocalTime().AddDays(-7)).Take(100);
 
             SessionDetailsViewModel sessionDetails = _cart.SessionsDetails();
 
@@ -131,7 +131,7 @@ namespace RepoWebShop.MvcControllers
             {
                 Exceptions = exceptions,
                 SessionDetails = sessionDetails,
-                BookingRecords = bookingRecords
+                BookingRecords = new List<BookingRecord>()
             };
 
             return View(result);

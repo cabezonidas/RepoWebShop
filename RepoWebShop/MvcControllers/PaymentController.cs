@@ -26,14 +26,18 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        public IActionResult Payments()
+        public async Task<IActionResult> Payments()
         {
-            var result = _paymentsRepository.GetPayments().Select(async x =>
-                new PaymentViewModel()
-                {
-                    PaymentNotice = x,
-                    Order = await _orderRepository.GetOrderByBookingIdAsync(x.BookingId) ?? new Order()
-                });
+			var orders = await _orderRepository.GetAllAsync();
+			var result = _paymentsRepository.GetPayments().Select(x =>
+			{
+				var item = new PaymentViewModel()
+				{
+					PaymentNotice = x,
+					Order = orders.FirstOrDefault(y => x.BookingId == y.BookingId)
+				};
+				return item;
+			}).ToArray();
             return View(result);
         }
 

@@ -594,10 +594,10 @@ namespace RepoWebShop.Repositories
                 .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true))
                 .OrderByDescending(x => x.Visited)
                 .Include(x => x.User).ToArray();
-            var ips = _appDbContext.BookingRecords
-                .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true)).ToArray();
-            var repeatedIps = _appDbContext.BookingRecords
-                .Where(x => ips.Select(y => y.Ip).Contains(x.Ip)).ToArray();
+            //var ips = _appDbContext.BookingRecords
+            //    .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true)).ToArray();
+            //var repeatedIps = _appDbContext.BookingRecords
+            //    .Where(x => ips.Select(y => y.Ip).Contains(x.Ip)).ToArray();
             var orders = _appDbContext.Orders
                 .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true));
             var users = visits.Where(x => x.User != null).Select(x => x.User).Distinct().ToArray();
@@ -614,7 +614,7 @@ namespace RepoWebShop.Repositories
                 FriendlyBookingId = friendlyBookingId,
                 Delivery = delivery,
                 Visits = visits,
-                Ips = ips.Union(repeatedIps).OrderByDescending(x => x.Created),
+                Ips = new List<BookingRecord>(), //ips.Union(repeatedIps).OrderByDescending(x => x.Created),
                 Orders = orders,
                 Users = users
             };
