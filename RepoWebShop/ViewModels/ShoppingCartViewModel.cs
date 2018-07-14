@@ -10,7 +10,7 @@ namespace RepoWebShop.ViewModels
 {
     public class ShoppingCartViewModel
     {
-        public List<ShoppingCartItem> Items { get; set; }
+        public IEnumerable<ShoppingCartItem> Items { get; set; }
         public decimal ShoppingCartTotal { get; set; }
         public int CountTrolleyObjects { get; set; }
         public string Mercadolink { get; set; }
@@ -29,8 +29,8 @@ namespace RepoWebShop.ViewModels
         public int DeliveryRadius { get; internal set; }
         public Discount Discount { get; internal set; }
         public decimal ShopingCartTotalWithoutDiscount { get; internal set; }
-        public List<ShoppingCartCatalogItem> CatalogItems { get; internal set; }
-        public List<ShoppingCartComboCatering> Caterings { get; internal set; }
+        public IEnumerable<ShoppingCartCatalogItem> CatalogItems { get; internal set; }
+        public IEnumerable<ShoppingCartComboCatering> Caterings { get; internal set; }
         public ShoppingCartLunch CustomCatering { get; internal set; }
         public long Cuit { get; internal set; }
     }

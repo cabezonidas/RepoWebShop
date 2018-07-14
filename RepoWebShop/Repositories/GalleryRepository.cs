@@ -39,18 +39,18 @@ namespace RepoWebShop.Repositories
 
         public IEnumerable<GalleryFlickrAlbum> GetFlickrAlbums()
         {
-            return _appDbContext.GalleryFlickrAlbums.ToList();
+            return _appDbContext.GalleryFlickrAlbums.ToArray();
         }
 
         public IEnumerable<AlbumPictures> GetGalleryPictures()
         {
-            var albums = _appDbContext.GalleryFlickrAlbums.Where(x => x.InGallery).Select(x => x.FlickrSetId).ToList().AsEnumerable();
+            var albums = _appDbContext.GalleryFlickrAlbums.Where(x => x.InGallery).Select(x => x.FlickrSetId).ToArray().AsEnumerable();
             return _photosetAlbums.GetAlbumsPictures(albums);
         }
 
         public IEnumerable<AlbumPictures> GetAllAlbums()
         {
-            var albums = _appDbContext.GalleryFlickrAlbums.Select(x => x.FlickrSetId).ToList().AsEnumerable();
+            var albums = _appDbContext.GalleryFlickrAlbums.Select(x => x.FlickrSetId).ToArray().AsEnumerable();
             
             return _photosetAlbums.GetAlbumsPictures(albums);
         }

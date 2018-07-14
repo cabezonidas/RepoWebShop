@@ -11,6 +11,7 @@ using System.Net.Http;
 using Microsoft.AspNetCore.Http;
 using RepoWebShop.ViewModels;
 using RepoWebShop.Extensions;
+using Microsoft.AspNetCore.Identity;
 
 namespace RepoWebShop.Repositories
 {
@@ -23,14 +24,21 @@ namespace RepoWebShop.Repositories
         private readonly IConfiguration _config;
         private readonly IDiscountRepository _discountRepository;
         private readonly IHttpContextAccessor _contextAccessor;
-        private readonly int _minimumArsForOrderDelivery;
+		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly SignInManager<ApplicationUser> _signInManager;
+		private readonly int _minimumArsForOrderDelivery;
         private readonly int _maxArsForReservation;
         private readonly int _cateringMinPrepTime;
+		private readonly int _minimumCharge;
+		private readonly int _costByBlock;
+		private readonly int _deliveryRadius;
 
-        public ShoppingCartRepository(IHttpContextAccessor contextAccessor, IConfiguration config, IDiscountRepository discountRepository, ShoppingCart shoppingCart, IMapper mapper, AppDbContext appDbContext, ICalendarRepository calendarRepository)
+		public ShoppingCartRepository(IHttpContextAccessor contextAccessor, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration config, IDiscountRepository discountRepository, ShoppingCart shoppingCart, IMapper mapper, AppDbContext appDbContext, ICalendarRepository calendarRepository)
         {
             _contextAccessor = contextAccessor;
-            _config = config;
+			_userManager = userManager;
+			_signInManager = signInManager;
+			_config = config;
             _appDbContext = appDbContext;
             _cartSession = shoppingCart;
             _mapper = mapper;
@@ -40,7 +48,11 @@ namespace RepoWebShop.Repositories
             _minimumArsForOrderDelivery = _config.GetValue<int>("MinimumArsForOrderDelivery");
             _maxArsForReservation = _config.GetValue<int>("MaxArsForReservation");
             _cateringMinPrepTime = _config.GetValue<int>("CateringDefaultPreparationTime");
-        }
+
+			_minimumCharge = _config.GetValue<int>("LowestDeliveryCost");
+			_costByBlock = _config.GetValue<int>("DeliveryCostByBlock");
+			_deliveryRadius = _config.GetValue<int>("DeliveryRadius");
+		}
 
         public ShoppingCartLunch GetSessionLunchIfNotEmpty(string bookingId = null)
         {
@@ -85,7 +97,7 @@ namespace RepoWebShop.Repositories
         public IEnumerable<ShoppingCartItem> GetItems(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
-            return _appDbContext.ShoppingCartItems.Include(x => x.Pie).ThenInclude(x => x.PieDetail).Where(x => x.ShoppingCartId == bookingId).ToList();
+			return _appDbContext.ShoppingCartItems.Include(x => x.Pie).ThenInclude(x => x.PieDetail).Where(x => x.ShoppingCartId == bookingId).ToArray();
         }
 
         public ShoppingCartComment GetComments(string bookingId)
@@ -123,7 +135,7 @@ namespace RepoWebShop.Repositories
         public IEnumerable<ShoppingCartCatalogItem> GetCatalogItems(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
-            return _appDbContext.ShoppingCartCatalogProducts.Include(x => x.Product).ThenInclude(x => x.PieDetail).Where(x => x.ShoppingCartId == bookingId).ToList();
+            return _appDbContext.ShoppingCartCatalogProducts.Include(x => x.Product).ThenInclude(x => x.PieDetail).Where(x => x.ShoppingCartId == bookingId).ToArray();
         }
 
         public void ClearCart(string bookingId)
@@ -157,13 +169,13 @@ namespace RepoWebShop.Repositories
         {
             if (cartDiscount != null)
             {
-                var bookingsWithDiscountsInUse = _appDbContext.ShoppingCartDiscount.Where(x => x.Discount == cartDiscount.Discount).ToList();
-                if (bookingsWithDiscountsInUse.Count > 0)
+                var bookingsWithDiscountsInUse = _appDbContext.ShoppingCartDiscount.Where(x => x.Discount == cartDiscount.Discount).ToArray();
+                if (bookingsWithDiscountsInUse.Count() > 0)
                 {
                     var bookings = bookingsWithDiscountsInUse.Select(y => y.ShoppingCartId);
-                    var currentPreferencesWithDiscount = _appDbContext.ShoppingCartData.Where(x => bookings.Contains(x.BookingId)).ToList();
+                    var currentPreferencesWithDiscount = _appDbContext.ShoppingCartData.Where(x => bookings.Contains(x.BookingId));
 
-                    if (currentPreferencesWithDiscount.Count > 0)
+                    if (currentPreferencesWithDiscount.Count() > 0)
                     {
                         foreach (var pref in currentPreferencesWithDiscount)
                         {
@@ -557,39 +569,38 @@ namespace RepoWebShop.Repositories
             var items = _appDbContext.ShoppingCartItems
                 .Where(x => x.ShoppingCartId.ContainsSubstring(friendlyBookingId, true))
                 .Include(x => x.Pie)
-                .ThenInclude(x => x.PieDetail).ToList();
+                .ThenInclude(x => x.PieDetail).ToArray();
             var comments = _appDbContext.ShoppingCartComments
                 .Where(x => x.ShoppingCartId.ContainsSubstring(friendlyBookingId, true))
-                .Where(x => !String.IsNullOrEmpty(x.Comments)).ToList();
+                .Where(x => !String.IsNullOrEmpty(x.Comments)).ToArray();
             var discounts = _appDbContext.ShoppingCartDiscount
                 .Where(x => x.ShoppingCartId.ContainsSubstring(friendlyBookingId, true))
-                .Include(x => x.Discount).ToList();
+                .Include(x => x.Discount).ToArray();
             var dates = _appDbContext.ShoppingCartPickUpDates
-                .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true))
-                .ToList();
+                .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true)).ToArray();
             var customLunches = _appDbContext.ShoppingCartCustomLunch
                 .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true))
-                .Include(x => x.Lunch).ToList();
+                .Include(x => x.Lunch).ToArray();
             var caterings = _appDbContext.ShoppingCartCaterings
                 .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true))
-                .Include(x => x.Lunch).ToList();
+                .Include(x => x.Lunch).ToArray();
             var products = _appDbContext.ShoppingCartCatalogProducts
                 .Where(x => x.ShoppingCartId.ContainsSubstring(friendlyBookingId, true))
                 .Include(x => x.Product)
-                .ThenInclude(x => x.PieDetail).ToList();
+                .ThenInclude(x => x.PieDetail).ToArray();
             var delivery = _appDbContext.DeliveryAddresses
-                .Where(x => x.ShoppingCartId.ContainsSubstring(friendlyBookingId, true)).ToList();
+                .Where(x => x.ShoppingCartId.ContainsSubstring(friendlyBookingId, true)).ToArray();
             var visits = _appDbContext.PageVisits
                 .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true))
                 .OrderByDescending(x => x.Visited)
-                .Include(x => x.User).ToList();
+                .Include(x => x.User).ToArray();
             var ips = _appDbContext.BookingRecords
-                .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true)).ToList();
+                .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true)).ToArray();
             var repeatedIps = _appDbContext.BookingRecords
-                .Where(x => ips.Select(y => y.Ip).Contains(x.Ip)).ToList();
+                .Where(x => ips.Select(y => y.Ip).Contains(x.Ip)).ToArray();
             var orders = _appDbContext.Orders
-                .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true)).ToList();
-            var users = visits.Where(x => x.User != null).Select(x => x.User).Distinct().ToList();
+                .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true));
+            var users = visits.Where(x => x.User != null).Select(x => x.User).Distinct().ToArray();
 
             SessionDetailsViewModel sessionDetails = new SessionDetailsViewModel()
             {
@@ -664,7 +675,7 @@ namespace RepoWebShop.Repositories
         {
             var shoppingCartCatalogItem =
                 _appDbContext.ShoppingCartCatalogProducts.Where(
-                    s => s.Product.ProductId == productId && s.ShoppingCartId == _cartSession.BookingId);
+                    s => s.Product.ProductId == productId && s.ShoppingCartId == _cartSession.BookingId).ToArray();
             _appDbContext.ShoppingCartCatalogProducts.RemoveRange(shoppingCartCatalogItem);
             _appDbContext.SaveChanges();
         }
@@ -672,7 +683,7 @@ namespace RepoWebShop.Repositories
         public IEnumerable<ShoppingCartComboCatering> GetShoppingCaterings(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
-            var result = AllShoppingCartCaterings().Where(x => x.BookingId == bookingId).ToList();
+            var result = AllShoppingCartCaterings().Where(x => x.BookingId == bookingId);
             return result;
         }
 
@@ -739,8 +750,7 @@ namespace RepoWebShop.Repositories
         public IEnumerable<ShoppingCartComboCatering> AllShoppingCartCaterings() => _appDbContext.ShoppingCartCaterings.Include(x => x.Lunch)
             .Include(x => x.Lunch.Miscellanea)
             .Include(x => x.Lunch.Items)
-            .ThenInclude(x => x.Product)
-            .ToList();
+            .ThenInclude(x => x.Product).ToArray();
 
         public int CountTrolleyObjects(string bookingId)
         {
@@ -765,23 +775,22 @@ namespace RepoWebShop.Repositories
         public void ClearCustomCateringFromCart()
         {
             var bookingId = GetSessionCartId();
-            _appDbContext.ShoppingCartCustomLunch.RemoveRange(_appDbContext.ShoppingCartCustomLunch.Where(x => x.BookingId == bookingId));
+            _appDbContext.ShoppingCartCustomLunch.RemoveRange(_appDbContext.ShoppingCartCustomLunch.Where(x => x.BookingId == bookingId).ToArray());
             _appDbContext.SaveChanges();
         }
 
         public IEnumerable<string> GetPendingBookings()
         {
-            var result = new List<string>();
-            result.AddRange(_appDbContext.ShoppingCartByIp.Select(x => x.BookingId));
-            result.AddRange(_appDbContext.ShoppingCartCatalogProducts.Select(x => x.ShoppingCartId));
-            result.AddRange(_appDbContext.ShoppingCartCaterings.Select(x => x.BookingId));
-            result.AddRange(_appDbContext.ShoppingCartComments.Select(x => x.ShoppingCartId));
-            result.AddRange(_appDbContext.ShoppingCartCustomLunch.Select(x => x.BookingId));
-            result.AddRange(_appDbContext.ShoppingCartData.Select(x => x.BookingId));
-            result.AddRange(_appDbContext.ShoppingCartDiscount.Select(x => x.ShoppingCartId));
-            result.AddRange(_appDbContext.ShoppingCartItems.Select(x => x.ShoppingCartId));
-            result.AddRange(_appDbContext.ShoppingCartPickUpDates.Select(x => x.BookingId));
-            return result.Distinct().OrderBy(x => x).ToList();
+            var result = _appDbContext.ShoppingCartByIp.Select(x => x.BookingId).ToArray().AsEnumerable();
+			result = result.Concat(_appDbContext.ShoppingCartCatalogProducts.Select(x => x.ShoppingCartId).ToArray());
+            result = result.Concat(_appDbContext.ShoppingCartCaterings.Select(x => x.BookingId).ToArray());
+            result = result.Concat(_appDbContext.ShoppingCartComments.Select(x => x.ShoppingCartId).ToArray());
+            result = result.Concat(_appDbContext.ShoppingCartCustomLunch.Select(x => x.BookingId).ToArray());
+            result = result.Concat(_appDbContext.ShoppingCartData.Select(x => x.BookingId).ToArray());
+            result = result.Concat(_appDbContext.ShoppingCartDiscount.Select(x => x.ShoppingCartId).ToArray());
+            result = result.Concat(_appDbContext.ShoppingCartItems.Select(x => x.ShoppingCartId).ToArray());
+			result = result.Concat(_appDbContext.ShoppingCartPickUpDates.Select(x => x.BookingId).ToArray());
+            return result.Distinct().OrderBy(x => x);
         }
 
         public void AddCuitToCart(string bookingId, long cuit)
@@ -816,6 +825,58 @@ namespace RepoWebShop.Repositories
 		public void AddCatalogItemToCart(int id)
 		{
 			AddCatalogItemToCart(_appDbContext.Products.First(x => x.ProductId == id), 1);
+		}
+
+		public async Task<ShoppingCartViewModel> GetShoppingCartViewModel()
+		{
+			var _highestPrepTime = GetPreparationTime(null);
+			var _Cuit = GetCuit(null);
+			var _Items = GetItems(null);
+			var _CatalogItems = GetCatalogItems(null);
+			var _CustomCatering = GetSessionLunchIfNotEmpty(null);
+			var _Caterings = GetShoppingCaterings(null);
+			var _ShoppingCartTotal = GetTotal(null);
+			var _ShopingCartTotalWithoutDiscount = GetTotalWithoutDiscount(null);
+			var _Comments = GetComments(null)?.Comments;
+			var _DeliveryAddress = GetDelivery(null);
+			var _PickupTime = GetTimeSlots(null);
+			var _Discount = GetDiscount(null);
+			var _PickupDate = _calendarRepository.GetPickupEstimate(_highestPrepTime);
+			var _PreparationTime = _highestPrepTime;
+			var _FriendlyBookingId = GetSessionCartId().Ending(6);
+			var _MercadoPagoId = _config.GetSection("MercadoPagoClientId").Value;
+			var _User = await _userManager.GetUser(_signInManager);
+			var _MaxArsForReservation = _maxArsForReservation;
+			var _MinArsForDelivery = _minimumArsForOrderDelivery;
+			var _MinimumDeliveryCharge = _minimumCharge;
+			var _DeliveryCostByBlock = _costByBlock;
+			var _DeliveryRadius = _deliveryRadius;
+
+			var shoppingCartViewModel = new ShoppingCartViewModel
+			{
+				Cuit = _Cuit,
+				Items = _Items,
+				CatalogItems = _CatalogItems,
+				CustomCatering = _CustomCatering,
+				Caterings = _Caterings,
+				PickupDate = _PickupDate,
+				ShoppingCartTotal = _ShoppingCartTotal,
+				PreparationTime = _PreparationTime,
+				FriendlyBookingId = _FriendlyBookingId,
+				ShopingCartTotalWithoutDiscount = _ShopingCartTotalWithoutDiscount,
+				Comments = _Comments,
+				MercadoPagoId = _MercadoPagoId,
+				User = _User,
+				DeliveryAddress = _DeliveryAddress,
+				MaxArsForReservation = _MaxArsForReservation,
+				MinArsForDelivery = _MinArsForDelivery,
+				MinimumDeliveryCharge = _MinimumDeliveryCharge,
+				DeliveryCostByBlock = _DeliveryCostByBlock,
+				DeliveryRadius = _DeliveryRadius,
+				PickupTime = _PickupTime,
+				Discount = _Discount
+			};
+			return shoppingCartViewModel;
 		}
 	}
 }

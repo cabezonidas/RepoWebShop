@@ -205,7 +205,7 @@ namespace RepoWebShop.Repositories
                 .Include(x => x.Items)
                 .ThenInclude(x => x.Product)
                 .ThenInclude(x => x.PieDetail)
-                .ToListAsync();
+                .ToArrayAsync();
 
             return result;
         }
@@ -215,8 +215,8 @@ namespace RepoWebShop.Repositories
             //SaveLunch();
             var lunch = await GetLunchByIdAsync(id);
             var newSessionLunch = _cartRepository.GetOrCreateSessionLunch();
-            var items = lunch.Items.Select(x => new LunchItem { Lunch = newSessionLunch.Lunch, Product = x.Product, Quantity = x.Quantity }).ToList();
-            var miscellanea = lunch.Miscellanea.Select(x => new LunchMiscellaneous { Lunch = newSessionLunch.Lunch, Description = x.Description, Price = x.Price, Quantity = x.Quantity }).ToList();
+            var items = lunch.Items.Select(x => new LunchItem { Lunch = newSessionLunch.Lunch, Product = x.Product, Quantity = x.Quantity });
+            var miscellanea = lunch.Miscellanea.Select(x => new LunchMiscellaneous { Lunch = newSessionLunch.Lunch, Description = x.Description, Price = x.Price, Quantity = x.Quantity });
             _appDbContext.LunchItems.AddRange(items);
             _appDbContext.LunchMiscellanea.AddRange(miscellanea);
             await _appDbContext.SaveChangesAsync();

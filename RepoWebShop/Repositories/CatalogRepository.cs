@@ -37,7 +37,7 @@ namespace RepoWebShop.Models
 
         public void ApplyPriceRise(decimal percentage, int roundTo)
         {
-            var products = _appDbContext.Products.ToList();
+            var products = _appDbContext.Products;
             foreach (var product in products)
             {
                 product.OldPrice = product.Price;
@@ -103,7 +103,7 @@ namespace RepoWebShop.Models
 
         public IEnumerable<Product> GetAll(Func<Product, bool> condition = null)
         {
-            var result = _appDbContext.Products.Where(x => condition == null || condition(x)).Include(x => x.PieDetail);
+            var result = _appDbContext.Products.Where(x => condition == null || condition(x)).Include(x => x.PieDetail).ToArray();
             return result;
         }
 
@@ -111,17 +111,15 @@ namespace RepoWebShop.Models
 
         public IEnumerable<ProductInflationEstimateViewModel> InflationEstimate(decimal percentage, int roundTo)
         {
-            var result = GetAll().Select(x => new ProductInflationEstimateViewModel { Product = x, EstimateOnline = x.Price.ApplyPercentage(percentage).RoundTo(roundTo), EstimateInStore = x.PriceInStore.ApplyPercentage(percentage).RoundTo(roundTo) }).ToList();
+            var result = GetAll().Select(x => new ProductInflationEstimateViewModel { Product = x, EstimateOnline = x.Price.ApplyPercentage(percentage).RoundTo(roundTo), EstimateInStore = x.PriceInStore.ApplyPercentage(percentage).RoundTo(roundTo) });
             return result;
         }
 
         public void RestorePrices()
         {
-            var products = _appDbContext.Products.ToList();
+            var products = _appDbContext.Products;
             foreach (var product in products)
-            {
                 product.Price = product.OldPrice ?? product.Price;
-            }
 
             _appDbContext.Products.UpdateRange(products);
             _appDbContext.SaveChanges();

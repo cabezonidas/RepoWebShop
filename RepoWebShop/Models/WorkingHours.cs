@@ -17,45 +17,64 @@ namespace RepoWebShop.Models
 
         public static IEnumerable<KeyValuePair<DateTime, TimeSpan>> GetOpenSlots(DateTime orderReady, IEnumerable<IWorkingHours> openHours, IEnumerable<PublicHoliday> holidays, IEnumerable<Vacation> vacations)
         {
-            List<DateTime> days = new List<DateTime>();
-            for (int i = 0; i < 365; i++)
-                days.Add(orderReady.Date.AddDays(i));
-            
-            List<DateTime> daysCountingVacation = new List<DateTime>();
+			IEnumerable<DateTime> days = Enumerable.Range(0, 365).Select(i => orderReady.Date.AddDays(i));
+
+
+			/*List<DateTime> daysCountingVacation = new List<DateTime>();
             foreach(var day in days)
             {
                 if (vacations.Count(x => x.StartDate.Date <= day && x.EndDate >= day) == 0)
                     daysCountingVacation.Add(day);
-            }
+            }*/
 
-            List<KeyValuePair<DateTime, TimeSpan>> preliminarResults = new List<KeyValuePair<DateTime, TimeSpan>>();
-            foreach (var day in daysCountingVacation)
+			IEnumerable<DateTime> daysCountingVacation = days.Where(day => vacations.Count(x => x.StartDate.Date <= day && x.EndDate >= day) == 0);
+
+            //List<KeyValuePair<DateTime, TimeSpan>> preliminarResults = new List<KeyValuePair<DateTime, TimeSpan>>();
+
+			var preliminarResultsGroups = daysCountingVacation.Select(day =>
+			{
+				var openHoursSlotsInHolidays = holidays.Where(x => x.Date.Date == day.Date);
+				if (openHoursSlotsInHolidays.Count() > 0)
+					return openHoursSlotsInHolidays.Select(x => new KeyValuePair<DateTime, TimeSpan>(day.Add(x.OpenHours.StartingAt), x.OpenHours.Duration));
+				else
+				{
+					var ordinaryHours = openHours.Where(x => x.DayId == (int)day.DayOfWeek).Select(x => new KeyValuePair<DateTime, TimeSpan>(day.Add(x.StartingAt), x.Duration));
+					return ordinaryHours;
+				}
+			}).ToArray();
+
+			IEnumerable<KeyValuePair<DateTime, TimeSpan>> preliminarResults = new KeyValuePair<DateTime, TimeSpan>[0];
+			for (int i = 0; i < preliminarResultsGroups.Count(); i++)
+				preliminarResults = preliminarResults.Concat(preliminarResultsGroups[i]);
+
+
+			foreach (var day in daysCountingVacation)
             {
                 var openHoursSlotsInHolidays = holidays.Where(x => x.Date.Date == day.Date);
                 if(openHoursSlotsInHolidays.Count() > 0)
                 {
                     var holidayHours = openHoursSlotsInHolidays.Select(x => new KeyValuePair<DateTime, TimeSpan>(day.Add(x.OpenHours.StartingAt), x.OpenHours.Duration));
-                    preliminarResults.AddRange(holidayHours);
+                    preliminarResults = preliminarResults.Concat(holidayHours);
                 }
                 else
                 {
                     var ordinaryHours = openHours.Where(x => x.DayId == (int)day.DayOfWeek)
                         .Select(x => new KeyValuePair<DateTime, TimeSpan>(day.Add(x.StartingAt), x.Duration));
-                    preliminarResults.AddRange(ordinaryHours);
+					preliminarResults = preliminarResults.Concat(ordinaryHours);
                 }
             }
 
             var onlyAfterOrIncludingOrderReady = preliminarResults.Where(x => x.Key.Add(x.Value) > orderReady);
 
-            var results = new List<KeyValuePair<DateTime, TimeSpan>>();
-            foreach(var item in onlyAfterOrIncludingOrderReady)
+            IEnumerable<KeyValuePair<DateTime, TimeSpan>> results = new KeyValuePair<DateTime, TimeSpan>[0];
+			foreach (var item in onlyAfterOrIncludingOrderReady)
                 if (item.Key <= orderReady)
                 {
                     TimeSpan offset = orderReady.Subtract(item.Key);
-                    results.Add(new KeyValuePair<DateTime, TimeSpan>(orderReady, item.Value.Subtract(offset)));
+					results = results.Append(new KeyValuePair<DateTime, TimeSpan>(orderReady, item.Value.Subtract(offset)));
                 }
                 else
-                    results.Add(item);
+					results = results.Append(item);
 
             return results;
         }
@@ -63,15 +82,15 @@ namespace RepoWebShop.Models
         public static IEnumerable<KeyValuePair<DateTime, TimeSpan>> GetCompatibleOpenSlots(IEnumerable<KeyValuePair<DateTime, TimeSpan>> openSlots, Discount discount, DateTime today)
         {
             var slots = openSlots.ToArray();
-            var results = new List<KeyValuePair<DateTime, TimeSpan>>();
-            for(int i = 0; i < slots.Length; i++)
+			IEnumerable<KeyValuePair<DateTime, TimeSpan>> results = new KeyValuePair<DateTime, TimeSpan>[0];
+			for (int i = 0; i < slots.Length; i++)
             {
                 DateTime result = slots[i].Key;
                 if (i == 0 && slots[i].Key > today.Date) //Esto es por si alguien usa un descuento a ultima hora, para que lo pueda usar, aunque se entregue al dia sgte.
                     result = today;
 
                 if(discount == null || Discount.IsValid(result, discount))
-                    results.Add(slots[i]);
+					results = results.Append(slots[i]);
 
                 if (discount != null && !Discount.IsValid(result, discount))
                     break;

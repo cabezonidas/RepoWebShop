@@ -87,8 +87,8 @@
 <div class="container" style="margin: auto; max-width: 600px;">
     <h2 class="text-center" style="margin-top: 50px; ">Iniciar Sesión</h2>
     @{
-        var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-        if (loginProviders.Count > 0)
+        var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync());
+        if (loginProviders.Count() > 0)
         {
             
                 <input type="hidden" asp-for="ReturnUrl" />

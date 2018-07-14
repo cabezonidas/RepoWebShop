@@ -30,7 +30,7 @@ namespace RepoWebShop.MvcControllers
         [HttpGet]
         public async Task<ViewResult> Index()
         {
-            var users = _appDbContext.Users.ToList();
+            var users = _appDbContext.Users.ToArray().AsEnumerable();
             var orders = await _orderRepository.GetAllAsync();
 
             var ordersWithoutUsers = orders.Where(x => x.Registration == null);

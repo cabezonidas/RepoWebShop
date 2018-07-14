@@ -200,30 +200,27 @@ namespace RepoWebShop.Models
         public decimal TotalInStore { get; set; }
 
         [BindNever]
-        public List<KeyValuePair<int, string>> ItemDetails
+        public IEnumerable<KeyValuePair<int, string>> ItemDetails
         {
             get
             {
-                var result = new List<KeyValuePair<int, string>>();
-                try
-                {
-                    var pies = OrderLines.Select(x => new KeyValuePair<int, string>(x.Amount, $"{x.Pie.PieDetail.Name} {x.Pie.Name}"));
-                    var products = OrderCatalogItems.Select(x => new KeyValuePair<int, string>(x.Amount, x.Product.DisplayName)).ToList();
-                    var miscellanea = new List<KeyValuePair<int, string>>();
-                    foreach (var cat in OrderCaterings)
-                    {
-                        products.AddRange(cat.Lunch.Items.Select(x => new KeyValuePair<int, string>(x.ItemCount * cat.Amount, x.Product.DisplayName)));
-                        miscellanea.AddRange(cat.Lunch.Miscellanea.Select(x => new KeyValuePair<int, string>(x.Quantity * cat.Amount, x.Description)));
-                    }
-                    products = products.GroupBy(x => x.Value).Select(group => new KeyValuePair<int, string>(group.Sum(x => x.Key), group.Key)).ToList();
-                    result.AddRange(pies);
-                    result.AddRange(products);
-                    result.AddRange(miscellanea);
-                    result = result.OrderByDescending(x => x.Key).ToList();
-                }
-                catch { }
+				// var result = new List<KeyValuePair<int, string>>();
+				IEnumerable<KeyValuePair<int, string>> allItems;
 
-                return result;
+                allItems = OrderLines.Select(x => new KeyValuePair<int, string>(x.Amount, $"{x.Pie.PieDetail.Name} {x.Pie.Name}"));
+                allItems = allItems.Concat(OrderCatalogItems.Select(x => new KeyValuePair<int, string>(x.Amount, x.Product.DisplayName)));
+                // var miscellanea = new List<KeyValuePair<int, string>>();
+                foreach (var cat in OrderCaterings)
+                {
+					allItems = allItems.Concat(cat.Lunch.Items.Select(x => new KeyValuePair<int, string>(x.ItemCount * cat.Amount, x.Product.DisplayName)));
+					allItems = allItems.Concat(cat.Lunch.Miscellanea.Select(x => new KeyValuePair<int, string>(x.Quantity * cat.Amount, x.Description)));
+                }
+                allItems = allItems.GroupBy(x => x.Value).Select(group => new KeyValuePair<int, string>(group.Sum(x => x.Key), group.Key));
+                //result.AddRange(pies);
+                //result.AddRange(allItems);
+                //result.AddRange(miscellanea);
+                //result = result.OrderByDescending(x => x.Key).ToList();
+				return allItems.OrderByDescending(x => x.Key);
             }
         }
 

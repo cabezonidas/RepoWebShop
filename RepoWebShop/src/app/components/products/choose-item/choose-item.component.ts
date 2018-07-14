@@ -18,7 +18,7 @@ export class ChooseItemComponent implements OnInit {
 
   addToCart(id: MouseEvent): void {
     this.bottomSheetRef.dismiss();
-    this.cart.addProductToCart(id).subscribe();
+    this.cart.addProductToCart(id);
   }
 
   ngOnInit() {

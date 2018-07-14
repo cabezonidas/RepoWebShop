@@ -2,6 +2,7 @@
 using RepoWebShop.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Interfaces
 {
@@ -68,5 +69,6 @@ namespace RepoWebShop.Interfaces
         ShoppingCartLunch GetSessionLunchIfNotEmpty(string bookingId = null);
         void ClearCustomCateringFromCart();
         decimal GetTotalInStore(string bookingId);
-    }
+		Task<ShoppingCartViewModel> GetShoppingCartViewModel();
+	}
 }

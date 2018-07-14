@@ -22,7 +22,7 @@ namespace RepoWebShop.MvcControllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult MercadoPago()
         {
             var Notification = ((JToken)new JsonSerializer().Deserialize<Object>(new JsonTextReader(new StreamReader(Request.Body)))).Root;

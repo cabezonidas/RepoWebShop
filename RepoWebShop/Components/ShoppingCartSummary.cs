@@ -23,7 +23,7 @@ namespace RepoWebShop.Components
             var shoppingCartViewModel = new ShoppingCartViewModel
             {
                 //ShoppingCart = _shoppingCart,
-                Items = _cartRepository.GetItems(null).ToList(),
+                Items = _cartRepository.GetItems(null),
                 ShoppingCartTotal = _cartRepository.GetProductsTotal(null)
             };
             return View(shoppingCartViewModel);

@@ -53,17 +53,17 @@ namespace RepoWebShop.MvcControllers
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
             return View(new LoginViewModel
             {
-                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList(),
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()),
                 ReturnUrl = returnUrl ?? (Request.Query.ContainsKey("returnUrl") ? Request.Query["returnUrl"].ToString() : string.Empty)
             });
         }
 
         
 
-        [HttpGet]
-        [AllowAnonymous]
-        [Route("[controller]/AccessDenied/{*returnUrl}")]
-        public IActionResult AccessDenied(string returnUrl) => RedirectToAction("Index", "Home");
+        //[HttpGet]
+        //[AllowAnonymous]
+        //[Route("[controller]/AccessDenied/{*returnUrl}")]
+        //public IActionResult AccessDenied(string returnUrl) => RedirectToAction("Index", "Home");
 
         [HttpGet]
         [AllowAnonymous]

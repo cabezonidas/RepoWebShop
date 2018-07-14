@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { CartService } from '../../../services/cart.service';
 import { ICartCatalogItem } from '../../../interfaces/icart-catalog-item';
 
@@ -14,8 +14,6 @@ export class CartComponent implements OnInit {
   products$: Array<ICartCatalogItem>;
 
   ngOnInit() {
-    this.cart.getProducts().subscribe(
-      products => this.products$ = products
-    );
+    this.cart.currentProducts.subscribe(products => this.products$ = products);
   }
 }

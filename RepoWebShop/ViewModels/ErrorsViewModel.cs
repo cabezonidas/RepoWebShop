@@ -8,8 +8,8 @@ namespace RepoWebShop.ViewModels
 {
     public class ErrorsViewModel
     {
-        public List<SiteException> Exceptions { get; internal set; }
+        public IEnumerable<SiteException> Exceptions { get; internal set; }
         public SessionDetailsViewModel SessionDetails { get; internal set; }
-        public List<BookingRecord> BookingRecords { get; internal set; }
+        public IEnumerable<BookingRecord> BookingRecords { get; internal set; }
     }
 }

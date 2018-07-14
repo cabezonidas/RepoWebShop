@@ -22,6 +22,6 @@ namespace RepoWebShop.ViewModels
 
         public List<string> Errors { get; set; }
 
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        public IEnumerable<AuthenticationScheme> ExternalLogins { get; set; }
     }
 }

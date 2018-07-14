@@ -107,19 +107,20 @@ namespace RepoWebShop.Models
 
         private void LogBooking(string bookingId)
         {
-            var bookingDetails = new BookingRecord
-            {
-                BookingId = bookingId,
-                Ip = _ctx?.Connection?.RemoteIpAddress?.ToString() ?? string.Empty,
-                Created = _calendarRepository.LocalTime()
-            };
+			// Very SLOW query
+            //var bookingDetails = new BookingRecord
+            //{
+            //    BookingId = bookingId,
+            //    Ip = _ctx?.Connection?.RemoteIpAddress?.ToString() ?? string.Empty,
+            //    Created = _calendarRepository.LocalTime()
+            //};
 
-            var detailCounts = _appDbContext.BookingRecords.Count(x => x.BookingId == bookingId && x.Ip == bookingDetails.Ip);
-            if(detailCounts == 0)
-            {
-                _appDbContext.BookingRecords.Add(bookingDetails);
-                _appDbContext.SaveChanges();
-            }
+            //var detailCounts = _appDbContext.BookingRecords.Count(x => x.BookingId == bookingId && x.Ip == bookingDetails.Ip);
+            //if(detailCounts == 0)
+            //{
+            //    _appDbContext.BookingRecords.Add(bookingDetails);
+            //    _appDbContext.SaveChanges();
+            //}
         }
     }
 }

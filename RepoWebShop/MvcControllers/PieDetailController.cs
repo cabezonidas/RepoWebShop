@@ -46,13 +46,13 @@ namespace RepoWebShop.MvcControllers
             var products = _catalogRepository
                 .GetAll(x => x.IsActive && x.IsOnSale && x.Category.ToLower() != "lunch" && x.Category.ToLower() != "appetizer");
 
-            Dictionary<int, string> times = _pieDetailRepository.TimeEstimations(products);
+            // Dictionary<int, string> times = _pieDetailRepository.TimeEstimations(products);
 
             return View(new PieDetailsListViewModel
             {
                 PieDetails = viewProducts,
                 CurrentCategory = "Todos los productos",
-                CatalogProducts = products.Select(x => _mapper.Map<Product, ProductEstimationViewModel>(x)).Select(x => { x.Estimation = times[x.PreparationTime]; return x; })
+                CatalogProducts = products.Select(x => _mapper.Map<Product, ProductEstimationViewModel>(x)).Select(x => { x.Estimation = "" /*times[x.PreparationTime]*/; return x; })
             });
         }
 
@@ -93,7 +93,7 @@ namespace RepoWebShop.MvcControllers
             var albumes = _flickrRepository.Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content });
             var pieDetailCreateViewModel = new PieDetailCreateViewModel()
             {
-                Albumes = albumes.ToList()
+                Albumes = albumes
             };
             return View(pieDetailCreateViewModel);
         }

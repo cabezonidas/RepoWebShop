@@ -42,7 +42,7 @@ namespace RepoWebShop.Repositories
             }
         }
 
-        public IEnumerable<Discount> GetActives() => _appDbContext.Discounts.Where(x => x.IsActive);
+        public IEnumerable<Discount> GetActives() => _appDbContext.Discounts.Where(x => x.IsActive).ToArray();
 
         public Discount FindByCode(string code) => GetActives().FirstOrDefault(x => x.Phrase.Trim().ToLower() == code.Trim().ToLower());
 

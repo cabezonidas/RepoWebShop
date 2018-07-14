@@ -30,18 +30,18 @@ namespace RepoWebShop.Repositories
             _ctx = contextAccessor;
         }
 
-        public Dictionary<int, string> TimeEstimations(IEnumerable<Product> products)
-        {
-            var timeEstimations = new Dictionary<int, string>();
-            foreach (var time in products.Select(x => x.PreparationTime).Distinct())
-                timeEstimations.Add(time, _calendar.GetSoonestPickupEstimateForUsers(time));
-            return timeEstimations;
-        }
+        //public Dictionary<int, string> TimeEstimations(IEnumerable<Product> products)
+        //{
+        //    var timeEstimations = new Dictionary<int, string>();
+        //    foreach (var time in products.Select(x => x.PreparationTime).Distinct())
+        //        timeEstimations.Add(time, _calendar.GetSoonestPickupEstimateForUsers(time));
+        //    return timeEstimations;
+        //}
 
         public PieDetailViewModel MapDbPieDetailToPieDetailViewModel(PieDetail dbPieDetail)
         {
             var products = GetChildren(dbPieDetail.PieDetailId);
-            var times = TimeEstimations(products);
+            // var times = TimeEstimations(products);
 
             var result = new PieDetailViewModel()
             {
@@ -51,13 +51,13 @@ namespace RepoWebShop.Repositories
                 Pies = _pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == dbPieDetail.PieDetailId)
             };
 
-            result.Products = products
-                .Select(x => _mapper.Map<Product, ProductEstimationViewModel>(x))
-                .Select(x =>
-                {
-                    x.Estimation = times[x.PreparationTime];
-                    return x;
-                });
+			result.Products = products
+				.Select(x => _mapper.Map<Product, ProductEstimationViewModel>(x));
+                //.Select(x =>
+                //{
+                //    x.Estimation = times[x.PreparationTime];
+                //    return x;
+                //});
 
             return result;
         }
@@ -132,6 +132,6 @@ namespace RepoWebShop.Repositories
             _appDbContext.SaveChanges();
         }
 
-        public IEnumerable<Product> GetChildren(int id) => _appDbContext.Products.Include(x => x.PieDetail).Where(x => x.PieDetail.PieDetailId == id && x.IsActive && x.IsOnSale).ToList();
+        public IEnumerable<Product> GetChildren(int id) => _appDbContext.Products.Include(x => x.PieDetail).Where(x => x.PieDetail.PieDetailId == id && x.IsActive && x.IsOnSale).ToArray();
     }
 }

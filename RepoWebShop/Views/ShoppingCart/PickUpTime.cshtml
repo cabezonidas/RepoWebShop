@@ -93,7 +93,7 @@
                                         <select name="state" id="hours">
                                             <option value="__blank__"></option>
                                             @{
-                                                List<DateTime> dates = Model.TimeSlots.GroupBy(x => x.Key.Date).Select(group => group.Key).ToList();
+                                                IEnumerable<DateTime> dates = Model.TimeSlots.GroupBy(x => x.Key.Date).Select(group => group.Key);
                                                 foreach (var date in dates)
                                                 {
                                                     var group = $"{PickUpTimeViewModel.SelectedDay(date)} {date.Day} de {PickUpTimeViewModel.SelectedMonth(date)}";

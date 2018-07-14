@@ -61,7 +61,7 @@ namespace RepoWebShop.MvcControllers
         {
             var result = new ShoppingCartViewModel
             {
-                Items = _cartRepository.GetItems(null).ToList()
+                Items = _cartRepository.GetItems(null)
             };
             return View(result);
         }
@@ -70,34 +70,34 @@ namespace RepoWebShop.MvcControllers
         [PageVisitAsync]
         public async Task<ViewResult> Index()
         {
+			ShoppingCartViewModel res = await _cartRepository.GetShoppingCartViewModel();
 
-            var highestPrepTime = _cartRepository.GetPreparationTime(null);
 
-            var shoppingCartViewModel = new ShoppingCartViewModel
-            {
-                Cuit = _cartRepository.GetCuit(null),
-                Items = _cartRepository.GetItems(null).ToList(),
-                CatalogItems = _cartRepository.GetCatalogItems(null).ToList(),
-                CustomCatering = _cartRepository.GetSessionLunchIfNotEmpty(null),
-                Caterings = _cartRepository.GetShoppingCaterings(null).ToList(),
-                PickupDate = _calendarRepository.GetPickupEstimate(highestPrepTime),
-                ShoppingCartTotal = _cartRepository.GetTotal(null),
-                PreparationTime = highestPrepTime,
-                FriendlyBookingId = _friendlyBookingId,
-                ShopingCartTotalWithoutDiscount = _cartRepository.GetTotalWithoutDiscount(null),
-                Comments = _cartRepository.GetComments(null)?.Comments,
-                MercadoPagoId = _config.GetSection("MercadoPagoClientId").Value,
-                User = await _userManager.GetUser(_signInManager),
-                DeliveryAddress = _cartRepository.GetDelivery(null),
-                MaxArsForReservation = _maxArsForReservation,
-                MinArsForDelivery = _minimumArsForOrderDelivery,
-                MinimumDeliveryCharge = _minimumCharge,
-                DeliveryCostByBlock = _costByBlock,
-                DeliveryRadius = _deliveryRadius,
-                PickupTime = _cartRepository.GetTimeSlots(null),
-                Discount = _cartRepository.GetDiscount(null)
-            };
-            return View(shoppingCartViewModel);
+			//var shoppingCartViewModel = new ShoppingCartViewModel
+			//{
+			//	Cuit = _Cuit,
+			//	Items = _Items,
+			//	CatalogItems = _CatalogItems,
+			//	CustomCatering = _CustomCatering,
+			//	Caterings = _Caterings,
+			//	PickupDate = _PickupDate,
+			//	ShoppingCartTotal = _ShoppingCartTotal,
+			//	PreparationTime = _PreparationTime,
+			//	FriendlyBookingId = _FriendlyBookingId,
+			//	ShopingCartTotalWithoutDiscount = _ShopingCartTotalWithoutDiscount,
+			//	Comments = _Comments,
+			//	MercadoPagoId = _MercadoPagoId,
+			//	User = _User,
+			//	DeliveryAddress = _DeliveryAddress,
+			//	MaxArsForReservation = _MaxArsForReservation,
+			//	MinArsForDelivery = _MinArsForDelivery,
+			//	MinimumDeliveryCharge = _MinimumDeliveryCharge,
+			//	DeliveryCostByBlock = _DeliveryCostByBlock,
+			//	DeliveryRadius = _DeliveryRadius,
+			//	PickupTime = _PickupTime,
+			//	Discount = _Discount
+			//};
+            return View(res);
         }
 
         [HttpGet]

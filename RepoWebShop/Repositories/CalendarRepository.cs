@@ -92,10 +92,10 @@ namespace RepoWebShop.Repositories
             var result = WorkingHours.GetPickUpDate(
                 LocalTime(),
                 hours,
-                _appDbContext.ProcessingHours.ToList(),
-                _appDbContext.OpenHours.ToList(),
-                _appDbContext.Holidays.ToList(),
-                _appDbContext.Vacations.ToList());
+                _appDbContext.ProcessingHours,
+                _appDbContext.OpenHours,
+                _appDbContext.Holidays,
+                _appDbContext.Vacations);
 
             var localTime = LocalTime();
             var offsetMinutes = 15 - (localTime.Minute % 15);
@@ -138,9 +138,9 @@ namespace RepoWebShop.Repositories
                 discount = null;
 
             var pickUpTime = GetPickupEstimate(preparationTime);
-            var openHours = _appDbContext.OpenHours.ToList();
-            var holidays = _appDbContext.Holidays.ToList();
-            var vacations = _appDbContext.Vacations.ToList();
+            var openHours = _appDbContext.OpenHours.ToArray().AsEnumerable();
+            var holidays = _appDbContext.Holidays.ToArray().AsEnumerable();
+            var vacations = _appDbContext.Vacations.ToArray().AsEnumerable();
 
             var openSlots = WorkingHours.GetOpenSlots(pickUpTime, openHours, holidays, vacations);
             var pickUpOptions = WorkingHours.GetCompatibleOpenSlots(openSlots, discount, LocalTime());
@@ -153,7 +153,7 @@ namespace RepoWebShop.Repositories
                 var date = GetPickupEstimate(prepTime);
                 var isToday = date.Date == LocalTime().Date;
                 var datevalue = isToday ? "<span style=\"color: green;\">hoy</span> a partir de las" : $"a partir del {FriendlyDate(date)} a las";
-                var text = $"Disponible {datevalue} {date.ToString("HH:ss")} hs.";
+                var text = $"Disponible {datevalue} {date.ToString("HH:mm")} hs.";
                 return text;
         }
 

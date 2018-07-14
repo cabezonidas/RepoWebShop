@@ -38,7 +38,7 @@ namespace RepoWebShop.ViewModels
         [Display(Name = "Ingredientes")]
         public string Ingredients { get; set; }
 
-        public List<SelectListItem> Albumes { set; get; } 
+        public IEnumerable<SelectListItem> Albumes { set; get; } 
 
         [BindNever]
         public IEnumerable<Product> Children { get; set; }

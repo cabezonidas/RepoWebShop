@@ -93,7 +93,6 @@ namespace RepoWebShop.ApiControllers
             var result = _catalogRepository.GetAll();
             result = result.OrderBy(x => x.DisplayName.TrimStart());
             result = result.OrderBy(x => x.Category);
-            result = result.ToList();
             return Ok(result);
         }
 

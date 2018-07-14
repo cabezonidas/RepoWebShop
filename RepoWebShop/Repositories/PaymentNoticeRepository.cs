@@ -42,7 +42,7 @@ namespace RepoWebShop.Repositories
 
         public IEnumerable<PaymentNotice> GetPayments()
         {
-            return _appDbContext.PaymentNotices.OrderByDescending(x => x.Id).ToList();
+            return _appDbContext.PaymentNotices.OrderByDescending(x => x.Id).ToArray();
         }
 
         public PaymentNotice GetPayment(int id)

@@ -88,7 +88,7 @@ namespace RepoWebShop.Models
 
         public async Task<IEnumerable<Order>> GetAllAsync(Func<Order, bool> condition = null)
         {
-            List<Order> orders = await _appDbContext.Orders
+            IEnumerable<Order> orders = await _appDbContext.Orders
                 .Where(x => (condition == null || condition(x)) && x.Status != "draft")
                 .Include(x => x.Factura)
                 .Include(x => x.Factura.InvoiceDetails)
@@ -100,7 +100,7 @@ namespace RepoWebShop.Models
                 .Include(x => x.Discount)
                 .Include(x => x.OrderCatalogItems)
                 .Include(x => x.OrderCaterings)
-                .ToListAsync();
+                .ToArrayAsync();
 
             foreach (var order in orders)
             {
@@ -192,7 +192,7 @@ namespace RepoWebShop.Models
 
             /**********************/
 
-            var shoppingLunches = _cartRepository.GetShoppingCaterings(order.BookingId).Select(x => _mapper.Map<ShoppingCartComboCatering, OrderCatering>(x)).ToList();
+            var shoppingLunches = _cartRepository.GetShoppingCaterings(order.BookingId).Select(x => _mapper.Map<ShoppingCartComboCatering, OrderCatering>(x)).ToArray();
             foreach (var lunch in shoppingLunches)
             {
                 lunch.Order = order;

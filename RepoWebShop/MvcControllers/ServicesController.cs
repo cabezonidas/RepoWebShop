@@ -87,7 +87,7 @@ namespace RepoWebShop.MvcControllers
             //var Response = (new JsonSerializer().Deserialize<Object>((new JsonTextReader(new StreamReader(body)))));
             //return View("Catering", access_token);
 
-            var result = _catalog.GetAll(x => x.Category.ToLower().Trim() == "lunch").ToList();
+            var result = _catalog.GetAll(x => x.Category.ToLower().Trim() == "lunch");
 
             return View("Catering", result);
         }
@@ -104,7 +104,7 @@ namespace RepoWebShop.MvcControllers
             //var access_token = await GetSharePointAccessTokenAsync();
             //return View("FullCatalog", access_token);
 
-            var result = _catalog.GetActive().Where(x => x.Category.ToLower().Trim() != "lunch").OrderBy(x => x.DisplayName).ToList();
+            var result = _catalog.GetActive().Where(x => x.Category.ToLower().Trim() != "lunch").OrderBy(x => x.DisplayName);
             return View("FullCatalog", result);
         }
 

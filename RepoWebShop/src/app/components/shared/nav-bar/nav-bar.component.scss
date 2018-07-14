@@ -1,6 +1,8 @@
 .nav {
-  border-radius: 5px;
-  background-color: #883636
+  top: 0;
+  position: fixed;
+  z-index:999;
+  background-color: #883636;
 }
 .icon {
     padding: 0 14px;

@@ -51,7 +51,7 @@ namespace RepoWebShop.Repositories
 
         public IEnumerable<PrintQueue> GetQueue()
         {
-            return _appDbContext.PrintQueue.Where(x => !x.Printing && !x.Completed.HasValue).ToList();
+            return _appDbContext.PrintQueue.Where(x => !x.Printing && !x.Completed.HasValue).ToArray();
         }
 
         public void SubmitQueue(IEnumerable<PrintQueue> printjobs)
@@ -66,7 +66,7 @@ namespace RepoWebShop.Repositories
 
         public void ClearQueue()
         {
-            var printjobs = _appDbContext.PrintQueue.Where(x => x.Printing && !x.Completed.HasValue).ToList();
+            var printjobs = _appDbContext.PrintQueue.Where(x => x.Printing && !x.Completed.HasValue).ToArray().AsEnumerable();
             var updates = printjobs.Select(x => {
                 x.Printing = false;
                 x.Completed = _calendar.LocalTime();

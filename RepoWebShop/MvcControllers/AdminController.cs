@@ -49,7 +49,7 @@ namespace RepoWebShop.MvcControllers
         [HttpGet]
         public IActionResult Contacts()
         {
-            var result = _appDbContext.Contacts.ToList();
+            var result = _appDbContext.Contacts;
             return View(result);
         }
 
@@ -96,11 +96,11 @@ namespace RepoWebShop.MvcControllers
         [HttpGet]
         public IActionResult Visits()
         {
-            var visits = _appDbContext.PageVisits.OrderByDescending(x => x.PageVisitId).Take(100).ToList();
+            var visits = _appDbContext.PageVisits.OrderByDescending(x => x.PageVisitId).Take(100);
 
-            var visitsByPath = visits.GroupBy(x => x.Path).Select(group => new KeyValuePair<string, int>(group.Key, group.Count())).OrderByDescending(x => x.Value).Take(100).ToList();
+            var visitsByPath = visits.GroupBy(x => x.Path).Select(group => new KeyValuePair<string, int>(group.Key, group.Count())).OrderByDescending(x => x.Value).Take(100);
 
-            var visitsByIp = visits.GroupBy(x => x.Ip).Select(group => new KeyValuePair<string, int>(group.Key, group.Count())).OrderByDescending(x => x.Value).Take(100).ToList();
+            var visitsByIp = visits.GroupBy(x => x.Ip).Select(group => new KeyValuePair<string, int>(group.Key, group.Count())).OrderByDescending(x => x.Value).Take(100);
 
             VisitsViewModel model = new VisitsViewModel
             {
@@ -115,15 +115,15 @@ namespace RepoWebShop.MvcControllers
         [HttpGet]
         public IActionResult Notifications()
         {
-            var result = _appDbContext.AdminNotifications.ToList();
+            var result = _appDbContext.AdminNotifications;
             return View(result);
         }
 
         [HttpGet]
         public IActionResult Errors()
         {
-            var exceptions = _appDbContext.Exceptions.OrderByDescending(x => x.SiteExceptionId).ToList();
-            var bookingRecords = _appDbContext.BookingRecords.Where(x => x.Created > _calendar.LocalTime().AddDays(-7)).Take(200).ToList();
+            var exceptions = _appDbContext.Exceptions.OrderByDescending(x => x.SiteExceptionId);
+            var bookingRecords = _appDbContext.BookingRecords.Where(x => x.Created > _calendar.LocalTime().AddDays(-7)).Take(100);
 
             SessionDetailsViewModel sessionDetails = _cart.SessionsDetails();
 
@@ -163,7 +163,7 @@ namespace RepoWebShop.MvcControllers
                 var pieDetailCreateViewModel = _mapper.Map<PieDetail, PieDetailCreateViewModel>(pieDetail);
                 var albumes = _flickrRepository.Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content });
                 
-                pieDetailCreateViewModel.Albumes = albumes.ToList();
+                pieDetailCreateViewModel.Albumes = albumes;
                 pieDetailCreateViewModel.Children = _pieDetailRepository.GetChildren(pieDetailCreateViewModel.PieDetailId);
                 return View(pieDetailCreateViewModel);
             }
@@ -218,7 +218,7 @@ namespace RepoWebShop.MvcControllers
             }
             
             var albumes = _flickrRepository.Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content });
-            pieDetailCreateViewModel.Albumes = albumes.ToList();
+            pieDetailCreateViewModel.Albumes = albumes;
             pieDetailCreateViewModel.Children = _pieDetailRepository.GetChildren(pieDetailCreateViewModel.PieDetailId);
 
             return View(pieDetailCreateViewModel);

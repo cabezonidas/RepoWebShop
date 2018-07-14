@@ -416,11 +416,11 @@ namespace RepoWebShop.Repositories
         }
         public async Task<IEnumerable<InvoiceData>> GetAll(Func<InvoiceData, bool> condition = null)
         {
-            return await _dbCtx.InvoiceData.Where(x => condition == null || condition(x))
-                    .Include(x => x.Caes)
-                    .Include(x => x.InvoiceDetails)
-                    .Include(x => x.Order)
-                    .ToListAsync();
+			return await _dbCtx.InvoiceData.Where(x => condition == null || condition(x))
+					.Include(x => x.Caes)
+					.Include(x => x.InvoiceDetails)
+					.Include(x => x.Order)
+					.ToArrayAsync();
         }
 
         public async Task<InvoiceData> GetById(int id)

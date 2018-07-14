@@ -7,7 +7,7 @@ namespace RepoWebShop.Interfaces
 {
     public interface IPieDetailRepository
     {
-        Dictionary<int, string> TimeEstimations(IEnumerable<Product> products);
+        // Dictionary<int, string> TimeEstimations(IEnumerable<Product> products);
         PieDetailViewModel MapDbPieDetailToPieDetailViewModel(PieDetail dbPieDetail);
         IEnumerable<PieDetail> PieDetails { get; }
         IEnumerable<PieDetail> PieDetailsWithChildren { get; }

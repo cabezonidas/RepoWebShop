@@ -33,8 +33,8 @@ namespace RepoWebShop.MvcControllers
         {
             var calendar = new CalendarViewModel()
             {
-                ProcessingHours = _appDbContext.ProcessingHours.OrderBy(x => x.StartingAt).ToList(),
-                OpenHours = _appDbContext.OpenHours.OrderBy(x => x.StartingAt).ToList()
+                ProcessingHours = _appDbContext.ProcessingHours.OrderBy(x => x.StartingAt),
+                OpenHours = _appDbContext.OpenHours.OrderBy(x => x.StartingAt)
             };
 
             return View(calendar);
@@ -69,7 +69,7 @@ namespace RepoWebShop.MvcControllers
         {
             var result = new OpenHoursViewModel()
             {
-                OpenHours = _appDbContext.OpenHours.Where(x => x.DayId >= 0 && x.DayId <= 7).OrderBy(x => x.StartingAt).ToList(),
+                OpenHours = _appDbContext.OpenHours.Where(x => x.DayId >= 0 && x.DayId <= 7).OrderBy(x => x.StartingAt),
                 PublicHolidays = _appDbContext.Holidays.Where(x => x.Date >= _calendarRepository.LocalTime().Date).Include(x => x.OpenHours),
                 Vacations = _appDbContext.Vacations.Where(x => x.EndDate >= _calendarRepository.LocalTime().Date)
             };
@@ -120,8 +120,8 @@ namespace RepoWebShop.MvcControllers
         [HttpGet]
         public IActionResult SpecialDates(int id)
         {
-            var holidays = _appDbContext.Holidays.Include(x => x.OpenHours).Include(x => x.ProcessingHours).ToList();
-            var vacations = _appDbContext.Vacations.ToList();
+            var holidays = _appDbContext.Holidays.Include(x => x.OpenHours).Include(x => x.ProcessingHours);
+            var vacations = _appDbContext.Vacations;
             SpecialDatesViewModel model = new SpecialDatesViewModel()
             {
                 Holidays = holidays,

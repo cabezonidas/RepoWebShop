@@ -33,32 +33,31 @@ namespace RepoWebShop.Repositories
 
         public IEnumerable<string> GetAllEmails()
         {
-            var emails = new List<string>();
-            emails.AddRange(_appDbContext.Orders.Select(x => x.MercadoPagoMail));
-            emails.AddRange(_appDbContext.Users.Select(x => x.Email));
-            emails.AddRange(_appDbContext.PaymentNotices.Select(x => x.MercadoPagoMail));
-            emails = emails.Where(x => x.IsValidEmail()).Select(x => x.ToLower().Trim()).Distinct().ToList();
+            var emails = _appDbContext.Orders.Select(x => x.MercadoPagoMail).ToArray().AsEnumerable();
+            emails = emails.Concat(_appDbContext.Users.Select(x => x.Email).ToArray().AsEnumerable());
+			emails = emails.Concat(_appDbContext.PaymentNotices.Select(x => x.MercadoPagoMail).ToArray().AsEnumerable());
+            emails = emails.Where(x => x.IsValidEmail()).Select(x => x.ToLower().Trim()).Distinct();
 
             var unsubscribed = _appDbContext.Unsubscribed.Select(x => x.Email.ToLower().Trim());
-            var result = emails.Where(x => x.IsValidEmail() && !unsubscribed.Contains(x)).ToList();
+            var result = emails.Where(x => x.IsValidEmail() && !unsubscribed.Contains(x));
 
             return result;
         }
 
         public IEnumerable<string> GetAllMobiles()
         {
-            var numbers = new List<string>();
-            numbers.AddRange(_appDbContext.Orders.Select(x => x.PhoneNumber));
-            numbers.AddRange(_appDbContext.Users.Select(x => x.PhoneNumber));
-            numbers.AddRange(_appDbContext.Users.Select(x => x.PhoneNumberDeclared));
-            numbers.AddRange(_appDbContext.PaymentNotices.Select(x => x.PhoneNumber));
+            var numbers = _appDbContext.Orders.Select(x => x.PhoneNumber).ToArray().AsEnumerable();
+			numbers = numbers.Concat(_appDbContext.Orders.Select(x => x.PhoneNumber).ToArray().AsEnumerable());
+			numbers = numbers.Concat(_appDbContext.Users.Select(x => x.PhoneNumber).ToArray().AsEnumerable());
+			numbers = numbers.Concat(_appDbContext.Users.Select(x => x.PhoneNumberDeclared).ToArray().AsEnumerable());
+			numbers = numbers.Concat(_appDbContext.PaymentNotices.Select(x => x.PhoneNumber).ToArray().AsEnumerable());
 
             return numbers.Where(x => !string.IsNullOrEmpty(x)).Distinct();
         }
 
         public IEnumerable<EmailMarketingTemplate> GetTemplates()
         {
-            return _appDbContext.EmailMarketingTemplates.OrderByDescending(x => x.Created).ToList();
+            return _appDbContext.EmailMarketingTemplates.OrderByDescending(x => x.Created).ToArray();
         }
 
 

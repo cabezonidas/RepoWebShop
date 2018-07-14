@@ -40,12 +40,12 @@ namespace RepoWebShop.ApiControllers
 			var viewProducts = _pieDetailRepository.PieDetailsWithChildren.Select(x =>
 			{
 				var products = _catalog.GetAll(y => y.IsActive && y.IsOnSale && y.PieDetailId == x.PieDetailId).Where(y => y.Category.ToLower() != "lunch" && y.Category.ToLower() != "appetizer");
-				Dictionary<int, string> times = _pieDetailRepository.TimeEstimations(products);
+				// Dictionary<int, string> times = _pieDetailRepository.TimeEstimations(products);
 
 				var items = products.Select(z =>
 				{
 					var item = _mapper.Map<Product, FeItem>(z);
-					item.PickUpAsHtml = times[item.PreparationTime];
+					item.PickUpAsHtml = ""; // times[item.PreparationTime];
 					return item;
 				});
 				var result = new FeProduct
