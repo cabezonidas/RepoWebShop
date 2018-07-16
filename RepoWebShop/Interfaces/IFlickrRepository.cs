@@ -1,4 +1,5 @@
-﻿using RepoWebShop.Models;
+﻿using RepoWebShop.FeModels;
+using RepoWebShop.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace RepoWebShop.Interfaces
         IEnumerable<PhotosetMetadata> Albums { get; }
         AlbumPictures GetAlbumPictures(long album);
         IEnumerable<AlbumPictures> GetAlbumsPictures(IEnumerable<long> albums);
-    }
+		_Album GetFeAlbumBy(long id);
+	}
 }

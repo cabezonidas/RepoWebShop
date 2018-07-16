@@ -1,7 +1,7 @@
 ﻿using AutoMapper;   
 using Microsoft.AspNetCore.Identity;
 using RepoWebShop.Extensions;
-using RepoWebShop.FrontEndModels;
+using RepoWebShop.FeModels;
 using RepoWebShop.ViewModels;
 using System;
 using System.Linq;
@@ -11,10 +11,19 @@ namespace RepoWebShop.Models
 {
     public class MappingProfile : Profile
     {
-        public MappingProfile()
+		public MappingProfile()
 		{
-			CreateMap<FeItem, Product>();
-			CreateMap<Product, FeItem>();
+			CreateMap<AlbumPictures, _Album>()
+				.ForMember(x => x.AlbumId, opt => opt.MapFrom(src => src.Photoset.Id))
+				.ForMember(x => x.Title, opt => opt.MapFrom(src => src.Photoset.Title))
+				.ForMember(x => x.PrimaryPicture, opt => opt.MapFrom(src => src.PrimaryPicture))
+				.ForMember(x => x.Photos, opt => opt.MapFrom(src => src.Pictures));
+
+
+
+			CreateMap<Product, _Item>();
+			CreateMap<PieDetail, _Product>()
+				.ForMember(x => x.FlickrAlbumId, opt => opt.MapFrom(src => src.FlickrAlbumId == 0 ? string.Empty : src.FlickrAlbumId.ToString()));
 
 			CreateMap<FECAEResponse.FECAECabResponse, InvoiceData>();
             CreateMap<FECAEResponse.FECAEDetResponse, Cae>();

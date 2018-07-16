@@ -37,10 +37,10 @@ namespace RepoWebShop.MvcControllers
             return View(homeViewModel);
         }
 
-        [HttpGet]
-        public IActionResult RedirectIndex()
-        {
-            return File("~/dist/index.html", "text/html");
-        }
+        //[HttpGet]
+        //public IActionResult RedirectIndex()
+        //{
+        //    return File("~/dist/index.html", "text/html");
+        //}
     }
 }

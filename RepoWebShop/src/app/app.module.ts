@@ -13,6 +13,7 @@ import { DetailsComponent } from './components/products/details/details.componen
 import { ChooseItemComponent } from './components/products/choose-item/choose-item.component';
 import { CateringComponent } from './components/catering/catering.component';
 import { CartComponent } from './components/shared/cart/cart.component';
+import { ProductCarouselPreviewComponent } from './components/shared/product-carousel-preview/product-carousel-preview.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { CartComponent } from './components/shared/cart/cart.component';
     CateringComponent,
     DetailsComponent,
     ChooseItemComponent,
-    CartComponent
+    CartComponent,
+    ProductCarouselPreviewComponent
   ],
   imports: [
     BrowserModule,

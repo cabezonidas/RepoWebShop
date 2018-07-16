@@ -1,10 +1,11 @@
-<mat-toolbar color="warn" role="heading" class="nav" >
-  <mat-toolbar-row>
-    <span>De las Artes</span>
-    <span class="spacer"></span>
-    <div *ngIf="products$.length > 0">
-      <div [@items]="products$.length" matBadge="{{products$.length}}" matBadgeColor="warn"></div>
-      <mat-icon class="icon" routerLink="/cart" >shopping_cart</mat-icon>
-    </div>
-  </mat-toolbar-row>
-</mat-toolbar>
+<div class='navbar-fixed'>
+  <mat-toolbar color="primary" role="heading" class="nav" >
+    <mat-toolbar-row>
+      <span>De las Artes</span>
+      <span class="spacer"></span>
+      <div *ngIf="products$.length">
+        <mat-icon class="icon" routerLink="/cart" [@items]="products$.length" matBadge="{{products$.length}}" matBadgeColor="accent">shopping_cart</mat-icon>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</div>

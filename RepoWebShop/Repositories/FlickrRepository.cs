@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.IO;
 using Newtonsoft.Json;
+using RepoWebShop.FeModels;
+using AutoMapper;
 
 namespace RepoWebShop.Repositories
 {
@@ -15,16 +17,19 @@ namespace RepoWebShop.Repositories
     {
         private readonly IConfiguration _config;
         private readonly string apiUrl = "https://api.flickr.com/services/rest/";
+        private readonly IMapper _mapper;
 
-        private PhotosetList albums;
+
+		private PhotosetList albums;
         private DateTime lastRefresh;
 
         private List<PhotosetPhotosRefresh> picturesUrls = new List<PhotosetPhotosRefresh>();
         //Lists of albums with corresponding img urls. This is a cache.       
 
-        public FlickrRepository(IConfiguration config)
+        public FlickrRepository(IConfiguration config, IMapper mapper)
         {
             _config = config;
+			_mapper = mapper;
             albums = Api_GetAlbums();
         }
 
@@ -79,6 +84,8 @@ namespace RepoWebShop.Repositories
             return albumPictures.PhotosetPhotos;
         }
 
+		public _Album GetFeAlbumBy(long id) => _mapper.Map<AlbumPictures, _Album>(GetAlbumPictures(id));
+
         /***************/
         private PhotosetList Api_GetAlbums()
         {
@@ -106,7 +113,9 @@ namespace RepoWebShop.Repositories
             var result = new JsonSerializer().Deserialize<AlbumPictures>(new JsonTextReader(new StreamReader(apiResult.GetResponseStream())));
             return result;
         }
-        private class PhotosetPhotosRefresh
+
+
+		private class PhotosetPhotosRefresh
         {
             public AlbumPictures PhotosetPhotos;
             public DateTime LastRefresh;

@@ -13,9 +13,9 @@ export class ProductsService {
   constructor(private http: HttpClient) { }
 
   getProducts() {
-    return this.http.get('/api/PieDetailData/Products') as Observable<Array<IProduct>>;
+    return this.http.get('/api/_products/all') as Observable<Array<IProduct>>;
   }
   getProduct(id) {
-    return this.http.get('/api/PieDetailData/Products/' + id);
+    return this.http.get('/api/_products/all/' + id);
   }
 }

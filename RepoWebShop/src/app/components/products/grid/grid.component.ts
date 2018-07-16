@@ -15,7 +15,9 @@ export class GridComponent implements OnInit {
 
   ngOnInit() {
     this.products.getProducts().subscribe(
-      products => this.products$ = products
+      products => {
+        this.products$ = products;
+      }
     );
   }
 }

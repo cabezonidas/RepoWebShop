@@ -1,4 +1,4 @@
-import { Component, OnChanges, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ICartCatalogItem } from '../../../interfaces/icart-catalog-item';
 import { trigger, style, transition, animate, keyframes, query, stagger } from '@angular/animations';
 
@@ -21,11 +21,6 @@ import { trigger, style, transition, animate, keyframes, query, stagger } from '
     ])
   ]
 })
-export class NavBarComponent implements OnChanges {
-
+export class NavBarComponent {
   @Input() products$: Array<ICartCatalogItem>;
-
-  ngOnChanges() {
-    console.log(this.products$);
-  }
 }

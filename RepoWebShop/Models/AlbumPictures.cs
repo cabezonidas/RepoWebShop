@@ -51,7 +51,7 @@ namespace RepoWebShop.Models
             {
                 try
                 {
-                    Photo photo = Pictures.First(x => x.IsPrimary == "1");
+                    Photo photo = Pictures.FirstOrDefault(x => x.IsPrimary == "1") ?? Pictures.First();
                     return $"https://farm{photo.Farm}.staticflickr.com/{photo.Server}/{photo.Id}_{photo.Secret}_";
                 }
                 catch

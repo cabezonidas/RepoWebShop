@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using RepoWebShop.Extensions;
+using RepoWebShop.FeModels;
 using RepoWebShop.Interfaces;
 using RepoWebShop.ViewModels;
 
@@ -173,5 +174,15 @@ namespace RepoWebShop.Models
             _appDbContext.Products.Update(prod);
             _appDbContext.SaveChanges();
         }
+
+		public IEnumerable<_Product> GroupByParent(IEnumerable<Product> items)
+		{
+			var _products = items.Select(x => x.PieDetail).Distinct().Select(x => {
+				var _product = _mapper.Map<PieDetail, _Product>(x);
+				_product.Items = items.Where(p => p.PieDetailId == x.PieDetailId).Select(i => _mapper.Map<Product, _Item>(i));
+				return _product;
+			});
+			return _products;
+		}
     }
 }

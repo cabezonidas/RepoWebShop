@@ -1,15 +1,43 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import "~materialize-css/sass/materialize.scss";
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import '~@angular/material/theming';
 
 @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Condensed:300,400,500');
 
-$my-typography: mat-typography-config(
+$repo-typography: mat-typography-config(
     $font-family: 'Noto Serif'
 );
+
+
+$dark-primary-text: rgba(black, 0.87);
+$light-primary-text: papayawhip;
+
+$mat-primary: (
+  500: #460b07,
+  A100: #a74343,
+  A200: #883636,
+  contrast: (
+    500: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $light-primary-text,
+  )
+);
+
+// default, lighter, and darker
+$repo-app-primary: mat-palette($mat-primary, A200, A100, 500);
+$repo-app-accent:  mat-palette($mat-purple);
+$repo-app-warn:    mat-palette($mat-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$repo-app-theme: mat-light-theme($repo-app-primary, $repo-app-accent, $repo-app-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($repo-app-theme);
     
-@include mat-core($my-typography);
+@include mat-core($repo-typography);
 
 body {
     background-color: papayawhip;

@@ -1,16 +1,12 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Extensions;
-using RepoWebShop.FrontEndModels;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoWebShop.ApiControllers
@@ -31,32 +27,6 @@ namespace RepoWebShop.ApiControllers
             _pieRepository = pieRepository;
             _flickrRepository = flickrRepository;
             _mapper = mapper;
-        }
-
-        [HttpGet]
-        [Route("Products")]
-        public IEnumerable<FeProduct> Products()
-        {
-			var viewProducts = _pieDetailRepository.PieDetailsWithChildren.Select(x =>
-			{
-				var products = _catalog.GetAll(y => y.IsActive && y.IsOnSale && y.PieDetailId == x.PieDetailId).Where(y => y.Category.ToLower() != "lunch" && y.Category.ToLower() != "appetizer");
-				// Dictionary<int, string> times = _pieDetailRepository.TimeEstimations(products);
-
-				var items = products.Select(z =>
-				{
-					var item = _mapper.Map<Product, FeItem>(z);
-					item.PickUpAsHtml = ""; // times[item.PreparationTime];
-					return item;
-				});
-				var result = new FeProduct
-				{
-					PieDetail = x,
-					PrimaryPicture = _flickrRepository.GetAlbumPictures(x.FlickrAlbumId).PrimaryPicture + (Request.IsMobile() ? "m" : "z") + ".jpg",
-					Items = items
-				};
-				return result;
-			});
-			return viewProducts;
         }
 
         [HttpGet]
