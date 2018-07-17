@@ -14,6 +14,10 @@ import { ChooseItemComponent } from './components/products/choose-item/choose-it
 import { CateringComponent } from './components/catering/catering.component';
 import { CartComponent } from './components/shared/cart/cart.component';
 import { ProductCarouselPreviewComponent } from './components/shared/product-carousel-preview/product-carousel-preview.component';
+import { FullCatalogComponent } from './components/shared/full-catalog/full-catalog.component';
+import { SoonestPickupComponent } from './components/shared/soonest-pickup/soonest-pickup.component';
+import { PriceComparisonComponent } from './components/shared/price-comparison/price-comparison.component';
+import { CartItemEditComponent } from './components/shared/cart-item-edit/cart-item-edit.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +29,11 @@ import { ProductCarouselPreviewComponent } from './components/shared/product-car
     DetailsComponent,
     ChooseItemComponent,
     CartComponent,
-    ProductCarouselPreviewComponent
+    ProductCarouselPreviewComponent,
+    FullCatalogComponent,
+    SoonestPickupComponent,
+    PriceComparisonComponent,
+    CartItemEditComponent
   ],
   imports: [
     BrowserModule,

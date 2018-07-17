@@ -5,9 +5,50 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material';
+import { MatListModule } from '@angular/material/list';
+import { MatDialogModule } from '@angular/material/dialog';
+import { CartItemEditComponent } from './components/shared/cart-item-edit/cart-item-edit.component';
 
 @NgModule({
-    imports: [MatButtonModule, MatCheckboxModule, MatToolbarModule, MatIconModule, MatCardModule, MatBottomSheetModule, MatBadgeModule],
-    exports: [MatButtonModule, MatCheckboxModule, MatToolbarModule, MatIconModule, MatCardModule, MatBottomSheetModule, MatBadgeModule],
+    imports: [
+        MatButtonModule,
+        MatCheckboxModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatCardModule,
+        MatBottomSheetModule,
+        MatBadgeModule,
+        MatProgressBarModule,
+        MatProgressSpinnerModule,
+        MatTableModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatListModule,
+        MatDialogModule
+    ],
+    exports: [
+        MatButtonModule,
+        MatCheckboxModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatCardModule,
+        MatBottomSheetModule,
+        MatBadgeModule,
+        MatProgressBarModule,
+        MatProgressSpinnerModule,
+        MatTableModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatListModule,
+        MatDialogModule
+    ],
+    entryComponents: [
+        CartItemEditComponent
+    ]
 })
 export class MaterialModule { }

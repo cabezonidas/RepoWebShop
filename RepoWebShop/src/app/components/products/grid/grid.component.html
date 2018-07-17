@@ -1,5 +1,10 @@
 <div style="text-align: center">
-    <div *ngFor='let product of products$' class='products'>
+  <h2>Catálogo</h2>
+  <mat-spinner *ngIf='!products$'> </mat-spinner>
+  <div *ngIf='products$'>
+    <div *ngFor='let product of productsPreview$' class='products'>
       <app-product-preview [product$]="product"></app-product-preview>
     </div>
+    <app-full-catalog [products$]="products$"> </app-full-catalog>
+  </div>
 </div>

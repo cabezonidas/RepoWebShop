@@ -1,3 +1,10 @@
-<div *ngFor='let product of products$'>
-  <div>{{ product.product.displayName }}</div>
-</div>
+<mat-list>
+  <h3 mat-subheader>Productos</h3>
+  <mat-list-item *ngFor="let item of products$">
+    <mat-icon mat-list-icon (click)="openDialog(item)">more_vert</mat-icon>
+    <h3 mat-line>{{item.product.displayName}}</h3>
+    <h3 mat-line>Cantidad: {{item.amount}}</h3>
+    <div>${{ item.amount * item.product.priceInStore }}</div>
+  </mat-list-item>
+  <!-- <mat-divider></mat-divider> -->
+</mat-list>

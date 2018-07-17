@@ -5,6 +5,6 @@
       <div>Porciones: {{ item.portions }}</div>
       <div [innerHTML]="item.pickUpAsHtml"></div>
     </td>
-    <td class="nuyButton"><button mat-raised-button (click)="addToCart(item.productId)" >Comprar</button></td>
+    <td class="nuyButton"><button mat-raised-button (click)="addToCart(item.productId)" color="primary" >Comprar</button></td>
   </tr>
 </table>

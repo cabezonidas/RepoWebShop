@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { ICartCatalogItem } from '../../../interfaces/icart-catalog-item';
 import { trigger, style, transition, animate, keyframes, query, stagger } from '@angular/animations';
 
 @Component({
@@ -22,5 +21,5 @@ import { trigger, style, transition, animate, keyframes, query, stagger } from '
   ]
 })
 export class NavBarComponent {
-  @Input() products$: Array<ICartCatalogItem>;
+  @Input() itemsLength$: number;
 }

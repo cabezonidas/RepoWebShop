@@ -13,9 +13,14 @@ export class AppComponent implements OnInit {
   constructor(private cart: CartService) { }
 
   products$: Array<ICartCatalogItem>;
+  itemsLength$: number;
 
   ngOnInit() {
-    this.cart.currentProducts.subscribe(products => this.products$ = products);
+    this.cart.currentProducts.subscribe(products => {
+      this.products$ = products;
+      this.itemsLength$ = 0;
+      this.products$.forEach(x => this.itemsLength$ += x.amount);
+    });
     this.cart.getProducts();
   }
 }

@@ -1,0 +1,16 @@
+<div class='displayPrice'>
+  <div class="content">
+    <div *ngIf="price < priceInStore" class="discount">
+      <div class='price'>
+        ${{ price }} Online
+      </div>
+      <div class="priceInStore">
+        ${{ priceInStore }} En Sucursal
+      </div>
+    </div>
+    
+    <div *ngIf="!(price < priceInStore)" class="normal">
+      <h4>${{ price }}</h4>
+    </div>
+  </div>
+</div>

@@ -1,3 +1,7 @@
 .products {
     display: inline;
 }
+mat-progress-bar, mat-spinner {
+    width: 60%;
+    margin: 100px auto;
+}

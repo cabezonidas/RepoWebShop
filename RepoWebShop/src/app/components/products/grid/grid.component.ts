@@ -10,6 +10,7 @@ import { IProduct } from '../../../interfaces/iproduct';
 export class GridComponent implements OnInit {
 
   products$: Array<IProduct>;
+  productsPreview$: Array<IProduct>;
 
   constructor(private products: ProductsService) { }
 
@@ -17,6 +18,7 @@ export class GridComponent implements OnInit {
     this.products.getProducts().subscribe(
       products => {
         this.products$ = products;
+        this.productsPreview$ = products.filter(x => x.flickrAlbumId);
       }
     );
   }

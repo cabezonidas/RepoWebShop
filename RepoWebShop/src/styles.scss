@@ -15,7 +15,7 @@ $light-primary-text: papayawhip;
 
 $mat-primary: (
   500: #460b07,
-  A100: #a74343,
+  A100: #c74646,
   A200: #883636,
   contrast: (
     500: $light-primary-text,
@@ -40,7 +40,8 @@ $repo-app-theme: mat-light-theme($repo-app-primary, $repo-app-accent, $repo-app-
 @include mat-core($repo-typography);
 
 body {
-    background-color: papayawhip;
-    margin: 0px;
+  font-family: 'Noto Serif';
+  background-color: papayawhip;
+  margin: 0px;
 }
 
