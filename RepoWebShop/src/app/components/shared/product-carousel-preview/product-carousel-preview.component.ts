@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, AfterViewChecked } from '@angular/core';
 import { IAlbum } from '../../../interfaces/ialbum';
 import { ImagesService } from '../../../services/images.service';
-import * as MobileDetect from 'mobile-detect';
+import * as MobileDetect from 'mobile-detect/mobile-detect';
 import * as M from 'materialize-css';
 
 @Component({

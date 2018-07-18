@@ -827,6 +827,11 @@ namespace RepoWebShop.Repositories
 			AddCatalogItemToCart(_appDbContext.Products.First(x => x.ProductId == id), 1);
 		}
 
+		public void RemoveCatalogItemFromCart(int id)
+		{
+			RemoveProductFromCart(_appDbContext.Products.First(x => x.ProductId == id));
+		}
+		
 		public async Task<ShoppingCartViewModel> GetShoppingCartViewModel()
 		{
 			var _highestPrepTime = GetPreparationTime(null);

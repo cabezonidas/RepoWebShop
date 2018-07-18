@@ -13,6 +13,7 @@ namespace RepoWebShop.Models
     {
 		public MappingProfile()
 		{
+			CreateMap<ApplicationUser, _User>();
 			CreateMap<AlbumPictures, _Album>()
 				.ForMember(x => x.AlbumId, opt => opt.MapFrom(src => src.Photoset.Id))
 				.ForMember(x => x.Title, opt => opt.MapFrom(src => src.Photoset.Title))

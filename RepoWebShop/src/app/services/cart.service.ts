@@ -14,10 +14,12 @@ export class CartService {
 
   constructor(private http: HttpClient) { }
 
-  addProductToCart = (id) => this.http.post('/api/ShoppingCartData/AddProductItem', id).subscribe(() => this.getProducts());
+  addProductToCart = (id) => this.http.post('/api/_shoppingcart/addproductitem', id).subscribe(() => this.getProducts());
+  removeProductFromCart = (id) => this.http.post('/api/_shoppingcart/removeproductitem', id).subscribe(() => this.getProducts());
+  clearProductFromCart = (id) => this.http.post('/api/_shoppingcart/clearproductitem', id).subscribe(() => this.getProducts());
 
   getProducts = () => {
-    (this.http.get('/api/ShoppingCartData/GetProductItems') as Observable<Array<ICartCatalogItem>>).subscribe(
+    (this.http.get('/api/_shoppingcart/getproductitems') as Observable<Array<ICartCatalogItem>>).subscribe(
         products => this.productsSource.next(products)
     );
   }

@@ -18,6 +18,7 @@ import { FullCatalogComponent } from './components/shared/full-catalog/full-cata
 import { SoonestPickupComponent } from './components/shared/soonest-pickup/soonest-pickup.component';
 import { PriceComparisonComponent } from './components/shared/price-comparison/price-comparison.component';
 import { CartItemEditComponent } from './components/shared/cart-item-edit/cart-item-edit.component';
+import { ExternalLoginComponent } from './components/account/external-login/external-login.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { CartItemEditComponent } from './components/shared/cart-item-edit/cart-i
     FullCatalogComponent,
     SoonestPickupComponent,
     PriceComparisonComponent,
-    CartItemEditComponent
+    CartItemEditComponent,
+    ExternalLoginComponent
   ],
   imports: [
     BrowserModule,

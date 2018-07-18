@@ -20,7 +20,8 @@ namespace RepoWebShop.Interfaces
         ShoppingCartComment GetComments(string bookingId);
         DeliveryAddress GetDelivery(string bookingId);
         Discount GetDiscount(string bookingId);
-        decimal GetTotalWithoutDiscount(string bookingId);
+		void RemoveCatalogItemFromCart(int id);
+		decimal GetTotalWithoutDiscount(string bookingId);
 
         decimal GetProductsTotal(string bookingId);
         decimal GetCateringsTotal(string bookingId);

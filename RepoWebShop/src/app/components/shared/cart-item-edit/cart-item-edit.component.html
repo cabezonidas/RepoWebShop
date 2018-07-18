@@ -3,19 +3,13 @@
     <h5 class='title'>{{ data.product.displayName }}</h5> 
     <div class='counter'>
       
-      <button mat-mini-fab color="primary">
+      <button mat-mini-fab color="primary" (click)="removeFromCart()">
         <mat-icon>arrow_left</mat-icon>
       </button>
       <button mat-mini-fab color="default" >{{ data.amount }}</button>
-      <button mat-mini-fab color="primary">
+      <button mat-mini-fab color="primary" (click)="addToCart()">
         <mat-icon>arrow_right</mat-icon>
       </button>
-      <div class='delete'>
-        <button mat-raised-button color="warn">
-          <mat-icon>delete</mat-icon>
-          <span>Eliminar</span>
-        </button>
-      </div>
     </div>
   </mat-dialog-content>
 </div>

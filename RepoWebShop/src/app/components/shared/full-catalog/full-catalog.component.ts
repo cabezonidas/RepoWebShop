@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { IItem } from '../../../interfaces/iitem';
 import { IProduct } from '../../../interfaces/iproduct';
 import { CartService } from '../../../services/cart.service';
-import { MatTableDataSource } from '../../../../../node_modules/@angular/material';
+import { MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-full-catalog',

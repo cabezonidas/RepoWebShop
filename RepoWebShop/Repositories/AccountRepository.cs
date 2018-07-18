@@ -84,6 +84,10 @@ namespace RepoWebShop.Repositories
             var user = await _userManager.GetUser(_signInManager);
             return user != null && await _userManager.IsInRoleAsync(user, "Administrator");
         }
+        public async Task<ApplicationUser> Current()
+        {
+            return await _userManager.GetUser(_signInManager);
+        }
         public async Task<string> SendValidationCode(ApplicationUser user, string phone)
         {
             var token = String.Concat(DateTime.Now.Ticks.ToString().ToArray().TakeLast(4));

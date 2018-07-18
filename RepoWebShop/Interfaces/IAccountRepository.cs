@@ -13,5 +13,6 @@ namespace RepoWebShop.Interfaces
         Task<bool> IsAdmin();
         Task<IdentityResult> CreateOrUpdateUserAsync(ExternalLoginInfo info, string email, string hostUrl);
         Task<IdentityResult> EnsureUserHasLoginAsync(ExternalLoginInfo info, string email);
-    }
+		Task<ApplicationUser> Current();
+	}
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CartService } from '../../../services/cart.service';
 import { ICartCatalogItem } from '../../../interfaces/icart-catalog-item';
-import { MatDialog } from '../../../../../node_modules/@angular/material';
+import { MatDialog } from '@angular/material';
 import { CartItemEditComponent } from '../cart-item-edit/cart-item-edit.component';
 
 @Component({
