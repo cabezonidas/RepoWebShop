@@ -28,33 +28,23 @@ namespace RepoWebShop.FeApi
 		}
 
 		[HttpGet]
-		[Route("ExternalLoginProviders")]
-		public async Task<IEnumerable<string>> ExternalLoginProviders()
+		[Route("Current")]
+		public async Task<_User> Current()
 		{
-			return (await _signInManager.GetExternalAuthenticationSchemesAsync()).Select(x => x.Name);
-		}
-
-
-		[HttpPost]
-		[Route("ExternalLogin/{provider}")]
-		public IActionResult ExternalLogin(string provider, [FromBody] string returnUrl = null)
-		{
-			var redirectUrl = Url.Action(nameof(ExternalLoginCallback), RouteData.Values["controller"].ToString(), new { returnUrl });
-			var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
-			var result = Challenge(properties, provider);
-			
-			return result;
+			return _mapper.Map<ApplicationUser, _User>(await _account.Current());
 		}
 
 		[HttpGet]
-		[Route("ExternalLoginCallback")]
-		public async Task<_User> ExternalLoginCallback([FromQuery] string returnUrl = null, [FromQuery] string remoteError = null)
+		[Route("IsAdmin")]
+		public async Task<bool> IsAdmin()
 		{
-			IEnumerable<string> errors = new string[0];
+			return await _account.IsAdmin();
+		}
 
-			if (remoteError != null)
-				throw new Exception(remoteError);
-
+		[HttpPost]
+		[Route("ExternalSignIn")]
+		public async Task<_User> ExternalSignIn()
+		{
 			var info = await _signInManager.GetExternalLoginInfoAsync();
 
 			await _account.CreateOrUpdateUserAsync(info, null, Request.HostUrl());

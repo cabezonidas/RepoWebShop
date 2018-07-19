@@ -19,6 +19,16 @@ import { SoonestPickupComponent } from './components/shared/soonest-pickup/soone
 import { PriceComparisonComponent } from './components/shared/price-comparison/price-comparison.component';
 import { CartItemEditComponent } from './components/shared/cart-item-edit/cart-item-edit.component';
 import { ExternalLoginComponent } from './components/account/external-login/external-login.component';
+import { LoginComponent } from './components/account/login/login.component';
+import { EmailComponent } from './components/account/email/email.component';
+import { SignupComponent } from './components/account/signup/signup.component';
+import { MembersComponent } from './components/account/members/members.component';
+
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { environment } from '../environments/environment';
+import { AuthGuardService } from './services/auth-guard.service';
+import { AdminGuardService } from './services/admin-guard.service';
 
 @NgModule({
   declarations: [
@@ -35,16 +45,22 @@ import { ExternalLoginComponent } from './components/account/external-login/exte
     SoonestPickupComponent,
     PriceComparisonComponent,
     CartItemEditComponent,
-    ExternalLoginComponent
+    ExternalLoginComponent,
+    LoginComponent,
+    EmailComponent,
+    SignupComponent,
+    MembersComponent
   ],
   imports: [
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [ AuthGuardService, AdminGuardService ],
   entryComponents: [ChooseItemComponent],
   bootstrap: [AppComponent]
 })
