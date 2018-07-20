@@ -81,9 +81,9 @@ namespace RepoWebShop.Models
             string remoteIp = _ctx?.Connection?.RemoteIpAddress?.ToString() ?? string.Empty;
             _shoppingCartId = Guid.NewGuid().ToString("D").ToUpper();
             
-            var newBooking = new ShoppingCartByIp { BookingId = _shoppingCartId, Ip = remoteIp };
-            _appDbContext.ShoppingCartByIp.Add(newBooking);
-            _appDbContext.SaveChanges();
+            //var newBooking = new ShoppingCartByIp { BookingId = _shoppingCartId, Ip = remoteIp };
+            //_appDbContext.ShoppingCartByIp.Add(newBooking);
+            //_appDbContext.SaveChanges();
 
             _ctx.Session.SetString("CartId", _shoppingCartId);
             //_cache.SetString("CartId", _shoppingCartId);
@@ -96,9 +96,9 @@ namespace RepoWebShop.Models
             _shoppingCartId = _ctx.Session.GetString("CartId") ?? Guid.NewGuid().ToString("D").ToUpper();
             //_shoppingCartId = _cache.GetString("CartId") ?? Guid.NewGuid().ToString("D").ToUpper();
 
-            var newBooking = new ShoppingCartByIp { BookingId = _shoppingCartId, Ip = remoteIp };
-            _appDbContext.ShoppingCartByIp.Add(newBooking);
-            _appDbContext.SaveChanges();
+            //var newBooking = new ShoppingCartByIp { BookingId = _shoppingCartId, Ip = remoteIp };
+            //_appDbContext.ShoppingCartByIp.Add(newBooking);
+            //_appDbContext.SaveChanges();
 
             _ctx.Session.SetString("CartId", _shoppingCartId);
             //_cache.SetString("CartId", _shoppingCartId);

@@ -96,17 +96,17 @@ namespace RepoWebShop.MvcControllers
         [HttpGet]
         public IActionResult Visits()
         {
-            var visits = _appDbContext.PageVisits.OrderByDescending(x => x.PageVisitId).Take(100);
+            //var visits = _appDbContext.PageVisits.OrderByDescending(x => x.PageVisitId).Take(100);
 
-            var visitsByPath = visits.GroupBy(x => x.Path).Select(group => new KeyValuePair<string, int>(group.Key, group.Count())).OrderByDescending(x => x.Value).Take(100);
+            //var visitsByPath = visits.GroupBy(x => x.Path).Select(group => new KeyValuePair<string, int>(group.Key, group.Count())).OrderByDescending(x => x.Value).Take(100);
 
-            var visitsByIp = visits.GroupBy(x => x.Ip).Select(group => new KeyValuePair<string, int>(group.Key, group.Count())).OrderByDescending(x => x.Value).Take(100);
+            //var visitsByIp = visits.GroupBy(x => x.Ip).Select(group => new KeyValuePair<string, int>(group.Key, group.Count())).OrderByDescending(x => x.Value).Take(100);
 
             VisitsViewModel model = new VisitsViewModel
             {
-                Visits = visits,
-                ByPath = visitsByPath,
-                ByIp = visitsByIp
+                Visits = new List<PageVisit>(),
+                ByPath = new List<KeyValuePair<string, int>>(),
+                ByIp = new List<KeyValuePair<string, int>>()
             };
 
             return View(model);

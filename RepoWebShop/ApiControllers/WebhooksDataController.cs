@@ -38,8 +38,7 @@ namespace RepoWebShop.ApiControllers
         {
             try
             {
-                if(_env.IsProduction())
-                    await CheckPayments();
+				await CheckPayments();
                 return Ok();
             }
             catch
@@ -51,16 +50,14 @@ namespace RepoWebShop.ApiControllers
         private async Task CheckPayments()
         {
             var payments = await _mp.SearchPaymentAsync(new Dictionary<string, string>(), 0, 0);
-            var totalPayments = Int32.Parse(((payments["response"] as Hashtable)["paging"] as Hashtable)["total"].ToString());
-            var chunckSize = 1000;
-            for (int i = 0; i < totalPayments / chunckSize; i++)
-                await CheckPaymentsChunck(totalPayments - ((i+1) * chunckSize), chunckSize);
-            var left = totalPayments % chunckSize;
-            if (left > 0)
-                await CheckPaymentsChunck(0, left);
-        }
 
-        private async Task CheckPaymentsChunck(int offset, int limit)
+			var totalPayments = Convert.ToUInt32(Int32.Parse(((payments["response"] as Hashtable)["paging"] as Hashtable)["total"].ToString()));
+			
+			foreach(var page in totalPayments.Paginate(100))
+				await CheckPaymentsChunck(page.Key, page.Value);
+		}
+
+        private async Task CheckPaymentsChunck(uint offset, uint limit)
         {
             var latestPayments = await LatestPayments(offset, limit);
             var pendingBookings = _shoppingCart.GetPendingBookings();
@@ -80,7 +77,7 @@ namespace RepoWebShop.ApiControllers
 
         private async Task<IEnumerable<KeyValuePair<string, string>>> LatestPayments(long offset, long limit)
         {
-            List<KeyValuePair<string, string>> result = new List<KeyValuePair<string, string>>();
+            var result = new List<KeyValuePair<string, string>>().ToArray().AsEnumerable();
 
             var latestPayments = await _mp.SearchPaymentAsync(new Dictionary<string, string>(), offset, limit);
             var paymentsResults = ((latestPayments["response"] as Hashtable)["results"] as ArrayList);
@@ -88,9 +85,9 @@ namespace RepoWebShop.ApiControllers
             {
                 string bookingId = (payment["collection"] as Hashtable)["external_reference"]?.ToString();
                 string id = (payment["collection"] as Hashtable)["id"]?.ToString();
-                result.Add(new KeyValuePair<string, string>(bookingId, id));
+				result = result.Append(new KeyValuePair<string, string>(bookingId, id));
             }
-            return result;
+            return result.Reverse(); // Order by most recent
         }
 
         [HttpGet]

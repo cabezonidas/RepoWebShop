@@ -3,6 +3,7 @@ using System;
 using RepoWebShop.Extensions;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace RepoWebShop.Tests
 {
@@ -19,6 +20,28 @@ namespace RepoWebShop.Tests
             Assert.AreEqual(10m.ApplyPercentage(10), 11m);
             Assert.AreEqual(20m.ApplyPercentage(15), 23m);
         }
+
+        [TestMethod]
+        public void Pagination()
+		{
+			var test0 = ((uint)2530).Paginate(0);
+			var test1 = ((uint)2530).Paginate(1);
+			var test2 = ((uint)2530).Paginate(100);
+			var test3 = ((uint)2530).Paginate(1000);
+			var test4 = ((uint)2530).Paginate(10000);
+
+			Assert.AreEqual(test0.Count(), 2530);
+			Assert.AreEqual(test1.Count(), 2530);
+			Assert.AreEqual(test2.Count(), 26);
+			Assert.AreEqual(test3.Count(), 3);
+			Assert.AreEqual(test4.Count(), 1);
+
+			Assert.AreEqual(test0.Select(x => x.Value).Sum(), 2530);
+			Assert.AreEqual(test1.Select(x => x.Value).Sum(), 2530);
+			Assert.AreEqual(test2.Select(x => x.Value).Sum(), 2530);
+			Assert.AreEqual(test3.Select(x => x.Value).Sum(), 2530);
+			Assert.AreEqual(test4.Select(x => x.Value).Sum(), 2530);
+		}
 
         [TestMethod]
         public void RoundTo5()

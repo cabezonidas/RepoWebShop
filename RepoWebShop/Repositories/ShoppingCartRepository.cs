@@ -590,17 +590,17 @@ namespace RepoWebShop.Repositories
                 .ThenInclude(x => x.PieDetail).ToArray();
             var delivery = _appDbContext.DeliveryAddresses
                 .Where(x => x.ShoppingCartId.ContainsSubstring(friendlyBookingId, true)).ToArray();
-            var visits = _appDbContext.PageVisits
-                .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true))
-                .OrderByDescending(x => x.Visited)
-                .Include(x => x.User).ToArray();
+            //var visits = _appDbContext.PageVisits
+            //    .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true))
+            //    .OrderByDescending(x => x.Visited)
+            //    .Include(x => x.User).ToArray();
             //var ips = _appDbContext.BookingRecords
             //    .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true)).ToArray();
             //var repeatedIps = _appDbContext.BookingRecords
             //    .Where(x => ips.Select(y => y.Ip).Contains(x.Ip)).ToArray();
             var orders = _appDbContext.Orders
                 .Where(x => x.BookingId.ContainsSubstring(friendlyBookingId, true));
-            var users = visits.Where(x => x.User != null).Select(x => x.User).Distinct().ToArray();
+            // var users = visits.Where(x => x.User != null).Select(x => x.User).Distinct().ToArray();
 
             SessionDetailsViewModel sessionDetails = new SessionDetailsViewModel()
             {
@@ -613,11 +613,11 @@ namespace RepoWebShop.Repositories
                 Products = products,
                 FriendlyBookingId = friendlyBookingId,
                 Delivery = delivery,
-                Visits = visits,
+                Visits = new List<PageVisit>(),
                 Ips = new List<BookingRecord>(), //ips.Union(repeatedIps).OrderByDescending(x => x.Created),
                 Orders = orders,
-                Users = users
-            };
+                Users = new List<ApplicationUser>()
+			};
             return sessionDetails;
         }
 
@@ -781,7 +781,8 @@ namespace RepoWebShop.Repositories
 
         public IEnumerable<string> GetPendingBookings()
         {
-            var result = _appDbContext.ShoppingCartByIp.Select(x => x.BookingId).ToArray().AsEnumerable();
+			// var result = _appDbContext.ShoppingCartByIp.Select(x => x.BookingId).ToArray().AsEnumerable();
+			var result = _appDbContext.ShoppingCartCatalogProducts.Select(x => x.ShoppingCartId).ToArray().AsEnumerable();
 			result = result.Concat(_appDbContext.ShoppingCartCatalogProducts.Select(x => x.ShoppingCartId).ToArray());
             result = result.Concat(_appDbContext.ShoppingCartCaterings.Select(x => x.BookingId).ToArray());
             result = result.Concat(_appDbContext.ShoppingCartComments.Select(x => x.ShoppingCartId).ToArray());
