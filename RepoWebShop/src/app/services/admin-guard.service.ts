@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '../../../node_modules/@angular/router';
+import { CanActivate, Router } from '@angular/router';
 import { AuthService } from './auth.service';
-import { Observable } from '../../../node_modules/rxjs';
+import { Observable } from 'rxjs';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
@@ -18,7 +18,6 @@ export class AdminGuardService implements CanActivate {
   canActivate(): Observable<boolean> {
     return this.authService.isAdmin()
       .do(isAdmin => {
-        console.log('1. Is Admin: ', isAdmin);
         if (!isAdmin) {
           this.router.navigate([ '/login' ]);
       }

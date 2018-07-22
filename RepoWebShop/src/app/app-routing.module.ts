@@ -15,7 +15,7 @@ import { AdminGuardService } from './services/admin-guard.service';
 
 const routes: Routes = [
   { path: '', redirectTo: '/products', pathMatch: 'full' },
-  { path: 'products', component: GridComponent, canActivate: [AdminGuardService] },
+  { path: 'products', component: GridComponent },
   { path: 'cart', component: CartComponent },
   { path: 'external-login', component: ExternalLoginComponent },
   { path: 'products/:id', component: DetailsComponent },

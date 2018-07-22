@@ -2,7 +2,8 @@ import { Component, OnInit, HostBinding } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
 import { moveIn } from '../router.animations';
-import * as firebase from 'firebase/app';
+import * as firebase from 'firebase';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -13,12 +14,10 @@ import * as firebase from 'firebase/app';
 export class LoginComponent implements OnInit {
 
   error: any;
-  constructor(public afAuth: AngularFireAuth, private router: Router) {
-    // this.af.auth.subscribe(auth => {
-    //   if (auth) {
-    //     this.router.navigateByUrl('/members');
-    //   }
-    // });
+  constructor(public afAuth: AngularFireAuth, private router: Router, private auth: AuthService) {
+      // if (user) {
+      //   this.router.navigateByUrl('/members');
+      // }
   }
 
   @HostBinding('@moveIn') role = '';
@@ -36,7 +35,9 @@ export class LoginComponent implements OnInit {
   }
 
   loginSuccess = () => {
-    this.router.navigate(['/members']);
+    this.afAuth.user.subscribe(user$ => {
+      this.auth.socialLogin(user$);
+    });
   }
 
   loginError = (err) => this.error = err;

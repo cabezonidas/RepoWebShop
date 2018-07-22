@@ -13,6 +13,28 @@ namespace RepoWebShop.Models
     {
 		public MappingProfile()
 		{
+			CreateMap<_ProviderData, ApplicationUser>()
+				.ForMember(x => x.UserName, opt => {
+					if (opt.DestinationMember != null)
+						opt.UseDestinationValue();
+					else
+						opt.MapFrom(src => src.Email);
+				})
+				.ForMember(x => x.Email, opt => opt.MapFrom(src => src.Email))
+				.ForMember(x => x.FirstName, opt => opt.ResolveUsing(src => src.DisplayName.Split(' ').FirstOrDefault()))
+				.ForMember(x => x.LastName, opt => opt.ResolveUsing(src => {
+					var names = src.DisplayName.Split(' ');
+					var firstNameLength = names.FirstOrDefault()?.Length ?? 0;
+					return names.Count() > 1 && firstNameLength > 0 && src.DisplayName.Length > firstNameLength ? src.DisplayName.Substring(firstNameLength).TrimStart() : string.Empty;
+				}))
+				.ForMember(x => x.FacebookNameIdentifier, opt => opt.ResolveUsing(src => {
+					return src.ProviderId.ToLower() == "facebook" ? src.Uid : null;
+				}))
+				.ForMember(x => x.GoogleNameIdentifier, opt => opt.ResolveUsing(src => {
+					return src.ProviderId.ToLower() == "google" ? src.Uid : null;
+				}));
+
+
 			CreateMap<ApplicationUser, _User>();
 			CreateMap<AlbumPictures, _Album>()
 				.ForMember(x => x.AlbumId, opt => opt.MapFrom(src => src.Photoset.Id))

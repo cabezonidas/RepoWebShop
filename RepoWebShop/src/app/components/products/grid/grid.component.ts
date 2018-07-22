@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductsService } from '../../../services/products.service';
 import { IProduct } from '../../../interfaces/iproduct';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-products',
@@ -12,7 +13,7 @@ export class GridComponent implements OnInit {
   products$: Array<IProduct>;
   productsPreview$: Array<IProduct>;
 
-  constructor(private products: ProductsService) { }
+  constructor(private products: ProductsService, private auth: AuthService) { }
 
   ngOnInit() {
     this.products.getProducts().subscribe(

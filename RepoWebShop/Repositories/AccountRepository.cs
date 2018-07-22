@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using RepoWebShop.Extensions;
+using RepoWebShop.FeModels;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
@@ -49,7 +50,26 @@ namespace RepoWebShop.Repositories
             }
         }
 
-        private async Task<IdentityResult> CreateFromExternalLoginInfoAsync(ExternalLoginInfo info, string email, string hostUrl)
+		public async Task EnsureSocialLoginAsync(_ProviderData info)
+		{
+			var user = _userManager.Users
+				.FirstOrDefault(x => x.GoogleNameIdentifier == info.Uid || x.FacebookNameIdentifier == info.Uid || x.Email == info.Email);
+
+			var appUser = _mapper.Map(info, user ?? new ApplicationUser());
+
+			if (user == null)
+				await _userManager.CreateAsync(appUser);
+			else
+				await _userManager.UpdateAsync(appUser);
+
+			var result = await _userManager.FindByEmailAsync(appUser.Email);
+			var logins = await _userManager.GetLoginsAsync(result);
+
+			if (logins.Count(x => x.LoginProvider.ToLower() == info.ProviderId.ToLower()) == 0)
+				await _userManager.AddLoginAsync(user, new UserLoginInfo(info.ProviderId, info.Uid, info.DisplayName));
+		}
+
+		private async Task<IdentityResult> CreateFromExternalLoginInfoAsync(ExternalLoginInfo info, string email, string hostUrl)
         {
             var newUser = _mapper.Map<ExternalLoginInfo, ApplicationUser>(info);
             if (String.IsNullOrEmpty(newUser.Email))
@@ -60,9 +80,9 @@ namespace RepoWebShop.Repositories
             if (result.Succeeded && !newUser.EmailConfirmed)
                 await _emailRepository.SendEmailActivationAsync(newUser);
             return result;
-        }
+		}
 
-        public async Task<IdentityResult> EnsureUserHasLoginAsync(ExternalLoginInfo info, string email)
+		public async Task<IdentityResult> EnsureUserHasLoginAsync(ExternalLoginInfo info, string email)
         {
             var user = _userManager.GetUserByExternalLogin(info);
             if (user != null)

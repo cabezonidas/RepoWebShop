@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using RepoWebShop.FeModels;
 using RepoWebShop.Models;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,6 @@ namespace RepoWebShop.Interfaces
         Task<IdentityResult> CreateOrUpdateUserAsync(ExternalLoginInfo info, string email, string hostUrl);
         Task<IdentityResult> EnsureUserHasLoginAsync(ExternalLoginInfo info, string email);
 		Task<ApplicationUser> Current();
+		Task EnsureSocialLoginAsync(_ProviderData userData);
 	}
 }

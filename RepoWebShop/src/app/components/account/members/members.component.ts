@@ -1,8 +1,8 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
-import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
 import { moveIn, fallIn, moveInLeft } from '../router.animations';
-import { Observable } from '../../../../../node_modules/rxjs';
+import { AuthService } from '../../../services/auth.service';
+import { IAppUser } from '../../../interfaces/iapp-user';
 
 @Component({
   selector: 'app-other',
@@ -13,23 +13,23 @@ import { Observable } from '../../../../../node_modules/rxjs';
 
 export class MembersComponent implements OnInit {
 
-  user: firebase.User;
+  user: IAppUser;
+  state = '';
 
-  constructor(public afAuth: AngularFireAuth, private router: Router) {
-    this.afAuth.user.subscribe(user$ => {
-      this.user = user$;
-    });
-  }
+  constructor(private router: Router, private auth: AuthService) { }
 
   @HostBinding('@moveIn') role = '';
 
   logout() {
-    this.afAuth.auth.signOut();
-    this.router.navigateByUrl('/login');
+    this.auth.logOut().subscribe(() => {
+      this.router.navigateByUrl('/login');
+    });
   }
 
-
   ngOnInit() {
+    this.auth.user.subscribe(user$ => {
+      this.user = user$;
+    });
   }
 
 }
