@@ -13,6 +13,8 @@ import { MatInputModule } from '@angular/material';
 import { MatListModule } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CartItemEditComponent } from './components/shared/cart-item-edit/cart-item-edit.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
     imports: [
@@ -29,7 +31,9 @@ import { CartItemEditComponent } from './components/shared/cart-item-edit/cart-i
         MatFormFieldModule,
         MatInputModule,
         MatListModule,
-        MatDialogModule
+        MatDialogModule,
+        MatStepperModule,
+        MatSelectModule
     ],
     exports: [
         MatButtonModule,
@@ -45,7 +49,9 @@ import { CartItemEditComponent } from './components/shared/cart-item-edit/cart-i
         MatFormFieldModule,
         MatInputModule,
         MatListModule,
-        MatDialogModule
+        MatDialogModule,
+        MatStepperModule,
+        MatSelectModule
     ],
     entryComponents: [
         CartItemEditComponent

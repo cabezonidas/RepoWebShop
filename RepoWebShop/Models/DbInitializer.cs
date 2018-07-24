@@ -13,7 +13,11 @@ namespace RepoWebShop.Models
     {
         public static async Task Seed(IServiceProvider serviceProvider)
         {
-            await CreateUserWithRoleAsync(serviceProvider, "Administrator", "sebastian.scd@gmail.com", "Sebastián", "Cabeza");
+			if (serviceProvider.GetRequiredService<IHostingEnvironment>().IsDevelopment())
+				await CreateUserAsync(serviceProvider, "vagancia@gmail.com", "Guido", "Declich", "banana123");
+			else
+				await CreateUserWithRoleAsync(serviceProvider, "Administrator", "sebastian.scd@gmail.com", "Sebastián", "Cabeza");
+
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "fiorelcd@gmail.com", "Fiorella", "Cabeza");
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "marcelardec@gmail.com", "Marcela", "Declich");
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "cabeza1961@gmail.com", "Claudio", "Cabeza");
@@ -56,5 +60,24 @@ namespace RepoWebShop.Models
             if (!await userManager.IsInRoleAsync(user, role))
                 await userManager.AddToRoleAsync(user, role);
         }
-    }
+
+		private static async Task CreateUserAsync(IServiceProvider serviceProvider, string email, string name, string lastname, string password)
+		{
+			var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+			ApplicationUser user = await userManager.FindByEmailAsync(email);
+			if (user == null)
+			{
+				user = new ApplicationUser
+				{
+					UserName = email,
+					LastName = lastname,
+					Email = email,
+					EmailConfirmed = true,
+					FirstName = name
+				};
+				await userManager.CreateAsync(user, password);
+			}
+		}
+	}
 }

@@ -1,0 +1,28 @@
+<div class="form-container" *ngIf="user">
+    <mat-card>
+      <mat-card-title [@fallIn]="state">
+        ¡Hola {{ user.firstName }}!
+      </mat-card-title>
+      <mat-card-content [@moveInLeft]="state">
+        Primero que nada, ¡gracias por registrarte con nosotros!
+      </mat-card-content>
+      <mat-card-content>
+        Para que puedas aprovechar nuestros descuentos con reservas online todavía necesitamos que nos digas tu teléfono.
+      </mat-card-content>
+      <form [formGroup]="mobileForm">
+          <mat-form-field>
+            <mat-label>País</mat-label>
+            <mat-select color="primary" #fontSize value="54" formControlName="country" >
+              <mat-option value="54">Argentina (+54)</mat-option>
+              <mat-option value="55">Brasil (+55)</mat-option>
+              <mat-option value="64">New Zealand (+64)</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Teléfono</mat-label>
+            <input matInput placeholder="11 2777 8899" formControlName="mobile" name="tel" required/>
+          </mat-form-field>
+      </form>
+      
+    </mat-card>
+  </div>

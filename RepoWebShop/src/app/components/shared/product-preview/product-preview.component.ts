@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { MatBottomSheet, MatBottomSheetRef } from '@angular/material';
+import { Component, Input, HostBinding } from '@angular/core';
+import { MatBottomSheet } from '@angular/material';
 import { IProduct } from '../../../interfaces/iproduct';
 import { IItem } from '../../../interfaces/iitem';
 import { ChooseItemComponent } from '../../products/choose-item/choose-item.component';
@@ -8,7 +8,6 @@ import { ChooseItemComponent } from '../../products/choose-item/choose-item.comp
   selector: 'app-product-preview',
   templateUrl: './product-preview.component.html',
   styleUrls: ['./product-preview.component.scss']
-
 })
 export class ProductPreviewComponent {
 

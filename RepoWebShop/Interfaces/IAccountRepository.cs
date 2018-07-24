@@ -16,5 +16,8 @@ namespace RepoWebShop.Interfaces
         Task<IdentityResult> EnsureUserHasLoginAsync(ExternalLoginInfo info, string email);
 		Task<ApplicationUser> Current();
 		Task EnsureSocialLoginAsync(_ProviderData userData);
+		Task SetCacheRegistration(_RegisterEmail registration);
+		Task<_RegisterEmail> GetCacheRegistration(string email);
+		Task<_User> RegisterUser(_RegisterEmail userCache);
 	}
 }

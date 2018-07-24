@@ -1,7 +1,7 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
-import { moveIn } from '../router.animations';
+import { moveIn } from '../../../animations/router.animations';
 import * as firebase from 'firebase';
 import { AuthService } from '../../../services/auth.service';
 
@@ -14,11 +14,9 @@ import { AuthService } from '../../../services/auth.service';
 export class LoginComponent implements OnInit {
 
   error: any;
-  constructor(public afAuth: AngularFireAuth, private router: Router, private auth: AuthService) {
-      // if (user) {
-      //   this.router.navigateByUrl('/members');
-      // }
-  }
+  returnUrl = '';
+
+  constructor(public afAuth: AngularFireAuth, private router: Router, private auth: AuthService) { }
 
   @HostBinding('@moveIn') role = '';
 
@@ -35,14 +33,21 @@ export class LoginComponent implements OnInit {
   }
 
   loginSuccess = () => {
-    this.afAuth.user.subscribe(user$ => {
-      this.auth.socialLogin(user$);
-    });
+    this.afAuth.user.subscribe(user$ => this.auth.socialLogin(user$), this.loginError);
   }
 
-  loginError = (err) => this.error = err;
+  loginError = (err) => {
+    this.error = 'No se pudo iniciar sesión. Intenta con otro medio.';
+    console.warn(err);
+  }
 
   ngOnInit() {
+    this.auth.returnUrl.subscribe(url => this.returnUrl = url);
+    this.auth.user.subscribe(user$ => {
+      if (user$) {
+        this.router.navigate([ this.returnUrl ? this.returnUrl : '/members' ]);
+      }
+    });
   }
 
 }

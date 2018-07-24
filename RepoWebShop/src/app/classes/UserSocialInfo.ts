@@ -11,10 +11,10 @@ export class UserSocialInfo {
         this.uid = provider.uid;
         switch (provider.providerId) {
         case 'facebook.com':
-            this.providerId = 'facebook';
+            this.providerId = 'Facebook';
             break;
         case 'google.com':
-            this.providerId = 'google';
+            this.providerId = 'Google';
             break;
         default:
             this.providerId = provider.providerId;

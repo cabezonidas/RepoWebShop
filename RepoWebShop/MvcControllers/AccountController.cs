@@ -14,6 +14,7 @@ using System.Security.Cryptography;
 using RepoWebShop.Extensions;
 using System.Security.Claims;
 using RepoWebShop.Filters;
+using RepoWebShop.FeModels;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -88,7 +89,16 @@ namespace RepoWebShop.MvcControllers
             return View(result);
         }
 
+        [HttpGet]
         [AllowAnonymous]
+        [Route("[Controller]/EmailCodeVerificationBody/{email}")]
+        public async Task<IActionResult> EmailCodeVerificationBody(string email)
+        {
+			_RegisterEmail emailReg = await _accountRepository.GetCacheRegistration(email);            
+            return View(nameof(EmailCodeVerificationBody), emailReg.FirstName);
+        }
+
+		[AllowAnonymous]
         [Route("[Controller]/ResetNewPassword/{userId}/{hash}")]
         [HttpGet]
         public IActionResult ResetNewPassword(string userId, string hash)

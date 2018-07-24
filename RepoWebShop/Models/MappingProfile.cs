@@ -13,26 +13,36 @@ namespace RepoWebShop.Models
     {
 		public MappingProfile()
 		{
-			CreateMap<_ProviderData, ApplicationUser>()
-				.ForMember(x => x.UserName, opt => {
-					if (opt.DestinationMember != null)
-						opt.UseDestinationValue();
-					else
-						opt.MapFrom(src => src.Email);
-				})
+			CreateMap<_RegisterEmail, ApplicationUser>()
+				.ForMember(x => x.FirstName, opt => opt.MapFrom(src => src.FirstName))
+				.ForMember(x => x.EmailConfirmed, opt => opt.MapFrom(src => true))
+				.ForMember(x => x.LastName, opt => opt.MapFrom(src => src.LastName))
+				.ForMember(x => x.UserName, opt => opt.MapFrom(src => src.Email))
 				.ForMember(x => x.Email, opt => opt.MapFrom(src => src.Email))
+				.ForMember(x => x.ValidationMailToken, opt => opt.MapFrom(src => DateTime.Now));
+
+			CreateMap<_ProviderData, ApplicationUser>()
+				.ForMember(x => x.Email, opt => opt.MapFrom(src => src.Email))
+				.ForMember(x => x.EmailConfirmed, opt => opt.MapFrom(src => true))
 				.ForMember(x => x.FirstName, opt => opt.ResolveUsing(src => src.DisplayName.Split(' ').FirstOrDefault()))
-				.ForMember(x => x.LastName, opt => opt.ResolveUsing(src => {
+				.ForMember(x => x.LastName, opt => opt.ResolveUsing(src =>
+				{
 					var names = src.DisplayName.Split(' ');
 					var firstNameLength = names.FirstOrDefault()?.Length ?? 0;
 					return names.Count() > 1 && firstNameLength > 0 && src.DisplayName.Length > firstNameLength ? src.DisplayName.Substring(firstNameLength).TrimStart() : string.Empty;
 				}))
-				.ForMember(x => x.FacebookNameIdentifier, opt => opt.ResolveUsing(src => {
-					return src.ProviderId.ToLower() == "facebook" ? src.Uid : null;
-				}))
-				.ForMember(x => x.GoogleNameIdentifier, opt => opt.ResolveUsing(src => {
-					return src.ProviderId.ToLower() == "google" ? src.Uid : null;
-				}));
+				.ForMember(x => x.GoogleNameIdentifier, opt => opt.Ignore())
+				.ForMember(x => x.FacebookNameIdentifier, opt => opt.Ignore())
+				.ForMember(x => x.UserName, opt => opt.Ignore())
+				.AfterMap((s, d) => d.UserName = d.UserName ?? s.Email)
+				.AfterMap((s, d) => {
+					if (s.ProviderId == "Google")
+						d.GoogleNameIdentifier = s.Uid;
+				})
+				.AfterMap((s, d) => {
+					if (s.ProviderId == "Facebook")
+						d.FacebookNameIdentifier = s.Uid;
+				});
 
 
 			CreateMap<ApplicationUser, _User>();

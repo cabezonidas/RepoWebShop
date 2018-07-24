@@ -1,4 +1,5 @@
-﻿using RepoWebShop.Models;
+﻿using RepoWebShop.FeModels;
+using RepoWebShop.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,5 +13,6 @@ namespace RepoWebShop.Interfaces
         Task NotifyOrderCompleteAsync(Order order);
         Task SendEmailResetPasswordAsync(ApplicationUser foundUser);
         Task SendPromoAsync(string subject, string emailBody, IEnumerable<string> allEmails);
-    }
+		Task SendEmailCodeAsync(_RegisterEmail registration);
+	}
 }

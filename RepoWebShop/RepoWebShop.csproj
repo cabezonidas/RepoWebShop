@@ -104,6 +104,9 @@
     <Content Update="appsettings.staging.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="Views\Account\EmailCodeVerificationBody.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
   </ItemGroup>
   
   <PropertyGroup>

@@ -1,15 +1,33 @@
 <div class="form-container">
-  <a routerLink="/login" id="goback">Go back</a>
-  <h2>Custom Login</h2>
+  <mat-card>
+    <mat-card-header>
+      <a routerLink="/login" id="goback">Volver</a>
+    </mat-card-header>
+    <mat-card-title>
+      <div class='logo'>
+        <img src='../../../../assets/images/logoRepo.PNG'>
+      </div>
+      Inicio con email
+    </mat-card-title>
+    <mat-card-content>
 
-  <span class="error" *ngIf="error" [@fallIn]='state'>{{ error }}</span>
-
-  <!-- <form #formData='ngForm' (ngSubmit)="onSubmit(formData)">
-
-    <input type="text" placeholder="Email address.." (ngModel)="email" name="email" class="txt" required>
-    <input type="password" placeholder="Password" (ngModel)="password" name="password" class="txt" required>
-
-    <button type="submit" [disabled]="!formData.valid" class="basic-btn">Log in</button>
-    <a routerLink="/signup" class="alc">Don't have an account?</a>
-  </form> -->
+      <form [formGroup]="rForm" (ngSubmit)="onSubmit(rForm.value)">
+        <mat-form-field>
+          <input matInput placeholder="Email" formControlName="email">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Contraseña" [type]="hide ? 'password' : 'text'" formControlName="password" name="password">
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+        </mat-form-field>
+        <div>
+          <span class="error" *ngIf="error" [@fallIn]='state'>{{ error }}</span>
+        </div>
+        <button mat-raised-button type="submit" [disabled]="!rForm.valid" color="primary">Iniciar</button>
+        
+      </form>
+      <mat-card-footer>
+        <a routerLink="/signup" routerLinkActive="active">¿No tenés cuenta? <strong>¡Create una acá!</strong></a>
+      </mat-card-footer>
+    </mat-card-content>
+  </mat-card>
 </div>

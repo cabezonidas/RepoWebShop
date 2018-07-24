@@ -1,16 +1,71 @@
+ 
 <div class="form-container">
-    <a routerLink="/login" id="goback">Go back</a>
-  
-    <h2>Join now</h2>
-  
-    <span class="error" *ngIf="error" [@fallIn]='state'>{{ error }}</span>
-      
-    <!-- <form #formData='ngForm' (ngSubmit)="onSubmit(formData)">
-  
-      <input type="text" placeholder="Email address.." (ngModel)="email" name="email" class="txt" required>
-      <input type="password" placeholder="Password" (ngModel)="password" name="password" class="txt" required>
-  
-  
-      <button type="submit" [disabled]="!formData.valid" class="basic-btn">Create my account</button>
-    </form> -->
-  </div>
+  <mat-card>
+    <a routerLink="/login" id="goback">Volver</a>
+    <div class="error" *ngIf="error" [@fallIn]='state'>{{ error }}</div>
+    <!-- <mat-vertical-stepper>
+      <mat-step>
+        Content 1
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Paso 2</ng-template>
+        Content 2
+      </mat-step>
+    </mat-vertical-stepper> -->
+    <mat-vertical-stepper linear>
+      <mat-step [stepControl]="emailGroup" editable="false">
+        <ng-template matStepLabel>Información personal</ng-template>
+        <form [formGroup]="emailGroup">
+          <mat-form-field>
+            <input matInput placeholder="Nombre" formControlName="firstName" maxlength="50" name="given-name">
+          </mat-form-field>
+          
+          <mat-form-field>
+            <input matInput placeholder="Apellido" formControlName="lastName" maxlength="50" name="family-name">
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput placeholder="Email" formControlName="email" name="email">
+          </mat-form-field>
+          <div *ngIf="emailGroup.get('email').status === 'PENDING'">
+            Chequeando email...
+          </div>
+          <div *ngIf="emailGroup.get('email').errors && emailTaken">
+            😢 Uf! Parece que este email ya fue registrado.
+          </div>
+
+          <mat-form-field>
+            <input matInput placeholder="Contraseña" [type]="hide ? 'password' : 'text'" formControlName="password" name="password">
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+          </mat-form-field>
+          <div>
+            <br />
+            <button mat-raised-button matStepperNext color="primary" [disabled]="!emailGroup.valid">Siguiente</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="confirmEmailGroup">
+        <ng-template matStepLabel>Confirmación de email</ng-template>
+        <mat-card-content>
+          ¡Gracias {{ emailGroup.value.firstName}}! Para que podamos validar {{ emailGroup.value.email }} necesitamos enviarte un código de 4 dígitos.
+        </mat-card-content>
+        <div>
+            <button [disabled]="emailCodeSubmitted" mat-raised-button color="primary" (click)="bookEmail()">Enviar Código</button>
+        </div>
+        <form [formGroup]="confirmEmailGroup">
+          <br />
+          <div *ngIf='!emailCodeSent && emailCodeSubmitted'>
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          </div>
+          <div *ngIf='emailCodeSent'>
+            Por favor revisa tu correo e ingresa el código que te enviamos.
+            
+          <mat-form-field>
+            <input matInput type="number" step="1" min="1000" max="9999" placeholder="Código de Validación" formControlName="emailCode" required>
+          </mat-form-field>
+          </div>
+        </form>
+      </mat-step>
+    </mat-vertical-stepper>
+  </mat-card>
+</div>

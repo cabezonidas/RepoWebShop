@@ -5,6 +5,9 @@ import { IAppUser } from '../interfaces/iapp-user';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { UserSocialInfo } from '../classes/UserSocialInfo';
+import { EmailLogin } from '../classes/EmailLogin';
+import { ValidatorFn, AbstractControl } from '../../../node_modules/@angular/forms';
+import { EmailRegistration } from '../classes/EmailRegistration';
 
 @Injectable({
   providedIn: 'root'
@@ -20,32 +23,42 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router, private afAuth: AngularFireAuth) { }
 
-  getUser = () => (this.http.get('/api/_account/current') as Observable<IAppUser>).subscribe(user => this.userSource.next(user));
+  loadUser = () => (this.http.get('/api/_account/current') as Observable<IAppUser>).subscribe(user => this.userSource.next(user));
 
-  socialLogin = (user: firebase.User): any => {
+  socialLogin = (user: firebase.User): void => {
     if (user) {
       const providerData = new Array<UserSocialInfo>();
       user.providerData.forEach(x => providerData.push(new UserSocialInfo(user, x)));
-      (this.http.post('/api/_account/socialLogIn', providerData) as Observable<IAppUser>).subscribe((appUser) => {
-        this.userSource.next(appUser);
-        this.returnUrl.subscribe(url => url ? this.router.navigate([ url ]) : this.router.navigate([ '/members' ]));
-      });
+      (this.http.post('/api/_account/socialLogIn', providerData) as Observable<any>)
+        .subscribe(() => this.loadUser());
     }
+  }
+
+  registerUserEmail = (emailReg: EmailRegistration, code: string): Observable<any> => {
+    return (this.http.post('/api/_account/registerEmail/' + code, emailReg) as Observable<any>);
+  }
+
+  emailLogin = (user: EmailLogin): Observable<IAppUser> => {
+    return (this.http.post('/api/_account/emailLogIn', user) as Observable<IAppUser>);
   }
 
   isAdmin = (): Observable<boolean> => (this.http.get('/api/_account/isAdmin') as Observable<boolean>);
   isAuth = (): Observable<boolean> => (this.http.get('/api/_account/isAuth') as Observable<boolean>);
   isMobileConfirmed = (): Observable<boolean> => (this.http.get('/api/_account/isMobileConfirmed') as Observable<boolean>);
 
-  logOut = (): Observable<any> => {
+  logOut = (): void => {
+    this.userSource.next(null);
     this.afAuth.auth.signOut();
-    return this.http.post('/api/_account/signOut', null);
+    (this.http.post('/api/_account/signOut', null) as Observable<any>).subscribe(() =>
+      this.router.navigateByUrl('/products'));
   }
 
   setReturnUrl = (url: string) => this.returnUrlSource.next(url);
+
+  isEmailAvailable = (email: string): Observable<boolean> =>
+    (this.http.get('/api/_account/isEmailAvailable/' + email) as Observable<boolean>)
+
+  bookEmail = (emailReg: EmailRegistration): Observable<any> =>
+    (this.http.post('/api/_account/bookEmail', emailReg) as Observable<any>)
 }
-
-
-
-
 

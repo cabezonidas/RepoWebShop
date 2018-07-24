@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.cart.getProducts();
-    this.auth.getUser();
+    this.auth.loadUser();
     this.cart.currentProducts.subscribe(products => {
       this.products$ = products;
       this.itemsLength$ = 0;

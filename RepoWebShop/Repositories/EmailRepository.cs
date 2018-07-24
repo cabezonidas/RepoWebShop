@@ -15,12 +15,14 @@ using RepoWebShop.Extensions;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
+using RepoWebShop.FeModels;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace RepoWebShop.Repositories
 {
     public class EmailRepository : IEmailRepository
-    {
-        private readonly AppDbContext _appDbContext;
+	{
+		private readonly AppDbContext _appDbContext;
         //private readonly IOrderRepository _orderRepository; MAKES CIRCULAR DEPENDENCY
         private readonly IHostingEnvironment _env;
         private readonly IConfiguration _config;
@@ -32,8 +34,8 @@ namespace RepoWebShop.Repositories
 
 
         public EmailRepository(AppDbContext appDbContext, IHttpContextAccessor contextAccessor, IHostingEnvironment env, IConfiguration config)
-        {
-            host = "http://" + contextAccessor.HttpContext?.Request.Host.ToString();
+		{
+			host = "http://" + contextAccessor.HttpContext?.Request.Host.ToString();
             _appDbContext = appDbContext;
             _env = env;
             _config = config;
@@ -230,5 +232,21 @@ namespace RepoWebShop.Repositories
                 await SendMailAsync(msg);
             }
         }
-    }
+
+		public async Task SendEmailCodeAsync(_RegisterEmail registration)
+		{
+			var apicall = $"{host}/Account/EmailCodeVerificationBody/{registration.Email}";
+			HttpResponseMessage responseTask = await new HttpClient().GetAsync(apicall);
+
+			Email email = new Email()
+			{
+				To = registration.Email,
+				Bcc = _sender,
+				Subject = $"Código: {registration.ValidationCode} - Activación de cuenta",
+				Body = await responseTask.Content.ReadAsStringAsync()
+			};
+
+			await SendMailAsync(GetMimeMessage(email));
+		}
+	}
 }

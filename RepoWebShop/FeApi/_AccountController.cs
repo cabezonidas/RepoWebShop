@@ -50,12 +50,12 @@ namespace RepoWebShop.FeApi
 
 		[HttpPost]
 		[Route("SocialLogin")]
-		public async Task<_User> SocialLogin()
+		public async Task<IActionResult> SocialLogin()
 		{
 			var userData = (new JsonSerializer()).Deserialize<_ProviderData[]>(new JsonTextReader(new StreamReader(Request.Body))).FirstOrDefault();
 			await _account.EnsureSocialLoginAsync(userData);
-			var signedIn = await _signInManager.ExternalLoginSignInAsync(userData.ProviderId , userData.Uid, isPersistent: true, bypassTwoFactor: true);
-			return signedIn.Succeeded ? _mapper.Map<ApplicationUser, _User>(await _userManager.FindByEmailAsync(userData.Email)) : null;
+			await _signInManager.ExternalLoginSignInAsync(userData.ProviderId , userData.Uid, isPersistent: true, bypassTwoFactor: true);
+			return Ok();
 		}
 
 		[HttpPost]
@@ -68,12 +68,42 @@ namespace RepoWebShop.FeApi
 
 		[HttpPost]
 		[Route("EmailLogin")]
-		public async Task<_User> EmailLogin()
+		public async Task<IActionResult> EmailLogin()
 		{
 			var userData = (new JsonSerializer()).Deserialize<_EmailLogin>(new JsonTextReader(new StreamReader(Request.Body)));
 			var appUser = await _userManager.FindByEmailAsync(userData.Email);
+			if (appUser == null)
+				return Unauthorized();
 			var signedIn = await _signInManager.PasswordSignInAsync(appUser, userData.Password, true, false);
-			return signedIn.Succeeded ? _mapper.Map<ApplicationUser, _User>(appUser) : null;
+			if (!signedIn.Succeeded)
+				return Unauthorized();
+			return Ok(_mapper.Map<ApplicationUser, _User>(appUser));
+		}
+
+		[HttpGet]
+		[Route("IsEmailAvailable/{email}")]
+		public async Task<bool> IsEmailAvailable(string email) => await _userManager.FindByEmailAsync(email) == null;
+
+		[HttpPost]
+		[Route("BookEmail")]
+		public async Task<IActionResult> BookEmail()
+		{
+			var registration = (new JsonSerializer()).Deserialize<_RegisterEmail>(new JsonTextReader(new StreamReader(Request.Body)));
+			registration.ValidationCode = (new Random()).Next(1000, 9999).ToString();
+			await _account.SetCacheRegistration(registration);
+			return Ok();
+		}
+
+		[HttpPost]
+		[Route("RegisterEmail/{emailCode}")]
+		public async Task<IActionResult> RegisterEmail(string emailCode)
+		{
+			var registration = (new JsonSerializer()).Deserialize<_RegisterEmail>(new JsonTextReader(new StreamReader(Request.Body)));
+			var userCache = await _account.GetCacheRegistration(registration.Email);
+			if (userCache.ValidationCode != emailCode)
+				return Unauthorized();
+			else
+				return Ok(await _account.RegisterUser(userCache));
 		}
 	}
 }

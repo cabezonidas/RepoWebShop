@@ -1,13 +1,17 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using RepoWebShop.Extensions;
 using RepoWebShop.FeModels;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace RepoWebShop.Repositories
@@ -15,14 +19,15 @@ namespace RepoWebShop.Repositories
     public class AccountRepository : IAccountRepository
     {
         private readonly AppDbContext _appDbContext;
-        private readonly IEmailRepository _emailRepository;
+		private readonly IDistributedCache _serverCache;
+		private readonly IEmailRepository _emailRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ISmsRepository _smsRepository;
         private readonly IMapper _mapper;
    
 
-        public AccountRepository(IEmailRepository emailRepository, IMapper mapper, AppDbContext appDbContext, ISmsRepository smsRepository, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountRepository(IDistributedCache serverCache, IEmailRepository emailRepository, IMapper mapper, AppDbContext appDbContext, ISmsRepository smsRepository, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _emailRepository = emailRepository;
             _mapper = mapper;
@@ -30,9 +35,36 @@ namespace RepoWebShop.Repositories
             _appDbContext = appDbContext;
             _userManager = userManager;
             _signInManager = signInManager;
+			_serverCache = serverCache;
         }
 
-        public async Task<IdentityResult> CreateOrUpdateUserAsync(ExternalLoginInfo info, string email, string hostUrl)
+		public async Task SetCacheRegistration(_RegisterEmail registration)
+		{
+			MemoryStream ms = new MemoryStream(); 
+			DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(_RegisterEmail));
+			ser.WriteObject(ms, registration);
+			byte[] json = ms.ToArray();
+			ms.Close();
+			var data = Encoding.UTF8.GetString(json, 0, json.Length);
+			await _serverCache.SetStringAsync(registration.Email, data, new DistributedCacheEntryOptions
+			{
+				AbsoluteExpirationRelativeToNow = new TimeSpan(24, 0, 0, 0)
+			});
+			await _emailRepository.SendEmailCodeAsync(registration);
+		}
+
+		public async Task<_RegisterEmail> GetCacheRegistration(string email)
+		{
+			var body = await _serverCache.GetStringAsync(email);
+			_RegisterEmail deserializedRegisterMail = new _RegisterEmail();
+			MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(body));
+			DataContractJsonSerializer ser = new DataContractJsonSerializer(deserializedRegisterMail.GetType());
+			deserializedRegisterMail = ser.ReadObject(ms) as _RegisterEmail;
+			ms.Close();
+			return deserializedRegisterMail;
+		}
+
+		public async Task<IdentityResult> CreateOrUpdateUserAsync(ExternalLoginInfo info, string email, string hostUrl)
         {
             var nameIdentifier = info.Principal.GetClaimValue(ClaimTypes.NameIdentifier);
             var user = _userManager.Users.FirstOrDefault(x => x.GoogleNameIdentifier == nameIdentifier || x.FacebookNameIdentifier == nameIdentifier || x.Email == info.Principal.GetClaimValue(ClaimTypes.Email));
@@ -52,21 +84,26 @@ namespace RepoWebShop.Repositories
 
 		public async Task EnsureSocialLoginAsync(_ProviderData info)
 		{
-			var user = _userManager.Users
-				.FirstOrDefault(x => x.GoogleNameIdentifier == info.Uid || x.FacebookNameIdentifier == info.Uid || x.Email == info.Email);
-
-			var appUser = _mapper.Map(info, user ?? new ApplicationUser());
+			var user = await _userManager.FindByEmailAsync(info.Email);
 
 			if (user == null)
-				await _userManager.CreateAsync(appUser);
+			{
+				var newUser = _mapper.Map<_ProviderData, ApplicationUser>(info);
+				var creation = await _userManager.CreateAsync(newUser);
+			}
 			else
-				await _userManager.UpdateAsync(appUser);
+			{
+				var updateUser = _mapper.Map(info, user);
+				var update = await _userManager.UpdateAsync(updateUser);
+			}
 
-			var result = await _userManager.FindByEmailAsync(appUser.Email);
+			var result = await _userManager.FindByEmailAsync(info.Email);
 			var logins = await _userManager.GetLoginsAsync(result);
 
-			if (logins.Count(x => x.LoginProvider.ToLower() == info.ProviderId.ToLower()) == 0)
-				await _userManager.AddLoginAsync(user, new UserLoginInfo(info.ProviderId, info.Uid, info.DisplayName));
+			if (logins.Count(x => x.LoginProvider == info.ProviderId) == 0)
+			{
+				var login = await _userManager.AddLoginAsync(result, new UserLoginInfo(info.ProviderId, info.Uid, info.DisplayName));
+			}
 		}
 
 		private async Task<IdentityResult> CreateFromExternalLoginInfoAsync(ExternalLoginInfo info, string email, string hostUrl)
@@ -128,5 +165,14 @@ namespace RepoWebShop.Repositories
                 return string.Empty;
             }
         }
-    }
+
+		public async Task<_User> RegisterUser(_RegisterEmail userCache)
+		{
+			var appUser = _mapper.Map<_RegisterEmail, ApplicationUser>(userCache);
+			var userCreated = await _userManager.CreateAsync(appUser, userCache.Password);
+			appUser = await _userManager.FindByEmailAsync(appUser.Email);
+			var signInUser = await _signInManager.PasswordSignInAsync(appUser, userCache.Password, true, false);
+			return _mapper.Map<ApplicationUser, _User>(appUser);
+		}
+	}
 }

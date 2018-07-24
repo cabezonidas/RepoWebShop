@@ -1,0 +1,43 @@
+﻿@model string
+@{Layout = string.Empty;}
+@{
+	var host = this.Context?.Request?.HostUrl() ?? "";
+}
+
+<div style="text-align:center; font-family: 'Trebuchet MS'; max-width: 400px;">
+	<section style='padding: 20px; width:90%; min-width:300px; ' id='body'>
+		<div style=" background-color: #883636; color: papayawhip; border-top-left-radius: 10px;border-top-right-radius: 10px;">
+			<br />
+			<a href="@host" target="_blank" style="text-decoration: none; ">
+				<div style="padding-left: 20px; padding-right: 20px;">
+					<img src="@host/Pictures/LogoRepo.png" width="250" />
+				</div>
+			</a>
+			<br />
+		</div>
+		<div style=" background-color: papayawhip; ">
+			<div style="width: 90%; margin: auto;">
+				<br>
+				<h2><strong>@Model, este mail es para confirmar que este mail es tuyo</strong></h2>
+				<div>
+					Para que puedas operar con nosotros, necesitamos que nos confirmes tu email con el código que te mandamos en el asunto del mensaje.
+				</div>
+				<br />
+				@*<div style="font-size:30px;">@Model.ValidationCode</div>*@
+
+				<br />
+
+				<div>Si recibiste este correo por equivocación, podés olvidarte de este mail, o podés informarnos a <email address="info@@lareposteria.com.ar" content="info@@lareposteria.com.ar"></email></div>
+				<br />
+			</div>
+		</div>
+		<div style=" background-color: #883636; color: papayawhip; text-align:center; border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+			<div style="text-align: center;">
+				<br />
+				<a href='@host' target="_blank" style="color: papayawhip">@host</a>
+			</div>
+			<br />
+		</div>
+	</section>
+
+</div>

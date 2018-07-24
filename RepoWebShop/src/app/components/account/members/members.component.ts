@@ -1,6 +1,6 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
-import { moveIn, fallIn, moveInLeft } from '../router.animations';
+import { moveIn, fallIn, moveInLeft } from '../../../animations/router.animations';
 import { AuthService } from '../../../services/auth.service';
 import { IAppUser } from '../../../interfaces/iapp-user';
 
@@ -21,9 +21,7 @@ export class MembersComponent implements OnInit {
   @HostBinding('@moveIn') role = '';
 
   logout() {
-    this.auth.logOut().subscribe(() => {
-      this.router.navigateByUrl('/login');
-    });
+    this.auth.logOut();
   }
 
   ngOnInit() {

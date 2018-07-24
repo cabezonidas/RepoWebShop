@@ -1,10 +1,10 @@
-<div class="form-container" id="toolbar" *ngIf="user">
-    <header [@fallIn]="state">
-      <button (click)="logout()" class="basic-btn">Logout</button>
-    </header>
-    <div id="page" [@moveInLeft]="state">
-      <h3>Hey {{ user.firstName }}!</h3>
-      <img src="assets/images/filler.png" />
-    </div>
-    
+<div class="form-container" *ngIf="user">
+  <mat-card>
+    <mat-card-title [@fallIn]="state">
+      Hey {{ user.firstName }}!
+    </mat-card-title>
+    <mat-card-content [@moveInLeft]="state">
+      <button mat-raised-button (click)="logout()" class="basic-btn">Logout</button>
+    </mat-card-content>
+  </mat-card>
 </div>

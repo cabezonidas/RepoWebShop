@@ -1,11 +1,40 @@
 <div class="form-container">
-  <img src="../../../../assets/images/lock.svg" id="lock">
 
-  <span class="error" *ngIf="error">{{ error }}</span>
+  <mat-card>
+    <mat-card-title>
+      <div class='logo'>
+        <img src='../../../../assets/images/logoRepo.PNG'>
+      </div>
+      Iniciar Sesión
+    </mat-card-title>
 
-  <button (click)="loginFb()" id="fb">Iniciar con Facebook</button><br>
-  <button (click)="loginGoogle()" id="google">Iniciar con Google</button>
-  <button routerLink="/login-email" id="email">Email</button>
-
-  <a routerLink="/signup" routerLinkActive="active" class="alc">¿No tenés? <strong>¡Create una acá!</strong></a>
+    <mat-card-content>
+      <span *ngIf="error">{{ error }}</span>
+      <div class="button" (click)="loginFb()" id="fb">
+        <div class="option">
+          Seguir con Facebook
+        </div>
+      </div>
+      <div class="button" (click)="loginGoogle()" id="google">
+          <div class="option">
+            Seguir con Google
+          </div>
+        </div>
+      <div class="button" routerLink="/login-email" id="email">
+        <div class="option">
+            Iniciar con email
+          </div>
+        </div>
+    </mat-card-content>
+    
+    <p>
+      Ingresar con Facebook o Google te ahorra el proceso de registro y activación de email.
+      Ellos sólo nos brindarán tu nombre completo, email, y foto de perfil para que podamos registrarte de manera rápida y segura para que no tengas que recordar nuevas contraseñas.
+    </p>
+    <div>
+      <a routerLink="/signup" routerLinkActive="active">¿Querés crearte una cuenta con tu mail? <strong>¡Click aquí!</strong></a>
+    </div>
+    
+  </mat-card>
+  
 </div>
