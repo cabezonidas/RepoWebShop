@@ -33,6 +33,8 @@ export class EmailComponent implements OnInit, OnDestroy {
     });
   }
 
+  @HostBinding('@moveIn') role = '';
+
   ngOnInit() {
     this.returnUrlSub = this.auth.returnUrl.subscribe(url => this.returnUrl = url);
     this.userSub = this.auth.user.subscribe(user$ => {
