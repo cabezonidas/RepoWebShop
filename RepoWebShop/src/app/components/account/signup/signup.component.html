@@ -12,7 +12,7 @@
       Registrate
     </mat-card-title>
     <div class="error" *ngIf="error" [@fallIn]='state'>{{ error }}</div>
-    <mat-vertical-stepper linear>
+    <mat-vertical-stepper linear #stepper>
       <mat-step [stepControl]="emailGroup" editable="false">
         <ng-template matStepLabel>Información personal</ng-template>
         <form [formGroup]="emailGroup">
@@ -35,7 +35,7 @@
             <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
           </mat-form-field>
           <div>
-            <button mat-raised-button matStepperNext color="primary" [disabled]="!emailGroup.valid" (click)="bookEmail()">Siguiente</button>
+            <button mat-raised-button matStepperNext color="primary" [disabled]="!emailGroup.valid">Siguiente</button>
           </div>
         </form>
       </mat-step>

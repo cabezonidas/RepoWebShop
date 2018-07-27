@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding, OnDestroy } from '@angular/core';
+import { Component, OnInit, HostBinding, OnDestroy, ViewChild } from '@angular/core';
 // import { AngularFire, AuthProviders, AuthMethods } from 'angularfire2';
 import { Router } from '@angular/router';
 import { moveIn, fallIn } from '../../../animations/router.animations';
@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder, Validators, AbstractControl } from '../../../..
 import { AuthService } from '../../../services/auth.service';
 import { EmailRegistration } from '../../../classes/EmailRegistration';
 import { Subscription, Observable } from '../../../../../node_modules/rxjs';
+import { MatStepper } from '../../../../../node_modules/@angular/material';
 
 @Component({
   selector: 'app-signup',
@@ -22,7 +23,6 @@ export class SignupComponent implements OnInit, OnDestroy {
   emailGroup: FormGroup;
   confirmEmailGroup: FormGroup;
 
-  emailGroupEditable = true;
   emailTaken = false;
   emailCodeSubmitted = false;
   emailCodeSent = false;
@@ -30,14 +30,18 @@ export class SignupComponent implements OnInit, OnDestroy {
   emailCodeSent$ = new Subscription();
   returnUrl$ = new Subscription();
   user$ = new Subscription();
+  stepper$ = new Subscription();
 
   constructor(private _formBuilder: FormBuilder, private auth: AuthService, private router: Router) {}
 
   @HostBinding('@moveIn') role = '';
+  @ViewChild('stepper') stepper: MatStepper;
+
   returnUrl = '';
 
   ngOnInit() {
     this.returnUrl$ = this.auth.returnUrl.subscribe(url => this.returnUrl = url);
+    this.stepper$ = this.stepper.selectionChange.subscribe(() => this.bookEmail());
     this.user$ = this.auth.user.subscribe(user$ => {
       if (user$) {
         this.auth.returnToUrl(this.returnUrl);
@@ -77,7 +81,6 @@ export class SignupComponent implements OnInit, OnDestroy {
 
   bookEmail = () => {
     this.emailCodeSent$.unsubscribe();
-    this.emailGroupEditable = false;
     this.emailCodeSubmitted = true;
     this.emailCodeSent$ = this.auth.bookEmail(this.current()).subscribe(() => this.emailCodeSent = true) ;
   }
@@ -89,6 +92,7 @@ export class SignupComponent implements OnInit, OnDestroy {
     this.returnUrl$.unsubscribe();
     this.user$.unsubscribe();
     this.emailCodeSent$.unsubscribe();
+    this.stepper$.unsubscribe();
   }
 
 }
