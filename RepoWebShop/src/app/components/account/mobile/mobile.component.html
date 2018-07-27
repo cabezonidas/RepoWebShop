@@ -1,10 +1,13 @@
 <div class="form-container" *ngIf="user">
     <mat-card>
       <mat-card-title [@fallIn]="state">
-        ¡Hola {{ user.firstName }}!
-      </mat-card-title>
+        <div class='logo'>
+          <img src='../../../../assets/images/logoRepo.PNG'>
+        </div>
+        </mat-card-title>
       <mat-card-content [@moveInLeft]="state">
-        Para que puedas aprovechar nuestros descuentos con reservas online necesitamos que nos digas tu teléfono actual.
+        {{ user.firstName }}, para que puedas aprovechar nuestros descuentos con reservas online necesitamos que nos digas tu teléfono actual.
+        Tu teléfono nos sirve para comunicarnos con vos, y avisarte cuando el pedido está listo para la entrega.
       </mat-card-content>
       
     <mat-vertical-stepper linear>

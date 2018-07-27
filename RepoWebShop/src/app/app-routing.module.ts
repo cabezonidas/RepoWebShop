@@ -13,6 +13,7 @@ import { MobileComponent } from './components/account/mobile/mobile.component';
 import { PasswordComponent } from './components/account/password/password.component';
 import { CheckoutComponent } from './components/cart/checkout/checkout.component';
 import { MobileGuardService } from './services/mobile-guard.service';
+import { DashboardComponent } from './components/admin/dashboard/dashboard.component';
 
 
 
@@ -27,6 +28,7 @@ const routes: Routes = [
   { path: 'login-email', component: EmailComponent },
   { path: 'reset-password', component: PasswordComponent },
   { path: 'checkout', component: CheckoutComponent, canActivate: [MobileGuardService] },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [MobileGuardService] },
   { path: 'profile', component: MembersComponent, canActivate: [AuthGuardService] }
 ];
 

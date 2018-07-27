@@ -24,7 +24,10 @@ export class AuthService {
 
   setUser = (appUser: IAppUser): void => this.userSource.next(appUser);
   setReturnUrl = (url: string): void => this.returnUrlSource.next(url);
-  returnToUrl = (url: string) => this.router.navigate([ url ? url : '/profile' ]);
+  returnToUrl = (url: string) => {
+    this.returnUrlSource.next(null);
+    this.router.navigate([ url ? url : '/profile' ]);
+  }
 
   loadUser = () => (this.http.get('/api/_account/current') as Observable<IAppUser>);
 

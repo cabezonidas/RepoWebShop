@@ -1,5 +1,5 @@
 import { Component, OnInit, HostBinding, OnDestroy, ViewChild } from '@angular/core';
-import { moveIn } from '../../../animations/router.animations';
+import { moveIn, moveInLeft } from '../../../animations/router.animations';
 import { AuthService } from '../../../services/auth.service';
 import { IAppUser } from '../../../interfaces/iapp-user';
 import { Subscription } from '../../../../../node_modules/rxjs';
@@ -10,13 +10,14 @@ import { MatStepper } from '../../../../../node_modules/@angular/material';
   selector: 'app-password',
   templateUrl: './password.component.html',
   styleUrls: ['./password.component.scss'],
-  animations: [moveIn()]
+  animations: [moveIn(), moveInLeft()]
 })
 export class PasswordComponent implements OnInit, OnDestroy {
 
   returnUrl = '';
+  state = '';
   hide = true;
-  user: IAppUser;
+  user: IAppUser = null;
 
   emailGroup: FormGroup;
   confirmEmailGroup: FormGroup;
@@ -37,6 +38,7 @@ export class PasswordComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.returnUrl$ = this.auth.returnUrl.subscribe(url => this.returnUrl = url);
+    this.stepper$ = this.stepper.selectionChange.subscribe(() => this.sendCodeToEmail());
     this.emailGroup = this._formBuilder.group({
       email: ['', Validators.compose([Validators.required, Validators.email]), this.emailFound.bind(this)],
     });
@@ -49,9 +51,6 @@ export class PasswordComponent implements OnInit, OnDestroy {
       newPass: ['', Validators.compose([Validators.required, Validators.minLength(6)])]});
     this.userSub = this.auth.user.subscribe(appUser => {
       this.user = appUser;
-      if (this.stepper) {
-        this.stepper$ = this.stepper.selectionChange.subscribe(() => this.sendCodeToEmail());
-      }
     });
   }
 

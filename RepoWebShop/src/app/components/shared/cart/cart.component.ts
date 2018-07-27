@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CartService } from '../../../services/cart.service';
 import { ICartCatalogItem } from '../../../interfaces/icart-catalog-item';
 import { MatDialog } from '@angular/material';
 import { CartItemEditComponent } from '../cart-item-edit/cart-item-edit.component';
 import { AuthService } from '../../../services/auth.service';
+import { Subscription } from '../../../../../node_modules/rxjs';
 
 @Component({
   selector: 'app-cart',
@@ -11,18 +12,17 @@ import { AuthService } from '../../../services/auth.service';
   styleUrls: ['./cart.component.scss']
 })
 
-export class CartComponent implements OnInit {
+export class CartComponent implements OnInit, OnDestroy {
 
   constructor(private cart: CartService, public dialog: MatDialog, private auth: AuthService) {}
 
-  products$: Array<ICartCatalogItem>;
+  products$ = new Subscription();
+  products: Array<ICartCatalogItem>;
 
   ngOnInit() {
-    this.cart.currentProducts.subscribe(products => this.products$ = products);
-    this.auth.returnUrl.subscribe(data => console.log(data));
+    this.products$ = this.cart.currentProducts.subscribe(products => this.products = products);
   }
   openDialog(item: ICartCatalogItem): void {
-    console.log('1');
     const dialogRef = this.dialog.open(CartItemEditComponent, {
       data: item
     });
@@ -31,5 +31,8 @@ export class CartComponent implements OnInit {
       console.log('The dialog was closed');
       // this.animal = result;
     });
+  }
+  ngOnDestroy() {
+    this.products$.unsubscribe();
   }
 }
