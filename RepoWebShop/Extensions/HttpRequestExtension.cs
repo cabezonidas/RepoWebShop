@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace RepoWebShop.Extensions
 {
@@ -56,6 +54,11 @@ namespace RepoWebShop.Extensions
 
             return result;
         }
+
+		public static T ParseBody<T>(this HttpRequest request)
+		{
+			return (new JsonSerializer()).Deserialize<T>(new JsonTextReader(new StreamReader(request.Body)));
+		}
 
 
 

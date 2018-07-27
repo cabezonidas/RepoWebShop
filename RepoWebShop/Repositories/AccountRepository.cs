@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using RepoWebShop.Extensions;
@@ -38,14 +39,9 @@ namespace RepoWebShop.Repositories
 			_serverCache = serverCache;
         }
 
-		public async Task SetCacheRegistration(_RegisterEmail registration)
+		public async Task SetCacheEmailActivation(_RegisterEmail registration)
 		{
-			MemoryStream ms = new MemoryStream(); 
-			DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(_RegisterEmail));
-			ser.WriteObject(ms, registration);
-			byte[] json = ms.ToArray();
-			ms.Close();
-			var data = Encoding.UTF8.GetString(json, 0, json.Length);
+			var data = registration.ToJson();
 			await _serverCache.SetStringAsync(registration.Email, data, new DistributedCacheEntryOptions
 			{
 				AbsoluteExpirationRelativeToNow = new TimeSpan(24, 0, 0, 0)
@@ -53,14 +49,10 @@ namespace RepoWebShop.Repositories
 			await _emailRepository.SendEmailCodeAsync(registration);
 		}
 
-		public async Task<_RegisterEmail> GetCacheRegistration(string email)
+		public async Task<_RegisterEmail> GetCacheEmailActivation(string email)
 		{
 			var body = await _serverCache.GetStringAsync(email);
-			_RegisterEmail deserializedRegisterMail = new _RegisterEmail();
-			MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(body));
-			DataContractJsonSerializer ser = new DataContractJsonSerializer(deserializedRegisterMail.GetType());
-			deserializedRegisterMail = ser.ReadObject(ms) as _RegisterEmail;
-			ms.Close();
+			var deserializedRegisterMail = body.Parse<_RegisterEmail>();
 			return deserializedRegisterMail;
 		}
 
@@ -173,6 +165,46 @@ namespace RepoWebShop.Repositories
 			appUser = await _userManager.FindByEmailAsync(appUser.Email);
 			var signInUser = await _signInManager.PasswordSignInAsync(appUser, userCache.Password, true, false);
 			return _mapper.Map<ApplicationUser, _User>(appUser);
+		}
+
+		public async Task UpdatePassword(string password)
+		{
+			var appUser = await Current(); 
+			if (await _userManager.HasPasswordAsync(appUser))
+				await _userManager.RemovePasswordAsync(appUser);
+			await _userManager.AddPasswordAsync(appUser, password);
+		}
+
+		public async Task SetCacheMobileActivation(string mobile)
+		{
+			var appUser = await Current();
+			appUser.PhoneNumberDeclared = mobile;
+			await _userManager.UpdateAsync(appUser);
+
+			var _mobileInfo = new _MobileInfo { Number = mobile, Code = (new Random()).Next(1000, 9999).ToString() };
+
+			await _serverCache.SetStringAsync($"{appUser.Email}/mobile", _mobileInfo.ToJson(), new DistributedCacheEntryOptions
+			{
+				AbsoluteExpirationRelativeToNow = new TimeSpan(24, 0, 0, 0)
+			});
+
+			await _smsRepository.SendSms(mobile, $"Código {_mobileInfo.Code}. Utiliza este número para confirmar tu celular. De las Artes.");
+		}
+
+		public async Task<_MobileInfo> GetCacheMobileActivation()
+		{
+			var appUser = await Current();
+			var body = await _serverCache.GetStringAsync($"{appUser.Email}/mobile");
+			var mobileInfo = body.Parse<_MobileInfo>();
+			return mobileInfo;
+		}
+
+		public async Task UpdateMobileAsync(string number)
+		{
+			var appUser = await Current();
+			appUser.PhoneNumber = number;
+			appUser.PhoneNumberConfirmed = true;
+			await _userManager.UpdateAsync(appUser);
 		}
 	}
 }

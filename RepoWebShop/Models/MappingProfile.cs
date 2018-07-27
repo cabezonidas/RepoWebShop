@@ -13,6 +13,8 @@ namespace RepoWebShop.Models
     {
 		public MappingProfile()
 		{
+			CreateMap<ApplicationUser, _RegisterEmail>();
+
 			CreateMap<_RegisterEmail, ApplicationUser>()
 				.ForMember(x => x.FirstName, opt => opt.MapFrom(src => src.FirstName))
 				.ForMember(x => x.EmailConfirmed, opt => opt.MapFrom(src => true))

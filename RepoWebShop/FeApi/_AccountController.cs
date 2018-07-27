@@ -42,68 +42,112 @@ namespace RepoWebShop.FeApi
 
 		[HttpGet]
 		[Route("IsMobileConfirmed")]
-		public async Task<bool> IsMobileConfirmed() => (await _account.Current()).PhoneNumberConfirmed;
+		public async Task<bool> IsMobileConfirmed() => (await _account.Current())?.PhoneNumberConfirmed ?? false;
 
 		[HttpGet]
 		[Route("IsAdmin")]
 		public async Task<bool> IsAdmin() => await _account.IsAdmin();
-
-		[HttpPost]
-		[Route("SocialLogin")]
-		public async Task<IActionResult> SocialLogin()
-		{
-			var userData = (new JsonSerializer()).Deserialize<_ProviderData[]>(new JsonTextReader(new StreamReader(Request.Body))).FirstOrDefault();
-			await _account.EnsureSocialLoginAsync(userData);
-			await _signInManager.ExternalLoginSignInAsync(userData.ProviderId , userData.Uid, isPersistent: true, bypassTwoFactor: true);
-			return Ok();
-		}
-
-		[HttpPost]
-		[Route("SignOut")]
-		public async Task<IActionResult> SignOut()
-		{
-			await _signInManager.SignOutAsync();
-			return Ok();
-		}
-
-		[HttpPost]
-		[Route("EmailLogin")]
-		public async Task<IActionResult> EmailLogin()
-		{
-			var userData = (new JsonSerializer()).Deserialize<_EmailLogin>(new JsonTextReader(new StreamReader(Request.Body)));
-			var appUser = await _userManager.FindByEmailAsync(userData.Email);
-			if (appUser == null)
-				return Unauthorized();
-			var signedIn = await _signInManager.PasswordSignInAsync(appUser, userData.Password, true, false);
-			if (!signedIn.Succeeded)
-				return Unauthorized();
-			return Ok(_mapper.Map<ApplicationUser, _User>(appUser));
-		}
 
 		[HttpGet]
 		[Route("IsEmailAvailable/{email}")]
 		public async Task<bool> IsEmailAvailable(string email) => await _userManager.FindByEmailAsync(email) == null;
 
 		[HttpPost]
+		[Route("SignOut")]
+		public async Task SignOut() => await _signInManager.SignOutAsync();
+
+		[HttpPost]
+		[Route("SocialLogin")]
+		public async Task<_User> SocialLogin()
+		{
+			var userData = Request.ParseBody<_ProviderData[]>().FirstOrDefault();
+			await _account.EnsureSocialLoginAsync(userData);
+			var signInResult = await _signInManager.ExternalLoginSignInAsync(userData.ProviderId, userData.Uid, isPersistent: true, bypassTwoFactor: true);
+			return signInResult.Succeeded ? _mapper.Map<ApplicationUser, _User>(await _userManager.FindByEmailAsync(userData.Email)) : null;
+		}
+
+		[HttpPost]
+		[Route("EmailLogin")]
+		public async Task<_User> EmailLogin()
+		{
+			var userData = Request.ParseBody<_EmailLogin>();
+			var appUser = await _userManager.FindByEmailAsync(userData.Email);
+			if (appUser == null)
+				return null;
+			var signedIn = await _signInManager.PasswordSignInAsync(appUser, userData.Password, true, false);
+			if (!signedIn.Succeeded)
+				return null;
+			return _mapper.Map<ApplicationUser, _User>(appUser);
+		}
+
+		[HttpPost]
 		[Route("BookEmail")]
 		public async Task<IActionResult> BookEmail()
 		{
-			var registration = (new JsonSerializer()).Deserialize<_RegisterEmail>(new JsonTextReader(new StreamReader(Request.Body)));
+			var registration = Request.ParseBody<_RegisterEmail>();
 			registration.ValidationCode = (new Random()).Next(1000, 9999).ToString();
-			await _account.SetCacheRegistration(registration);
+			await _account.SetCacheEmailActivation(registration);
 			return Ok();
 		}
 
 		[HttpPost]
 		[Route("RegisterEmail/{emailCode}")]
-		public async Task<IActionResult> RegisterEmail(string emailCode)
+		public async Task<_User> RegisterEmail(string emailCode)
 		{
-			var registration = (new JsonSerializer()).Deserialize<_RegisterEmail>(new JsonTextReader(new StreamReader(Request.Body)));
-			var userCache = await _account.GetCacheRegistration(registration.Email);
-			if (userCache.ValidationCode != emailCode)
-				return Unauthorized();
+			var registration = Request.ParseBody<_RegisterEmail>(); 
+			var userCache = await _account.GetCacheEmailActivation(registration.Email);
+			return userCache.ValidationCode == emailCode ? await _account.RegisterUser(userCache) : null;
+		}
+
+		[HttpPost]
+		[Route("RecoverEmail/{email}")]
+		public async Task<IActionResult> RecoverEmail(string email)
+		{
+			ApplicationUser appUser = await _userManager.FindByEmailAsync(email);
+			var regEmail = _mapper.Map<ApplicationUser, _RegisterEmail>(appUser);
+			regEmail.ValidationCode = (new Random()).Next(1000, 9999).ToString();
+			await _account.SetCacheEmailActivation(regEmail);
+			return Ok();
+		}
+
+		[HttpPost]
+		[Route("ActivateRecoveredEmail/{email}/{code}")]
+		public async Task<_User> ActivateRecoveredEmail(string email, string code)
+		{
+			var userCache = await _account.GetCacheEmailActivation(email);
+			if (userCache.ValidationCode != code)
+				return null;
 			else
-				return Ok(await _account.RegisterUser(userCache));
+			{
+				var appUser = await _userManager.FindByEmailAsync(email);
+				await _signInManager.SignInAsync(appUser, true);
+				return _mapper.Map<ApplicationUser, _User>(appUser);
+			}
+		}
+
+		[HttpPost]
+		[Authorize]
+		[Route("UpdatePassword/{password}")]
+		public async Task UpdatePassword(string password) => await _account.UpdatePassword(password);
+
+		[HttpPost]
+		[Authorize]
+		[Route("RegisterMobile/{mobile}")]
+		public async Task RegisterMobile(string mobile) => await _account.SetCacheMobileActivation(mobile);
+
+		[HttpPost]
+		[Authorize]
+		[Route("ConfirmMobile/{code}")]
+		public async Task<bool> ConfirmMobile(string code)
+		{
+			_MobileInfo mobileInfo = await _account.GetCacheMobileActivation();
+			if (mobileInfo.Code == code)
+			{
+				await _account.UpdateMobileAsync(mobileInfo.Number);
+				return true;
+			}
+			else
+				return false;
 		}
 	}
 }

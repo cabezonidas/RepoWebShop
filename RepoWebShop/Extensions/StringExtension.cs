@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -65,7 +68,15 @@ namespace RepoWebShop.Extensions
             return text;
         }
 
-        public static bool IsValidEmail(this string email)
+        public static T Parse<T>(this string json)
+        {
+			MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(json));
+			DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(T));
+			var obj = ser.ReadObject(ms);
+			return (T)Convert.ChangeType(obj, typeof(T));
+        }
+
+		public static bool IsValidEmail(this string email)
         {
             email = email ?? string.Empty;
             try

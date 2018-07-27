@@ -10,5 +10,6 @@ namespace RepoWebShop.Interfaces
         Task<MessageResource> SendSms(string phone, string body);
         Task NotifyAdminsAsync(string v);
         Task<IEnumerable<string>> GetFormattedNumbers(IEnumerable<string> numbers);
-    }
+		Task<bool> IsValidNumberAsync(string number);
+	}
 }

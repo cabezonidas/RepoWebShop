@@ -10,6 +10,9 @@ import { MembersComponent } from './components/account/members/members.component
 import { AuthGuardService } from './services/auth-guard.service';
 import { AdminGuardService } from './services/admin-guard.service';
 import { MobileComponent } from './components/account/mobile/mobile.component';
+import { PasswordComponent } from './components/account/password/password.component';
+import { CheckoutComponent } from './components/cart/checkout/checkout.component';
+import { MobileGuardService } from './services/mobile-guard.service';
 
 
 
@@ -22,7 +25,9 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'login-email', component: EmailComponent },
-  { path: 'members', component: MembersComponent, canActivate: [AuthGuardService] }
+  { path: 'reset-password', component: PasswordComponent },
+  { path: 'checkout', component: CheckoutComponent, canActivate: [MobileGuardService] },
+  { path: 'profile', component: MembersComponent, canActivate: [AuthGuardService] }
 ];
 
 @NgModule({

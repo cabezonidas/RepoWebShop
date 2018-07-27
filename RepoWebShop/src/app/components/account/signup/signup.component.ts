@@ -1,10 +1,11 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
+import { Component, OnInit, HostBinding, OnDestroy } from '@angular/core';
 // import { AngularFire, AuthProviders, AuthMethods } from 'angularfire2';
 import { Router } from '@angular/router';
 import { moveIn, fallIn } from '../../../animations/router.animations';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '../../../../../node_modules/@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { EmailRegistration } from '../../../classes/EmailRegistration';
+import { Subscription, Observable } from '../../../../../node_modules/rxjs';
 
 @Component({
   selector: 'app-signup',
@@ -12,7 +13,7 @@ import { EmailRegistration } from '../../../classes/EmailRegistration';
   styleUrls: ['./signup.component.scss'],
   animations: [moveIn(), fallIn()]
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent implements OnInit, OnDestroy {
 
   state = '';
   error: any;
@@ -26,16 +27,20 @@ export class SignupComponent implements OnInit {
   emailCodeSubmitted = false;
   emailCodeSent = false;
 
+  emailCodeSent$ = new Subscription();
+  returnUrl$ = new Subscription();
+  user$ = new Subscription();
+
   constructor(private _formBuilder: FormBuilder, private auth: AuthService, private router: Router) {}
 
   @HostBinding('@moveIn') role = '';
   returnUrl = '';
 
   ngOnInit() {
-    this.auth.returnUrl.subscribe(url => this.returnUrl = url);
-    this.auth.user.subscribe(user$ => {
+    this.returnUrl$ = this.auth.returnUrl.subscribe(url => this.returnUrl = url);
+    this.user$ = this.auth.user.subscribe(user$ => {
       if (user$) {
-        this.router.navigate([ this.returnUrl ? this.returnUrl : '/members' ]);
+        this.auth.returnToUrl(this.returnUrl);
       }
     });
 
@@ -54,9 +59,9 @@ export class SignupComponent implements OnInit {
 
   matchingValidationCode(control: AbstractControl): {[key: string]: any} | null {
     return this.auth.registerUserEmail(this.current(), control.value)
-    .map(res => {
-      if (res) {
-        this.auth.loadUser();
+    .map(appUser => {
+      if (appUser) {
+        this.auth.userSource.next(appUser);
       }
       return { emailCode: false };
     });
@@ -71,17 +76,19 @@ export class SignupComponent implements OnInit {
   }
 
   bookEmail = () => {
+    this.emailCodeSent$.unsubscribe();
     this.emailGroupEditable = false;
     this.emailCodeSubmitted = true;
-    this.auth.bookEmail(this.current()).subscribe(() => {
-      this.emailCodeSent = true;
-    }, () => {
-      this.emailCodeSubmitted = false;
-      this.emailCodeSent = false;
-    });
+    this.emailCodeSent$ = this.auth.bookEmail(this.current()).subscribe(() => this.emailCodeSent = true) ;
   }
 
   current = (): EmailRegistration => new EmailRegistration(this.emailGroup.value.firstName,
       this.emailGroup.value.lastName, this.emailGroup.value.email, this.emailGroup.value.password)
+
+  ngOnDestroy() {
+    this.returnUrl$.unsubscribe();
+    this.user$.unsubscribe();
+    this.emailCodeSent$.unsubscribe();
+  }
 
 }

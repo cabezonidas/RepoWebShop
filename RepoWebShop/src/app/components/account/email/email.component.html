@@ -1,7 +1,7 @@
 <div class="form-container">
   <mat-card>
     <mat-card-header>
-      <a routerLink="/login" id="goback">Volver</a>
+      <a routerLink="/login">Volver</a>
     </mat-card-header>
     <mat-card-title>
       <div class='logo'>
@@ -20,13 +20,18 @@
             <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
         </mat-form-field>
         <div>
-          <span class="error" *ngIf="error" [@fallIn]='state'>{{ error }}</span>
+          <span class="error" *ngIf="invalidCredentials" [@fallIn]='state'>{{ invalidCredentials }}</span>
         </div>
-        <button mat-raised-button type="submit" [disabled]="!rForm.valid" color="primary">Iniciar</button>
+        <button mat-raised-button type="submit" [disabled]="!rForm.valid" color="primary" (click)="onSubmit()">Iniciar</button>
         
       </form>
       <mat-card-footer>
-        <a routerLink="/signup" routerLinkActive="active">¿No tenés cuenta? <strong>¡Create una acá!</strong></a>
+        <div>
+          <a routerLink="/signup" routerLinkActive="active">¿No tenés cuenta? <strong>¡Create una acá!</strong></a>
+        </div>
+        <div>
+          <a routerLink="/reset-password" routerLinkActive="active">¿Olvidaste tu contraseña? <strong>¡Recuperala acá!</strong></a>
+        </div>
       </mat-card-footer>
     </mat-card-content>
   </mat-card>

@@ -92,5 +92,18 @@ namespace RepoWebShop.Repositories
 
             return result;
         }
-    }
+
+		public async Task<bool> IsValidNumberAsync(string number)
+		{
+			try
+			{
+				var result = await ParseNumberAsync(number);
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+	}
 }

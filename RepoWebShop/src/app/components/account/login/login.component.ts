@@ -1,9 +1,10 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
+import { Component, OnInit, HostBinding, OnDestroy } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
 import { moveIn } from '../../../animations/router.animations';
 import * as firebase from 'firebase';
 import { AuthService } from '../../../services/auth.service';
+import { Subscription } from '../../../../../node_modules/rxjs';
 
 @Component({
   selector: 'app-login',
@@ -11,10 +12,15 @@ import { AuthService } from '../../../services/auth.service';
   styleUrls: ['./login.component.scss'],
   animations: [moveIn()]
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   error: any;
   returnUrl = '';
+  afUser: firebase.User;
+  backEndLogin$ = new Subscription();
+  loginSuccess$ = new Subscription();
+  returnUrl$ = new Subscription();
+  userSub$ = new Subscription();
 
   constructor(public afAuth: AngularFireAuth, private router: Router, private auth: AuthService) { }
 
@@ -33,7 +39,12 @@ export class LoginComponent implements OnInit {
   }
 
   loginSuccess = () => {
-    this.afAuth.user.subscribe(user$ => this.auth.socialLogin(user$), this.loginError);
+    this.loginSuccess$.unsubscribe();
+    this.backEndLogin$.unsubscribe();
+
+    this.loginSuccess$ = this.afAuth.user.subscribe(user$ => {
+      this.backEndLogin$ = this.auth.socialLogin(user$).subscribe(appUser => this.auth.userSource.next(appUser));
+    }, this.loginError);
   }
 
   loginError = (err) => {
@@ -42,12 +53,19 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.auth.returnUrl.subscribe(url => this.returnUrl = url);
-    this.auth.user.subscribe(user$ => {
+    this.returnUrl$ = this.auth.returnUrl.subscribe(url => this.returnUrl = url);
+    this.userSub$ = this.auth.user.subscribe(user$ => {
       if (user$) {
-        this.router.navigate([ this.returnUrl ? this.returnUrl : '/members' ]);
+        this.auth.returnToUrl(this.returnUrl);
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.loginSuccess$.unsubscribe();
+    this.backEndLogin$.unsubscribe();
+    this.returnUrl$.unsubscribe();
+    this.userSub$.unsubscribe();
   }
 
 }

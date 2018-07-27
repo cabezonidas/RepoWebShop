@@ -14,10 +14,9 @@ namespace RepoWebShop.Models
         public static async Task Seed(IServiceProvider serviceProvider)
         {
 			if (serviceProvider.GetRequiredService<IHostingEnvironment>().IsDevelopment())
-				await CreateUserAsync(serviceProvider, "vagancia@gmail.com", "Guido", "Declich", "banana123");
-			else
-				await CreateUserWithRoleAsync(serviceProvider, "Administrator", "sebastian.scd@gmail.com", "Sebastián", "Cabeza");
+				await CreateUserAsync(serviceProvider, "vagancia@gmail.com", "Guido", "Declich", "banana123", "Administrator");
 
+			await CreateUserWithRoleAsync(serviceProvider, "Administrator", "sebastian.scd@gmail.com", "Sebastián", "Cabeza");
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "fiorelcd@gmail.com", "Fiorella", "Cabeza");
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "marcelardec@gmail.com", "Marcela", "Declich");
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "cabeza1961@gmail.com", "Claudio", "Cabeza");
@@ -61,9 +60,13 @@ namespace RepoWebShop.Models
                 await userManager.AddToRoleAsync(user, role);
         }
 
-		private static async Task CreateUserAsync(IServiceProvider serviceProvider, string email, string name, string lastname, string password)
+		private static async Task CreateUserAsync(IServiceProvider serviceProvider, string email, string name, string lastname, string password, string role = null)
 		{
+			var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 			var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+			if (!await roleManager.RoleExistsAsync(role))
+				await roleManager.CreateAsync(new IdentityRole(role));
 
 			ApplicationUser user = await userManager.FindByEmailAsync(email);
 			if (user == null)
@@ -78,6 +81,9 @@ namespace RepoWebShop.Models
 				};
 				await userManager.CreateAsync(user, password);
 			}
+
+			if (!await userManager.IsInRoleAsync(user, role))
+				await userManager.AddToRoleAsync(user, role);
 		}
 	}
 }

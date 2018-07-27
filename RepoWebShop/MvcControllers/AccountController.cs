@@ -94,7 +94,7 @@ namespace RepoWebShop.MvcControllers
         [Route("[Controller]/EmailCodeVerificationBody/{email}")]
         public async Task<IActionResult> EmailCodeVerificationBody(string email)
         {
-			_RegisterEmail emailReg = await _accountRepository.GetCacheRegistration(email);            
+			_RegisterEmail emailReg = await _accountRepository.GetCacheEmailActivation(email);            
             return View(nameof(EmailCodeVerificationBody), emailReg.FirstName);
         }
 

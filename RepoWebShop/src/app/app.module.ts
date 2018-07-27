@@ -30,18 +30,22 @@ import { environment } from '../environments/environment';
 import { AuthGuardService } from './services/auth-guard.service';
 import { AdminGuardService } from './services/admin-guard.service';
 import { MobileComponent } from './components/account/mobile/mobile.component';
+import { PasswordComponent } from './components/account/password/password.component';
+import { CheckoutComponent } from './components/cart/checkout/checkout.component';
+import { MobileGuardService } from './services/mobile-guard.service';
 
 @NgModule({
   declarations: [
     AppComponent, NavBarComponent, ProductPreviewComponent, GridComponent, CateringComponent, DetailsComponent, ChooseItemComponent,
     CartComponent, ProductCarouselPreviewComponent, FullCatalogComponent, SoonestPickupComponent, PriceComparisonComponent,
-    CartItemEditComponent, LoginComponent, EmailComponent, SignupComponent, MembersComponent, MobileComponent
+    CartItemEditComponent, LoginComponent, EmailComponent, SignupComponent, MembersComponent, MobileComponent, PasswordComponent,
+    CheckoutComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase), AngularFireAuthModule, BrowserModule, AppRoutingModule, BrowserAnimationsModule,
-    MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule 
+    MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule
   ],
-  providers: [ AuthGuardService, AdminGuardService ],
+  providers: [ AuthGuardService, AdminGuardService, MobileGuardService ],
   entryComponents: [ChooseItemComponent],
   bootstrap: [AppComponent]
 })

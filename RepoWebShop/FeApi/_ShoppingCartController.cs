@@ -23,26 +23,26 @@ namespace RepoWebShop.FeApi
 
 		[HttpPost]
 		[Route("AddProductItem")]
-		public IActionResult AddProductItem([FromBody] int id)
+		public IEnumerable<ShoppingCartCatalogItem> AddProductItem([FromBody] int id)
 		{
 			_cart.AddCatalogItemToCart(id);
-			return Ok();
+			return _cart.GetCatalogItems(null);
 		}
 
 		[HttpPost]
 		[Route("RemoveProductItem")]
-		public IActionResult RemoveProductItem([FromBody] int id)
+		public IEnumerable<ShoppingCartCatalogItem> RemoveProductItem([FromBody] int id)
 		{
 			_cart.RemoveCatalogItemFromCart(id);
-			return Ok();
+			return _cart.GetCatalogItems(null);
 		}
 
 		[HttpPost]
 		[Route("ClearProductItem")]
-		public IActionResult ClearProductItem([FromBody] int id)
+		public IEnumerable<ShoppingCartCatalogItem> ClearProductItem([FromBody] int id)
 		{
 			_cart.ClearCatalogItemFromCart(id);
-			return Ok();
+			return _cart.GetCatalogItems(null);
 		}
 	}
 }

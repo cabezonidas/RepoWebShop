@@ -14,6 +14,9 @@ mat-card {
 mat-raised-button, mat-form-field, mat-card-footer, mat-card-content {
     margin: 10px;
 }
+mat-card-title {
+    text-align: center;
+}
 
 input {
     border: none;

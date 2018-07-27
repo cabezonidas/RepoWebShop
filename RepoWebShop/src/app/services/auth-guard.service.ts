@@ -13,19 +13,18 @@ import { AuthService } from './auth.service';
 })
 export class AuthGuardService implements CanActivate {
 
-  constructor(private router: Router, private authService: AuthService) { }
-
-  // canActivate(): Observable<boolean> {
-  //   return this.auth.user.map(state => !!state).do(authenticated => {
-  //       if (!authenticated) {
-  //         this.router.navigate([ '/login' ]);
-  //   }});}
+  url = '';
+  constructor(private router: Router, private authService: AuthService)  {
+    this.authService.returnUrl.subscribe(url => this.url = url);
+  }
 
   canActivate(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Observable<boolean> {
     return this.authService.isAuth()
       .do(state => {
         if (!state) {
-          this.authService.setReturnUrl(routerState.url);
+          if (!this.url) {
+            this.authService.setReturnUrl(routerState.url);
+          }
           this.router.navigate([ '/login' ]);
       }
     });
