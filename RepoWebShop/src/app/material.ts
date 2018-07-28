@@ -15,6 +15,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { CartItemEditComponent } from './components/shared/cart-item-edit/cart-item-edit.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
     imports: [
@@ -33,7 +34,8 @@ import { MatSelectModule } from '@angular/material/select';
         MatListModule,
         MatDialogModule,
         MatStepperModule,
-        MatSelectModule
+        MatSelectModule,
+        MatSidenavModule
     ],
     exports: [
         MatButtonModule,
@@ -51,7 +53,8 @@ import { MatSelectModule } from '@angular/material/select';
         MatListModule,
         MatDialogModule,
         MatStepperModule,
-        MatSelectModule
+        MatSelectModule,
+        MatSidenavModule
     ],
     entryComponents: [
         CartItemEditComponent

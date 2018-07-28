@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { trigger, style, transition, animate, keyframes, query, stagger } from '@angular/animations';
+import { MatSidenav } from '../../../../../node_modules/@angular/material';
 
 @Component({
   selector: 'app-nav-bar',
@@ -22,4 +23,5 @@ import { trigger, style, transition, animate, keyframes, query, stagger } from '
 })
 export class NavBarComponent {
   @Input() itemsLength$: number;
+  @Input() sidevar: MatSidenav;
 }

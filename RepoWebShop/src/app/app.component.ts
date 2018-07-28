@@ -1,9 +1,10 @@
-import { Component, Input, OnInit, OnChanges, OnDestroy } from '@angular/core';
+import { Component, ViewChild, OnInit, OnChanges, OnDestroy } from '@angular/core';
 import { ICartCatalogItem } from './interfaces/icart-catalog-item';
 import { CartService } from './services/cart.service';
 import { AuthService } from './services/auth.service';
 import { RouterStateSnapshot } from '../../node_modules/@angular/router';
 import { Subscription } from '../../node_modules/rxjs';
+import {MatSidenav} from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,9 @@ import { Subscription } from '../../node_modules/rxjs';
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'app';
+  @ViewChild('sidenav') sidenav: MatSidenav;
+
+  reason = '';
 
   constructor(private cart: CartService, private auth: AuthService) { }
 
@@ -34,5 +38,10 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
     this.itemsSubscription.unsubscribe();
+  }
+
+  close(reason: string) {
+    this.reason = reason;
+    this.sidenav.close();
   }
 }

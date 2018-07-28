@@ -1,6 +1,7 @@
 <div class='navbar-fixed'>
   <mat-toolbar color="primary" role="heading" class="nav" >
     <mat-toolbar-row>
+      <mat-icon class="icon" (click)="sidevar.open()">menu</mat-icon>
       <span>De las Artes</span>
       <mat-icon *ngIf="itemsLength$" class="icon" [@items]="itemsLength$" routerLink="/cart" matBadge="{{itemsLength$}}" matBadgeColor="accent">shopping_cart</mat-icon>
       <span class="spacer"></span>

@@ -1,15 +1,23 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div id="container">
-    <div class="links">
-      <a class='templink' routerLink='/login'>Login</a>
-        <a class='templink' routerLink='/products'>Products</a>
-        <a class='templink' routerLink='/cart'>Cart</a>
-        <a class='templink' routerLink='/profile'>Profile</a>
-        <div id="content">
+  <mat-sidenav-container class="left-container" (backdropClick)="close('backdrop')">
+    <mat-sidenav #sidenav (keydown.escape)="close('escape')" disableClose>
+      <div class="links">
+        <a class='templink' routerLink='/login'>Login</a>
+          <a class='templink' routerLink='/products'>Products</a>
+          <a class='templink' routerLink='/cart'>Cart</a>
+          <a class='templink' routerLink='/profile'>Profile</a>
+          <div id="content">
+        </div>
       </div>
-    </div>
-  <app-nav-bar [itemsLength$]="itemsLength$"></app-nav-bar>
-  <div id="content">
-    <router-outlet></router-outlet>
-  </div>
+      <p><button mat-button (click)="close('toggle button')">Toggle</button></p>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <app-nav-bar [itemsLength$]="itemsLength$" [sidevar]='sidenav'></app-nav-bar>
+      <div id="content">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>  
 </div>
