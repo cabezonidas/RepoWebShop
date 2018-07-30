@@ -6,7 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
 import { MatStepper } from '@angular/material';
 import { EmailRegistration } from '../../classes/EmailRegistration';
-import { AppService } from 'src/app/core/services/app/app.service';
+import { AppService } from '../../../core/services/app/app.service';
 import { map } from 'rxjs/operators';
 
 @Component({

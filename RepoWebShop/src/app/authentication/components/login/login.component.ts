@@ -5,7 +5,7 @@ import { moveIn } from '../../../animations/router.animations';
 import * as firebase from 'firebase';
 import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
-import { AppService } from 'src/app/core/services/app/app.service';
+import { AppService } from '../../../core/services/app/app.service';
 
 @Component({
   selector: 'app-login',

@@ -177,12 +177,17 @@ namespace RepoWebShop.Models
 
 		public IEnumerable<_Product> GroupByParent(IEnumerable<Product> items)
 		{
-			var _products = items.Select(x => x.PieDetail).Distinct().Select(x => {
-				var _product = _mapper.Map<PieDetail, _Product>(x);
-				_product.Items = items.Where(p => p.PieDetailId == x.PieDetailId).Select(i => _mapper.Map<Product, _Item>(i));
-				return _product;
-			});
-			return _products;
+			var _products = items.Select(x => x.PieDetail).Distinct();
+			var result = _products.Select(pieDetail => GroupedProducts(items, pieDetail));
+			return result;
 		}
-    }
+
+		private _Product GroupedProducts(IEnumerable<Product> items, PieDetail pieDetail)
+		{
+			var _product = _mapper.Map<PieDetail, _Product>(pieDetail);
+			var filteredItems = items.Where(p => p.PieDetailId == pieDetail.PieDetailId);
+			_product.Items = filteredItems.Select(i => _mapper.Map<Product, _Item>(i));
+			return _product;
+		}
+	}
 }

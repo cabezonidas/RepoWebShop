@@ -3,7 +3,7 @@ import { CartService } from '../../services/cart.service';
 import { MatDialog } from '@angular/material';
 import { CartItemEditComponent } from '../cart-item-edit/cart-item-edit.component';
 import { Subscription } from 'rxjs';
-import { ICartCatalogItem } from 'src/app/cart/interfaces/icart-catalog-item';
+import { ICartCatalogItem } from '../../interfaces/icart-catalog-item';
 
 @Component({
   selector: 'app-cart',

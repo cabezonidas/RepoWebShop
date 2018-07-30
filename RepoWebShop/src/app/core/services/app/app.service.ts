@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { IAppUser } from 'src/app/authentication/interfaces/iapp-user';
+import { IAppUser } from '../../../authentication/interfaces/iapp-user';
 import { HttpClient } from '@angular/common/http';
 
 

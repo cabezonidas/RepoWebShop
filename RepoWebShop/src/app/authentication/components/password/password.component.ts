@@ -5,7 +5,7 @@ import { IAppUser } from '../../interfaces/iapp-user';
 import { Subscription } from 'rxjs';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { MatStepper } from '@angular/material';
-import { AppService } from 'src/app/core/services/app/app.service';
+import { AppService } from '../../../core/services/app/app.service';
 import { map } from 'rxjs/operators';
 
 @Component({

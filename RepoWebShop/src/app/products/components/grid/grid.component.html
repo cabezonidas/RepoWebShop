@@ -1,11 +1,16 @@
-<div style="text-align: center">
-  <a routerLink='/checkout'>Checkout</a>
-  <h2>Catálogo</h2>
-  <mat-spinner *ngIf='!products$'> </mat-spinner>
+<div>
+  <h2>Catálogo 1</h2>
+  <div *ngIf="products$ | async as products">
+    <div *ngFor="let product of products" class='products'>
+      <p> {{ product.name }} </p>
+    </div>
+  </div>
+</div>
+<div>
+  <!-- <mat-spinner *ngIf='!products$'> </mat-spinner>
   <div *ngIf='products$'>
     <div *ngFor='let product of productsPreview$' class='products'>
       <app-product-preview [product$]="product"></app-product-preview>
     </div>
     <app-full-catalog [products$]="products$"> </app-full-catalog>
-  </div>
-</div>
+  </div> -->

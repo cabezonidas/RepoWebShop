@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { IAppUser } from '../../interfaces/iapp-user';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Subscription } from 'rxjs';
-import { AppService } from 'src/app/core/services/app/app.service';
+import { AppService } from '../../../core/services/app/app.service';
 
 @Component({
   selector: 'app-other',

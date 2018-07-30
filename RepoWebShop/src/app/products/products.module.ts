@@ -11,6 +11,10 @@ import { GridComponent } from './components/grid/grid.component';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared.module';
 import { MaterialModule } from '../material/material.module';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { reducer } from './state/product.reducer';
+import { ProductEffects } from './state/product.effects';
 
 const productRoutes: Routes = [
   { path: 'products', component: GridComponent },
@@ -22,7 +26,13 @@ const productRoutes: Routes = [
     CommonModule,
     MaterialModule,
     SharedModule,
-    RouterModule.forChild(productRoutes)
+    RouterModule.forChild(productRoutes),
+    StoreModule.forFeature('product', reducer),
+    // StoreModule.forFeature('products', {
+    //  productList: listReducer,
+    //  productData: dataReducer // (images)
+    // })
+    EffectsModule.forFeature([ProductEffects])
   ],
   declarations: [
     ChooseItemComponent, DetailsComponent, FullCatalogComponent, GridComponent,

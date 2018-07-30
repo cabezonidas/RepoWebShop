@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EmailLogin } from '../../classes/EmailLogin';
-import { AppService } from 'src/app/core/services/app/app.service';
+import { AppService } from '../../../core/services/app/app.service';
 @Component({
   selector: 'app-email',
   templateUrl: './email.component.html',

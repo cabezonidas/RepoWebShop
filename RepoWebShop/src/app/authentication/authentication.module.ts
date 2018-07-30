@@ -15,9 +15,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { SmsService } from './services/sms.service';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { AuthGuardService } from '../core/services/guard/auth-guard.service';
-import { CoreModule } from '../core/core.module';
 
 const authRoutes: Routes = [
   { path: 'login', component: LoginComponent },
