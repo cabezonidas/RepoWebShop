@@ -38,10 +38,4 @@ $repo-app-theme: mat-light-theme($repo-app-primary, $repo-app-accent, $repo-app-
     
 @include mat-core($repo-typography);
 
-body {
-  font-family: 'Noto Serif';
-  background-color: papayawhip;
-  margin: 0px;
-  margin-top: 80px;
-}
 

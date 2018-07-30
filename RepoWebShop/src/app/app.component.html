@@ -2,21 +2,28 @@
 <div id="container">
   <mat-sidenav-container class="left-container" (backdropClick)="close('backdrop')">
     <mat-sidenav #sidenav (keydown.escape)="close('escape')" disableClose>
-      <div class="links">
-        <a class='templink' routerLink='/login'>Login</a>
-          <a class='templink' routerLink='/products'>Products</a>
-          <a class='templink' routerLink='/cart'>Cart</a>
-          <a class='templink' routerLink='/profile'>Profile</a>
-          <div id="content">
-        </div>
-      </div>
+      <ul class="links">
+        <li class='templink' routerLink='/login'>Login</li>
+        <li class='templink' routerLink='/products'>Products</li>
+        <li class='templink' routerLink='/cart'>Cart</li>
+        <li class='templink' routerLink='/profile'>Profile</li>
+      </ul>
       <p><button mat-button (click)="close('toggle button')">Toggle</button></p>
     </mat-sidenav>
 
     <mat-sidenav-content>
-      <app-nav-bar [itemsLength$]="itemsLength$" [sidevar]='sidenav'></app-nav-bar>
-      <div id="content">
-        <router-outlet></router-outlet>
+      <div >
+        <mat-toolbar color="primary" role="heading" class='navbar-fixed'>
+          <mat-toolbar-row>
+            <mat-icon class="icon" (click)="sidenav.open()">menu</mat-icon>
+            <span>De las Artes</span>
+            <mat-icon matBadge="1" matBadgeColor="accent">shopping_cart</mat-icon>
+            <span class="spacer"></span>
+          </mat-toolbar-row>
+        </mat-toolbar>
+        <div id="content">
+          <router-outlet></router-outlet>
+        </div>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>  

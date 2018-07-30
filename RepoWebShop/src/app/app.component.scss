@@ -1,3 +1,20 @@
+.navbar-fixed {
+  top: 0;
+  position: fixed;
+  z-index:999;
+  background-color: #883636;
+  width: 100%;
+}
+.icon {
+  margin-left: 20px;
+  margin-right: 20px;
+    cursor: pointer;
+}
+  
+  .spacer {
+    flex: 1 1 auto;
+  }
+
 .templink {
     margin: 5px;
 }
@@ -11,3 +28,11 @@
     left: 0;
     right: 0;
   }
+
+mat-sidenav-content {
+  background-color: papayawhip;
+} 
+div#content {
+  font-family: 'Noto Serif';
+  margin-top: 100px;
+}

@@ -1,0 +1,38 @@
+<div class="form-container">
+  <mat-card>
+    <mat-card-header>
+      <a routerLink="/login">Volver</a>
+    </mat-card-header>
+    <mat-card-title>
+      <div class='logo'>
+        <img src='../../../../assets/images/logoRepo.PNG'>
+      </div>
+      Inicio con email
+    </mat-card-title>
+    <mat-card-content>
+
+      <form [formGroup]="rForm" (ngSubmit)="onSubmit(rForm.value)">
+        <mat-form-field>
+          <input matInput placeholder="Email" formControlName="email" type="email" name="email" />
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Contraseña" [type]="hide ? 'password' : 'text'" formControlName="password" name="password">
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+        </mat-form-field>
+        <div>
+          <span class="error" *ngIf="invalidCredentials" [@fallIn]='state'>{{ invalidCredentials }}</span>
+        </div>
+        <button mat-raised-button type="submit" [disabled]="!rForm.valid" color="primary" (click)="onSubmit()">Iniciar</button>
+        
+      </form>
+      <mat-card-footer>
+        <div>
+          <a routerLink="/signup" routerLinkActive="active">¿No tenés cuenta? <strong>¡Create una acá!</strong></a>
+        </div>
+        <div>
+          <a routerLink="/password" routerLinkActive="active">¿Olvidaste tu contraseña? <strong>¡Recuperala acá!</strong></a>
+        </div>
+      </mat-card-footer>
+    </mat-card-content>
+  </mat-card>
+</div>

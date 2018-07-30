@@ -1,15 +1,27 @@
-import { Component, ViewChild, OnInit, OnChanges, OnDestroy } from '@angular/core';
-import { ICartCatalogItem } from './interfaces/icart-catalog-item';
-import { CartService } from './services/cart.service';
-import { AuthService } from './services/auth.service';
-import { RouterStateSnapshot } from '../../node_modules/@angular/router';
-import { Subscription } from '../../node_modules/rxjs';
-import {MatSidenav} from '@angular/material/sidenav';
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { CartService } from './cart/services/cart.service';
+import { AuthService } from './authentication/services/auth.service';
+import { Subscription } from 'rxjs';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
+  // animations: [
+  //   trigger('items', [
+  //     transition('* => *', [
+  //       query(':self', style({ opacity: 0}), {optional: true}),
+
+  //       query(':self', stagger('300ms', [
+  //         animate('.6s ease-in', keyframes([
+  //           style({opacity: 0, transform: 'translateY(-75%)', offset: 0}),
+  //           style({opacity: .5, transform: 'translateY(35px)', offset: .3}),
+  //           style({opacity: 1, transform: 'translateY(0)', offset: 1})
+  //         ]))]), {optional: true})
+  //     ])
+  //   ])
+  // ]
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'app';
@@ -19,25 +31,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(private cart: CartService, private auth: AuthService) { }
 
-  userSubscription: Subscription;
-  itemsSubscription: Subscription;
-
-  products$: Array<ICartCatalogItem>;
-  itemsLength$: number;
-
   ngOnInit() {
-    this.userSubscription = this.auth.loadUser().subscribe(user => this.auth.setUser(user));
-    this.itemsSubscription = this.cart.getProducts().subscribe(products => {
-      this.products$ = products;
-      this.itemsLength$ = 0;
-      this.products$.forEach(x => this.itemsLength$ += x.amount);
-      this.cart.setCartItems(products);
-    });
   }
 
   ngOnDestroy(): void {
-    this.userSubscription.unsubscribe();
-    this.itemsSubscription.unsubscribe();
   }
 
   close(reason: string) {
