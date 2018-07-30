@@ -7,7 +7,7 @@ import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/fo
 import { SmsService } from '../../services/sms.service';
 import { Subscription } from 'rxjs';
 import { AppService } from '../../../core/services/app/app.service';
-import 'rxjs/add/operator/map';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-mobile',
@@ -51,20 +51,20 @@ export class MobileComponent implements OnInit, OnDestroy {
   }
 
   validCode(control: AbstractControl): {[key: string]: any} | null {
-    return this.auth.confirmMobile(control.value)
-    .map(res => {
-      if (res) {
-        this.appService.returnToUrl(this.returnUrl);
-      }
-      return res === true ? null : { emailTaken: true };
-    });
+    return this.auth.confirmMobile(control.value).pipe(
+      map(res => {
+        if (res) {
+          this.appService.returnToUrl(this.returnUrl);
+        }
+        return res === true ? null : { emailTaken: true };
+    }));
   }
 
   validMobile(control: AbstractControl): {[key: string]: any} | null {
-    return this.sms.isValidMobile(this.mobileForm.value.country + control.value)
-    .map(res => {
+    return this.sms.isValidMobile(this.mobileForm.value.country + control.value).pipe(
+    map(res => {
       return res === true ? null : { emailTaken: true };
-    });
+    }));
   }
 
   sendCodeToNumber = () => {

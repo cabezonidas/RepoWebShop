@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { MatStepper } from '@angular/material';
 import { EmailRegistration } from '../../classes/EmailRegistration';
 import { AppService } from 'src/app/core/services/app/app.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-signup',
@@ -62,21 +63,21 @@ export class SignupComponent implements OnInit, OnDestroy {
   }
 
   matchingValidationCode(control: AbstractControl): {[key: string]: any} | null {
-    return this.auth.registerUserEmail(this.current(), control.value)
-    .map(appUser => {
+    return this.auth.registerUserEmail(this.current(), control.value).pipe(
+    map(appUser => {
       if (appUser) {
         this.appService.setUser(appUser);
       }
       return { emailCode: false };
-    });
+    }));
   }
 
   emailNotTaken(control: AbstractControl): {[key: string]: any} | null {
-    return this.auth.isEmailAvailable(control.value)
-    .map(res => {
+    return this.auth.isEmailAvailable(control.value).pipe(
+    map(res => {
       this.emailTaken = res !== true;
       return res === true ? null : { emailTaken: true };
-    });
+    }));
   }
 
   bookEmail = () => {

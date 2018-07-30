@@ -3,7 +3,7 @@ import { CanActivate, Router, RouterStateSnapshot, ActivatedRouteSnapshot } from
 import { AppService } from '../app/app.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/do';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -19,14 +19,14 @@ export class MobileGuardService implements CanActivate {
   isMobileConfirmed = (): Observable<boolean> => (this.http.get('/api/_account/isMobileConfirmed') as Observable<boolean>);
 
   canActivate(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Observable<boolean> {
-    return this.isMobileConfirmed()
-      .do(state => {
+    return this.isMobileConfirmed().pipe(
+      tap(state => {
         if (!state) {
           if (!this.url) {
             this.appService.setReturnUrl(routerState.url);
           }
           this.router.navigate([ '/mobile' ]);
       }
-    });
+    }));
   }
 }

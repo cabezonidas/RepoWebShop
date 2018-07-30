@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { MatStepper } from '@angular/material';
 import { AppService } from 'src/app/core/services/app/app.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-password',
@@ -62,21 +63,21 @@ export class PasswordComponent implements OnInit, OnDestroy {
   }
 
   emailFound(control: AbstractControl): {[key: string]: any} | null {
-    return this.auth.isEmailAvailable(control.value)
-    .map(res => {
+    return this.auth.isEmailAvailable(control.value).pipe(
+    map(res => {
       this.emailNotFound = res !== false;
       return res === false ? null : { emailNotFound: true };
-    });
+    }));
   }
 
   matchingValidationCode(control: AbstractControl): {[key: string]: any} | null {
-    return this.auth.activateRecoveredEmail(this.emailGroup.value.email, control.value)
-    .map(appUser => {
+    return this.auth.activateRecoveredEmail(this.emailGroup.value.email, control.value).pipe(
+    map(appUser => {
       if (appUser) {
         this.appService.setUser(appUser);
       }
       return { emailCode: false };
-    });
+    }));
   }
 
   savePassword() {
