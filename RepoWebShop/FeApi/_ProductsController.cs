@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepoWebShop.FeModels;
 using RepoWebShop.Interfaces;
+using RepoWebShop.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RepoWebShop.FeApi
 {
@@ -10,20 +13,31 @@ namespace RepoWebShop.FeApi
 	public class _ProductsController : Controller
 	{
 		private readonly ICatalogRepository _catalogRepo;
+		private readonly IPieDetailRepository _pieRepo;
 		private readonly IMapper _mapper;
 
-		public _ProductsController(IMapper mapper, ICatalogRepository catalogRepo)
+		public _ProductsController(IMapper mapper, ICatalogRepository catalogRepo, IPieDetailRepository pieRepo)
 		{
+			_pieRepo = pieRepo;
 			_mapper = mapper;
 			_catalogRepo = catalogRepo;
 		}
+
 
 		[HttpGet]
 		[Route("All")]
 		public IEnumerable<_Product> All()
 		{
-			IEnumerable<_Product> _products = _catalogRepo.GroupByParent(_catalogRepo.GetAvailableToBuyOnline());
-			return _products;
+			var _items = _catalogRepo.GetAvailableToBuyOnline().Select(x => _mapper.Map<Product, _Item>(x));
+			IEnumerable<_Product> _products = _pieRepo.PieDetails.Where(x => x.IsActive).ToArray().Select(x => _mapper.Map<PieDetail, _Product>(x));
+
+			var result = _products.Select(x =>
+			{
+				x.Items = _items.Where(item => item.PieDetailId == x.PieDetailId);
+				return x;
+			}).ToArray();
+
+			return result;
 		}
 	}
 }

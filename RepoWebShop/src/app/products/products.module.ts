@@ -7,7 +7,6 @@ import { PriceComparisonComponent } from './components/price-comparison/price-co
 import { ProductCarouselPreviewComponent } from './components/product-carousel-preview/product-carousel-preview.component';
 import { ProductPreviewComponent } from './components/product-preview/product-preview.component';
 import { SoonestPickupComponent } from './components/soonest-pickup/soonest-pickup.component';
-import { GridComponent } from './components/grid/grid.component';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared.module';
 import { MaterialModule } from '../material/material.module';
@@ -15,9 +14,10 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { reducer } from './state/product.reducer';
 import { ProductEffects } from './state/product.effects';
+import { ProductShellComponent } from './containers/product-shell.component';
 
 const productRoutes: Routes = [
-  { path: 'products', component: GridComponent },
+  { path: 'products', component: ProductShellComponent },
   { path: 'products/:id', component: DetailsComponent }
 ];
 
@@ -35,7 +35,7 @@ const productRoutes: Routes = [
     EffectsModule.forFeature([ProductEffects])
   ],
   declarations: [
-    ChooseItemComponent, DetailsComponent, FullCatalogComponent, GridComponent,
+    ProductShellComponent, ChooseItemComponent, DetailsComponent, FullCatalogComponent,
     PriceComparisonComponent, ProductCarouselPreviewComponent, ProductPreviewComponent, SoonestPickupComponent
   ],
   entryComponents: [ChooseItemComponent],

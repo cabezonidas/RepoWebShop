@@ -11,13 +11,13 @@ import { IItem } from '../../interfaces/iitem';
 })
 export class ProductPreviewComponent {
 
-  @Input() product$: IProduct;
+  @Input() product: IProduct;
 
   constructor(private bottomSheet: MatBottomSheet) {}
 
   chooseProduct(): void {
     this.bottomSheet.open(ChooseItemComponent, {
-      data: this.product$.items as Array<IItem>
+      data: this.product.items as Array<IItem>
     });
   }
 }

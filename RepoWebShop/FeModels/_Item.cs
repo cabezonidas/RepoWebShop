@@ -3,7 +3,9 @@
 namespace RepoWebShop.FeModels
 {
     public class _Item
-    {
+	{
+		public int? PieDetailId { get; set; }
+
 		public int ProductId { get; set; }
 
 		public decimal Price { get; set; }

@@ -1,0 +1,7 @@
+<mat-spinner *ngIf='!products$'> </mat-spinner>
+<div *ngIf="products$ | async as products">
+    <div *ngFor="let product of products" class='products'>
+        <app-product-preview *ngIf="product.flickrAlbumId" [product]="product">
+        </app-product-preview>
+    </div>
+</div>
