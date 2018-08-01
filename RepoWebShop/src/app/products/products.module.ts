@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ChooseItemComponent } from './components/choose-item/choose-item.component';
-import { DetailsComponent } from './components/details/details.component';
 import { FullCatalogComponent } from './components/full-catalog/full-catalog.component';
 import { PriceComparisonComponent } from './components/price-comparison/price-comparison.component';
 import { ProductCarouselPreviewComponent } from './components/product-carousel-preview/product-carousel-preview.component';
@@ -14,11 +13,11 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { reducer } from './state/product.reducer';
 import { ProductEffects } from './state/product.effects';
-import { ProductShellComponent } from './containers/product-shell.component';
+import { ProductShellComponent } from './containers/product-shell/product-shell.component';
 
 const productRoutes: Routes = [
-  { path: 'products', component: ProductShellComponent },
-  { path: 'products/:id', component: DetailsComponent }
+  { path: 'products', component: ProductShellComponent } ,
+  // { path: 'products/:id', component: DetailsComponent }
 ];
 
 @NgModule({
@@ -35,7 +34,7 @@ const productRoutes: Routes = [
     EffectsModule.forFeature([ProductEffects])
   ],
   declarations: [
-    ProductShellComponent, ChooseItemComponent, DetailsComponent, FullCatalogComponent,
+    ProductShellComponent, ChooseItemComponent, FullCatalogComponent,
     PriceComparisonComponent, ProductCarouselPreviewComponent, ProductPreviewComponent, SoonestPickupComponent
   ],
   entryComponents: [ChooseItemComponent],

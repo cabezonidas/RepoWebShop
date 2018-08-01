@@ -1,6 +1,4 @@
-<!-- <div [style.backgroundImage]="'url('+album$.primaryPicture+')'" class='primaryPicture'></div> -->
-
-<div *ngIf="album$" >
+<div *ngIf="currentAlbum" >
   <div class="carousel" id="{{ albumId }}">
     <div *ngFor="let thumbnail of thumbnails; let i = index">
       <div class="carousel-item">

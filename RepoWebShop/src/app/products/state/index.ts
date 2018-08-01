@@ -38,3 +38,8 @@ export const getError = createSelector(
     getProductFeatureState,
     state => state.error
 );
+
+export const getAlbums = createSelector(
+    getProductFeatureState,
+    (state) => state.albums
+);

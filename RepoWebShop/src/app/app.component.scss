@@ -10,17 +10,18 @@
   margin-right: 20px;
     cursor: pointer;
 }
+
+.leftPanelButton {
+  width: 100%;
+  border-radius: 0%;
+  text-align: left;
+  margin-top: 5px;
+}
   
   .spacer {
     flex: 1 1 auto;
   }
 
-.templink {
-    margin: 5px;
-}
-.links {
-    text-align: center;
-}
 .left-container {
     position: absolute;
     top: 0;
@@ -29,11 +30,25 @@
     right: 0;
   }
 
+.closeButton {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-radius: 0%;
+}
+
+mat-list-item {
+  cursor: pointer;
+}
+
 mat-sidenav-content {
   background-color: papayawhip;
-  text-align: center;
+  // No poner text-align: center -> rompe la animación
 } 
 div#content {
   font-family: 'Noto Serif';
   margin-top: 100px;
+  background-color: papayawhip;
+  // No poner text-align: center -> rompe la animación
 }

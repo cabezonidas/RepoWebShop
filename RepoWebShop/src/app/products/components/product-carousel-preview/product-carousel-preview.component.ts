@@ -1,8 +1,14 @@
-import { Component, OnInit, Input, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, Input, AfterViewChecked, OnDestroy } from '@angular/core';
 import { IAlbum } from '../../interfaces/ialbum';
 import { ImagesService } from '../../services/images.service';
 import * as MobileDetect from 'mobile-detect/mobile-detect';
 import * as M from 'materialize-css';
+import { Store } from '@ngrx/store';
+import * as fromProduct from '../../state';
+import { Observable, Subscription } from 'rxjs';
+import { select } from '@ngrx/store';
+import { first, map } from '../../../../../node_modules/rxjs/operators';
+import { IProduct } from '../../interfaces/iproduct';
 
 @Component({
   selector: 'app-product-carousel-preview',
@@ -11,38 +17,39 @@ import * as M from 'materialize-css';
 })
 
 
-export class ProductCarouselPreviewComponent implements OnInit, AfterViewChecked {
+export class ProductCarouselPreviewComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   @Input() albumId: string;
 
-  constructor(private images: ImagesService) { }
+  constructor(private images: ImagesService, private store: Store<fromProduct.State>) { }
 
-  album$: IAlbum;
+  albumsSub = new Subscription();
+  currentAlbum: IAlbum;
+  albumInit = false;
   thumbnails: Array<string> = [];
-  largePics: Array<string> = [];
-  initCarouse = false;
-  options = { };
+  mobileDetect = new MobileDetect(window.navigator.userAgent);
 
   ngAfterViewChecked(): void {
-    if (this.album$ && !this.initCarouse) {
-      this.initCarouse = true;
-      const elems = document.getElementById(this.albumId);
-      M.Carousel.init(elems, this.options);
+    if (this.currentAlbum && !this.albumInit) {
+      this.albumInit = true;
+      M.Carousel.init(document.getElementById(this.albumId), { });
     }
   }
 
   ngOnInit() {
-    this.images.getAlbum(this.albumId).subscribe(album => {
-      this.album$ = album;
-      const md = new MobileDetect(window.navigator.userAgent);
-      album.photos.forEach(x => {
-        this.thumbnails.push(this.images.smallUrl_240(x));
-        if (md.isPhoneSized) {
-          this.largePics.push(this.images.med_640(x));
-        } else {
-          this.largePics.push(this.images.large_1024(x));
-        }
-      });
+    this.albumsSub = this.store.pipe(
+      select(fromProduct.getAlbums),
+      map(albums => albums.find(album => album.albumId === this.albumId))
+    ).subscribe(album => {
+      if (album) {
+        this.currentAlbum = album;
+        this.currentAlbum.photos.forEach(x => this.thumbnails.push(this.images.smallUrl_240(x)));
+        this.albumsSub.unsubscribe();
+      }
     });
+  }
+
+  ngOnDestroy() {
+    this.albumsSub.unsubscribe();
   }
 }

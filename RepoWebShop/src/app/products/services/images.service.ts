@@ -10,9 +10,7 @@ import { IAlbum } from '../interfaces/ialbum';
 export class ImagesService {
   constructor(private http: HttpClient) { }
 
-  getAlbum(id) {
-    return this.http.get('/api/_images/album/' + id) as Observable<IAlbum>;
-  }
+  getAlbum = (id): Observable<IAlbum> => this.http.get('/api/_images/album/' + id) as Observable<IAlbum>;
 
   private getUrl(photo: IPhoto): string {
     return `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_`;

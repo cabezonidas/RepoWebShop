@@ -1,8 +1,10 @@
 import { IProduct } from '../interfaces/iproduct';
 import { ProductActions, ProductActionTypes } from './product.actions';
+import { IAlbum } from '../interfaces/ialbum';
 
 export interface ProductState {
     products: IProduct[];
+    albums: IAlbum[];
     showProductCode: boolean;
     currentProductId: number | null;
     error: string;
@@ -10,6 +12,7 @@ export interface ProductState {
 
 const initialState: ProductState = {
     products: [],
+    albums: [],
     showProductCode: true,
     currentProductId: null,
     error: ''
@@ -17,15 +20,23 @@ const initialState: ProductState = {
 
 export function reducer(state = initialState, action: ProductActions): ProductState {
     switch (action.type) {
-        case ProductActionTypes.LoadSuccess: return {
+        case ProductActionTypes.LoadProductsSuccess: return {
             ...state,
             products: action.payload,
             error: ''
         };
-
-        case ProductActionTypes.LoadFail: return {
+        case ProductActionTypes.LoadProductsFail: return {
             ...state,
             products: [],
+            error: action.payload
+        };
+        case ProductActionTypes.LoadAlbumSuccess: return {
+            ...state,
+            albums: [...state.albums, action.payload],
+            error: ''
+        };
+        case ProductActionTypes.LoadProductsFail: return {
+            ...state,
             error: action.payload
         };
 

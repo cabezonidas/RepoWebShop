@@ -1,4 +1,5 @@
 import { IItem } from './iitem';
+import { IAlbum } from './ialbum';
 
 export interface IProduct {
     pieDetailId: number;
@@ -9,6 +10,7 @@ export interface IProduct {
     isPieOfTheWeek: boolean;
     ingredients: string;
     flickrAlbumId: string;
+    album: IAlbum;
     primaryPicture: string;
     items: Array<IItem>;
 }

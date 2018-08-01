@@ -2,15 +2,32 @@
 <div id="container">
   <mat-sidenav-container class="left-container" (backdropClick)="close('backdrop')">
     <mat-sidenav #sidenav (keydown.escape)="close('escape')" disableClose>
-      <ul class="links">
-        <li class='templink' routerLink='/login'>Login</li>
-        <li class='templink' routerLink='/products'>Products</li>
-        <li class='templink' routerLink='/cart'>Cart</li>
-        <li class='templink' routerLink='/profile'>Profile</li>
-      </ul>
-      <p><button mat-button (click)="close('toggle button')">Toggle</button></p>
+      <mat-card>
+        <mat-card-title color="primary">De las Artes</mat-card-title>
+      </mat-card>
+      <div>
+        <button mat-raised-button routerLink='/login' class='leftPanelButton' (click)="close('toggle button')">
+          <mat-icon matListIcon>person</mat-icon>Iniciar Sesión
+        </button>
+      </div>
+      <div>
+        <button mat-raised-button routerLink='/products' class='leftPanelButton' (click)="close('toggle button')">
+          <mat-icon matListIcon>cake</mat-icon>Productos
+        </button>
+      </div>
+      <div>
+        <button mat-raised-button routerLink='/cart' class='leftPanelButton' (click)="close('toggle button')">
+          <mat-icon matListIcon>person</mat-icon>Carrito
+        </button>
+      </div>
+      <div>
+        <button mat-raised-button routerLink='/profile' class='leftPanelButton' (click)="close('toggle button')">
+          <mat-icon matListIcon>person</mat-icon>Perfil
+        </button>
+      </div>
+      <button mat-raised-button (click)="close('toggle button')" color="primary" class='closeButton'>Cerrar</button>
     </mat-sidenav>
-
+    
     <mat-sidenav-content>
       <div >
         <mat-toolbar color="primary" role="heading" class='navbar-fixed'>
@@ -26,5 +43,5 @@
         </div>
       </div>
     </mat-sidenav-content>
-  </mat-sidenav-container>  
+  </mat-sidenav-container> 
 </div>
