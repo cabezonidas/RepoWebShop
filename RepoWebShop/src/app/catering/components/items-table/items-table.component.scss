@@ -1,0 +1,24 @@
+table {
+    width: 100%;
+  }
+  
+  .mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+
+
+
+tr.data:nth-child(even) {background: papayawhip}
+tr.data:nth-child(odd) {background: rgba(248, 203, 177, 0.527)}
+
+tr.header {
+  background-color: #883636;
+}
+th.mat-header-cell {
+  color: papayawhip;
+}
+
+td {
+  text-align: left;
+}

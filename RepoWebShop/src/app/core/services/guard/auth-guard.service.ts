@@ -13,7 +13,6 @@ export class AuthGuardService implements CanActivate {
 
   url = '';
   constructor(private router: Router, private appService: AppService, private http: HttpClient)  {
-    console.log('Auth Guard constructor called');
     this.appService.returnUrl.subscribe(url => this.url = url);
   }
 

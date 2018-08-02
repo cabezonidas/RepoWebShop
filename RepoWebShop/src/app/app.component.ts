@@ -3,6 +3,7 @@ import { CartService } from './cart/services/cart.service';
 import { AuthService } from './authentication/services/auth.service';
 import { Subscription } from 'rxjs';
 import { MatSidenav } from '@angular/material/sidenav';
+import { IAppUser } from './authentication/interfaces/iapp-user';
 
 @Component({
   selector: 'app-root',
@@ -24,17 +25,20 @@ import { MatSidenav } from '@angular/material/sidenav';
   // ]
 })
 export class AppComponent implements OnInit, OnDestroy {
-  title = 'app';
   @ViewChild('sidenav') sidenav: MatSidenav;
 
+  user: IAppUser;
+  userSub = new Subscription();
   reason = '';
 
-  constructor(private cart: CartService, private auth: AuthService) { }
+  constructor(private auth: AuthService) {}
 
   ngOnInit() {
+    this.userSub = this.auth.loadUser().subscribe(user => this.user = user);
   }
 
   ngOnDestroy(): void {
+    this.userSub.unsubscribe();
   }
 
   close(reason: string) {

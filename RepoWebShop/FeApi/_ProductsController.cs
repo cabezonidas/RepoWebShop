@@ -39,5 +39,13 @@ namespace RepoWebShop.FeApi
 
 			return result;
 		}
+
+		[HttpGet]
+		[Route("CateringItems")]
+		public IEnumerable<_Item> CateringItems()
+		{
+			var _items = _catalogRepo.GetAll(x => x.IsActive).Select(x => _mapper.Map<Product, _Item>(x));
+			return _items;
+		}
 	}
 }

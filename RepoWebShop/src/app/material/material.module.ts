@@ -15,7 +15,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { CommonModule } from '@angular/common';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
     imports: [
@@ -35,7 +35,8 @@ import { CommonModule } from '@angular/common';
         MatDialogModule,
         MatStepperModule,
         MatSelectModule,
-        MatSidenavModule
+        MatSidenavModule,
+        MatPaginatorModule
     ],
     exports: [
         MatButtonModule,
@@ -54,7 +55,8 @@ import { CommonModule } from '@angular/common';
         MatDialogModule,
         MatStepperModule,
         MatSelectModule,
-        MatSidenavModule
+        MatSidenavModule,
+        MatPaginatorModule
     ],
     declarations: []
 })

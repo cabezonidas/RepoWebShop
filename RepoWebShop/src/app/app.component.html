@@ -6,22 +6,27 @@
         <mat-card-title color="primary">De las Artes</mat-card-title>
       </mat-card>
       <div>
-        <button mat-raised-button routerLink='/login' class='leftPanelButton' (click)="close('toggle button')">
+        <button mat-button routerLink='/login' class='leftPanelButton' (click)="close('toggle button')">
           <mat-icon matListIcon>person</mat-icon>Iniciar Sesión
         </button>
       </div>
       <div>
-        <button mat-raised-button routerLink='/products' class='leftPanelButton' (click)="close('toggle button')">
+        <button mat-button routerLink='/products' class='leftPanelButton' (click)="close('toggle button')">
           <mat-icon matListIcon>cake</mat-icon>Productos
         </button>
       </div>
       <div>
-        <button mat-raised-button routerLink='/cart' class='leftPanelButton' (click)="close('toggle button')">
-          <mat-icon matListIcon>person</mat-icon>Carrito
+        <button mat-button routerLink='/new-catering' class='leftPanelButton' (click)="close('toggle button')">
+          <mat-icon matListIcon>restaurant_menu</mat-icon>Catering
         </button>
       </div>
       <div>
-        <button mat-raised-button routerLink='/profile' class='leftPanelButton' (click)="close('toggle button')">
+        <button mat-button routerLink='/cart' class='leftPanelButton' (click)="close('toggle button')">
+          <mat-icon matListIcon>shopping_cart</mat-icon>Carrito
+        </button>
+      </div>
+      <div>
+        <button mat-button routerLink='/profile' class='leftPanelButton' (click)="close('toggle button')">
           <mat-icon matListIcon>person</mat-icon>Perfil
         </button>
       </div>
