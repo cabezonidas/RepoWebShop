@@ -1,5 +1,5 @@
 <mat-form-field>
-  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar producto">
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar producto" autocomplete="off">
 </mat-form-field>
 
 <div *ngIf="!items.length">
@@ -7,7 +7,7 @@
 </div>
 
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" >
-  <tr class='header' mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <!-- <tr class='header' mat-header-row *matHeaderRowDef="displayedColumns"></tr> -->
   <tr class='data' mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   
   <ng-container matColumnDef="name">
@@ -30,6 +30,6 @@
   </ng-container>
   
 </table>
-<div class="mat-elevation-z8">
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-</div>
+<!-- <div class="mat-elevation-z8">
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons [hidePageSize]='true'></mat-paginator>
+</div> -->

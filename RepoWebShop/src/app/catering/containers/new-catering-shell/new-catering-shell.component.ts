@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 
 import * as fromCatering from '../../state';
 import * as cateringActions from '../../state/catering.actions';
+import { map } from '../../../../../node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-new-catering-shell',
@@ -19,7 +20,10 @@ export class NewCateringShellComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(new cateringActions.LoadItems());
-    this.items$ = this.store.pipe(select(fromCatering.getItems));
+    this.items$ = this.store.pipe(
+      select(fromCatering.getItems),
+      map(items => items.sort((a, b) => a.displayName.localeCompare(b.displayName))
+    ));
     this.errorMessage$ = this.store.pipe(select(fromCatering.getError));
   }
 

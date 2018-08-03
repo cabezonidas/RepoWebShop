@@ -21,4 +21,14 @@ th.mat-header-cell {
 
 td {
   text-align: left;
+  font-size: smaller;
+}
+
+mat-paginator {
+  background-color: #883636;
+  color: papayawhip;
+}
+
+.mat-select-value {
+  color: papayawhip !important;
 }

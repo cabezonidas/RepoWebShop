@@ -9,6 +9,9 @@ import { reducer } from './state/catering.reducer';
 import { CateringEffects } from './state/catering.effects';
 import { MaterialModule } from '../material/material.module';
 import { ItemsTableComponent } from './components/items-table/items-table.component';
+import { SelectedItemsTableComponent } from './components/selected-items-table/selected-items-table.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AutocompleteItemsComponent } from './components/autocomplete-items/autocomplete-items.component';
 
 const cateringRoutes: Routes = [
   { path: 'new-catering', component: NewCateringShellComponent }
@@ -18,10 +21,11 @@ const cateringRoutes: Routes = [
   imports: [
     CommonModule,
     MaterialModule,
+    ReactiveFormsModule,
     RouterModule.forChild(cateringRoutes),
     StoreModule.forFeature('catering', reducer),
     EffectsModule.forFeature([CateringEffects])
   ],
-  declarations: [NewCateringShellComponent, NewCateringComponent, ItemsTableComponent]
+  declarations: [NewCateringShellComponent, NewCateringComponent, ItemsTableComponent, SelectedItemsTableComponent, AutocompleteItemsComponent]
 })
 export class CateringModule { }

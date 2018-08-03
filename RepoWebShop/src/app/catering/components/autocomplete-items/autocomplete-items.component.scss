@@ -1,0 +1,17 @@
+mat-form-field {
+    width: 100%;
+}
+mat-option {
+    line-height: unset;
+    .price {
+        color: green;
+    }
+    .storePrice {
+        color: red;
+        text-decoration: line-through;
+        padding-left: 5px;
+    }
+    .description {
+        color: rgb(132, 126, 134);
+    }
+  }

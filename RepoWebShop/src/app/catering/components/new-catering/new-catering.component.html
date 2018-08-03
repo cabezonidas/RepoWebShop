@@ -2,9 +2,17 @@
   <div class="form-content">
     <mat-card>
       <mat-card-header>
-
+        <div mat-card-avatar class="header-image"></div>
+        <div class='header-text'>
+          <mat-card-title>Catering personalizado</mat-card-title>
+          <mat-card-subtitle>De las Artes</mat-card-subtitle>
+        </div>
       </mat-card-header>
-      <app-items-table [items]='items' ></app-items-table>
+      <app-autocomplete-items [items]='items' ></app-autocomplete-items>
+      <app-selected-items-table>
+
+      </app-selected-items-table>
+
     </mat-card>
   </div>
 </div>

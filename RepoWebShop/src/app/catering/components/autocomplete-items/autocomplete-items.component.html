@@ -1,0 +1,19 @@
+<mat-form-field class="example-full-width">
+  <input matInput placeholder="Buscar productos..." aria-label="Item" [matAutocomplete]="auto" [formControl]="itemCtrl"> 
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let item of filteredProducts | async" [value]="item.displayName">
+      <!-- <img class="example-option-img" aria-hidden [src]="state.flag" height="25"> -->
+      <small>
+        <span><strong>{{item.displayName}} ${{ item.price * item.minOrderAmount}}</strong></span>
+        <span *ngIf="item.minOrderAmount > 1" >
+          ({{item.minOrderAmount === 12 ? 'docena' : 'x' + item.minOrderAmount}})
+        </span>
+        <span class="description"> | {{item.displayDescription}}</span>
+        <br />
+        <span>Precio Unitario: <span class="price"><strong>${{item.price}}</strong> </span></span>
+        <span class='storePrice' *ngIf="item.price < item.priceInStore">(${{item.priceInStore}})</span>
+        <span> | Porciones por unidad: {{item.portions}}</span>
+      </small>
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

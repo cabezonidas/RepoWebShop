@@ -1,0 +1,35 @@
+table {
+    width: 100%;
+    .product {
+        width: 80%;
+        overflow: hidden;
+        text-align: left;
+    }
+    .price {
+        text-align: right;
+    }
+}
+.subtotal {
+    // width: 100%;
+    min-width: 100px;
+    text-align: right;
+}
+.mat-line {
+    text-align: left;
+}
+.priceInStore {
+    color: red;
+    text-decoration: line-through;
+}
+.price {
+    color: #883636;
+}
+
+.material-icons {
+    margin: auto;
+}
+.arrow {
+    color: #883636;
+    margin: 0 5px;
+    cursor: pointer;
+}
