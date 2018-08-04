@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
@@ -37,25 +38,34 @@ namespace RepoWebShop.Repositories
 
         public async Task NotifyAdminsAsync(string v)
         {
-            //var numbers = _config.GetSection("AdminMobiles").GetChildren().Select(x => x.Value);
-            if(_env.IsProduction())
-            {
-                var numbers = _appDbContext.AdminNotifications.Select(x => x.Phone);
-                foreach(var number in numbers)
-                    await SendSms(number, v);
-            }
-        }
+			if (_env.IsProduction())
+			{
+				var numbers = _appDbContext.AdminNotifications.ToList().Select(x => x.Phone).ToArray();
+				foreach (var number in numbers)
+				{
+					await SendSms(number, v);
+				}
+			}
+		}
 
-        public async Task<MessageResource> SendSms(string phone, string body)
+        public async Task SendSms(string phone, string body)
         {
-            var result = MessageResource.Create(
-                from: new PhoneNumber(_sender),
-                to: new PhoneNumber(await ParseNumberAsync(phone)),
-                body: body);
+			try
+			{
+				var destination = await ParseNumberAsync(phone);
 
-            _appDbContext.SmsHistory.Add(new SmsHistory { Body = body, Destintation = phone, Date = _calendar.LocalTime() });
-            _appDbContext.SaveChanges();
-            return result;
+				var result = await MessageResource.CreateAsync(
+					from: new PhoneNumber(_sender),
+					to: new PhoneNumber(destination),
+					body: body.RemoveAccents());
+
+				_appDbContext.SmsHistory.Add(new SmsHistory { Body = body, Destintation = phone, Date = _calendar.LocalTime() });
+			}
+			catch(Exception ex)
+			{
+				_appDbContext.SmsHistory.Add(new SmsHistory { Body = body, Destintation = $"INVALID {phone}. {ex.Message}", Date = _calendar.LocalTime() });
+			}
+			_appDbContext.SaveChanges();
         }
 
 

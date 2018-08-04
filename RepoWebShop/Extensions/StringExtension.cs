@@ -12,6 +12,17 @@ namespace RepoWebShop.Extensions
 {
     public static class StringExtension
     {
+		public static string RemoveAccents(this string text)
+		{
+			if (string.IsNullOrWhiteSpace(text))
+				return text;
+
+			text = text.Normalize(NormalizationForm.FormD);
+			var chars = text.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark).ToArray();
+			var result = new string(chars).Normalize(NormalizationForm.FormC);
+
+			return result;
+		}
         public static string CamelCaseString(this string camelCase)
         {
             if (string.IsNullOrEmpty(camelCase) || camelCase.Length < 2)

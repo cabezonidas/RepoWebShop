@@ -122,8 +122,9 @@ else
     @Html.Partial("~/Views/Shared/LoadingBar.cshtml")
     
     <script type="text/javascript">
-        checkOrder();
-        setInterval(checkOrder, 5000);
+		checkOrder();
+		setInterval(checkOrder, 2000);
+		setTimeout(checkAllOrders, 15000);
 
         function checkOrder() {
             $.ajax({
@@ -134,5 +135,15 @@ else
                 }
             });
         }
+
+        function checkAllOrders() {
+            $.ajax({
+                type: 'GET',
+				url: '/api/WebhooksData/OnPaymentNotNotified',
+                success: function () {
+					console.log('Payments checked!');
+                }
+            });
+		}
     </script>
 }

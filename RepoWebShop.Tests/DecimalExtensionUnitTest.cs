@@ -4,6 +4,7 @@ using RepoWebShop.Extensions;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Globalization;
 
 namespace RepoWebShop.Tests
 {
@@ -13,6 +14,15 @@ namespace RepoWebShop.Tests
         public DecimalExtensionUnitTest()
         {
         }
+
+        [TestMethod]
+        public void Diatricts()
+        {
+			var text = "Hólá, Hono lulú, !¡ - é í";
+			var result = text.RemoveAccents();
+
+			Assert.AreEqual(result, "Hola, Hono lulu, !¡ - e i");
+		}
 
         [TestMethod]
         public void ApplyPercentage()
@@ -36,11 +46,11 @@ namespace RepoWebShop.Tests
 			Assert.AreEqual(test3.Count(), 3);
 			Assert.AreEqual(test4.Count(), 1);
 
-			Assert.AreEqual(test0.Select(x => x.Value).Sum(), 2530);
-			Assert.AreEqual(test1.Select(x => x.Value).Sum(), 2530);
-			Assert.AreEqual(test2.Select(x => x.Value).Sum(), 2530);
-			Assert.AreEqual(test3.Select(x => x.Value).Sum(), 2530);
-			Assert.AreEqual(test4.Select(x => x.Value).Sum(), 2530);
+			Assert.AreEqual(test0.Select(x => (int)x.Value).Sum(), 2530);
+			Assert.AreEqual(test1.Select(x => (int)x.Value).Sum(), 2530);
+			Assert.AreEqual(test2.Select(x => (int)x.Value).Sum(), 2530);
+			Assert.AreEqual(test3.Select(x => (int)x.Value).Sum(), 2530);
+			Assert.AreEqual(test4.Select(x => (int)x.Value).Sum(), 2530);
 		}
 
         [TestMethod]

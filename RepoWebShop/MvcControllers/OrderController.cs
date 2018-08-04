@@ -73,14 +73,6 @@ namespace RepoWebShop.MvcControllers
                 if(Request.Query.ContainsKey("preference_id"))
                     if(Request.Query["preference_id"].ToString() == _cartRepository.GetMpPreference(_cartRepository.GetSessionCartId()))
                         _cartRepository.RenewId();
-
-#pragma warning disable CS4014 // Ya que no se esperaba esta llamada, la ejecución del método actual continúa antes de que se complete la llamada
-                Task.Run(async () =>
-                {
-                    var apicall = $"http://{Request.Host.ToString()}/api/WebhooksData/OnPaymentNotNotified";
-                    await new HttpClient().GetAsync(apicall);
-                });
-#pragma warning restore CS4014 // Ya que no se esperaba esta llamada, la ejecución del método actual continúa antes de que se complete la llamada
             }
 
             Order order = await _orderRepository.GetOrderByFriendlyBookingId(id);

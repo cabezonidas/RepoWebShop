@@ -205,9 +205,11 @@ namespace RepoWebShop.Models
             get
             {
 				// var result = new List<KeyValuePair<int, string>>();
-				IEnumerable<KeyValuePair<int, string>> allItems;
+				IEnumerable<KeyValuePair<int, string>> allItems = new List<KeyValuePair<int, string>>().AsEnumerable();
 
-                allItems = OrderLines.Select(x => new KeyValuePair<int, string>(x.Amount, $"{x.Pie.PieDetail.Name} {x.Pie.Name}"));
+				if(OrderLines != null) //To be deprecated
+					allItems = allItems.Concat(OrderLines.Select(x => new KeyValuePair<int, string>(x.Amount, $"{x.Pie.PieDetail.Name} {x.Pie.Name}")));
+
                 allItems = allItems.Concat(OrderCatalogItems.Select(x => new KeyValuePair<int, string>(x.Amount, x.Product.DisplayName)));
                 // var miscellanea = new List<KeyValuePair<int, string>>();
                 foreach (var cat in OrderCaterings)
