@@ -13,6 +13,13 @@ namespace RepoWebShop.Models
     {
 		public MappingProfile()
 		{
+			CreateMap<Lunch, _Catering>();
+			
+			CreateMap<LunchItem, _CateringItem>();
+
+			CreateMap<LunchMiscellaneous, _CateringMiscellaneous>()
+				.ForMember(x => x.CateringMiscellaneousId, opt => opt.MapFrom(src => src.LunchMiscellaneousId));
+
 			CreateMap<ApplicationUser, _RegisterEmail>();
 
 			CreateMap<_RegisterEmail, ApplicationUser>()

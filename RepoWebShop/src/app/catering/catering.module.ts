@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NewCateringShellComponent } from './containers/new-catering-shell/new-catering-shell.component';
 import { Routes, RouterModule } from '@angular/router';
-import { NewCateringComponent } from './components/new-catering/new-catering.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { reducer } from './state/catering.reducer';
@@ -26,6 +25,6 @@ const cateringRoutes: Routes = [
     StoreModule.forFeature('catering', reducer),
     EffectsModule.forFeature([CateringEffects])
   ],
-  declarations: [NewCateringShellComponent, NewCateringComponent, ItemsTableComponent, SelectedItemsTableComponent, AutocompleteItemsComponent]
+  declarations: [NewCateringShellComponent, ItemsTableComponent, SelectedItemsTableComponent, AutocompleteItemsComponent]
 })
 export class CateringModule { }

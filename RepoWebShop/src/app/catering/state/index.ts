@@ -12,6 +12,10 @@ export const getItems = createSelector(
     getCateringFeatureState,
     state => state.items
 );
+export const getSessionCatering = createSelector(
+    getCateringFeatureState,
+    state => state.catering
+);
 export const getError = createSelector(
     getCateringFeatureState,
     state => state.error

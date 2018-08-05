@@ -7,6 +7,7 @@ import { IItem } from '../../products/interfaces/iitem';
 import { of, Observable } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
 import * as fromCatering from '../state';
+import { ICatering } from '../interfaces/ICatering';
 
 @Injectable()
 export class CateringEffects {
@@ -22,5 +23,29 @@ export class CateringEffects {
             }),
             catchError(err => of(new cateringActions.LoadItemsFail(err)))
         ))
+    );
+
+    @Effect()
+    loadSessionCatering$: Observable<Action> = this.actions$.pipe(
+        ofType(cateringActions.CateringActionTypes.LoadSessionCatering),
+        mergeMap((action: cateringActions.LoadSessionCatering) => this.cateringService.loadSessionCatering().pipe(
+            map((catering: ICatering) => {
+                return new cateringActions.LoadSessionCateringSuccess(catering);
+            }),
+            catchError(err => of(new cateringActions.LoadSessionCateringFail(err)))
+        ))
+    );
+
+    @Effect()
+    addItem$: Observable<Action> = this.actions$.pipe(
+      ofType(cateringActions.CateringActionTypes.AddItem),
+      map((action: cateringActions.AddItem) => action.payload),
+      mergeMap((itemId: number) => this.cateringService.addItem(itemId).pipe(
+            map((catering: ICatering) => {
+                return new cateringActions.LoadSessionCateringSuccess(catering);
+            }),
+          catchError(err => of(new cateringActions.LoadItemsFail(err)))
+        )
+      )
     );
 }

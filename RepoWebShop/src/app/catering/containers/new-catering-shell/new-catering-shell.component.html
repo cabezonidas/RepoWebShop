@@ -1,3 +1,18 @@
-<app-new-catering [items]="items$ | async">
+<!-- <app-new-catering [items]="" [catering]="catering$ | async" (addItemToCatering)="addItem($event)" >
 
-</app-new-catering>
+</app-new-catering> -->
+<div class='form-container'>
+        <div class="form-content">
+          <mat-card>
+            <mat-card-header>
+                <div mat-card-avatar class="header-image"></div>
+                <div class='header-text'>
+                <mat-card-title>Catering personalizado</mat-card-title>
+                <mat-card-subtitle>De las Artes</mat-card-subtitle>
+            </div>
+            </mat-card-header>
+            <app-autocomplete-items [items]='items$ | async' (addItem)="addItem($event)" ></app-autocomplete-items>
+            <app-selected-items-table [catering]='catering$ | async' [items]='items$ | async'></app-selected-items-table>
+        </mat-card>
+    </div>
+</div>

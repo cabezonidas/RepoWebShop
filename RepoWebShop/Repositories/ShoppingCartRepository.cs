@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using RepoWebShop.ViewModels;
 using RepoWebShop.Extensions;
 using Microsoft.AspNetCore.Identity;
+using RepoWebShop.FeModels;
 
 namespace RepoWebShop.Repositories
 {
@@ -883,6 +884,27 @@ namespace RepoWebShop.Repositories
 				Discount = _Discount
 			};
 			return shoppingCartViewModel;
+		}
+
+		public _Catering SessionCatering()
+		{
+			_Catering catering = null;
+			var sessionLunch = GetOrCreateSessionLunch();
+			if(sessionLunch != null && sessionLunch.Lunch != null)
+			{
+				catering = _mapper.Map<Lunch, _Catering>(sessionLunch.Lunch);
+				if(sessionLunch.Lunch.Items !=  null)
+					catering.Items = sessionLunch.Lunch.Items.Select(c => 
+					{
+						var result = _mapper.Map<LunchItem, _CateringItem>(c);
+						result.Item = _mapper.Map<Product, _Item>(c.Product);
+						return result;
+					});
+
+				if (sessionLunch.Lunch.Miscellanea != null)
+					catering.Miscellanea = sessionLunch.Lunch.Miscellanea.Select(m => _mapper.Map<LunchMiscellaneous, _CateringMiscellaneous>(m));
+			}
+			return catering;
 		}
 	}
 }

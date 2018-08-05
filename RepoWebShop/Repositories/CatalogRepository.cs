@@ -175,19 +175,18 @@ namespace RepoWebShop.Models
             _appDbContext.SaveChanges();
         }
 
-		public IEnumerable<_Product> GroupByParent(IEnumerable<Product> items)
+		public IEnumerable<_Product> ProductsGroupedByParent()
 		{
-			var _products = items.Select(x => x.PieDetail).Distinct();
-			var result = _products.Select(pieDetail => GroupedProducts(items, pieDetail));
-			return result;
-		}
+			var _items = GetAvailableToBuyOnline().Select(x => _mapper.Map<Product, _Item>(x));
+			IEnumerable<_Product> _products = _pieDetailRepository.PieDetails.Where(x => x.IsActive).ToArray().Select(x => _mapper.Map<PieDetail, _Product>(x));
 
-		private _Product GroupedProducts(IEnumerable<Product> items, PieDetail pieDetail)
-		{
-			var _product = _mapper.Map<PieDetail, _Product>(pieDetail);
-			var filteredItems = items.Where(p => p.PieDetailId == pieDetail.PieDetailId);
-			_product.Items = filteredItems.Select(i => _mapper.Map<Product, _Item>(i));
-			return _product;
+			var result = _products.Select(x =>
+			{
+				x.Items = _items.Where(item => item.PieDetailId == x.PieDetailId);
+				return x;
+			}).ToArray();
+
+			return result;
 		}
 	}
 }

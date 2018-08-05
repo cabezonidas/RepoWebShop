@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { ICatering } from '../../interfaces/ICatering';
+import { IItem } from '../../../products/interfaces/iitem';
 
 @Component({
   selector: 'app-selected-items-table',
@@ -7,9 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SelectedItemsTableComponent implements OnInit {
 
+  @Input() catering: ICatering;
+  @Input() items: IItem[];
   constructor() { }
 
   ngOnInit() {
   }
+
+  getItem = (id: number): IItem => this.items.find(i => i.productId === id);
 
 }

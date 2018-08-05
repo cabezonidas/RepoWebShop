@@ -1,4 +1,5 @@
-﻿using RepoWebShop.Models;
+﻿using RepoWebShop.FeModels;
+using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -36,8 +37,8 @@ namespace RepoWebShop.Interfaces
         decimal GetCateringsTotalSavings(string bookingId);
         decimal GetProductsTotalInStore(string bookingId);
         decimal GetProductsOnlineSavings(string bookingId);
-
-        void AddComments(string comments);
+		_Catering SessionCatering();
+		void AddComments(string comments);
         void ClearFromCart(int pieId);
         void ClearCatalogItemFromCart(int productId);
         void ClearCateringFromCart(int cateringId);
