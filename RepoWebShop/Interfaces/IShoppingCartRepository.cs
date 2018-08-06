@@ -54,8 +54,8 @@ namespace RepoWebShop.Interfaces
         void RemoveDelivery();
         void RemoveShoppingDiscount();
         void AddDiscount(Discount discount);
-        
-        void RenewId();
+		_Catering Map(Lunch c);
+		void RenewId();
         string GetSessionCartId();
         string GetMpPreference(string bookingId);
         void SetMpPreference(string preferenceId);

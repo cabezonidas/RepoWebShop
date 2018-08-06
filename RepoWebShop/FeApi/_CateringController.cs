@@ -1,16 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using RepoWebShop.Extensions;
 using RepoWebShop.FeModels;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -67,7 +60,7 @@ namespace RepoWebShop.FeApi
 		public async Task<_Catering> RemoveItem(int id)
 		{
 			var catering = _cart.SessionCatering();
-			await _catering.RemoveItemInstanceAsync(catering.LunchId, id);
+			await _catering.RemoveItemAsync(catering.LunchId, id);
 			catering = _cart.SessionCatering();
 			return catering;
 		}
@@ -80,6 +73,24 @@ namespace RepoWebShop.FeApi
 			await _catering.RemoveItemAsync(catering.LunchId, id);
 			catering = _cart.SessionCatering();
 			return catering;
+		}
+
+		[HttpGet]
+		[Route("AvailableCaterings")]
+		public async Task<IEnumerable<_Catering>> AvailableCaterings()
+		{
+			IEnumerable<Lunch> caterings = await _catering.GetAllLunchesAsync(x => x.IsCombo);
+			IEnumerable<_Catering> result = caterings.Select(c => _cart.Map(c));
+			return result;
+		}
+
+		[HttpPost]
+		[Route("AddToCart")]
+		public async Task<IActionResult> AddToCart(int id)
+		{
+			var catering = await _catering.GetLunchByIdAsync(id);
+			_cart.AddCateringToCart(catering, 1);
+			return Ok();
 		}
 	}
 }

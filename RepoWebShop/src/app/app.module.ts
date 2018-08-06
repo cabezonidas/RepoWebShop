@@ -10,10 +10,15 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { CateringModule } from './catering/catering.module';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule } from '@angular/material';
+import { MainNavComponent } from './shared/components/main-nav/main-nav.component';
+import { CartModule } from './cart/cart.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MainNavComponent
   ],
   imports: [
     MaterialModule,
@@ -21,6 +26,7 @@ import { CateringModule } from './catering/catering.module';
     AuthenticationModule,
     ProductModule,
     CateringModule,
+    CartModule,
     AppRoutingModule,
     EffectsModule.forRoot([]),
     StoreModule.forRoot({}),
@@ -28,7 +34,13 @@ import { CateringModule } from './catering/catering.module';
       name: 'De las Artes App Devtools',
       maxAge: 25,
       logOnly: environment.production
-    })
+    }),
+    LayoutModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatListModule
   ],
   bootstrap: [AppComponent]
 })

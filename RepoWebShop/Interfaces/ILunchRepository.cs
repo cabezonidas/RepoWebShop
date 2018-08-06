@@ -1,4 +1,5 @@
-﻿using RepoWebShop.Models;
+﻿using RepoWebShop.FeModels;
+using RepoWebShop.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,5 +27,5 @@ namespace RepoWebShop.Interfaces
         decimal GetTotal(Lunch lunch);
         decimal GetLunchTotalInStore(Lunch lunch);
         LunchMiscellaneous GetMiscellaneous(int id);
-    }
+	}
 }

@@ -13,13 +13,10 @@ import { ICartCatalogItem } from '../../interfaces/icart-catalog-item';
 
 export class CartComponent implements OnInit, OnDestroy {
 
-  constructor(private cart: CartService, public dialog: MatDialog) {}
-
-  products$ = new Subscription();
-  products: Array<ICartCatalogItem>;
+  constructor(public dialog: MatDialog) {}
 
   ngOnInit() {
-    this.products$ = this.cart.currentProducts.subscribe(products => this.products = products);
+
   }
   openDialog(item: ICartCatalogItem): void {
     const dialogRef = this.dialog.open(CartItemEditComponent, {
@@ -28,10 +25,8 @@ export class CartComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      // this.animal = result;
     });
   }
   ngOnDestroy() {
-    this.products$.unsubscribe();
   }
 }

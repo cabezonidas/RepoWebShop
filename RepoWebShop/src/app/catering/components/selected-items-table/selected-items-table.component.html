@@ -1,20 +1,18 @@
 <div *ngIf="catering">
   <mat-list>
-    <h3 mat-subheader>Items</h3>
     <mat-list-item *ngFor="let item of catering.items">
-
-      <mat-icon color="primary" mat-list-icon>folder</mat-icon>
-        <h4 mat-line>
-          {{ item.item.displayName }} (${{ item.item.price }} c/u)
-        </h4>
+      <mat-icon color="primary" mat-list-icon (tap)="onDecrement(item.item.productId)">arrow_drop_down</mat-icon>
+      <mat-icon color="primary" mat-list-icon (tap)="onIncrement(item.item.productId)">arrow_drop_up</mat-icon>
       <p mat-line>
-        <span class="arrow">-</span>
-        <span>{{ item.itemCount }}</span>
-        <span class="arrow">+</span>
+        {{ item.itemCount === 1 ? '' : item.itemCount }} {{ item.item.displayName }} (${{ item.item.price }} c/u)
       </p>
+      <!-- <p mat-line>
+        <i class="material-icons">arrow_drop_down</i>
+        <i class="material-icons" >arrow_drop_up</i>
+      </p> -->
       <div class="subtotal">
         <div class='price'><strong>${{ item.subTotal }}</strong></div>
-        <div class='priceInStore' *ngIf="item.subTotal < item.subTotalInStore"><small>${{ item.subTotalInStore }} c/u</small></div>
+        <div class='priceInStore' *ngIf="item.subTotal < item.subTotalInStore"><small>${{ item.subTotalInStore }}</small></div>
       </div>
     </mat-list-item>
   </mat-list>

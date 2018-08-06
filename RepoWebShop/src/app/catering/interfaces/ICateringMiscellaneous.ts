@@ -1,6 +1,6 @@
 export interface ICateringMiscellaneous {
-    'cateringMiscellaneousId': string;
-    'quantity': string;
-    'price': string;
+    'cateringMiscellaneousId': number;
+    'quantity': number;
+    'price': number;
     'description': string;
 }

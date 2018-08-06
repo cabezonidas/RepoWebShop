@@ -11,13 +11,19 @@ import { ItemsTableComponent } from './components/items-table/items-table.compon
 import { SelectedItemsTableComponent } from './components/selected-items-table/selected-items-table.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AutocompleteItemsComponent } from './components/autocomplete-items/autocomplete-items.component';
+import { NewCateringSubtotalHeaderComponent } from './components/new-catering-subtotal-header/new-catering-subtotal-header.component';
+import { SharedModule } from '../shared/shared.module';
+import { CateringOptionsShellComponent } from './containers/catering-options-shell/catering-options-shell.component';
+import { CateringOptionComponent } from './components/catering-option/catering-option.component';
 
 const cateringRoutes: Routes = [
-  { path: 'new-catering', component: NewCateringShellComponent }
+  { path: 'new-catering', component: NewCateringShellComponent },
+  { path: 'catering-options', component: CateringOptionsShellComponent }
 ];
 
 @NgModule({
   imports: [
+    SharedModule,
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
@@ -25,6 +31,7 @@ const cateringRoutes: Routes = [
     StoreModule.forFeature('catering', reducer),
     EffectsModule.forFeature([CateringEffects])
   ],
-  declarations: [NewCateringShellComponent, ItemsTableComponent, SelectedItemsTableComponent, AutocompleteItemsComponent]
+  declarations: [NewCateringShellComponent, ItemsTableComponent, SelectedItemsTableComponent,
+    AutocompleteItemsComponent, NewCateringSubtotalHeaderComponent, CateringOptionComponent, CateringOptionsShellComponent]
 })
 export class CateringModule { }

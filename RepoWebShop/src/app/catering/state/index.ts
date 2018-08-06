@@ -20,3 +20,11 @@ export const getError = createSelector(
     getCateringFeatureState,
     state => state.error
 );
+export const getLoading = createSelector(
+    getCateringFeatureState,
+    state => state.loading
+);
+export const getCaterings = createSelector(
+    getCateringFeatureState,
+    state => state.caterings
+);

@@ -1,35 +1,33 @@
-<!--The content below is only a placeholder and can be replaced.-->
+<!-- <app-main-nav></app-main-nav>
+<router-outlet></router-outlet> -->
 <div id="container">
   <mat-sidenav-container class="left-container" (backdropClick)="close('backdrop')">
     <mat-sidenav #sidenav (keydown.escape)="close('escape')" disableClose>
       <mat-card>
         <mat-card-title color="primary">De las Artes</mat-card-title>
       </mat-card>
-      <div>
-        <button mat-button routerLink='/login' class='leftPanelButton' (click)="close('toggle button')">
-          <mat-icon matListIcon>person</mat-icon>Iniciar Sesión
-        </button>
-      </div>
-      <div>
-        <button mat-button routerLink='/products' class='leftPanelButton' (click)="close('toggle button')">
-          <mat-icon matListIcon>cake</mat-icon>Productos
-        </button>
-      </div>
-      <div>
-        <button mat-button routerLink='/new-catering' class='leftPanelButton' (click)="close('toggle button')">
-          <mat-icon matListIcon>restaurant_menu</mat-icon>Catering
-        </button>
-      </div>
-      <div>
-        <button mat-button routerLink='/cart' class='leftPanelButton' (click)="close('toggle button')">
-          <mat-icon matListIcon>shopping_cart</mat-icon>Carrito
-        </button>
-      </div>
-      <div>
-        <button mat-button routerLink='/profile' class='leftPanelButton' (click)="close('toggle button')">
-          <mat-icon matListIcon>person</mat-icon>Perfil
-        </button>
-      </div>
+      <mat-nav-list>
+          <a mat-list-item (tap)="close('toggle button')" routerLink='/profile'>
+            <mat-icon matListIcon>person</mat-icon>
+            Perfil
+          </a>
+          <a mat-list-item (tap)="close('toggle button')" routerLink='/products'>
+            <mat-icon matListIcon>cake</mat-icon>
+            Destacados
+          </a>
+          <a mat-list-item (tap)="close('toggle button')" routerLink='/new-catering'>
+            <mat-icon matListIcon>person</mat-icon>
+            Armá tu Catering
+          </a>
+          <a mat-list-item (tap)="close('toggle button')" routerLink='/catering-options'>
+            <mat-icon matListIcon>person</mat-icon>
+            Opciones de Catering
+          </a>
+          <a mat-list-item (tap)="close('toggle button')" routerLink='/cart'>
+            <mat-icon matListIcon>shopping_cart</mat-icon>
+            Carrito
+          </a>
+      </mat-nav-list>
       <button mat-raised-button (click)="close('toggle button')" color="primary" class='closeButton'>Cerrar</button>
     </mat-sidenav>
     
@@ -41,6 +39,7 @@
             <span>De las Artes</span>
             <mat-icon matBadge="1" matBadgeColor="accent">shopping_cart</mat-icon>
             <span class="spacer"></span>
+            <span >Link</span>
           </mat-toolbar-row>
         </mat-toolbar>
         <div id="content">

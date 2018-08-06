@@ -889,20 +889,28 @@ namespace RepoWebShop.Repositories
 		public _Catering SessionCatering()
 		{
 			_Catering catering = null;
-			var sessionLunch = GetOrCreateSessionLunch();
-			if(sessionLunch != null && sessionLunch.Lunch != null)
+			var shoppingLunch = GetOrCreateSessionLunch();
+			if(shoppingLunch != null && shoppingLunch.Lunch != null)
+				catering = Map(shoppingLunch.Lunch);
+			return catering;
+		}
+
+		public _Catering Map(Lunch lunch)
+		{
+			_Catering catering = null;
+			if (lunch != null)
 			{
-				catering = _mapper.Map<Lunch, _Catering>(sessionLunch.Lunch);
-				if(sessionLunch.Lunch.Items !=  null)
-					catering.Items = sessionLunch.Lunch.Items.Select(c => 
+				catering = _mapper.Map<Lunch, _Catering>(lunch);
+				if (lunch.Items != null)
+					catering.Items = lunch.Items.Select(c =>
 					{
 						var result = _mapper.Map<LunchItem, _CateringItem>(c);
 						result.Item = _mapper.Map<Product, _Item>(c.Product);
 						return result;
 					});
 
-				if (sessionLunch.Lunch.Miscellanea != null)
-					catering.Miscellanea = sessionLunch.Lunch.Miscellanea.Select(m => _mapper.Map<LunchMiscellaneous, _CateringMiscellaneous>(m));
+				if (lunch.Miscellanea != null)
+					catering.Miscellanea = lunch.Miscellanea.Select(m => _mapper.Map<LunchMiscellaneous, _CateringMiscellaneous>(m));
 			}
 			return catering;
 		}

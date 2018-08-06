@@ -2,17 +2,25 @@
 
 </app-new-catering> -->
 <div class='form-container'>
-        <div class="form-content">
-          <mat-card>
+    <div class="form-content">
+        <mat-card>
             <mat-card-header>
                 <div mat-card-avatar class="header-image"></div>
                 <div class='header-text'>
-                <mat-card-title>Catering personalizado</mat-card-title>
-                <mat-card-subtitle>De las Artes</mat-card-subtitle>
-            </div>
+                    <mat-card-title>Catering personalizado</mat-card-title>
+                    <mat-card-subtitle>De las Artes</mat-card-subtitle>
+                    <div class='loaderbox'>
+                        <app-loading *ngIf='(loading$ | async)'></app-loading>
+                    </div>
+                    <app-new-catering-subtotal-header [catering]='catering$ | async'></app-new-catering-subtotal-header>
+                </div>
             </mat-card-header>
             <app-autocomplete-items [items]='items$ | async' (addItem)="addItem($event)" ></app-autocomplete-items>
-            <app-selected-items-table [catering]='catering$ | async' [items]='items$ | async'></app-selected-items-table>
+            <app-selected-items-table 
+                [catering]='catering$ | async' [items]='items$ | async'
+                (addItem)="addItem($event)" (removeItem)="removeItem($event)">
+            </app-selected-items-table>
+            <button mat-raised-button color="primary" routerLink="/cart">Finalizar</button>
         </mat-card>
     </div>
 </div>

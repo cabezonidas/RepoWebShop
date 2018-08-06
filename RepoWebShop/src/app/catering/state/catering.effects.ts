@@ -48,4 +48,28 @@ export class CateringEffects {
         )
       )
     );
+
+    @Effect()
+    removeItem$: Observable<Action> = this.actions$.pipe(
+      ofType(cateringActions.CateringActionTypes.RemoveItem),
+      map((action: cateringActions.RemoveItem) => action.payload),
+      mergeMap((itemId: number) => this.cateringService.removeItem(itemId).pipe(
+            map((catering: ICatering) => {
+                return new cateringActions.LoadSessionCateringSuccess(catering);
+            }),
+          catchError(err => of(new cateringActions.LoadItemsFail(err)))
+        )
+      )
+    );
+
+    @Effect()
+    loadCaterings$: Observable<Action> = this.actions$.pipe(
+        ofType(cateringActions.CateringActionTypes.LoadCaterings),
+        mergeMap((action: cateringActions.LoadCaterings) => this.cateringService.loadCaterings().pipe(
+            map((caterings: ICatering[]) => {
+                return new cateringActions.LoadCateringsSuccess(caterings);
+            }),
+            catchError(err => of(new cateringActions.LoadCateringsFail(err)))
+        ))
+    );
 }

@@ -9,7 +9,11 @@ export enum CateringActionTypes {
     LoadSessionCatering = '[Catering] Load Session Catering',
     LoadSessionCateringSuccess = '[Catering] Load Session Catering Success',
     LoadSessionCateringFail = '[Catering] Load Session Catering Fail',
-    AddItem = '[Catering] Add Item to Catering'
+    AddItem = '[Catering] Add Item to Catering',
+    RemoveItem = '[Catering] Remove Item from Catering',
+    LoadCaterings = '[Catering] Load Caterings',
+    LoadCateringsSuccess = '[Catering] Load Caterings Success',
+    LoadCateringsFail = '[Catering] Load Caterings Fail'
 }
 
 export class LoadItems implements Action {
@@ -40,8 +44,27 @@ export class LoadSessionCateringFail implements Action {
     constructor(public payload: string) {}
 }
 
+export class LoadCaterings implements Action {
+    readonly type = CateringActionTypes.LoadCaterings;
+}
+
+export class LoadCateringsSuccess implements Action {
+    readonly type = CateringActionTypes.LoadCateringsSuccess;
+    constructor(public payload: ICatering[]) {}
+}
+
+export class LoadCateringsFail implements Action {
+    readonly type = CateringActionTypes.LoadCateringsFail;
+    constructor(public payload: string) {}
+}
+
 export class AddItem implements Action {
     readonly type = CateringActionTypes.AddItem;
+    constructor(public payload: number) {}
+}
+
+export class RemoveItem implements Action {
+    readonly type = CateringActionTypes.RemoveItem;
     constructor(public payload: number) {}
 }
 
@@ -51,4 +74,8 @@ export type CateringActions = LoadItems
     | LoadSessionCatering
     | LoadSessionCateringSuccess
     | LoadSessionCateringFail
-    | AddItem;
+    | AddItem
+    | RemoveItem
+    | LoadCaterings
+    | LoadCateringsSuccess
+    | LoadCateringsFail;

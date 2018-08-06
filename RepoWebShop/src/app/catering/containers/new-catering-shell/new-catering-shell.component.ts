@@ -18,6 +18,7 @@ import { moveIn } from '../../../animations/router.animations';
 export class NewCateringShellComponent implements OnInit {
   items$: Observable<IItem[]>;
   catering$: Observable<ICatering>;
+  loading$: Observable<boolean>;
   errorMessage$: Observable<string>;
 
   constructor(private store: Store<fromCatering.State>) { }
@@ -36,10 +37,18 @@ export class NewCateringShellComponent implements OnInit {
     ));
 
     this.errorMessage$ = this.store.pipe(select(fromCatering.getError));
+
+    this.loading$ = this.store.pipe(
+      select(fromCatering.getLoading)
+    );
   }
 
   addItem(itemId: number): void {
     this.store.dispatch(new cateringActions.AddItem(itemId));
+  }
+
+  removeItem(itemId: number): void {
+    this.store.dispatch(new cateringActions.RemoveItem(itemId));
   }
 
 }
