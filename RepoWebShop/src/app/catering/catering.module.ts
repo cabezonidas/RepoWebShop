@@ -15,6 +15,7 @@ import { NewCateringSubtotalHeaderComponent } from './components/new-catering-su
 import { SharedModule } from '../shared/shared.module';
 import { CateringOptionsShellComponent } from './containers/catering-options-shell/catering-options-shell.component';
 import { CateringOptionComponent } from './components/catering-option/catering-option.component';
+import { SlickModule } from 'ngx-slick';
 
 const cateringRoutes: Routes = [
   { path: 'new-catering', component: NewCateringShellComponent },
@@ -24,6 +25,7 @@ const cateringRoutes: Routes = [
 @NgModule({
   imports: [
     SharedModule,
+    SlickModule,
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,

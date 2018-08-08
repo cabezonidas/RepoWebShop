@@ -1,10 +1,36 @@
-<mat-list>
-  <h3 mat-subheader>Productos</h3>
-  <mat-list-item *ngFor="let item of products$">
-    <mat-icon mat-list-icon (click)="openDialog(item)">more_vert</mat-icon>
-    <h3 mat-line>{{item.product.displayName}}</h3>
-    <h3 mat-line>Cantidad: {{item.amount}}</h3>
-    <div>${{ item.amount * item.product.priceInStore }}</div>
-  </mat-list-item>
-  <!-- <mat-divider></mat-divider> -->
-</mat-list>
+<div class="form-container">
+    <mat-card>
+      <mat-card-header>
+        <a routerLink="/login">Volver</a>
+      </mat-card-header>
+      <mat-card-title>
+        <div class='logo'>
+          <img src='../../../../assets/images/logoRepo.PNG'>
+        </div>
+      </mat-card-title>
+      <mat-vertical-stepper linear #stepper>
+        <mat-step >
+          <ng-template matStepLabel>Envío</ng-template>
+          <app-delivery></app-delivery>
+        </mat-step>
+        <mat-step >
+          <ng-template matStepLabel>Resumen</ng-template>
+        </mat-step>
+        <mat-step >
+          <ng-template matStepLabel>Comentarios</ng-template>
+        </mat-step>
+        <mat-step >
+          <ng-template matStepLabel>Código Promocional</ng-template>
+        </mat-step>
+        <mat-step >
+          <ng-template matStepLabel>Entrega</ng-template>
+        </mat-step>
+        <mat-step >
+          <ng-template matStepLabel>Facturación</ng-template>
+        </mat-step>
+        <mat-step >
+          <ng-template matStepLabel>Pago</ng-template>
+        </mat-step>
+      </mat-vertical-stepper>
+    </mat-card>
+  </div>

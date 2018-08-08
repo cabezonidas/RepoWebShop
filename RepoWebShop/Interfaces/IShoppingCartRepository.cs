@@ -23,8 +23,10 @@ namespace RepoWebShop.Interfaces
         Discount GetDiscount(string bookingId);
 		void RemoveCatalogItemFromCart(int id);
 		decimal GetTotalWithoutDiscount(string bookingId);
+		decimal GetSubtotalWithoutDelivery(string bookingId);
 
-        decimal GetProductsTotal(string bookingId);
+
+		decimal GetProductsTotal(string bookingId);
         decimal GetCateringsTotal(string bookingId);
         int GetPreparationTime(string bookingId);
         void ClearCart(string bookingId);

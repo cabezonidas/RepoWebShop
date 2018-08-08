@@ -13,15 +13,13 @@ namespace RepoWebShop.Models
     {
 		public MappingProfile()
 		{
+			CreateMap<DeliveryAddress, _DeliveryAddress>();
+			CreateMap<_DeliveryAddress, DeliveryAddress>();
 			CreateMap<Lunch, _Catering>();
-			
 			CreateMap<LunchItem, _CateringItem>();
-
 			CreateMap<LunchMiscellaneous, _CateringMiscellaneous>()
 				.ForMember(x => x.CateringMiscellaneousId, opt => opt.MapFrom(src => src.LunchMiscellaneousId));
-
 			CreateMap<ApplicationUser, _RegisterEmail>();
-
 			CreateMap<_RegisterEmail, ApplicationUser>()
 				.ForMember(x => x.FirstName, opt => opt.MapFrom(src => src.FirstName))
 				.ForMember(x => x.EmailConfirmed, opt => opt.MapFrom(src => true))
@@ -29,7 +27,6 @@ namespace RepoWebShop.Models
 				.ForMember(x => x.UserName, opt => opt.MapFrom(src => src.Email))
 				.ForMember(x => x.Email, opt => opt.MapFrom(src => src.Email))
 				.ForMember(x => x.ValidationMailToken, opt => opt.MapFrom(src => DateTime.Now));
-
 			CreateMap<_ProviderData, ApplicationUser>()
 				.ForMember(x => x.Email, opt => opt.MapFrom(src => src.Email))
 				.ForMember(x => x.EmailConfirmed, opt => opt.MapFrom(src => true))
@@ -60,16 +57,11 @@ namespace RepoWebShop.Models
 				.ForMember(x => x.Title, opt => opt.MapFrom(src => src.Photoset.Title))
 				.ForMember(x => x.PrimaryPicture, opt => opt.MapFrom(src => src.PrimaryPicture))
 				.ForMember(x => x.Photos, opt => opt.MapFrom(src => src.Pictures));
-
-
-
 			CreateMap<Product, _Item>();
 			CreateMap<PieDetail, _Product>()
 				.ForMember(x => x.FlickrAlbumId, opt => opt.MapFrom(src => src.FlickrAlbumId == 0 ? string.Empty : src.FlickrAlbumId.ToString()));
-
 			CreateMap<FECAEResponse.FECAECabResponse, InvoiceData>();
             CreateMap<FECAEResponse.FECAEDetResponse, Cae>();
-
             CreateMap<ElectronicInvoiceTest.Err, FECAEResponse.CodeMessage>();
             CreateMap<ElectronicInvoiceTest.Evt, FECAEResponse.CodeMessage>();
             CreateMap<ElectronicInvoiceTest.FECAECabResponse, FECAEResponse.FECAECabResponse>();
@@ -79,7 +71,6 @@ namespace RepoWebShop.Models
                 opt => opt.MapFrom(src => src.Iva.Select(x => new ElectronicInvoiceTest.AlicIva { Id = x.Id, BaseImp = x.BaseImp, Importe = x.Importe })));
             CreateMap<FECAECabRequest, ElectronicInvoiceTest.FECAECabRequest>();
             CreateMap<FEAuthRequest, ElectronicInvoiceTest.FEAuthRequest>();
-
             CreateMap<ElectronicInvoiceProd.Err, FECAEResponse.CodeMessage>();
             CreateMap<ElectronicInvoiceProd.Evt, FECAEResponse.CodeMessage>();
             CreateMap<ElectronicInvoiceProd.FECAECabResponse, FECAEResponse.FECAECabResponse>();
@@ -89,7 +80,6 @@ namespace RepoWebShop.Models
                 opt => opt.MapFrom(src => src.Iva.Select(x => new ElectronicInvoiceProd.AlicIva { Id = x.Id, BaseImp = x.BaseImp, Importe = x.Importe })));
             CreateMap<FECAECabRequest, ElectronicInvoiceProd.FECAECabRequest >();
             CreateMap<FEAuthRequest, ElectronicInvoiceProd.FEAuthRequest>();
-
             CreateMap<Lunch, LunchTicketViewModel>();
             CreateMap<LunchTicketViewModel, Lunch>();
             CreateMap<Product, ProductEstimationViewModel>();
@@ -102,7 +92,6 @@ namespace RepoWebShop.Models
             CreateMap<Lunch, LunchComboViewModel>();
             CreateMap<DeliveryAddress, DeliveryAddressViewModel>();
             CreateMap<DeliveryAddress, DeliveryAddressViewModel>();
-
             CreateMap<ExternalLoginInfo, ApplicationUser>()
                 .ForMember(x => x.ValidationMailToken, opt => opt.MapFrom(y => DateTime.Now))
                 .ForMember(x => x.UserName, opt =>
@@ -156,10 +145,8 @@ namespace RepoWebShop.Models
                 .ForMember(x => x.ValidationMailToken, opt => opt.MapFrom(y => DateTime.Now));
             CreateMap<IdentityUser, ApplicationUser>();
             CreateMap<ApplicationUserViewModel, ApplicationUser>();
-
             CreateMap<ApplicationUser, HashValidationViewModel>();
             CreateMap<ApplicationUser, RegisterProviderWithMailViewModel>();
-
             CreateMap<DeliveryAddress, DeliveryAddressViewModel>();
             CreateMap<DeliveryAddressViewModel, DeliveryAddress>();
             CreateMap<PieDetailCreateViewModel, PieDetail>();

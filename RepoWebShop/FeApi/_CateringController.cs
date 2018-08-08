@@ -60,7 +60,7 @@ namespace RepoWebShop.FeApi
 		public async Task<_Catering> RemoveItem(int id)
 		{
 			var catering = _cart.SessionCatering();
-			await _catering.RemoveItemAsync(catering.LunchId, id);
+			await _catering.RemoveItemInstanceAsync(catering.LunchId, id);
 			catering = _cart.SessionCatering();
 			return catering;
 		}

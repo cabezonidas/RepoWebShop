@@ -19,16 +19,22 @@ namespace RepoWebShop.Repositories
     public class DeliveryRepository : IDeliveryRepository
     {
         private readonly AppDbContext _appDbContext;
+        private readonly IShoppingCartRepository _cart;
         private readonly IConfiguration _config;
         private readonly int _minimumCharge;
         private readonly int _costByBlock;
-        public DeliveryRepository(AppDbContext appDbContext, IConfiguration config)
+        private readonly int _minimumArsForOrderDelivery;
+        private readonly int _deliveryRadius;
+        public DeliveryRepository(AppDbContext appDbContext, IConfiguration config, IShoppingCartRepository cart)
         {
+			_cart = cart;
             _appDbContext = appDbContext;
             _config = config;
             _minimumCharge = _config.GetValue<int>("LowestDeliveryCost");
             _costByBlock = _config.GetValue<int>("DeliveryCostByBlock");
-        }
+			_minimumArsForOrderDelivery = _config.GetValue<int>("MinimumArsForOrderDelivery");
+			_deliveryRadius = _config.GetValue<int>("DeliveryRadius");
+		}
 
         public void AddOrUpdateDelivery(DeliveryAddress deliveryAddress)
         {
@@ -60,7 +66,7 @@ namespace RepoWebShop.Repositories
         public async Task<int> GetDistanceAsync(string addressLine1)
         {
             var destination = await GetGeoLocationAsync(addressLine1);
-            var res1 = distance(destination.Key, destination.Value, 'K');
+            var res1 = Distance(destination.Key, destination.Value, 'K');
 
             return res1;
         }
@@ -71,7 +77,7 @@ namespace RepoWebShop.Repositories
             var placeConfirmed = await GetPlaceAsync(potentialPlace);
 
             var destination = await GetGeoLocationAsync(addressLine1);
-            var res1 = distance(destination.Key, destination.Value, 'K');
+            var res1 = Distance(destination.Key, destination.Value, 'K');
 
             return res1;
         }
@@ -106,7 +112,7 @@ namespace RepoWebShop.Repositories
             return result;
         }
 
-        private int distance(string lat, string lon, char unit)
+        public int Distance(string lat, string lon, char unit)
         {
             var lat1 = Double.Parse(lat, CultureInfo.InvariantCulture);
             var lon1 = Double.Parse(lon, CultureInfo.InvariantCulture);
@@ -212,6 +218,16 @@ namespace RepoWebShop.Repositories
             return address;
         }
 
+		public bool CanDelivery()
+		{
+			var result = _cart.GetSubtotalWithoutDelivery(null) >= _minimumArsForOrderDelivery;
+			return result;
+		}
 
-    }
+		public bool IsValidDistance(string lat, string lng)
+		{
+			int distance = Distance(lat, lng, 'K');
+			return distance <= _deliveryRadius;
+		}
+	}
 }

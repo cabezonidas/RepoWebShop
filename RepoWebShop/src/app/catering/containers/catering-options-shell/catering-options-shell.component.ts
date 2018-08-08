@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 
 import * as fromCatering from '../../state';
 import * as cateringActions from '../../state/catering.actions';
-import { map } from 'rxjs/operators';
 import { ICatering } from '../../interfaces/ICatering';
 import { moveIn } from '../../../animations/router.animations';
 
@@ -16,15 +15,32 @@ import { moveIn } from '../../../animations/router.animations';
 })
 export class CateringOptionsShellComponent implements OnInit {
   caterings$: Observable<ICatering[]>;
+  carouselInit = false;
+  slideConfig = {
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    variableWidth: true,
+    centerMode: true,
+    centerPadding: '40px'
+  };
 
   constructor(private store: Store<fromCatering.State>) { }
   @HostBinding('@moveIn') role = '';
 
   ngOnInit() {
     this.store.dispatch(new cateringActions.LoadCaterings());
-    this.caterings$ = this.store.pipe(
-      select(fromCatering.getCaterings)
-    );
+    this.caterings$ = this.store.pipe(select(fromCatering.getCaterings));
   }
 
+  addSlide() {
+    console.log('addSlide');
+  }
+
+  removeSlide() {
+    console.log('removeSlide');
+  }
+
+  afterChange(e) {
+    console.log('afterChange');
+  }
 }

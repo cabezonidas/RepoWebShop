@@ -1,0 +1,16 @@
+<div *ngIf="canDeliver$ | async; else cantDeliver">
+  <agm-map [latitude]="storeLatitude" [longitude]="storeLongitude" [zoom]="12" [clickableIcons]='false' [streetViewControl]='false'>
+    <agm-marker *ngIf="fullAddress" [latitude]="address.latitude" [longitude]="address.longitude"></agm-marker>
+    <agm-circle [latitude]="storeLatitude" [longitude]="storeLongitude" [radius]="deliveryKmRadius * 1000" [fillOpacity]="0.5" [fillColor]="'CadetBlue'">
+    </agm-circle>
+  </agm-map>
+
+  <mat-form-field>
+    <input [attr.disabled]="fullAddress && !outOfZone ? 'disabled' : ''" matInput type="text" placeholder="Escribe tu dirección" autocorrect="off" spellcheck="off" autocapitalize="off" #search>
+  </mat-form-field>
+  <div *ngIf="searchSelected && !fullAddress">Por favor, ingresa una dirección completa.</div>
+  <div *ngIf="searchSelected && fullAddress && outOfZone">Nuestro delivery no llega a tu zona :(. Si querés llamanos para ver cómo podemos arreglar.</div>
+</div>
+<ng-template #cantDeliver>
+  Tu orden no califica para envíos. Podés agregar algo más, o completar tu orden y retirar en sucursal.
+</ng-template>

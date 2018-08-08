@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import * as fromProduct from '../../state';
 import { Observable, Subscription } from 'rxjs';
 import { select } from '@ngrx/store';
-import { first, map } from '../../../../../node_modules/rxjs/operators';
+import { first, map } from 'rxjs/operators';
 import { IProduct } from '../../interfaces/iproduct';
 
 @Component({

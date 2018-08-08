@@ -1,3 +1,17 @@
-.catering-options {
-    text-align: center;
+@import url('//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css');
+@import url('//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css');
+
+ngx-slick {
+    height: 100%;
+}
+app-catering-option {
+    width: 350px;
+}
+.buttons {
+    display: flex;
+    padding-left: 20px;
+    padding-right: 20px;
+    .spacer{
+        flex: 1 1 auto;
+    }
 }

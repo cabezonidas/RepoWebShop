@@ -17,6 +17,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
     imports: [
@@ -38,7 +39,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
         MatSelectModule,
         MatSidenavModule,
         MatPaginatorModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        MatExpansionModule
     ],
     exports: [
         MatButtonModule,
@@ -59,7 +61,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
         MatSelectModule,
         MatSidenavModule,
         MatPaginatorModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        MatExpansionModule
     ],
     declarations: []
 })

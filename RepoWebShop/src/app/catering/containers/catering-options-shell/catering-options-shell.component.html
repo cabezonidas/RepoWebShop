@@ -1,3 +1,15 @@
-<div class='catering-options'>
-    <app-catering-option *ngFor='let catering of caterings$ | async' [catering]="catering"></app-catering-option>
+<div class="buttons">
+    <button mat-fab color="primary" (click)="slickModal.slickPrev()">
+        <mat-icon aria-label="">arrow_back_io</mat-icon>
+    </button>
+    <span class='spacer'></span>
+    <button mat-fab color="primary" (click)="slickModal.slickNext()">
+        <mat-icon aria-label="">arrow_forward_io</mat-icon>
+    </button>
+
 </div>
+<ngx-slick class="carousel" #slickModal="slick-modal" [config]="slideConfig" (afterChange)="afterChange($event)">
+    <div ngxSlickItem *ngFor="let catering of caterings$ | async" class="slide">
+        <app-catering-option [catering]="catering"></app-catering-option>
+    </div>
+</ngx-slick>

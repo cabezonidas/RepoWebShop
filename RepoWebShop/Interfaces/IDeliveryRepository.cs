@@ -13,5 +13,8 @@ namespace RepoWebShop.Interfaces
         Decimal GetDeliveryEstimate(decimal distance);
         Task<string> GuessPlaceIdAsync(string address);
         Task<AddressViewModel> GetPlaceAsync(string placeId);
-    }
+		bool CanDelivery();
+		int Distance(string lat, string lng, char v);
+		bool IsValidDistance(string lat, string lng);
+	}
 }

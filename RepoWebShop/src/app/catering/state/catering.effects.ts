@@ -6,7 +6,7 @@ import { mergeMap, map, catchError, tap } from 'rxjs/operators';
 import { IItem } from '../../products/interfaces/iitem';
 import { of, Observable } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
-import * as fromCatering from '../state';
+import * as fromCatering from '.';
 import { ICatering } from '../interfaces/ICatering';
 
 @Injectable()
