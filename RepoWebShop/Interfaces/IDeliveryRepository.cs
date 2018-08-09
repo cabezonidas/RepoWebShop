@@ -1,4 +1,5 @@
-﻿using RepoWebShop.Models;
+﻿using RepoWebShop.FeModels;
+using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -16,5 +17,7 @@ namespace RepoWebShop.Interfaces
 		bool CanDelivery();
 		int Distance(string lat, string lng, char v);
 		bool IsValidDistance(string lat, string lng);
+		_DeliveryAddress SaveAddress(_DeliveryAddress address);
+		_DeliveryAddress UpdateInstructions(_DeliveryAddress deliveryAddress);
 	}
 }

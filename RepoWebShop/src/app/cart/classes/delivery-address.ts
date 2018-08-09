@@ -1,3 +1,4 @@
+
 export class DeliveryAddress {
   'addressLine1': string;
   'streetNumber': string;
@@ -6,7 +7,7 @@ export class DeliveryAddress {
   'state': string;
   'country': string;
   'distance': number;
-  'deliveryInstructions': number;
+  'deliveryInstructions': string;
   'deliveryCost': number;
   'deliveryAddressId': number;
 

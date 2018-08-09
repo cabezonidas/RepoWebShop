@@ -315,7 +315,13 @@ namespace RepoWebShop.Repositories
         public DeliveryAddress GetDelivery(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
-            return GetSubtotalWithoutDelivery(bookingId) >= _minimumArsForOrderDelivery ? _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.ShoppingCartId == bookingId) : null;
+			var subtotalwithoutDelivery = GetSubtotalWithoutDelivery(bookingId);
+			var result = _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.ShoppingCartId == bookingId);
+
+			if (subtotalwithoutDelivery >= _minimumArsForOrderDelivery)
+				return result;
+			else
+				return null;
         }
 
         /////////////////////////////////////////////////////////////////////////////

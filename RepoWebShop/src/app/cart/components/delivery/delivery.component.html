@@ -1,16 +1,37 @@
-<div *ngIf="canDeliver$ | async; else cantDeliver">
-  <agm-map [latitude]="storeLatitude" [longitude]="storeLongitude" [zoom]="12" [clickableIcons]='false' [streetViewControl]='false'>
-    <agm-marker *ngIf="fullAddress" [latitude]="address.latitude" [longitude]="address.longitude"></agm-marker>
-    <agm-circle [latitude]="storeLatitude" [longitude]="storeLongitude" [radius]="deliveryKmRadius * 1000" [fillOpacity]="0.5" [fillColor]="'CadetBlue'">
-    </agm-circle>
-  </agm-map>
-
-  <mat-form-field>
-    <input [attr.disabled]="fullAddress && !outOfZone ? 'disabled' : ''" matInput type="text" placeholder="Escribe tu dirección" autocorrect="off" spellcheck="off" autocapitalize="off" #search>
-  </mat-form-field>
-  <div *ngIf="searchSelected && !fullAddress">Por favor, ingresa una dirección completa.</div>
-  <div *ngIf="searchSelected && fullAddress && outOfZone">Nuestro delivery no llega a tu zona :(. Si querés llamanos para ver cómo podemos arreglar.</div>
+<div [ngClass]="canDeliver ? 'show' : 'hidden'">
+  <div [ngClass]="deliverySaved ? 'hidden' : 'show'">
+    <agm-map [latitude]="storeLatitude" [longitude]="storeLongitude" [zoom]="12" [clickableIcons]='false' [streetViewControl]='false'>
+      <agm-marker *ngIf="fullAddress" [latitude]="address.latitude" [longitude]="address.longitude"></agm-marker>
+      <agm-circle [latitude]="storeLatitude" [longitude]="storeLongitude" [radius]="deliveryKmRadius * 1000" [fillOpacity]="0.5" [fillColor]="'CadetBlue'">
+      </agm-circle>
+    </agm-map>
+    
+    <mat-form-field>
+      <input matInput type="text" 
+        placeholder="Escribe tu dirección" autocorrect="off" spellcheck="off" autocapitalize="off" #search>
+    </mat-form-field>
+    <div *ngIf="searchSelected && !fullAddress">Por favor, ingresa una dirección completa.</div>
+    <div *ngIf="searchSelected && fullAddress && outOfZone">Nuestro delivery no llega a tu zona :(. Si querés llamanos para ver cómo podemos arreglar.</div>
+    <button mat-raised-button (tap)="proceed()">No quiero envío</button>
+  </div>
+  <div [ngClass]="deliverySaved ? 'show' : 'hidden'" class="addressConfirmed">
+    <div *ngIf="address" class='confirmed'>
+      <strong>Envío</strong> ${{ address.deliveryCost }} - {{ (address.distance / 1000).toFixed(2) }} kms<br/>
+      <strong>Dirección</strong> {{ address.streetName }} {{ address.streetNumber }}
+    </div>
+    <mat-form-field>
+      <mat-label>¿Instrucciones de envío?</mat-label>
+      <input matInput type="text" placeholder="Piso / Torre / Departamento / etc" #addressInstr
+      autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" value="{{ address ? address.deliveryInstructions : '' }}"
+      >
+    </mat-form-field>
+    <button mat-raised-button (tap)="clearDelivery()">Cancelar Envío</button>
+    <button mat-raised-button color="primary" (tap)="proceed()">¡Listo!</button>
+    
+  </div>
+  <mat-progress-bar *ngIf="savingDelivery" mode="indeterminate"></mat-progress-bar>
 </div>
-<ng-template #cantDeliver>
+<div [ngClass]="!canDeliver ? 'show' : 'hidden'">
   Tu orden no califica para envíos. Podés agregar algo más, o completar tu orden y retirar en sucursal.
-</ng-template>
+</div>
+<div ></div>

@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RepoWebShop.Extensions;
+using RepoWebShop.FeModels;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using RepoWebShop.ViewModels;
@@ -21,11 +23,12 @@ namespace RepoWebShop.Repositories
         private readonly AppDbContext _appDbContext;
         private readonly IShoppingCartRepository _cart;
         private readonly IConfiguration _config;
+        private readonly IMapper _mapper;
         private readonly int _minimumCharge;
         private readonly int _costByBlock;
         private readonly int _minimumArsForOrderDelivery;
         private readonly int _deliveryRadius;
-        public DeliveryRepository(AppDbContext appDbContext, IConfiguration config, IShoppingCartRepository cart)
+        public DeliveryRepository(AppDbContext appDbContext, IConfiguration config, IShoppingCartRepository cart, IMapper mapper)
         {
 			_cart = cart;
             _appDbContext = appDbContext;
@@ -34,6 +37,7 @@ namespace RepoWebShop.Repositories
             _costByBlock = _config.GetValue<int>("DeliveryCostByBlock");
 			_minimumArsForOrderDelivery = _config.GetValue<int>("MinimumArsForOrderDelivery");
 			_deliveryRadius = _config.GetValue<int>("DeliveryRadius");
+			_mapper = mapper;
 		}
 
         public void AddOrUpdateDelivery(DeliveryAddress deliveryAddress)
@@ -228,6 +232,34 @@ namespace RepoWebShop.Repositories
 		{
 			int distance = Distance(lat, lng, 'K');
 			return distance <= _deliveryRadius;
+		}
+
+		public _DeliveryAddress SaveAddress(_DeliveryAddress _address)
+		{
+			_address.Distance = Distance(_address.Latitude, _address.Longitude, 'K');
+			_address.DeliveryCost = GetDeliveryEstimate(_address.Distance);
+
+			var address = _mapper.Map<DeliveryAddress>(_address);
+			address.AddressLine1 = $"{address.StreetName} {address.StreetNumber}";
+			address.ShoppingCartId = _cart.GetSessionCartId();
+			AddOrUpdateDelivery(address);
+
+			var delivery = _cart.GetDelivery(null);
+			var result = _mapper.Map<_DeliveryAddress>(delivery);
+			return result;
+		}
+
+		public _DeliveryAddress UpdateInstructions(_DeliveryAddress deliveryAddress)
+		{
+			var instructions = deliveryAddress?.DeliveryInstructions;
+			var delivery = _cart.GetDelivery(null);
+			if (delivery != null)
+			{
+				delivery.DeliveryInstructions = instructions;
+				AddOrUpdateDelivery(delivery);
+				return _mapper.Map<_DeliveryAddress>(_cart.GetDelivery(null));
+			}
+			return null;
 		}
 	}
 }

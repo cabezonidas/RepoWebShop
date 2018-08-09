@@ -36,32 +36,18 @@ namespace RepoWebShop.FeApi
 
 		[HttpGet]
 		[Route("Get")]
-		public _DeliveryAddress Get()
-		{
-			var delivery = _mapper.Map<_DeliveryAddress>(_cart.GetDelivery(null));
-			return delivery;
-		}
+		public _DeliveryAddress Get() => _mapper.Map<_DeliveryAddress>(_cart.GetDelivery(null));
 
-		[HttpGet]
-		[Route("IsValidDistance/{lat}/{lng}")]
-		public bool IsValidDistance(string lat, string lng)
-		{
-			var result = _delivery.IsValidDistance(lat, lng);
-			return result;
-		}
 		[HttpDelete]
 		[Route("Remove")]
 		public void Remove() => _cart.RemoveDelivery();
 
-		[HttpGet]
+		[HttpPost]
 		[Route("SaveDelivery")]
-		public void SaveDelivery()
-		{
-			var _address = Request.ParseBody<_DeliveryAddress[]>().FirstOrDefault();
-			var address = _mapper.Map<DeliveryAddress>(_address);
+		public _DeliveryAddress SaveDelivery() => _delivery.SaveAddress(Request.ParseBody<_DeliveryAddress>());
 
-			// _delivery.AddOrUpdateDelivery(address);
-			return;
-		}
+		[HttpPost]
+		[Route("UpdateInstructions")]
+		public _DeliveryAddress UpdateInstructions() => _delivery.UpdateInstructions(Request.ParseBody<_DeliveryAddress>());
 	}
 }

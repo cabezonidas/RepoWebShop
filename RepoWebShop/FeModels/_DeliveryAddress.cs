@@ -18,5 +18,7 @@ namespace RepoWebShop.FeModels
 		public string DeliveryInstructions { get; set; }
 		public decimal DeliveryCost { get; set; }
 		public int DeliveryAddressId { get; set; }
+		public string Latitude { get; set; }
+		public string Longitude { get; set; }
 	}
 }

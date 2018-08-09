@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { DeliveryAddress } from '../classes/delivery-address';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,10 @@ export class DeliveryService {
   constructor(private http: HttpClient) { }
 
   canDeliver = () => this.http.get<boolean>('/api/_delivery/canDeliver');
+  clearDelivery = () => this.http.delete<boolean>('/api/_delivery/remove');
+  updateInstructions = (instructions: DeliveryAddress) => this.http.post<DeliveryAddress>('/api/_delivery/updateInstructions', instructions);
+  saveDelivery = (addresss: DeliveryAddress) => this.http.post<DeliveryAddress>('/api/_delivery/saveDelivery', addresss);
+  get = () => this.http.get<DeliveryAddress>('/api/_delivery/get');
 
   getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2): number {
     const R = 6371; // Radius of the earth in km

@@ -11,7 +11,7 @@
       <mat-vertical-stepper linear #stepper>
         <mat-step >
           <ng-template matStepLabel>Envío</ng-template>
-          <app-delivery></app-delivery>
+          <app-delivery (next)="_onNext()"></app-delivery>
         </mat-step>
         <mat-step >
           <ng-template matStepLabel>Resumen</ng-template>

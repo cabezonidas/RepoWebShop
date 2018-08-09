@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostBinding, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostBinding, ViewChild, EventEmitter, Output } from '@angular/core';
 import { CartService } from '../../services/cart.service';
 import { MatDialog, MatStepper } from '@angular/material';
 import { Subscription } from 'rxjs';
@@ -32,5 +32,9 @@ export class CartComponent implements OnInit, OnDestroy {
     // });
   }
   ngOnDestroy() {
+  }
+
+  _onNext() {
+    this.stepper.next();
   }
 }
