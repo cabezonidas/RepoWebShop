@@ -30,12 +30,14 @@ export class DeliveryComponent implements OnInit {
 
   ngOnInit() {
     this.canDeliver$ = this.delivery.canDeliver();
-    this.mapsAPILoader.load().then(() => {
-        this.autocomplete = new google.maps.places.Autocomplete(
-          this.searchElement.nativeElement, { types: ['address'], componentRestrictions: { country: 'ar' }});
-        this.autocomplete.addListener('place_changed', () => this.onPlaceSelection());
-      }
-    );
+    if (this.searchElement) {
+      this.mapsAPILoader.load().then(() => {
+          this.autocomplete = new google.maps.places.Autocomplete(
+            this.searchElement.nativeElement, { types: ['address'], componentRestrictions: { country: 'ar' }});
+          this.autocomplete.addListener('place_changed', () => this.onPlaceSelection());
+        }
+      );
+    }
   }
 
   onPlaceSelection() {
