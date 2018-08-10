@@ -540,26 +540,54 @@ namespace RepoWebShop.Repositories
             _appDbContext.ShoppingCartPickUpDates.Add(pickUp);
             _appDbContext.SaveChanges();
             return pickUp;
-        }
+		}
 
-        public PickUpTimeViewModel GetTimeSlots(string bookingId)
-        {
-            bookingId = bookingId ?? _cartSession.BookingId;
-            var prepTime = GetPreparationTime(bookingId);
-            var discount = GetDiscount(bookingId);
-            var model = _calendarRepository.GetPickUpOption(prepTime, discount).Take(50);
-            var selectedTime = GetPickUpDate(bookingId);
-            var result = new PickUpTimeViewModel
+		public PickUpTimeViewModel GetTimeSlots(string bookingId)
+		{
+			bookingId = bookingId ?? _cartSession.BookingId;
+			var prepTime = GetPreparationTime(bookingId);
+			var discount = GetDiscount(bookingId);
+			var model = _calendarRepository.GetPickUpOption(prepTime, discount).Take(50);
+			var selectedTime = GetPickUpDate(bookingId);
+			var result = new PickUpTimeViewModel
+			{
+				TimeSlots = model.Where(x => !(x.Key == selectedTime.From && x.Value == selectedTime.To)),
+				SelectedTime = new KeyValuePair<DateTime, TimeSpan>(selectedTime.From, selectedTime.To),
+				Message = selectedTime.Message,
+				UserSubmitted = selectedTime.UserSubmitted
+			};
+			return result;
+		}
+
+		public IEnumerable<_PickUpOptions> PickUpOptionsByDay()
+		{
+			var timeSlotsVm = GetTimeSlots(null);
+			var result = new List<_PickUpOptions>().AsEnumerable();
+            IEnumerable<DateTime> dates = timeSlotsVm.TimeSlots.GroupBy(x => x.Key.Date).Select(group => group.Key);
+            foreach (var date in dates)
             {
-                TimeSlots = model.Where(x => !(x.Key == selectedTime.From && x.Value == selectedTime.To)),
-                SelectedTime = new KeyValuePair<DateTime, TimeSpan>(selectedTime.From, selectedTime.To),
-                Message = selectedTime.Message,
-                UserSubmitted = selectedTime.UserSubmitted
-            };
-            return result;
-        }
+                var group = $"{PickUpTimeViewModel.SelectedDay(date)} {date.Day} de {PickUpTimeViewModel.SelectedMonth(date)}";
+				var _PickUpOptions = new _PickUpOptions { Date = date, Day = group, DayOptions = new List<_DayOption>().AsEnumerable() };
 
-        public void AcknowledgeSystemTime(string bookingId)
+				foreach (var slot in timeSlotsVm.TimeSlots)
+					if (slot.Key.Date == date.Date)
+					{
+						var grouping = 120;
+						var iterations = Convert.ToInt32(Math.Ceiling(slot.Value.TotalMinutes / (double)grouping));
+						var options = new int[iterations];
+						for(int i = 0; i < iterations; i++)
+						{
+							DateTime starting = slot.Key.AddMinutes(grouping * i);
+							double minutes = (i ==  iterations - 1) ? slot.Value.TotalMinutes - (grouping * i) : minutes = grouping;
+							_PickUpOptions.DayOptions = _PickUpOptions.DayOptions.Append(new _DayOption { TicksId = starting.Ticks.ToString(), From = starting, To = starting.AddMinutes(minutes) });
+						}
+					}
+				result = result.Append(_PickUpOptions);
+			}
+			return result;
+		}
+
+		public void AcknowledgeSystemTime(string bookingId)
         {
             var pickUpDate = GetPickUpDate(bookingId);
             if (pickUpDate != null)

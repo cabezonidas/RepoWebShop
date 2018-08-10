@@ -13,6 +13,7 @@ export class CartService {
 
   constructor(private http: HttpClient) { }
 
+  // Podria implementar aca los totals
   setCartItems = (products: Array<ICartCatalogItem>): void => this.productsSource.next(products);
 
   addProductToCart = (id) => this.http.post('/api/_shoppingcart/addproductitem', id) as Observable<Array<ICartCatalogItem>>;

@@ -9,6 +9,9 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { DeliveryComponent } from './components/delivery/delivery.component';
 import { AgmCoreModule } from '@agm/core';
+import { PickupOptionsComponent } from './components/pickup/components/pickup-options/pickup-options.component';
+import { PickupOptionsShellComponent } from './components/pickup/containers/pickup-options-shell/pickup-options-shell.component';
+import { reducers, effects } from './store';
 
 const cartRoutes: Routes = [
     { path: 'cart', component: CartComponent }
@@ -17,7 +20,9 @@ const cartRoutes: Routes = [
 @NgModule({
     declarations: [
         CartComponent,
-        DeliveryComponent
+        DeliveryComponent,
+        PickupOptionsComponent,
+        PickupOptionsShellComponent
     ],
     imports: [
         AgmCoreModule.forRoot({
@@ -29,8 +34,8 @@ const cartRoutes: Routes = [
         MaterialModule,
         ReactiveFormsModule,
         RouterModule.forChild(cartRoutes),
-        // StoreModule.forFeature('cart', reducer),
-        // EffectsModule.forFeature([CartEffects])
+        StoreModule.forFeature('cart', reducers),
+        EffectsModule.forFeature(effects)
     ]
   })
 

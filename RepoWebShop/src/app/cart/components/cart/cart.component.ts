@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy, HostBinding, ViewChild, EventEmitter, Output } from '@angular/core';
 import { CartService } from '../../services/cart.service';
 import { MatDialog, MatStepper } from '@angular/material';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { ICartCatalogItem } from '../../interfaces/icart-catalog-item';
 import { moveIn, fallIn } from '../../../animations/router.animations';
+import { Store, select } from '@ngrx/store';
+import * as fromStore from '../../store';
 
 @Component({
   selector: 'app-cart',
@@ -14,12 +16,16 @@ import { moveIn, fallIn } from '../../../animations/router.animations';
 
 export class CartComponent implements OnInit, OnDestroy {
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private store: Store<fromStore.CartState>) {}
+
+  products$: Observable<ICartCatalogItem[]>;
 
   @HostBinding('@moveIn') role = '';
   @ViewChild('stepper') stepper: MatStepper;
 
   ngOnInit() {
+    this.store.dispatch(new fromStore.LoadProducts());
+    this.products$ = this.store.pipe(select(fromStore.getProducts));
 
   }
   openDialog(item: ICartCatalogItem): void {

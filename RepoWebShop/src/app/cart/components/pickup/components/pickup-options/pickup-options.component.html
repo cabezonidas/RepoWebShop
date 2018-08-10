@@ -1,0 +1,16 @@
+<!-- <div *ngFor="let option of options">
+  {{ option.day }}
+  <div *ngFor="let dayoption of option.dayOptions">
+    {{ dayoption.ticksId }}
+  </div>
+</div> -->
+
+<mat-form-field>
+  <mat-select placeholder="Selecciona una fecha y hora"> <!--  [formControl]="pokemonControl" -->
+    <mat-optgroup *ngFor="let option of options" [label]="option.day" >
+      <mat-option *ngFor="let dayoption of option.dayOptions" [value]="dayoption.ticksId">
+        Entre {{ dayoption.from | date:'shortTime' }} y {{ dayoption.to | date:'shortTime' }}
+      </mat-option>
+    </mat-optgroup>
+  </mat-select>
+</mat-form-field>

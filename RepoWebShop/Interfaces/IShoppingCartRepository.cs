@@ -17,8 +17,8 @@ namespace RepoWebShop.Interfaces
         IEnumerable<ShoppingCartComboCatering> GetShoppingCaterings(string bookingId);
         ShoppingCartLunch GetSessionLunch(string bookingId = null);
         ShoppingCartLunch GetOrCreateSessionLunch(string bookingId = null);
-
-        ShoppingCartComment GetComments(string bookingId);
+		IEnumerable<_PickUpOptions> PickUpOptionsByDay();
+		ShoppingCartComment GetComments(string bookingId);
         DeliveryAddress GetDelivery(string bookingId);
         Discount GetDiscount(string bookingId);
 		void RemoveCatalogItemFromCart(int id);
