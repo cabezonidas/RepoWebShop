@@ -1,13 +1,16 @@
 import { ActionReducerMap, createFeatureSelector } from '@ngrx/store';
 
-import * as fromProducts from './products.reducer';
+import * as fromItems from './items.reducer';
+import * as fromCaterings from './caterings.reducer';
 
 export interface CartState {
-  products: fromProducts.ProductState;
+  items: fromItems.ItemState;
+  caterings: fromCaterings.CateringState;
 }
 
 export const reducers: ActionReducerMap<CartState> = {
-  products: fromProducts.reducer,
+  items: fromItems.reducer,
+  caterings: fromCaterings.reducer,
 };
 
 export const getCartState = createFeatureSelector<CartState>(

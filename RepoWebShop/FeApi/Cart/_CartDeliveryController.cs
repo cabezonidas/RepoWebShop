@@ -17,13 +17,13 @@ using System.Threading.Tasks;
 namespace RepoWebShop.FeApi
 {
 	[Route("api/[controller]")]
-	public class _DeliveryController : Controller
+	public class _CartDeliveryController : Controller
 	{
 		private readonly IMapper _mapper;
 		private readonly IDeliveryRepository _delivery;
 		private readonly IShoppingCartRepository _cart;
 
-		public _DeliveryController(IMapper mapper, IDeliveryRepository delivery, IShoppingCartRepository cart)
+		public _CartDeliveryController(IMapper mapper, IDeliveryRepository delivery, IShoppingCartRepository cart)
 		{
 			_mapper = mapper;
 			_delivery = delivery;

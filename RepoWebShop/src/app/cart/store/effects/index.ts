@@ -1,5 +1,7 @@
-import { ProductsEffects } from './products.effect';
+import { ItemsEffects } from './items.effect';
+import { CateringsEffects } from './caterings.effect';
 
-export const effects: any[] = [ProductsEffects];
+export const effects: any[] = [ItemsEffects, CateringsEffects];
 
-export * from './products.effect';
+export * from './items.effect';
+export * from './caterings.effect';

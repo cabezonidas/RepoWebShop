@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 namespace RepoWebShop.FeApi
 {
 	[Route("api/[controller]")]
-	public class _CateringController : Controller
+	public class _CartCustomCateringController : Controller
 	{
 		private readonly ILunchRepository _catering;
 		private readonly ICatalogRepository _catalog;
 		private readonly IMapper _mapper;
 		private readonly IShoppingCartRepository _cart;
 
-		public _CateringController(IShoppingCartRepository cart, IMapper mapper, ILunchRepository catering, ICatalogRepository catalog)
+		public _CartCustomCateringController(IShoppingCartRepository cart, IMapper mapper, ILunchRepository catering, ICatalogRepository catalog)
 		{
 			_cart = cart;
 			_mapper = mapper;

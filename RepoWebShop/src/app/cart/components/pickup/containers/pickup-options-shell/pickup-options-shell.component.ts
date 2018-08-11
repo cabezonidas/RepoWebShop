@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PickupService } from '../../../../services/pickup.service';
-import { Observable } from '../../../../../../../node_modules/rxjs';
+import { Observable } from 'rxjs';
 import { IPickupOption } from '../../interfaces/ipickup-option';
 
 @Component({

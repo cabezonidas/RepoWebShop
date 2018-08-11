@@ -1,1 +1,2 @@
-export * from './products.selectors';
+export * from './items.selectors';
+export * from './caterings.selectors';

@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 namespace RepoWebShop.FeApi
 {
 	[Route("api/[controller]")]
-	public class _ShoppingCartController : Controller
+	public class _CartItemsController : Controller
 	{
 		private readonly IShoppingCartRepository _cart;
-		public _ShoppingCartController(IShoppingCartRepository shoppingCart)
+		public _CartItemsController(IShoppingCartRepository shoppingCart)
 		{
 			_cart = shoppingCart;
 		}

@@ -7,19 +7,19 @@ import { catchError } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class ProductsService {
+export class ItemsService {
 
   constructor(private http: HttpClient) {}
   
   getCartItems = () => 
-    this.http.get<ICartCatalogItem[]>('/api/_shoppingCart/getProductItems')
+    this.http.get<ICartCatalogItem[]>('/api/_cartItems/getProductItems')
       .pipe(catchError((error: any) => Observable.throw(error.json())));
   
-  addProduct = (productId: number) => 
-    this.http.post<ICartCatalogItem[]>('/api/_shoppingCart/addProductItem', productId)
+  addItem = (productId: number) => 
+    this.http.post<ICartCatalogItem[]>('/api/_cartItems/addProductItem', productId)
       .pipe(catchError((error: any) => Observable.throw(error.json())));
   
-  removeProduct = (productId: number) => 
-    this.http.post<ICartCatalogItem[]>('/api/_shoppingCart/removeProductItem', productId)
+  removeItem = (productId: number) => 
+    this.http.post<ICartCatalogItem[]>('/api/_cartItems/removeProductItem', productId)
       .pipe(catchError((error: any) => Observable.throw(error.json())));
 }

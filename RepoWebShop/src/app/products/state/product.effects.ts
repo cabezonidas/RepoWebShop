@@ -8,7 +8,7 @@ import { of, Observable } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
 import { ImagesService } from '../services/images.service';
 
-import * as fromProduct from '../state';
+import * as fromProduct from '.';
 import { IAlbum } from '../interfaces/ialbum';
 
 @Injectable()

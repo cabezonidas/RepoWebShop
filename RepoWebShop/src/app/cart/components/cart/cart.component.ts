@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, HostBinding, ViewChild, EventEmitter, Output } from '@angular/core';
-import { CartService } from '../../services/cart.service';
 import { MatDialog, MatStepper } from '@angular/material';
 import { Subscription, Observable } from 'rxjs';
 import { ICartCatalogItem } from '../../interfaces/icart-catalog-item';
@@ -24,8 +23,8 @@ export class CartComponent implements OnInit, OnDestroy {
   @ViewChild('stepper') stepper: MatStepper;
 
   ngOnInit() {
-    this.store.dispatch(new fromStore.LoadProducts());
-    this.products$ = this.store.pipe(select(fromStore.getProducts));
+    this.store.dispatch(new fromStore.LoadItems());
+    this.products$ = this.store.pipe(select(fromStore.getItems));
 
   }
   openDialog(item: ICartCatalogItem): void {

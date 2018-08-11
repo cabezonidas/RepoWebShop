@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { IItem } from '../../interfaces/iitem';
 import { IProduct } from '../../interfaces/iproduct';
-import { CartService } from '../../../cart/services/cart.service';
 import { MatTableDataSource } from '@angular/material';
 
 @Component({
@@ -20,7 +19,7 @@ export class FullCatalogComponent implements OnInit {
     'action'
   ];
 
-  constructor(private cart: CartService) {}
+  constructor() {}
 
   ngOnInit() {
     const items: Array<IItem> = [];
@@ -29,7 +28,7 @@ export class FullCatalogComponent implements OnInit {
   }
 
   addToCart(id: MouseEvent): void {
-    this.cart.addProductToCart(id);
+    // this.cart.addProductToCart(id);
   }
 
   applyFilter(filterValue: string) {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using RepoWebShop.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -56,9 +57,7 @@ namespace RepoWebShop.Models
         [BindNever]
         public DateTime ValidTo { get => ValidFrom.AddDays(DurationDays - 1); }
 
-        private static bool IsWithinRange(DateTime date, DateTime dateFrom, int daysDuration) =>
-                dateFrom <= date && dateFrom.AddDays(daysDuration) >= date;
-        
+       
         public static bool IsValid(DateTime dateTime, Discount discount)
         {
             string error = string.Empty;
@@ -98,12 +97,12 @@ namespace RepoWebShop.Models
                 return 0;
             }
 
-            if (!IsWithinRange(dateTime, discount.ValidFrom, discount.DurationDays))
+            if (!dateTime.WithinRange(discount.ValidFrom, discount.DurationDays))
                 if (discount.Weekly)
                 {
                     DateTime loopDate = discount.ValidFrom;
                     for (; loopDate.AddDays(discount.DurationDays) <= dateTime; loopDate = loopDate.AddDays(7)) ;
-                    if (!IsWithinRange(dateTime, loopDate, discount.DurationDays))
+                    if (!dateTime.WithinRange(loopDate, discount.DurationDays))
                     {
                         error = "El código no es válido hoy.";
                         return 0;

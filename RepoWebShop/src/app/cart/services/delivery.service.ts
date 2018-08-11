@@ -10,11 +10,11 @@ export class DeliveryService {
 
   constructor(private http: HttpClient) { }
 
-  canDeliver = () => this.http.get<boolean>('/api/_delivery/canDeliver');
-  clearDelivery = () => this.http.delete<boolean>('/api/_delivery/remove');
-  updateInstructions = (instructions: DeliveryAddress) => this.http.post<DeliveryAddress>('/api/_delivery/updateInstructions', instructions);
-  saveDelivery = (addresss: DeliveryAddress) => this.http.post<DeliveryAddress>('/api/_delivery/saveDelivery', addresss);
-  get = () => this.http.get<DeliveryAddress>('/api/_delivery/get');
+  canDeliver = () => this.http.get<boolean>('/api/_cartDelivery/canDeliver');
+  clearDelivery = () => this.http.delete<boolean>('/api/_cartDelivery/remove');
+  updateInstructions = (instructions: DeliveryAddress) => this.http.post<DeliveryAddress>('/api/_cartDelivery/updateInstructions', instructions);
+  saveDelivery = (addresss: DeliveryAddress) => this.http.post<DeliveryAddress>('/api/_cartDelivery/saveDelivery', addresss);
+  get = () => this.http.get<DeliveryAddress>('/api/_cartDelivery/get');
 
   getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2): number {
     const R = 6371; // Radius of the earth in km
