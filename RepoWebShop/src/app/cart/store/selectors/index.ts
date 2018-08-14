@@ -5,3 +5,4 @@ export * from './discounts.selectors';
 export * from './invoice.selectors';
 export * from './pickup.selectors';
 export * from './totals.selectors';
+export * from './delivery.selectors';

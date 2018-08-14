@@ -8,6 +8,7 @@ import * as fromInvoice from './invoice.reducer';
 import * as fromPickup from './pickup.reducer';
 import * as fromTotals from './totals.reducer';
 import * as fromCustomCatering from './custom-catering.reducer';
+import * as fromDelivery from './delivery.reducer';
 
 export interface CartState {
   items: fromItems.ItemState;
@@ -18,6 +19,7 @@ export interface CartState {
   pickup: fromPickup.PickupState;
   totals: fromTotals.TotalState;
   customCatering: fromCustomCatering.CustomCateringState;
+  delivery: fromDelivery.DeliveryState;
 }
 
 export const reducers: ActionReducerMap<CartState> = {
@@ -29,6 +31,7 @@ export const reducers: ActionReducerMap<CartState> = {
   pickup: fromPickup.reducer,
   totals: fromTotals.reducer,
   customCatering: fromCustomCatering.reducer,
+  delivery: fromDelivery.reducer,
 };
 
 export const getCartState = createFeatureSelector<CartState>(

@@ -6,3 +6,4 @@ export * from './invoice.action';
 export * from './pickup.action';
 export * from './totals.action';
 export * from './custom-catering.action';
+export * from './delivery.action';
