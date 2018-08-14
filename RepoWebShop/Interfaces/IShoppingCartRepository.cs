@@ -13,7 +13,8 @@ namespace RepoWebShop.Interfaces
         void AddCuitToCart(string bookingId, long cuit);
         void RemoveCuitFromCart(string bookingId);
         IEnumerable<ShoppingCartItem> GetItems(string bookingId);
-        IEnumerable<ShoppingCartCatalogItem> GetCatalogItems(string bookingId);
+		_Totals GetTotals(string bookingId);
+		IEnumerable<ShoppingCartCatalogItem> GetCatalogItems(string bookingId);
         IEnumerable<ShoppingCartComboCatering> GetShoppingCaterings(string bookingId);
         ShoppingCartLunch GetSessionLunch(string bookingId = null);
         ShoppingCartLunch GetOrCreateSessionLunch(string bookingId = null);
@@ -34,7 +35,9 @@ namespace RepoWebShop.Interfaces
         decimal GetTotal(string bookingId);
 
         decimal GetLunchTotalInStore(Lunch lunch);
-        decimal GetCateringsTotalInStore(string bookingId);
+		decimal GetCustomCateringTotals(string bookingId);
+		decimal GetCustomCateringTotalsInStore(string bookingId);
+		decimal GetCateringsTotalInStore(string bookingId);
         decimal GetLunchOnlineSavings(Lunch lunch);
         decimal GetCateringsTotalSavings(string bookingId);
         decimal GetProductsTotalInStore(string bookingId);

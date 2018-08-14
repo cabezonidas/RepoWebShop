@@ -948,5 +948,36 @@ namespace RepoWebShop.Repositories
 			}
 			return catering;
 		}
+
+		public _Totals GetTotals(string bookingId)
+		{
+			bookingId = bookingId ?? _cartSession.BookingId;
+			_Totals result = new _Totals();
+			result.Total = GetTotal(bookingId);
+			result.TotalInStore = GetTotalInStore(bookingId);
+			result.TotalWithoutDiscount = GetTotalWithoutDiscount(bookingId);
+			result.Items = GetProductsTotal(bookingId);
+			result.ItemsInStore = GetProductsTotalInStore(bookingId);
+			result.Caterings = GetCateringsTotal(bookingId);
+			result.CateringsInStore = GetCateringsTotalInStore(bookingId);
+			result.CateringsSavings = GetCateringsTotalSavings(bookingId);
+			result.CustomCatering = GetCustomCateringTotals(bookingId);
+			result.CustomCateringInStore = GetCustomCateringTotalsInStore(bookingId);
+			return result;
+		}
+
+		public decimal GetCustomCateringTotals(string bookingId)
+		{
+			bookingId = bookingId ?? _cartSession.BookingId;
+			var catering = GetSessionLunch(bookingId);
+			return catering != null ? GetLunchTotal(catering.Lunch) : 0;
+		}
+
+		public decimal GetCustomCateringTotalsInStore(string bookingId)
+		{
+			bookingId = bookingId ?? _cartSession.BookingId;
+			var catering = GetSessionLunch(bookingId);
+			return catering != null ? GetLunchTotalInStore(catering.Lunch) : 0;
+		}
 	}
 }

@@ -13,6 +13,9 @@ namespace RepoWebShop.FeApi
 		{
 			_cart = shoppingCart;
 		}
+		[HttpGet]
+		[Route("Totals")]
+		public _Totals Totals() => _cart.GetTotals(null);
 
 		[HttpGet]
 		[Route("Total")]
@@ -35,14 +38,6 @@ namespace RepoWebShop.FeApi
 		public decimal ProductsTotal() => _cart.GetProductsTotal(null);
 
 		[HttpGet]
-		[Route("CustomCateringTotal")]
-		public decimal CustomCateringTotal() => _cart.GetLunchTotal(null);
-
-		[HttpGet]
-		[Route("CustomCateringTotalInStore")]
-		public decimal CustomCateringTotalInStore() => _cart.GetLunchTotalInStore(null);
-
-		[HttpGet]
 		[Route("CateringsTotal")]
 		public decimal CateringsTotal() => _cart.GetCateringsTotal(null);
 
@@ -53,5 +48,13 @@ namespace RepoWebShop.FeApi
 		[HttpGet]
 		[Route("CateringsTotalSavings")]
 		public decimal CateringsTotalSavings() => _cart.GetCateringsTotalSavings(null);
+
+		[HttpGet]
+		[Route("CustomCateringTotal")]
+		public decimal CustomCateringTotal() => _cart.GetCustomCateringTotals(null);
+
+		[HttpGet]
+		[Route("CustomCateringTotalInStore")]
+		public decimal CustomCateringTotalInStore() => _cart.GetCustomCateringTotalsInStore(null);
 	}
 }

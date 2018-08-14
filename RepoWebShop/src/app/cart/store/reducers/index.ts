@@ -6,6 +6,7 @@ import * as fromComments from './comments.reducer';
 import * as fromDiscounts from './discounts.reducer';
 import * as fromInvoice from './invoice.reducer';
 import * as fromPickup from './pickup.reducer';
+import * as fromTotals from './totals.reducer';
 
 export interface CartState {
   items: fromItems.ItemState;
@@ -14,6 +15,7 @@ export interface CartState {
   discount: fromDiscounts.DiscountState;
   invoice: fromInvoice.InvoiceState;
   pickup: fromPickup.PickupState;
+  totals: fromTotals.TotalState;
 }
 
 export const reducers: ActionReducerMap<CartState> = {
@@ -23,6 +25,7 @@ export const reducers: ActionReducerMap<CartState> = {
   discount: fromDiscounts.reducer,
   invoice: fromInvoice.reducer,
   pickup: fromPickup.reducer,
+  totals: fromTotals.reducer,
 };
 
 export const getCartState = createFeatureSelector<CartState>(
