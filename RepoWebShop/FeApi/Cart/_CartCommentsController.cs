@@ -15,6 +15,14 @@ namespace RepoWebShop.FeApi
 		}
 
 		[HttpGet]
+		[Route("Get")]
+		public string Get()
+		{
+			var comments = _cart.GetComments(null);
+			return comments?.Comments ?? string.Empty;
+		}
+
+		[HttpGet]
 		[Route("Add")]
 		public string Add([FromBody] string comments)
 		{

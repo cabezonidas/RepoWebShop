@@ -100,5 +100,16 @@ namespace RepoWebShop.Repositories
 
             return string.Join(" ", terms);
         }
-    }
+
+		public bool IsValid(string code)
+		{
+			var discount = FindByCode(code);
+			var error = "";
+			if (discount != null)
+				return Math.Abs(Discount.ApplyDiscount(
+					_calendarRepository.LocalTime(), Decimal.MaxValue, discount, out error)) > 0;
+			else
+				return false;
+		}
+	}
 }

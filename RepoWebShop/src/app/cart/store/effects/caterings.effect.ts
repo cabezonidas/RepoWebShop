@@ -15,7 +15,7 @@ export class CateringsEffects {
   ) {}
 
   @Effect()
-  loadPizzas$ = this.actions$.ofType(cateringActions.CateringActionTypes.Load).pipe(
+  loadItems$ = this.actions$.ofType(cateringActions.CateringActionTypes.Load).pipe(
     switchMap(() => {
       return this.cateringService
         .getCartCaterings()

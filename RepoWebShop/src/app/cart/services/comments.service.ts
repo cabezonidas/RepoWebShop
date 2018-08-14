@@ -9,6 +9,10 @@ import { Observable } from '../../../../node_modules/rxjs';
 export class CommentsService {
 
   constructor(private http: HttpClient) {}
-    addComments = (comments: string) => this.http.post<string>('/api/_cartComments/add', comments)
-      .pipe(catchError((error: any) => Observable.throw(error.json())));
+  
+  loadComments = () => this.http.get<string>('/api/_cartComments/get')
+    .pipe(catchError((error: any) => Observable.throw(error.json())));
+  
+  addComments = (comments: string) => this.http.post<string>('/api/_cartComments/add', comments)
+    .pipe(catchError((error: any) => Observable.throw(error.json())));
 }

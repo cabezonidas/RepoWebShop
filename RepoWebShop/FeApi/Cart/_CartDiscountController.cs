@@ -111,5 +111,13 @@ namespace RepoWebShop.FeApi
 			_cart.AddDiscount(discount);
 			return discount;
 		}
+
+		[HttpPost]
+		[Route("IsValid/{code}")]
+		public bool IsValid(string code)
+		{
+			var discount = _discount.FindByCode(code);
+			return _discount.IsValid(code);
+		}
 	}
 }

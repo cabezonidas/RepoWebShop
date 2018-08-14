@@ -9,5 +9,6 @@ namespace RepoWebShop.Interfaces
         Discount FindByCode(string code);
         Discount Add(Discount discount);
         void Delete(int id);
-    }
+		bool IsValid(string code);
+	}
 }

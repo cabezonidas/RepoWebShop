@@ -11,7 +11,10 @@ export class DiscountService {
 
   constructor(private http: HttpClient) {}
   
-  get = (code: string) => this.http.get<IDiscount>('/api/_cartDiscount/get')
+  get = () => this.http.get<IDiscount>('/api/_cartDiscount/get')
+    .pipe(catchError((error: any) => Observable.throw(error.json())));
+
+  apply = (code: string) => this.http.post<IDiscount>('/api/_cartDiscount/apply/' + code, null)
     .pipe(catchError((error: any) => Observable.throw(error.json())));
 
   exists = (code: string) => this.http.get<boolean>('/api/_cartDiscount/exists')
@@ -35,6 +38,6 @@ export class DiscountService {
   notPending = (code: string) => this.http.get<boolean>('/api/_cartDiscount/notPending')
     .pipe(catchError((error: any) => Observable.throw(error.json())));
 
-  apply = (code: string) => this.http.post<IDiscount>('/api/_cartDiscount/apply/' + code, null)
+  isValid = (code: string) => this.http.get<boolean>('/api/_cartDiscount/isValid')
     .pipe(catchError((error: any) => Observable.throw(error.json())));
 }
