@@ -11,10 +11,6 @@ export class CustomCateringService {
 
   constructor(private http: HttpClient) { }
 
-  getItems = (): Observable<IItem[]> => this.http.get<IItem[]>('/api/_cartCustomCatering/cateringItems');
   loadSessionCatering = (): Observable<ICatering> => this.http.get<ICatering>('/api/_cartCustomCatering/loadSessionCatering');
-  loadCaterings = (): Observable<ICatering[]> => this.http.get<ICatering[]>('/api/_cartCustomCatering/availableCaterings');
-  addItem = (productId: number): Observable<ICatering> => this.http.post<ICatering>('/api/_cat_cartCustomCateringering/addItem/' + productId, null);
-  removeItem = (productId: number): Observable<ICatering> => this.http.delete<ICatering>('/api/_cartCustomCatering/removeItem/' + productId);
-  clearItem = (productId: number): Observable<ICatering> => this.http.delete<ICatering>('/api/_cartCustomCatering/clearItem/' + productId);
+  clearSessionCatering = (): Observable<void> => this.http.get<void>('/api/_cartCustomCatering/clearSessionCatering');
 }

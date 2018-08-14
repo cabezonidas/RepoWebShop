@@ -11,10 +11,10 @@ export class CateringService {
 
   constructor(private http: HttpClient) { }
 
-  getItems = (): Observable<IItem[]> => this.http.get<IItem[]>('/api/_catering/cateringItems');
-  loadSessionCatering = (): Observable<ICatering> => this.http.get<ICatering>('/api/_catering/loadSessionCatering');
-  loadCaterings = (): Observable<ICatering[]> => this.http.get<ICatering[]>('/api/_catering/availableCaterings');
-  addItem = (productId: number): Observable<ICatering> => this.http.post<ICatering>('/api/_catering/addItem/' + productId, null);
-  removeItem = (productId: number): Observable<ICatering> => this.http.delete<ICatering>('/api/_catering/removeItem/' + productId);
-  clearItem = (productId: number): Observable<ICatering> => this.http.delete<ICatering>('/api/_catering/clearItem/' + productId);
+  getItems = (): Observable<IItem[]> => this.http.get<IItem[]>('/api/_cartCustomCatering/cateringItems');
+  loadSessionCatering = (): Observable<ICatering> => this.http.get<ICatering>('/api/_cartCustomCatering/loadSessionCatering');
+  loadCaterings = (): Observable<ICatering[]> => this.http.get<ICatering[]>('/api/_cartCustomCatering/availableCaterings');
+  addItem = (productId: number): Observable<ICatering> => this.http.post<ICatering>('/api/_cartCustomCatering/addItem/' + productId, null);
+  removeItem = (productId: number): Observable<ICatering> => this.http.delete<ICatering>('/api/_cartCustomCatering/removeItem/' + productId);
+  clearItem = (productId: number): Observable<ICatering> => this.http.delete<ICatering>('/api/_cartCustomCatering/clearItem/' + productId);
 }
