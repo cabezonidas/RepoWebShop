@@ -12,6 +12,7 @@ import { AgmCoreModule } from '@agm/core';
 import { PickupOptionsComponent } from './components/pickup/components/pickup-options/pickup-options.component';
 import { PickupOptionsShellComponent } from './components/pickup/containers/pickup-options-shell/pickup-options-shell.component';
 import { reducers, effects } from './store';
+import { DiscountComponent } from './components/discount/discount.component';
 
 const cartRoutes: Routes = [
     { path: 'cart', component: CartComponent }
@@ -22,7 +23,8 @@ const cartRoutes: Routes = [
         CartComponent,
         DeliveryComponent,
         PickupOptionsComponent,
-        PickupOptionsShellComponent
+        PickupOptionsShellComponent,
+        DiscountComponent
     ],
     imports: [
         AgmCoreModule.forRoot({

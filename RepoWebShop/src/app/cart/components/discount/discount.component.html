@@ -1,0 +1,8 @@
+<form [formGroup]="discountGroup">
+  <mat-form-field>
+    <input matInput placeholder="Código de Descuento" formControlName="discount" name="discount" #discountCode>
+  </mat-form-field>
+  <mat-card-content *ngIf="discountGroup.get('discount').errors && !isCodeValid">
+    😢 Uf! Descuento no encontrado.
+  </mat-card-content>
+</form>

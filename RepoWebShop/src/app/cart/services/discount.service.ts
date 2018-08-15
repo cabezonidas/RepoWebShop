@@ -17,27 +17,27 @@ export class DiscountService {
   apply = (code: string) => this.http.post<IDiscount>('/api/_cartDiscount/apply/' + code, null)
     .pipe(catchError((error: any) => Observable.throw(error.json())));
 
-  exists = (code: string) => this.http.get<boolean>('/api/_cartDiscount/exists')
+  exists = (code: string) => this.http.get<boolean>('/api/_cartDiscount/exists/' + code)
     .pipe(catchError((error: any) => Observable.throw(error.json())));
 
-  isActive = (code: string) => this.http.get<boolean>('/api/_cartDiscount/isActive')
+  isActive = (code: string) => this.http.get<boolean>('/api/_cartDiscount/isActive/' + code)
     .pipe(catchError((error: any) => Observable.throw(error.json())));
 
-  isAvailable = (code: string) => this.http.get<boolean>('/api/_cartDiscount/isAvailable')
+  isAvailable = (code: string) => this.http.get<boolean>('/api/_cartDiscount/isAvailable/' + code)
     .pipe(catchError((error: any) => Observable.throw(error.json())));
 
-  minOrderReached = (code: string) => this.http.get<boolean>('/api/_cartDiscount/minOrderReached')
+  minOrderReached = (code: string) => this.http.get<boolean>('/api/_cartDiscount/minOrderReached/' + code)
     .pipe(catchError((error: any) => Observable.throw(error.json())));
 
-  isValidToday = (code: string) => this.http.get<boolean>('/api/_cartDiscount/isValidToday')
+  isValidToday = (code: string) => this.http.get<boolean>('/api/_cartDiscount/isValidToday/' + code)
     .pipe(catchError((error: any) => Observable.throw(error.json())));
 
-  notExpired = (code: string) => this.http.get<boolean>('/api/_cartDiscount/notExpired')
+  notExpired = (code: string) => this.http.get<boolean>('/api/_cartDiscount/notExpired/' + code)
     .pipe(catchError((error: any) => Observable.throw(error.json())));
 
-  notPending = (code: string) => this.http.get<boolean>('/api/_cartDiscount/notPending')
+  notPending = (code: string) => this.http.get<boolean>('/api/_cartDiscount/notPending/' + code)
     .pipe(catchError((error: any) => Observable.throw(error.json())));
 
-  isValid = (code: string) => this.http.get<boolean>('/api/_cartDiscount/isValid')
+  isValid = (code: string) => this.http.get<boolean>('/api/_cartDiscount/isValid/' + code)
     .pipe(catchError((error: any) => Observable.throw(error.json())));
 }

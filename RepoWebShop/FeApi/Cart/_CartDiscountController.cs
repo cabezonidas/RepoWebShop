@@ -112,7 +112,7 @@ namespace RepoWebShop.FeApi
 			return discount;
 		}
 
-		[HttpPost]
+		[HttpGet]
 		[Route("IsValid/{code}")]
 		public bool IsValid(string code)
 		{

@@ -10,6 +10,10 @@
       </mat-card-title>
       <mat-vertical-stepper linear #stepper>
         <mat-step >
+          <ng-template matStepLabel>Código Promocional</ng-template>
+          <app-discount></app-discount>
+        </mat-step>
+        <mat-step >
           <ng-template matStepLabel>Entrega</ng-template>
           <app-pickup-options-shell></app-pickup-options-shell>
         </mat-step>
@@ -18,13 +22,10 @@
           <app-delivery (next)="_onNext()"></app-delivery>
         </mat-step>
         <mat-step >
-          <ng-template matStepLabel>Resumen</ng-template>
-        </mat-step>
-        <mat-step >
           <ng-template matStepLabel>Comentarios</ng-template>
         </mat-step>
         <mat-step >
-          <ng-template matStepLabel>Código Promocional</ng-template>
+          <ng-template matStepLabel>Resumen</ng-template>
         </mat-step>
         <mat-step >
           <ng-template matStepLabel>Facturación</ng-template>
