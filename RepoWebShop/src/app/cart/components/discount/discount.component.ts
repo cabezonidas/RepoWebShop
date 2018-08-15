@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, AbstractControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild, ElementRef, OnChanges } from '@angular/core';
+import { FormBuilder, AbstractControl, FormGroup, Validators, AsyncValidatorFn, ValidationErrors, FormControl } from '@angular/forms';
 import { DiscountService } from '../../services';
-import { Observable, interval, of, fromEvent } from 'rxjs';
+import { Observable, interval, of, fromEvent, timer } from 'rxjs';
 import { switchMap, map, flatMap, debounceTime, tap } from 'rxjs/operators';
 
 @Component({
@@ -13,39 +13,72 @@ export class DiscountComponent implements OnInit {
 
   isCodeValid = true;
   discountGroup: FormGroup;
-  @ViewChild('discountCode') public discountCode: ElementRef;
+  code = '';
+  @ViewChild('discount') public discountCode: ElementRef;
 
   constructor(private _formBuilder: FormBuilder, private discount: DiscountService) { }
 
   ngOnInit() {
-    this.discountGroup = this._formBuilder.group({
-      discount: ['', Validators.required , this.isValid.bind(this)]
+    this.discountGroup = new FormGroup({
+      'discount': new FormControl(this.code, [Validators.required], [
+        this.exists(), this.isActive(), this.isAvailable(), this.minOrderReached(), this.isValidToday(), this.notExpired(), this.notPending()
+      ])
     });
   }
   
-  // isValid(control: AbstractControl): {[key: string]: any} | null {
-  //   return fromEvent(this.discountCode.nativeElement, 'keyup').pipe(
-  //     map((e:any) => e.target.value as string),
-  //     debounceTime(1000),
-  //     switchMap((value) => this.discount.isValid(value)),
-  //     map(isCodeValid => {
-  //       this.isCodeValid = isCodeValid;
-  //       if (!isCodeValid) {
-  //         return !isCodeValid ? null : { isCodeInvalid: true };
-  //       }
-  //     })
-  //   );
-  // }
+  exists(): AsyncValidatorFn {
+    return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+      return timer(1000).pipe(
+        switchMap(() => this.discount.exists(control.value)),
+        map(isCodeValid => isCodeValid ? null : { 'notExists': true })
+    )};
+  };
   
-  isValid(control: AbstractControl): {[key: string]: any} | null {
-    console.log('value', control.value);
-    return this.discount.isValid(control.value).pipe(
-      map(isCodeValid => {
-        if (!isCodeValid) {
-          this.isCodeValid = isCodeValid;
-          return !isCodeValid ? null : { isCodeInvalid: true };
-        }
-      })
-    );
-  }
+  isActive(): AsyncValidatorFn {
+    return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+      return timer(1000).pipe(
+        switchMap(() => this.discount.isActive(control.value)),
+        map(isCodeValid => isCodeValid ? null : { 'notActive': true })
+    )};
+  };
+  
+  isAvailable(): AsyncValidatorFn {
+    return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+      return timer(1000).pipe(
+        switchMap(() => this.discount.isAvailable(control.value)),
+        map(isCodeValid => isCodeValid ? null : { 'notAvailable': true })
+    )};
+  };
+  
+  minOrderReached(): AsyncValidatorFn {
+    return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+      return timer(1000).pipe(
+        switchMap(() => this.discount.minOrderReached(control.value)),
+        map(isCodeValid => isCodeValid ? null : { 'minOrderNotReached': true })
+    )};
+  };
+  
+  isValidToday(): AsyncValidatorFn {
+    return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+      return timer(1000).pipe(
+        switchMap(() => this.discount.isValidToday(control.value)),
+        map(isCodeValid => isCodeValid ? null : { 'notValidToday': true })
+    )};
+  };
+  
+  notExpired(): AsyncValidatorFn {
+    return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+      return timer(1000).pipe(
+        switchMap(() => this.discount.notExpired(control.value)),
+        map(isCodeValid => isCodeValid ? null : { 'expired': true })
+    )};
+  };
+  
+  notPending(): AsyncValidatorFn {
+    return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+      return timer(1000).pipe(
+        switchMap(() => this.discount.notPending(control.value)),
+        map(isCodeValid => isCodeValid ? null : { 'pending': true })
+    )};
+  };
 }
