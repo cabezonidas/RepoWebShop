@@ -22,7 +22,6 @@ export enum PickupActionTypes {
 
 export class LoadPickupOptions implements Action {
     readonly type = PickupActionTypes.LoadPickupOptions;
-    constructor(public payload: number) {}
 }
 
 export class LoadPickupOptionsFail implements Action {

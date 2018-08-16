@@ -12,6 +12,12 @@ export const getInvoiceState = createSelector(
     fromInvoice.getTaxpayer
   );
 
+
+  export const getCuit = createSelector(
+    getInvoiceState,
+    fromInvoice.getCuit
+  );
+
   export const getInvoiceLoaded = createSelector(
     getInvoiceState,
     fromInvoice.getInvoicesLoaded

@@ -60,5 +60,9 @@ namespace RepoWebShop.FeApi
 			_cart.RemoveCuitFromCart(null);
 			return Ok();
 		}
+
+		[HttpGet]
+		[Route("ClearCuit")]
+		public string GetCuit() => _cart.GetCuit(null).ToString();
 	}
 }

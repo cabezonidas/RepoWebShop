@@ -1,5 +1,6 @@
 export * from './items.selectors';
 export * from './caterings.selectors';
+export * from './custom-catering.selectors';
 export * from './comments.selectors';
 export * from './discounts.selectors';
 export * from './invoice.selectors';

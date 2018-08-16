@@ -19,4 +19,7 @@ export class InvoiceService {
   
   clearCuit = () => this.http.delete<void>('/api/_cartInvoice/clearCuit/')
     .pipe(catchError((error: any) => Observable.throw(error.json())));
+
+  getCuit = () => this.http.get<string>('/api/_cartInvoice/getCuit/')
+    .pipe(catchError((error: any) => Observable.throw(error.json())));
 }

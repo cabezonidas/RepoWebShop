@@ -17,24 +17,34 @@ export const initialState: DiscountState = {
 
 export function reducer(state = initialState, action: fromDiscounts.DiscountActions): DiscountState {
     switch (action.type) {
-        case fromDiscounts.DiscountActionTypes.Get: 
-        case fromDiscounts.DiscountActionTypes.Apply:
+        case fromDiscounts.DiscountActionTypes.GetDiscount: 
+        case fromDiscounts.DiscountActionTypes.ApplyDiscount:
+        case fromDiscounts.DiscountActionTypes.ClearDiscount:
         return {
             ...state,
             loading: true,
         };
 
-        case fromDiscounts.DiscountActionTypes.GetSuccess: 
-        case fromDiscounts.DiscountActionTypes.ApplySuccess: 
+        case fromDiscounts.DiscountActionTypes.GetDiscountSuccess: 
+        case fromDiscounts.DiscountActionTypes.ApplyDiscountSuccess: 
         return {
             ...state,
             discount: action.payload,
             loading: false,
             loaded: true,
         }
+        
+        case fromDiscounts.DiscountActionTypes.ClearDiscountSuccess: 
+        return {
+            ...state,
+            discount: null,
+            loading: false,
+            loaded: true,
+        }
 
-        case fromDiscounts.DiscountActionTypes.GetFail: 
-        case fromDiscounts.DiscountActionTypes.ApplyFail: 
+        case fromDiscounts.DiscountActionTypes.GetDiscountFail: 
+        case fromDiscounts.DiscountActionTypes.ApplyDiscountFail: 
+        case fromDiscounts.DiscountActionTypes.ClearDiscountFail: 
         return {
             ...state,
             error: action.payload,

@@ -15,25 +15,37 @@ export class DiscountsEffects {
   ) {}
 
   @Effect()
-  getDiscount$ = this.actions$.ofType(discountActions.DiscountActionTypes.Get).pipe(
+  getDiscount$ = this.actions$.ofType(discountActions.DiscountActionTypes.GetDiscount).pipe(
     switchMap(() => {
       return this.discountService.get()
         .pipe(
-          map(discounts => new discountActions.GetSuccess(discounts)),
-          catchError(error => of(new discountActions.GetFail(error)))
+          map(discounts => new discountActions.GetDiscountSuccess(discounts)),
+          catchError(error => of(new discountActions.GetDiscountFail(error)))
         );
     })
   );
 
   @Effect()
-  addDiscount$ = this.actions$.ofType(discountActions.DiscountActionTypes.Apply).pipe(
-    map((action: discountActions.Apply) => action.payload),
+  addDiscount$ = this.actions$.ofType(discountActions.DiscountActionTypes.ApplyDiscount).pipe(
+    map((action: discountActions.ApplyDiscount) => action.payload),
     switchMap(discountId => {
       return this.discountService
         .apply(discountId)
         .pipe(
-          map(items => new discountActions.ApplySuccess(items)),
-          catchError(error => of(new discountActions.ApplyFail(error)))
+          map(items => new discountActions.ApplyDiscountSuccess(items)),
+          catchError(error => of(new discountActions.ApplyDiscountFail(error)))
+        );
+    })
+  );
+
+  @Effect()
+  clearDiscount$ = this.actions$.ofType(discountActions.DiscountActionTypes.ClearDiscount).pipe(
+    switchMap(() => {
+      return this.discountService
+        .clear()
+        .pipe(
+          map(() => new discountActions.ClearDiscountSuccess()),
+          catchError(error => of(new discountActions.ClearDiscountFail(error)))
         );
     })
   );

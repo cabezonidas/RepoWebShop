@@ -119,5 +119,9 @@ namespace RepoWebShop.FeApi
 			var discount = _discount.FindByCode(code);
 			return _discount.IsValid(code);
 		}
+
+		[HttpDelete]
+		[Route("Remove")]
+		public void Remove(string code) =>	_cart.RemoveShoppingDiscount();
 	}
 }

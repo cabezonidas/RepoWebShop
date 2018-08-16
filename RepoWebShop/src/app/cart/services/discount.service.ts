@@ -17,6 +17,9 @@ export class DiscountService {
   apply = (code: string) => this.http.post<IDiscount>('/api/_cartDiscount/apply/' + code, null)
     .pipe(catchError((error: any) => Observable.throw(error.json())));
 
+  clear = () => this.http.delete<void>('/api/_cartDiscount/remove/')
+    .pipe(catchError((error: any) => Observable.throw(error.json())));
+
   exists = (code: string) => this.http.get<boolean>('/api/_cartDiscount/exists/' + code)
     .pipe(catchError((error: any) => Observable.throw(error.json())));
 

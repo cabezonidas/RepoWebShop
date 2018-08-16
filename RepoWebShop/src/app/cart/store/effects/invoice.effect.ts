@@ -51,4 +51,16 @@ export class InvoicesEffects {
         );
     })
   );
+
+  @Effect()
+  getCuit$ = this.actions$.ofType(invoiceActions.InvoiceActionTypes.GetCuit).pipe(
+    switchMap(() => {
+      return this.invoiceService
+        .getCuit()
+        .pipe(
+          map((cuit: string) => new invoiceActions.GetCuitSuccess(cuit)),
+          catchError(error => of(new invoiceActions.GetCuitFail(error)))
+        );
+    })
+  );
 }
