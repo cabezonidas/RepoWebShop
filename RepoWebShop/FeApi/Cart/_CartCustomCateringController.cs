@@ -92,5 +92,9 @@ namespace RepoWebShop.FeApi
 			_cart.AddCateringToCart(catering, 1);
 			return Ok();
 		}
+
+		[HttpDelete]
+		[Route("ClearSessionCatering")]
+		public void ClearSessionCatering() => _cart.ClearCustomCateringFromCart();
 	}
 }

@@ -13,6 +13,8 @@
         <mat-step >
           <ng-template matStepLabel>Productos</ng-template>
           <app-products [items]="items$ | async" [caterings]="caterings$ | async" [customCatering]="customCatering$ | async"
+          (next)="_onNext()" (addItem)="addItem($event)" (removeItem)="removeItem($event)"
+          (addCatering)="addCatering($event)" (removeCatering)="removeCatering($event)" (removeCustomCatering)="removeCustomCatering($event)"
           >
           </app-products>
         </mat-step>

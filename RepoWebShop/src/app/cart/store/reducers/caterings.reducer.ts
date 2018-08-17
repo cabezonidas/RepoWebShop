@@ -17,17 +17,17 @@ export const initialState: CateringState = {
 
 export function reducer(state = initialState, action: fromCaterings.CateringActions): CateringState {
     switch (action.type) {
-        case fromCaterings.CateringActionTypes.Load: 
-        case fromCaterings.CateringActionTypes.Add: 
-        case fromCaterings.CateringActionTypes.Remove: 
+        case fromCaterings.CateringActionTypes.LoadCaterings: 
+        case fromCaterings.CateringActionTypes.AddCatering: 
+        case fromCaterings.CateringActionTypes.RemoveCatering: 
         return {
             ...state,
             loading: true,
         };
 
-        case fromCaterings.CateringActionTypes.LoadSuccess: 
-        case fromCaterings.CateringActionTypes.AddSuccess: 
-        case fromCaterings.CateringActionTypes.RemoveSuccess: 
+        case fromCaterings.CateringActionTypes.LoadCateringsSuccess: 
+        case fromCaterings.CateringActionTypes.AddCateringSuccess: 
+        case fromCaterings.CateringActionTypes.RemoveCateringSuccess: 
         return {
             ...state,
             caterings: action.payload,
@@ -35,9 +35,9 @@ export function reducer(state = initialState, action: fromCaterings.CateringActi
             loaded: true,
         }
 
-        case fromCaterings.CateringActionTypes.LoadFail: 
-        case fromCaterings.CateringActionTypes.AddFail: 
-        case fromCaterings.CateringActionTypes.RemoveFail: 
+        case fromCaterings.CateringActionTypes.LoadCateringsFail: 
+        case fromCaterings.CateringActionTypes.AddCateringFail: 
+        case fromCaterings.CateringActionTypes.RemoveCateringFail: 
         return {
             ...state,
             error: action.payload,

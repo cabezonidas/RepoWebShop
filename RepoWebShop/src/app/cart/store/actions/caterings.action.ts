@@ -2,60 +2,61 @@ import { Action } from '@ngrx/store';
 import { ICartCatering } from '../../interfaces/icart-catering';
 
 export enum CateringActionTypes {
-    Add = '[Cart] Add catering',
-    AddSuccess = '[Cart] Add catering success',
-    AddFail = '[Cart] Add catering fail',
+    AddCatering = '[Cart] Add catering',
+    AddCateringSuccess = '[Cart] Add catering success',
+    AddCateringFail = '[Cart] Add catering fail',
     
-    Remove = '[Cart] Remove catering',
-    RemoveSuccess = '[Cart] Remove catering success',
-    RemoveFail = '[Cart] Remove catering fail',
+    RemoveCatering = '[Cart] Remove catering',
+    RemoveCateringSuccess = '[Cart] Remove catering success',
+    RemoveCateringFail = '[Cart] Remove catering fail',
 
-    Load = '[Cart] Load caterings',
-    LoadSuccess = '[Cart] Load caterings success',
-    LoadFail = '[Cart] Load caterings fail'
+    LoadCaterings = '[Cart] Load caterings',
+    LoadCateringsSuccess = '[Cart] Load caterings success',
+    LoadCateringsFail = '[Cart] Load caterings fail'
 }
 
 export class AddCatering implements Action {
-    readonly type = CateringActionTypes.Add;
+    readonly type = CateringActionTypes.AddCatering;
     constructor(public payload: number) {}
 }
 
 export class AddCateringFail implements Action {
-    readonly type = CateringActionTypes.AddFail;
+    readonly type = CateringActionTypes.AddCateringFail;
     constructor(public payload: any) {}
 }
 
 export class AddCateringSuccess implements Action {
-  readonly type = CateringActionTypes.AddSuccess;
+  readonly type = CateringActionTypes.AddCateringSuccess;
   constructor(public payload: ICartCatering[]) {}
 }
 
 export class RemoveCatering implements Action {
-    readonly type = CateringActionTypes.Remove;
+    readonly type = CateringActionTypes.RemoveCatering;
     constructor(public payload: number) {}
 }
 
 export class RemoveCateringFail implements Action {
-    readonly type = CateringActionTypes.RemoveFail;
+    readonly type = CateringActionTypes.RemoveCateringFail;
     constructor(public payload: any) {}
 }
 
 export class RemoveCateringSuccess implements Action {
-  readonly type = CateringActionTypes.RemoveSuccess;
+  readonly type = CateringActionTypes.RemoveCateringSuccess;
   constructor(public payload: ICartCatering[]) {}
 }
 
 export class LoadCaterings implements Action {
-    readonly type = CateringActionTypes.Load;
+    readonly type = CateringActionTypes.LoadCaterings;
+    constructor() {}
 }
 
 export class LoadCateringsFail implements Action {
-    readonly type = CateringActionTypes.LoadFail;
+    readonly type = CateringActionTypes.LoadCateringsFail;
     constructor(public payload: any) {}
 }
 
 export class LoadCateringsSuccess implements Action {
-  readonly type = CateringActionTypes.LoadSuccess;
+  readonly type = CateringActionTypes.LoadCateringsSuccess;
   constructor(public payload: ICartCatering[]) {}
 }
 

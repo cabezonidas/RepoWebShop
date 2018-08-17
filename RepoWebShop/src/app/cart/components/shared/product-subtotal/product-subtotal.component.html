@@ -1,0 +1,18 @@
+<div class="priceBundle">
+  <small class="price-left">
+    <span [ngClass]="priceInStore < price ? 'hidden' : ''">Sucursal: ${{priceInStore}} c/u</span>
+  </small>
+  <small class="spacer"></small>
+  <small class="price-right">
+    Online: ${{price}} c/u
+  </small>
+</div>    
+<div class="priceBundle">
+  <small class="price-left">
+    <small [ngClass]="priceInStore < price ? 'hidden' : ''">Subtotal: ${{amount * priceInStore}}</small>
+  </small>
+  <small class="spacer"></small>
+  <small class="price-right">
+    Subtotal: ${{amount * price}} 
+  </small>
+</div>

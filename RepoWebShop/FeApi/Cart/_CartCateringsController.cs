@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RepoWebShop.FeModels;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
@@ -21,32 +22,36 @@ namespace RepoWebShop.FeApi
 
 		[HttpGet]
 		[Route("All")]
-		public IEnumerable<ShoppingCartComboCatering> All() => _cart.GetShoppingCaterings(null);
+		public IEnumerable<_CartCatering> All()
+		{
+			var result = _cart.GetCartCaterings(null);
+			return result;
+		}
 
 		[HttpPost]
 		[Route("Add")]
-		public async Task<IEnumerable<ShoppingCartComboCatering>> Add([FromBody] int id)
+		public async Task<IEnumerable<_CartCatering>> Add([FromBody] int id)
 		{
 			var catering = await _catering.GetLunchByIdAsync(id);
 			_cart.AddCateringToCart(catering, 1);
-			return _cart.GetShoppingCaterings(null);
+			return _cart.GetCartCaterings(null);
 		}
 
 		[HttpPost]
 		[Route("Remove")]
-		public async Task<IEnumerable<ShoppingCartComboCatering>> Remove([FromBody] int id)
+		public async Task<IEnumerable<_CartCatering>> Remove([FromBody] int id)
 		{
 			var catering = await _catering.GetLunchByIdAsync(id);
 			_cart.RemoveLunchFromCart(catering);
-			return _cart.GetShoppingCaterings(null);
+			return _cart.GetCartCaterings(null);
 		}
 
 		[HttpPost]
 		[Route("ClearCatering")]
-		public IEnumerable<ShoppingCartComboCatering> Clear([FromBody] int id)
+		public IEnumerable<_CartCatering> Clear([FromBody] int id)
 		{
 			_cart.ClearCateringFromCart(id);
-			return _cart.GetShoppingCaterings(null);
+			return _cart.GetCartCaterings(null);
 		}
 	}
 }

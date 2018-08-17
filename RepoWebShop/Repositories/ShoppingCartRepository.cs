@@ -713,16 +713,37 @@ namespace RepoWebShop.Repositories
                     s => s.Product.ProductId == productId && s.ShoppingCartId == _cartSession.BookingId).ToArray();
             _appDbContext.ShoppingCartCatalogProducts.RemoveRange(shoppingCartCatalogItem);
             _appDbContext.SaveChanges();
-        }
+		}
 
-        public IEnumerable<ShoppingCartComboCatering> GetShoppingCaterings(string bookingId)
-        {
-            bookingId = bookingId ?? _cartSession.BookingId;
-            var result = AllShoppingCartCaterings().Where(x => x.BookingId == bookingId);
-            return result;
-        }
+		public IEnumerable<ShoppingCartComboCatering> GetShoppingCaterings(string bookingId)
+		{
+			bookingId = bookingId ?? _cartSession.BookingId;
+			var result = AllShoppingCartCaterings().Where(x => x.BookingId == bookingId);
+			return result;
+		}
 
-        public void ClearCateringFromCart(int cateringId)
+		public IEnumerable<_CartCatering> GetCartCaterings(string bookingId)
+		{
+			var result = new List<_CartCatering>();
+			var caterings = GetShoppingCaterings(bookingId);
+			foreach(var catResult in caterings)
+			{
+				var cat = new _CartCatering();
+				cat.LunchId = catResult.LunchId;
+				cat.Amount = catResult.Amount;
+				cat.Title = catResult.Lunch.Title;
+				cat.Description = catResult.Lunch.Title;
+				cat.Attendants = catResult.Lunch.Attendants;
+				cat.EventDuration = catResult.Lunch.EventDuration;
+				cat.PreparationTime = catResult.Lunch.PreparationTime(_cateringMinPrepTime);
+				cat.Price = GetLunchTotal(catResult.Lunch);
+				cat.PriceInStore = GetLunchTotalInStore(catResult.Lunch);
+				result.Add(cat);
+			}
+			return result;
+		}
+
+		public void ClearCateringFromCart(int cateringId)
         {
             var shoppingCartCatering =
                 AllShoppingCartCaterings().Where(

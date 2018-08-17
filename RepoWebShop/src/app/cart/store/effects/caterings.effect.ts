@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as fromTotals from '../actions/totals.action';
 
 import { Effect, Actions } from '@ngrx/effects';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { map, switchMap, catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import * as cateringActions from '../actions/caterings.action';
@@ -16,19 +16,19 @@ export class CateringsEffects {
   ) {}
 
   @Effect()
-  loadItems$ = this.actions$.ofType(cateringActions.CateringActionTypes.Load).pipe(
+  loadCaterings$ = this.actions$.ofType(cateringActions.CateringActionTypes.LoadCaterings).pipe(
     switchMap(() => {
       return this.cateringService
         .getCartCaterings()
         .pipe(
-          map(items => new cateringActions.LoadCateringsSuccess(items)),
+          map(caterings => new cateringActions.LoadCateringsSuccess(caterings)),
           catchError(error => of(new cateringActions.LoadCateringsFail(error)))
         );
     })
   );
 
   @Effect()
-  addCatering$ = this.actions$.ofType(cateringActions.CateringActionTypes.Add).pipe(
+  addCatering$ = this.actions$.ofType(cateringActions.CateringActionTypes.AddCatering).pipe(
     map((action: cateringActions.AddCatering) => action.payload),
     switchMap(cateringId => {
       return this.cateringService
@@ -45,7 +45,7 @@ export class CateringsEffects {
   );
 
   @Effect()
-  removeCatering$ = this.actions$.ofType(cateringActions.CateringActionTypes.Remove).pipe(
+  removeCatering$ = this.actions$.ofType(cateringActions.CateringActionTypes.RemoveCatering).pipe(
     map((action: cateringActions.RemoveCatering) => action.payload),
     switchMap(cateringId => {
       return this.cateringService

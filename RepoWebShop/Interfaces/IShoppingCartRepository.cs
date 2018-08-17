@@ -77,5 +77,7 @@ namespace RepoWebShop.Interfaces
         void ClearCustomCateringFromCart();
         decimal GetTotalInStore(string bookingId);
 		Task<ShoppingCartViewModel> GetShoppingCartViewModel();
+
+		IEnumerable<_CartCatering> GetCartCaterings(string bookingId);
 	}
 }

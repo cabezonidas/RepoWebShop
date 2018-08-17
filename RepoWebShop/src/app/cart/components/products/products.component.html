@@ -1,3 +1,35 @@
-<div *ngFor="let item of items">
-  {{ item.product.displayName }}
-</div>
+<mat-list>
+  <mat-list-item *ngFor="let item of items">
+    <h4 mat-line color="primary">{{item.amount}}x {{item.product.displayName}} ({{item.product.preparationTime}} hs)</h4>
+    <p mat-line> {{item.product.displayDescription}} </p>
+    <app-product-subtotal  mat-line [amount]="item.amount" [priceInStore]="item.product.priceInStore" [price]="item.product.price">
+    </app-product-subtotal>
+    <div mat-line class="incrementer">
+      <span>Cantidad: </span>
+      <button mat-icon-button color="primary" (tap)="removeItemFromCart(item.product.productId)"><i class="material-icons">arrow_left</i></button>
+      <span>{{item.amount}}</span>
+      <button mat-icon-button color="primary" (tap)="addItemToCart(item.product.productId)"><i class="material-icons">arrow_right</i></button>
+    </div>
+  </mat-list-item>
+  <mat-list-item *ngFor="let catering of caterings">
+    <h4 mat-line color="primary">{{catering.amount}}x {{catering.title}} ({{catering.preparationTime}} hs)</h4>
+    <p mat-line> {{catering.description}} </p>
+    <app-product-subtotal  mat-line [amount]="catering.amount" [priceInStore]="catering.priceInStore" [price]="catering.price">
+    </app-product-subtotal>
+    <div mat-line class="incrementer">
+      <span>Cantidad: </span>
+      <button mat-icon-button color="primary" (tap)="removeCateringFromCart(catering.lunchId)"><i class="material-icons">arrow_left</i></button>
+      <span>{{catering.amount}}</span>
+      <button mat-icon-button color="primary" (tap)="addCateringToCart(catering.lunchId)"><i class="material-icons">arrow_right</i></button>
+    </div>
+  </mat-list-item>  
+  <mat-list-item *ngIf="customCatering && customCatering.items && customCatering.items.length">
+    <h4 mat-line color="primary">1x Catering Personalizado ({{customCatering.preparationTime}} hs)</h4>
+    <app-product-subtotal  mat-line [amount]="1" [priceInStore]="customCateringPriceInStore()" [price]="customCateringPrice()">
+    </app-product-subtotal>
+    <div mat-line class="removeCustomCatering">
+      <button mat-button color="primary" (tap)="removeCustomCateringFromCart()">Quitar</button>
+    </div>
+  </mat-list-item>
+</mat-list>
+<button mat-raised-button color="primary" (tap)="continue()">Continuar</button>

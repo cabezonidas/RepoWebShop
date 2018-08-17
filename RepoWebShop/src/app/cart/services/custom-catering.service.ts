@@ -12,5 +12,5 @@ export class CustomCateringService {
   constructor(private http: HttpClient) { }
 
   loadSessionCatering = (): Observable<ICatering> => this.http.get<ICatering>('/api/_cartCustomCatering/loadSessionCatering');
-  clearSessionCatering = (): Observable<void> => this.http.get<void>('/api/_cartCustomCatering/clearSessionCatering');
+  clearSessionCatering = (): Observable<void> => this.http.delete<void>('/api/_cartCustomCatering/clearSessionCatering');
 }
