@@ -14,6 +14,7 @@ import { PickupOptionsShellComponent } from './components/pickup/containers/pick
 import { reducers, effects } from './store';
 import { DiscountComponent } from './components/discount/discount.component';
 import { TotalsComponent } from './components/totals/totals.component';
+import { ProductsComponent } from './components/products/products.component';
 
 const cartRoutes: Routes = [
     { path: 'cart', component: CartComponent }
@@ -26,7 +27,8 @@ const cartRoutes: Routes = [
         PickupOptionsComponent,
         PickupOptionsShellComponent,
         DiscountComponent,
-        TotalsComponent
+        TotalsComponent,
+        ProductsComponent
     ],
     imports: [
         AgmCoreModule.forRoot({

@@ -56,6 +56,7 @@ export class ClearDiscountFail implements Action {
 
 export class ClearDiscountSuccess implements Action {
   readonly type = DiscountActionTypes.ClearDiscountSuccess;
+  constructor() {}
 }
 
 export type DiscountActions = GetDiscount

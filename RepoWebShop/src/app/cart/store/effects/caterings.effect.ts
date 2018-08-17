@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as fromStore from '../../store';
+import * as fromTotals from '../actions/totals.action';
 
 import { Effect, Actions } from '@ngrx/effects';
 import { map, switchMap, catchError } from 'rxjs/operators';
@@ -37,7 +37,7 @@ export class CateringsEffects {
           // map(items => new cateringActions.AddCateringSuccess(items)),
           switchMap(items => [
             new cateringActions.AddCateringSuccess(items),
-            new fromStore.GetTotals()
+            // new fromTotals.GetTotals()
           ]),
           catchError(error => of(new cateringActions.AddCateringFail(error)))
         );

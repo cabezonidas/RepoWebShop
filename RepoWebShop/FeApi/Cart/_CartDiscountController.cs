@@ -20,8 +20,8 @@ namespace RepoWebShop.FeApi
 		}
 
 		[HttpGet]
-		[Route("Get/{code}")]
-		public Discount Get(string code) => _discount.FindByCode(code);
+		[Route("Get")]
+		public Discount Get() => _cart.GetDiscount(null);
 
 		[HttpGet]
 		[Route("Exists/{code}")]

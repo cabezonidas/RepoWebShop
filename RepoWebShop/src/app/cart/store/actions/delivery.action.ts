@@ -21,6 +21,7 @@ export enum DeliveryActionTypes {
 
 export class ClearDelivery implements Action {
     readonly type = DeliveryActionTypes.ClearDelivery;
+    constructor() {}
 }
 
 export class ClearDeliveryFail implements Action {
@@ -29,7 +30,8 @@ export class ClearDeliveryFail implements Action {
 }
 
 export class ClearDeliverySuccess implements Action {
-  readonly type = DeliveryActionTypes.ClearDeliverySuccess;
+    readonly type = DeliveryActionTypes.ClearDeliverySuccess;
+    constructor() {}
 }
 
 export class UpdateInstructions implements Action {
@@ -64,6 +66,7 @@ export class SaveDeliverySuccess implements Action {
 
 export class GetDelivery implements Action {
     readonly type = DeliveryActionTypes.GetDelivery;
+    constructor() {}
 }
 
 export class GetDeliveryFail implements Action {

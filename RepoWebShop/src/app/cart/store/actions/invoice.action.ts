@@ -21,6 +21,7 @@ export enum InvoiceActionTypes {
 
 export class GetCuit implements Action {
     readonly type = InvoiceActionTypes.GetCuit;
+    constructor() {}
 }
 
 export class GetCuitFail implements Action {
