@@ -210,13 +210,18 @@ namespace RepoWebShop.Models
 				if(OrderLines != null) //To be deprecated
 					allItems = allItems.Concat(OrderLines.Select(x => new KeyValuePair<int, string>(x.Amount, $"{x.Pie.PieDetail.Name} {x.Pie.Name}")));
 
-                allItems = allItems.Concat(OrderCatalogItems.Select(x => new KeyValuePair<int, string>(x.Amount, x.Product.DisplayName)));
+				var catItems = OrderCatalogItems?.Select(x => new KeyValuePair<int, string>(x.Amount, x.Product.DisplayName));
+
+				if(catItems != null)
+					allItems = allItems.Concat(catItems);
                 // var miscellanea = new List<KeyValuePair<int, string>>();
-                foreach (var cat in OrderCaterings)
-                {
-					allItems = allItems.Concat(cat.Lunch.Items.Select(x => new KeyValuePair<int, string>(x.ItemCount * cat.Amount, x.Product.DisplayName)));
-					allItems = allItems.Concat(cat.Lunch.Miscellanea.Select(x => new KeyValuePair<int, string>(x.Quantity * cat.Amount, x.Description)));
-                }
+
+				if(OrderCaterings != null)
+					foreach (var cat in OrderCaterings)
+					{
+						allItems = allItems.Concat(cat.Lunch.Items.Select(x => new KeyValuePair<int, string>(x.ItemCount * cat.Amount, x.Product.DisplayName)));
+						allItems = allItems.Concat(cat.Lunch.Miscellanea.Select(x => new KeyValuePair<int, string>(x.Quantity * cat.Amount, x.Description)));
+					}
                 allItems = allItems.GroupBy(x => x.Value).Select(group => new KeyValuePair<int, string>(group.Sum(x => x.Key), group.Key));
                 //result.AddRange(pies);
                 //result.AddRange(allItems);
