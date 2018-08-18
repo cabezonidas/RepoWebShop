@@ -7,10 +7,10 @@ export const getInvoiceState = createSelector(
     (state: fromFeature.CartState) => state.invoice
   );
 
-  export const getTaxpayer = createSelector(
-    getInvoiceState,
-    fromInvoice.getTaxpayer
-  );
+  // export const getTaxpayer = createSelector(
+  //   getInvoiceState,
+  //   fromInvoice.getTaxpayer
+  // );
 
 
   export const getCuit = createSelector(
