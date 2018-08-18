@@ -5,10 +5,14 @@
 
 
   <div class="input">
-    <mat-form-field>
+    <mat-form-field [ngClass]="savedCuit ? 'hidden' : ''">
       <input class="inputnumber" matInput [value]="savedCuit ? savedCuit : ''" placeholder="Número de Cuit"
       autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off"
-      formControlName="cuit" name="cuit" #cuit  [attr.disabled]="savedCuit ? 'disabled' : null">
+      formControlName="cuit" name="cuit" #cuit  > <!-- [attr.disabled]="cuitLoading ? 'disabled' : null" -->
+    </mat-form-field>
+    <mat-form-field [ngClass]="savedCuit ? '' : 'hidden'">
+        <mat-label>Cuit</mat-label> 
+        <input matInput disabled [value]="savedCuit">
     </mat-form-field>
     <mat-progress-bar *ngIf="cuitLoading " mode="indeterminate"></mat-progress-bar>
   </div>

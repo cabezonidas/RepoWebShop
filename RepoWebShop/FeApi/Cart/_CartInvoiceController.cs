@@ -46,7 +46,7 @@ namespace RepoWebShop.FeApi
 				if(afipCuit.Valid)
 				{
 					_cart.AddCuitToCart(null, cuitNumber);
-					return cuit;
+					return cuitNumber.ToString();
 				}
 			}
 			catch { }

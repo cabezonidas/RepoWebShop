@@ -20,7 +20,7 @@ export class InvoiceComponent implements OnInit, OnChanges {
   @Output() clearCuit = new EventEmitter<void>();
   @Output() next = new EventEmitter<void>();
   cuitGroup: FormGroup;
-  @ViewChild('cuit') public cuitNumber: ElementRef;
+  // @ViewChild('cuit') public cuitNumber: ElementRef;
 
   constructor(private _formBuilder: FormBuilder, private invoice: InvoiceService) { }
 
@@ -48,7 +48,6 @@ export class InvoiceComponent implements OnInit, OnChanges {
   };
 
   ngOnChanges() {
-    console.log('saved cuit', this.savedCuit);
   }
 
   removeCuit = (): void => this.clearCuit.emit();
