@@ -61,7 +61,7 @@ export class AddCuitFail implements Action {
 
 export class AddCuitSuccess implements Action {
   readonly type = InvoiceActionTypes.AddCuitSuccess;
-  constructor(public payload: string[]) {}
+  constructor(public payload: string) {}
 }
 
 export class ClearCuit implements Action {

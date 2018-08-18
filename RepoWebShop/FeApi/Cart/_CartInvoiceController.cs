@@ -37,16 +37,16 @@ namespace RepoWebShop.FeApi
 
 		[HttpPost]
 		[Route("AddCuit/{cuit}")]
-		public async Task<IEnumerable<string>> AddCuit(string cuit)
+		public async Task<string> AddCuit(string cuit)
 		{
 			try
 			{
-				var cuitNumber = Convert.ToInt64(cuit.Replace("-", ""));
+				var cuitNumber = Convert.ToInt64(cuit.Replace("-", "").Replace(" ", ""));
 				var afipCuit = await _billing.ValidPersonaAsync(cuitNumber);
 				if(afipCuit.Valid)
 				{
 					_cart.AddCuitToCart(null, cuitNumber);
-					return afipCuit.CuitDetails.Select(x => $"{x.Property} {x.Value}");
+					return cuit;
 				}
 			}
 			catch { }
@@ -62,7 +62,7 @@ namespace RepoWebShop.FeApi
 		}
 
 		[HttpGet]
-		[Route("ClearCuit")]
+		[Route("GetCuit")]
 		public string GetCuit() => _cart.GetCuit(null).ToString();
 	}
 }

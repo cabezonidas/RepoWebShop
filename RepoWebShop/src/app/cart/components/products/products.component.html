@@ -24,7 +24,7 @@
     </div>
   </mat-list-item>  
   <mat-list-item *ngIf="customCatering && customCatering.items && customCatering.items.length">
-    <h4 mat-line color="primary">1x Catering Personalizado ({{customCatering.preparationTime}} hs)</h4>
+    <h4 mat-line class="customCatering" color="primary" routerLink="/new-catering" >1x Catering Personalizado ({{customCatering.preparationTime}} hs)</h4>
     <app-product-subtotal  mat-line [amount]="1" [priceInStore]="customCateringPriceInStore()" [price]="customCateringPrice()">
     </app-product-subtotal>
     <div mat-line class="removeCustomCatering">

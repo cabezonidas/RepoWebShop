@@ -946,7 +946,10 @@ namespace RepoWebShop.Repositories
 			_Catering catering = null;
 			var shoppingLunch = GetOrCreateSessionLunch();
 			if(shoppingLunch != null && shoppingLunch.Lunch != null)
+			{
 				catering = Map(shoppingLunch.Lunch);
+				catering.PreparationTime = shoppingLunch.Lunch.PreparationTime(_cateringMinPrepTime);
+			}
 			return catering;
 		}
 
@@ -966,6 +969,7 @@ namespace RepoWebShop.Repositories
 
 				if (lunch.Miscellanea != null)
 					catering.Miscellanea = lunch.Miscellanea.Select(m => _mapper.Map<LunchMiscellaneous, _CateringMiscellaneous>(m));
+				catering.PreparationTime = lunch.PreparationTime(_cateringMinPrepTime);
 			}
 			return catering;
 		}

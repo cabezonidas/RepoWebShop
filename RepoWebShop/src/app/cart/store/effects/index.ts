@@ -6,6 +6,7 @@ import { PickupEffects } from './pickup.effect';
 import { TotalsEffects } from './totals.effect';
 import { CustomCateringEffects } from './custom-catering.effect';
 import { DeliveryEffects } from './delivery.effect';
+import { InvoicesEffects } from './invoice.effect';
 
 export const effects: any[] = [
     ItemsEffects,
@@ -15,7 +16,8 @@ export const effects: any[] = [
     PickupEffects,
     TotalsEffects,
     CustomCateringEffects,
-    DeliveryEffects
+    DeliveryEffects,
+    InvoicesEffects
 ];
 
 export * from './items.effect';
@@ -26,3 +28,4 @@ export * from './pickup.effect';
 export * from './totals.effect';
 export * from './custom-catering.effect';
 export * from './delivery.effect';
+export * from './invoice.effect';

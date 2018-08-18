@@ -1,0 +1,34 @@
+<form [formGroup]="cuitGroup">
+  <p *ngIf="!savedCuit">
+      Si necesitás factura A, por favor ingresa tu cuit. 
+  </p>  
+
+
+  <div class="input">
+    <mat-form-field>
+      <input class="inputnumber" matInput [value]="savedCuit ? savedCuit : ''" placeholder="Número de Cuit"
+      autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off"
+      formControlName="cuit" name="cuit" #cuit  [attr.disabled]="savedCuit ? 'disabled' : null">
+    </mat-form-field>
+    <mat-progress-bar *ngIf="cuitLoading " mode="indeterminate"></mat-progress-bar>
+  </div>
+  <div class="error" *ngIf="cuitGroup.controls.cuit.errors?.cuitInvalid">
+    Cuit no encontrado.
+  </div>
+  <div>
+
+    <button mat-raised-button (tap)="removeCuit()" *ngIf="savedCuit">Quitar Cuit</button>
+    <button mat-raised-button *ngIf="!savedCuit" (tap)="continue()">No necesito factura A</button>
+  </div>
+</form>
+
+<div *ngIf="savedCuit" >
+  <h4 [@fallIn]="state" class="cuitTitle">
+    ¡Cuit encontrado!
+  </h4>
+  <p>Factura electrónica tipo A lista para ser emitida</p>
+</div>
+<div class="buttom-bottons">
+
+  <button mat-raised-button color="primary" *ngIf="savedCuit" (tap)="continue()">Continuar</button>
+</div>

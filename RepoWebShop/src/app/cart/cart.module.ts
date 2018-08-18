@@ -16,6 +16,7 @@ import { DiscountComponent } from './components/discount/discount.component';
 import { TotalsComponent } from './components/totals/totals.component';
 import { ProductsComponent } from './components/products/products.component';
 import { ProductSubtotalComponent } from './components/shared/product-subtotal/product-subtotal.component';
+import { InvoiceComponent } from './components/invoice/invoice.component';
 
 const cartRoutes: Routes = [
     { path: 'cart', component: CartComponent }
@@ -30,7 +31,8 @@ const cartRoutes: Routes = [
         DiscountComponent,
         TotalsComponent,
         ProductsComponent,
-        ProductSubtotalComponent
+        ProductSubtotalComponent,
+        InvoiceComponent
     ],
     imports: [
         AgmCoreModule.forRoot({

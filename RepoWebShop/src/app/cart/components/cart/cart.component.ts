@@ -30,10 +30,30 @@ export class CartComponent implements OnInit, OnDestroy {
   delivery$: Observable<DeliveryAddress>;
   discount$: Observable<IDiscount>;
   cuit$: Observable<string>;
+  cuitDetails$: Observable<string[]>;
   pickupOptions$: Observable<IPickupOption[]>;
   preparationTime$: Observable<number>;
   pickup$: Observable<IPickupDate>;
   total$: Observable<number>;
+
+  cateringsLoaded$: Observable<boolean>;
+  cateringsLoading$: Observable<boolean>;
+  commentsLoaded$: Observable<boolean>;
+  commentsLoading$: Observable<boolean>;
+  customCateringLoaded$: Observable<boolean>;
+  customCateringLoading$: Observable<boolean>;
+  deliveryLoaded$: Observable<boolean>;
+  deliveryLoading$: Observable<boolean>;
+  discountsLoaded$: Observable<boolean>;
+  discountsLoading$: Observable<boolean>;
+  cuitLoaded$: Observable<boolean>;
+  cuitLoading$: Observable<boolean>;
+  itemsLoaded$: Observable<boolean>;
+  itemsLoading$: Observable<boolean>;
+  pickupLoaded$: Observable<boolean>;
+  pickupLoading$: Observable<boolean>;
+  totalsLoaded$: Observable<boolean>;
+  totalsLoading$: Observable<boolean>;;
 
   @HostBinding('@moveIn') role = '';
   @ViewChild('stepper') stepper: MatStepper;
@@ -41,24 +61,39 @@ export class CartComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.store.dispatch(new fromStore.LoadCaterings());
     this.caterings$ = this.store.pipe(select(fromStore.getCaterings));
+    this.cateringsLoaded$ = this.store.pipe(select(fromStore.getCateringsLoaded));
+    this.cateringsLoading$ = this.store.pipe(select(fromStore.getCateringsLoading));
 
     this.store.dispatch(new fromStore.LoadComments());
     this.comments$ = this.store.pipe(select(fromStore.getComments));
+    this.commentsLoaded$ = this.store.pipe(select(fromStore.getCommentsLoaded));
+    this.commentsLoading$ = this.store.pipe(select(fromStore.getCommentsLoading));
 
     this.store.dispatch(new fromStore.LoadSessionCatering());
     this.customCatering$ = this.store.pipe(select(fromStore.getCustomCatering));
+    this.customCateringLoaded$ = this.store.pipe(select(fromStore.getCustomCateringLoaded));
+    this.customCateringLoading$ = this.store.pipe(select(fromStore.getCustomCateringLoading));
+
 
     this.store.dispatch(new fromStore.GetDelivery());
     this.delivery$ = this.store.pipe(select(fromStore.getDelivery));
+    this.deliveryLoaded$ = this.store.pipe(select(fromStore.getDeliveryLoaded));
+    this.deliveryLoading$ = this.store.pipe(select(fromStore.getDeliveryLoading));
 
     this.store.dispatch(new fromStore.GetDiscount());
     this.discount$ = this.store.pipe(select(fromStore.getDiscounts));
+    this.discountsLoaded$ = this.store.pipe(select(fromStore.getDiscountsLoaded));
+    this.discountsLoading$ = this.store.pipe(select(fromStore.getDiscountsLoading));
 
     this.store.dispatch(new fromStore.GetCuit());
     this.cuit$ = this.store.pipe(select(fromStore.getCuit));
+    this.cuitLoaded$ = this.store.pipe(select(fromStore.getInvoiceLoaded));
+    this.cuitLoading$ = this.store.pipe(select(fromStore.getInvoicesLoading));
 
     this.store.dispatch(new fromStore.LoadItems());
     this.items$ = this.store.pipe(select(fromStore.getItems));
+    this.itemsLoaded$ = this.store.pipe(select(fromStore.getItemsLoaded));
+    this.itemsLoading$ = this.store.pipe(select(fromStore.getItemsLoading));
 
     this.store.dispatch(new fromStore.LoadPickupOptions());
     this.store.dispatch(new fromStore.GetPickupOption());
@@ -66,9 +101,13 @@ export class CartComponent implements OnInit, OnDestroy {
     this.pickupOptions$ = this.store.pipe(select(fromStore.getPickupOptions));
     this.preparationTime$ = this.store.pipe(select(fromStore.getPreparationTime));
     this.pickup$ = this.store.pipe(select(fromStore.getPickup));
+    this.pickupLoaded$ = this.store.pipe(select(fromStore.getPickupLoaded));
+    this.pickupLoading$ = this.store.pipe(select(fromStore.getPickupLoading));
 
     this.store.dispatch(new fromStore.GetTotals());
     this.total$ = this.store.pipe(select(fromStore.getTotal));
+    this.totalsLoaded$ = this.store.pipe(select(fromStore.getTotalsLoaded));
+    this.totalsLoading$ = this.store.pipe(select(fromStore.getTotalsLoading));
   }
 
   ngOnDestroy() {

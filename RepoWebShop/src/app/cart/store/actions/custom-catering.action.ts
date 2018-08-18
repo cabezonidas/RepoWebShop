@@ -13,6 +13,7 @@ export enum CustomCateringActionTypes {
 
 export class LoadSessionCatering implements Action {
     readonly type = CustomCateringActionTypes.LoadSessionCatering;
+    constructor() {}
 }
 
 export class LoadSessionCateringSuccess implements Action {
@@ -27,10 +28,12 @@ export class LoadSessionCateringFail implements Action {
 
 export class RemoveSessionCatering implements Action {
     readonly type = CustomCateringActionTypes.RemoveSessionCatering;
+    constructor() {}
 }
 
 export class RemoveSessionCateringSuccess implements Action {
     readonly type = CustomCateringActionTypes.RemoveSessionCateringSuccess;
+    constructor() {}
 }
 
 export class RemoveSessionCateringFail implements Action {

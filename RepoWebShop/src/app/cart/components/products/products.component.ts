@@ -14,6 +14,8 @@ export class ProductsComponent implements OnInit {
   @Input() items: ICartCatalogItem[];
   @Input() caterings: ICartCatering[];
   @Input() customCatering: ICatering;
+  @Input() itemsLoaded: boolean;
+  @Input() itemsLoading: boolean;
   
   @Output() next = new EventEmitter<void>();
   @Output() addItem = new EventEmitter<number>();

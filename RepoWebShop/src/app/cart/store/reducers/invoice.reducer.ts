@@ -3,7 +3,7 @@ import { IInvoiceInfo } from '../../interfaces/iinvoice-info';
 
 export interface InvoiceState {
     cuit: string;
-    taxpayerInfo: string[];
+    // taxpayerInfo: string[];
     loaded: boolean;
     loading: boolean;
     error: any;
@@ -11,7 +11,7 @@ export interface InvoiceState {
 
 export const initialState: InvoiceState = {
     cuit: '',
-    taxpayerInfo: [],
+    // taxpayerInfo: [],
     loaded: false,
     loading: false,
     error: null
@@ -28,15 +28,8 @@ export function reducer(state = initialState, action: fromInvoices.InvoiceAction
             loading: true,
         };
 
-        case fromInvoices.InvoiceActionTypes.AddCuitSuccess:
-        return {
-            ...state,
-            taxpayerInfo: action.payload,
-            loading: false,
-            loaded: true,
-        }
-
         case fromInvoices.InvoiceActionTypes.GetCuitSuccess: 
+        case fromInvoices.InvoiceActionTypes.AddCuitSuccess:
         return {
             ...state,
             cuit: action.payload,
@@ -48,7 +41,7 @@ export function reducer(state = initialState, action: fromInvoices.InvoiceAction
         return {
             ...state,
             cuit: '',
-            taxpayerInfo: [],
+            // taxpayerInfo: [],
             loading: false,
             loaded: true,
         }
@@ -76,7 +69,7 @@ export function reducer(state = initialState, action: fromInvoices.InvoiceAction
 }
 
 export const getCuit = (state: InvoiceState) => state.cuit;
-export const getTaxpayer = (state: InvoiceState) => state.taxpayerInfo;
+// export const getTaxpayer = (state: InvoiceState) => state.taxpayerInfo;
 export const getInvoicesLoading = (state: InvoiceState) => state.loading;
 export const getInvoicesLoaded = (state: InvoiceState) => state.loaded;
 export const getInvoicesError = (state: InvoiceState) => state.error;

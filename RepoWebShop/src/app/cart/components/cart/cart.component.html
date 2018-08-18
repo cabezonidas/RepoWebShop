@@ -11,8 +11,14 @@
       <app-totals></app-totals>
       <mat-vertical-stepper linear #stepper>
         <mat-step >
+          <ng-template matStepLabel>Facturación Electrónica</ng-template>
+          <app-invoice [savedCuit]="cuit$ | async" [cuitLoaded]="cuitLoaded$ | async" [cuitLoading]="cuitLoading$ | async"
+          (next)="_onNext()" (addCuit)="addCuit($event)" (clearCuit)="clearCuit()"></app-invoice>
+        </mat-step>
+        <mat-step >
           <ng-template matStepLabel>Productos</ng-template>
           <app-products [items]="items$ | async" [caterings]="caterings$ | async" [customCatering]="customCatering$ | async"
+          [itemsLoaded]="cuitLoaded$ | async" [itemsLoading]="cuitLoading$ | async"
           (next)="_onNext()" (addItem)="addItem($event)" (removeItem)="removeItem($event)"
           (addCatering)="addCatering($event)" (removeCatering)="removeCatering($event)" (removeCustomCatering)="removeCustomCatering($event)"
           >
@@ -35,9 +41,6 @@
         </mat-step>
         <mat-step >
           <ng-template matStepLabel>Resumen</ng-template>
-        </mat-step>
-        <mat-step >
-          <ng-template matStepLabel>Facturación</ng-template>
         </mat-step>
         <mat-step >
           <ng-template matStepLabel>Pago</ng-template>
