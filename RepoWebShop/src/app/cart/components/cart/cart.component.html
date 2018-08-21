@@ -11,11 +11,6 @@
       <app-totals></app-totals>
       <mat-vertical-stepper linear #stepper>
         <mat-step >
-          <ng-template matStepLabel>Facturación Electrónica</ng-template>
-          <app-invoice [savedCuit]="cuit$ | async" [cuitLoaded]="cuitLoaded$ | async" [cuitLoading]="cuitLoading$ | async"
-          (next)="_onNext()" (addCuit)="addCuit($event)" (clearCuit)="clearCuit()"></app-invoice>
-        </mat-step>
-        <mat-step >
           <ng-template matStepLabel>Productos</ng-template>
           <app-products [items]="items$ | async" [caterings]="caterings$ | async" [customCatering]="customCatering$ | async"
           [itemsLoaded]="cuitLoaded$ | async" [itemsLoading]="cuitLoading$ | async"
@@ -24,9 +19,14 @@
           >
           </app-products>
         </mat-step>
+          <mat-step >
+            <ng-template matStepLabel>Facturación Electrónica</ng-template>
+            <app-invoice [savedCuit]="cuit$ | async" [cuitLoaded]="cuitLoaded$ | async" [cuitLoading]="cuitLoading$ | async"
+            (next)="_onNext()" (addCuit)="addCuit($event)" (clearCuit)="clearCuit()"></app-invoice>
+          </mat-step>
         <mat-step >
           <ng-template matStepLabel>Código Promocional</ng-template>
-          <app-discount></app-discount>
+          <app-discount (next)="_onNext()"></app-discount>
         </mat-step>
         <mat-step >
           <ng-template matStepLabel>Entrega</ng-template>

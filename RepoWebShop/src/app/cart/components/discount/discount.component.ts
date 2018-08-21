@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnChanges, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, AbstractControl, FormGroup, Validators, AsyncValidatorFn, ValidationErrors, FormControl } from '@angular/forms';
 import { DiscountService } from '../../services';
 import { Observable, interval, of, fromEvent, timer } from 'rxjs';
@@ -15,6 +15,8 @@ export class DiscountComponent implements OnInit {
   discountGroup: FormGroup;
   code = '';
   @ViewChild('discount') public discountCode: ElementRef;
+  @Output() next = new EventEmitter<void>();
+
 
   constructor(private _formBuilder: FormBuilder, private discount: DiscountService) { }
 
@@ -24,6 +26,10 @@ export class DiscountComponent implements OnInit {
         this.exists(), this.isActive(), this.isAvailable(), this.minOrderReached(), this.isValidToday(), this.notExpired(), this.notPending()
       ])
     });
+  }
+
+  onNext() {
+    this.next.emit();
   }
   
   exists(): AsyncValidatorFn {

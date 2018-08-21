@@ -24,4 +24,7 @@
   <div class="error" *ngIf="!discountGroup.controls.discount.errors?.notExists && discountGroup.controls.discount.errors?.pending">
     El descuento todavía no está activo.
   </div>
+  <div>
+    <button mat-raised-button color="primary" (tap)="onNext()">Siguiente</button>
+  </div>
 </form>

@@ -34,10 +34,9 @@ export class CateringsEffects {
       return this.cateringService
         .addCatering(cateringId)
         .pipe(
-          // map(items => new cateringActions.AddCateringSuccess(items)),
           switchMap(items => [
             new cateringActions.AddCateringSuccess(items),
-            // new fromTotals.GetTotals()
+            new fromTotals.GetTotals()
           ]),
           catchError(error => of(new cateringActions.AddCateringFail(error)))
         );
