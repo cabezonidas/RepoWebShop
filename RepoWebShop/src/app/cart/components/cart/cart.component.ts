@@ -53,7 +53,7 @@ export class CartComponent implements OnInit, OnDestroy {
   pickupLoaded$: Observable<boolean>;
   pickupLoading$: Observable<boolean>;
   totalsLoaded$: Observable<boolean>;
-  totalsLoading$: Observable<boolean>;;
+  totalsLoading$: Observable<boolean>;
 
   @HostBinding('@moveIn') role = '';
   @ViewChild('stepper') stepper: MatStepper;
@@ -119,7 +119,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   addCatering = (cateringId: number): void => this.store.dispatch(new fromStore.AddCatering(cateringId));
   removeCatering = (cateringId: number): void => this.store.dispatch(new fromStore.RemoveCatering(cateringId));
-  
+
   addComments = (comments: string): void => this.store.dispatch(new fromStore.AddComments(comments));
 
   removeCustomCatering = (): void => this.store.dispatch(new fromStore.RemoveSessionCatering());
@@ -133,9 +133,9 @@ export class CartComponent implements OnInit, OnDestroy {
 
   addCuit = (cuit: string): void => this.store.dispatch(new fromStore.AddCuit(cuit));
   clearCuit = (): void => this.store.dispatch(new fromStore.ClearCuit());
-  
+
   addItem = (itemId: number): void => this.store.dispatch(new fromStore.AddItem(itemId));
   removeItem = (itemId: number): void => this.store.dispatch(new fromStore.RemoveItem(itemId));
-  
+
   setPickupOption = (ticks: string): void => this.store.dispatch(new fromStore.SetPickupOption(ticks));
 }

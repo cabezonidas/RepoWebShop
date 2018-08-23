@@ -23,6 +23,30 @@ namespace RepoWebShop.Extensions
 
 			return result;
 		}
+
+		public static string[] ToCharsPerLine(this string text, int charsPerLine)
+		{
+			var words = text.Split(" ").ToArray();
+
+			var lines = new List<string>();
+			var buffer = "";
+			for (int i = 0; i < words.Length; i++)
+			{
+				if (buffer.Length + (words[i].Length + 1) <= charsPerLine)
+					buffer += $"{(!string.IsNullOrEmpty(buffer) ? " " : "")}{words[i]}";
+				else
+				{
+					lines.Add(buffer);
+					buffer = words[i];
+				}
+				if (i == words.Length - 1)
+					lines.Add(buffer);
+			}
+			var result = lines.ToArray();
+
+			return result;
+		}
+
         public static string CamelCaseString(this string camelCase)
         {
             if (string.IsNullOrEmpty(camelCase) || camelCase.Length < 2)

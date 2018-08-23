@@ -13,18 +13,33 @@ namespace RepoWebShop.Tests
     {
         public DecimalExtensionUnitTest()
         {
-        }
+		}
 
-        [TestMethod]
-        public void Diatricts()
-        {
+		[TestMethod]
+		public void Diatricts()
+		{
 			var text = "Hólá, Hono lulú, !¡ - é í";
 			var result = text.RemoveAccents();
 
 			Assert.AreEqual(result, "Hola, Hono lulu, !¡ - e i");
 		}
 
-        [TestMethod]
+
+		[TestMethod]
+		public void ParagraphLines()
+		{
+			var charsPerLine = 43;
+			var text = "*El descuento es válido a partir del Jueves 23 de Agosto de 2018. El descuento expira el Jueves 6 de Septiembre de 2018. El descuento se puede usar una sola vez. El voucher de $20 de descuento aplica para compras mayores a $1. La promoción puede desactivarse o modificarse sin previo aviso. Sólo válido para compras online en www.delasartes.com.ar. La compra debe realizarse el día que la promoción sea válida.La entrega y / o envío debe estar dentro de las opciones que ofrece el sitio web al finalizar la compra.";
+
+			var result = text.ToCharsPerLine(charsPerLine);
+
+			Assert.AreEqual(result[0], "*El descuento es válido a partir del Jueves");
+			Assert.AreEqual(result.Length, 13);
+			foreach (var item in result)
+				Assert.IsTrue(item.Length <= charsPerLine);
+		}
+
+		[TestMethod]
         public void ApplyPercentage()
         {
             Assert.AreEqual(10m.ApplyPercentage(10), 11m);

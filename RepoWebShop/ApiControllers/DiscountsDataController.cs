@@ -37,7 +37,7 @@ namespace RepoWebShop.ApiControllers
 		{
 			var disc = _discountRepository.AddQuickDiscount(value);
 
-			var view = "DiscountPrint";
+			var view = "VoucherPrint";
 			var result = await this.RenderViewAsync(view, disc, true);
 
 			_printerRepository.AddToQueue(result);
