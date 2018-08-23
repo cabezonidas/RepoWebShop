@@ -2,87 +2,117 @@
 @inject ICalendarRepository _calendarRepository;
 
 <div class="container">
-    <h3 class="text-center text-muted">Descuentos</h3>
-    <a asp-controller="Discounts" asp-action="Create" class="btn btn-primary" style="margin: 5px;">Agregar Descuento</a>
+	<h3 class="text-center text-muted">Descuentos</h3>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Código
-                </th>
-                <th>
-                    Válido Desde
-                </th>
-                <th>
-                    Válido Hasta
-                </th>
-                <th>
-                    Repetición semanal
-                </th>
-                <th>
-                    Usos disponibles
-                </th>
-                <th>
-                    Descuento
-                </th>
-                <th>
-                    Orden mínima
-                </th>
-                <th>
-                    Tope
-                </th>
-                <th>
-                    Condiciones
-                </th>
-                <th>
 
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var discount in Model)
-            {
-            <tr>
-                <td>
-                    <a asp-action="Details" asp-controller="Discounts" asp-route-code="@discount.Phrase.ToUpper()">
-                        @discount.Phrase.ToUpper()
-                    </a>
-                </td>
-                <td>
-                    @Html.Raw($"{_calendarRepository.FriendlyDate(discount.ValidFrom)} de {discount.ValidFrom.Year}")
-                </td>
-                <td>
-                    @Html.Raw($"{_calendarRepository.FriendlyDate(discount.ValidTo)} de {discount.ValidFrom.Year}")
-                </td>
-                <td>
-                    <span class='fa fa-@Html.Raw(discount.Weekly ? "check" : "times")'></span>
-                </td>
-                <td>
-                    @Html.Raw(discount.InstancesLeft.HasValue ? discount.InstancesLeft.Value.ToString() : "Infinitos")
-                </td>
-                <td>
-                    @discount.Percentage %
-                </td>
-                <td>
-                    $@discount.Base
-                </td>
-                <td>
-                    $@discount.Roof
-                </td>
-                <td>
-                    <div title="@discount.Comments">
-                        @discount.Comments.Substring(0, discount.Comments.Length >= 100 ? 100 : discount.Comments.Length - 1)...
-                    </div>
-                    
-                </td>
-                <td>
-                    <a asp-controller="Discounts" asp-action="Delete" asp-route-id="@discount.DiscountId">Eliminar</a>
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
+	<a asp-controller="Discounts" asp-action="Create" class="btn btn-primary" style="margin: 5px;">Agregar Descuento</a>
+	<a class="btn btn-primary" style="margin: 5px;" onclick="quickDisc(20)">Voucher $20</a>
+	<a class="btn btn-primary" style="margin: 5px;" onclick="quickDisc(30)">Voucher $30</a>
+	<a class="btn btn-primary" style="margin: 5px;" onclick="quickDisc(40)">Voucher $40</a>
+	<a class="btn btn-primary" style="margin: 5px;" onclick="quickDisc(50)">Voucher $50</a>
+	<a class="btn btn-primary" style="margin: 5px;" onclick="quickDisc(100)">Voucher $100</a>
+	<a class="btn btn-primary" style="margin: 5px;" onclick="quickDisc(150)">Voucher $150</a>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					Código
+				</th>
+				<th>
+					Válido Desde
+				</th>
+				<th>
+					Válido Hasta
+				</th>
+				<th>
+					Repetición semanal
+				</th>
+				<th>
+					Usos disponibles
+				</th>
+				<th>
+					Descuento
+				</th>
+				<th>
+					Orden mínima
+				</th>
+				<th>
+					Tope
+				</th>
+				<th>
+					Condiciones
+				</th>
+				<th>
+
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var discount in Model)
+			{
+				<tr>
+					<td>
+						<a asp-action="Details" asp-controller="Discounts" asp-route-code="@discount.Phrase.ToUpper()">
+							@discount.Phrase.ToUpper()
+						</a>
+					</td>
+					<td>
+						@Html.Raw($"{_calendarRepository.FriendlyDate(discount.ValidFrom)} de {discount.ValidFrom.Year}")
+					</td>
+					<td>
+						@Html.Raw($"{_calendarRepository.FriendlyDate(discount.ValidTo)} de {discount.ValidFrom.Year}")
+					</td>
+					<td>
+						<span class='fa fa-@Html.Raw(discount.Weekly ? "check" : "times")'></span>
+					</td>
+					<td>
+						@Html.Raw(discount.InstancesLeft.HasValue ? discount.InstancesLeft.Value.ToString() : "Infinitos")
+					</td>
+					<td>
+						@discount.Percentage %
+					</td>
+					<td>
+						$@discount.Base
+					</td>
+					<td>
+						$@discount.Roof
+					</td>
+					<td>
+						<div title="@discount.Comments">
+							@discount.Comments.Substring(0, discount.Comments.Length >= 100 ? 100 : discount.Comments.Length - 1)...
+						</div>
+
+					</td>
+					<td>
+						<a asp-controller="Discounts" asp-action="Delete" asp-route-id="@discount.DiscountId">Eliminar</a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 
 
 </div>
+
+<script>
+	function quickDisc(voucher) {
+		loaderOn();
+		$.ajax({
+			type: 'POST',
+			url: '/api/DiscountsData/QuickDiscount/' + voucher,
+			data: {},
+			success: function (data) {
+				loaderOff();
+				window.location.reload();
+			},
+			error: function (xhr, textStatus, error) {
+				console.log(xhr.statusText);
+				console.log(textStatus);
+				console.log(error);
+				loaderOff();
+				alert('No se pudo crear')
+			}
+		});
+	}
+</script>

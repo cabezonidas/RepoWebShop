@@ -1,4 +1,5 @@
-﻿using RepoWebShop.Interfaces;
+﻿using RepoWebShop.Extensions;
+using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
 using System.Collections;
@@ -110,6 +111,33 @@ namespace RepoWebShop.Repositories
 					_calendarRepository.LocalTime(), Decimal.MaxValue, discount, out error)) > 0;
 			else
 				return false;
+		}
+
+		public Discount AddQuickDiscount(decimal value)
+		{
+			var code = Guid.NewGuid().ToString("D").ToUpper().Ending(6);
+			var disc = FindByCode(code);
+
+			while (disc != null)
+			{
+				code = Guid.NewGuid().ToString("D").ToUpper().Ending(6);
+				disc = FindByCode(code);
+			}
+
+			disc = new Discount
+			{
+				Base = 1,
+				DurationDays = 15,
+				InstancesLeft = 1,
+				IsActive = true,
+				Percentage = 100,
+				Phrase = code,
+				Roof = value,
+				ValidFrom = _calendarRepository.LocalTime(),
+				Weekly = false
+			};
+
+			return Add(disc);
 		}
 	}
 }

@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RepoWebShop.Extensions;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
@@ -13,20 +15,35 @@ namespace RepoWebShop.ApiControllers
     {
         private readonly ICalendarRepository _calendarRepository;
         private readonly IDiscountRepository _discountRepository;
+        private readonly IPrinterRepository _printerRepository;
         private readonly IShoppingCartRepository _cartRepository;
 
-        public DiscountsDataController(ICalendarRepository calendarRepository, IDiscountRepository discountRepository, IShoppingCartRepository shoppingCartRepository)
+        public DiscountsDataController(IPrinterRepository printerRepository, ICalendarRepository calendarRepository, IDiscountRepository discountRepository, IShoppingCartRepository shoppingCartRepository)
         {
-            _calendarRepository = calendarRepository;
+			_printerRepository = printerRepository;
+			_calendarRepository = calendarRepository;
             _discountRepository = discountRepository;
             _cartRepository = shoppingCartRepository;
-        }
+		}
 
-        [HttpPost]
-        [Route("ApplyDiscount")]
-        public IActionResult ApplyDiscount() => ApplyDiscount(string.Empty);
+		[HttpPost]
+		[Route("ApplyDiscount")]
+		public IActionResult ApplyDiscount() => ApplyDiscount(string.Empty);
 
-        [HttpPost]
+		[HttpPost]
+		[Authorize(Roles = "Administrator")]
+		[Route("QuickDiscount/{value}")]
+		public async void QuickDiscount(decimal value)
+		{
+			var disc = _discountRepository.AddQuickDiscount(value);
+
+			var view = "DiscountPrint";
+			var result = await this.RenderViewAsync(view, disc, true);
+
+			_printerRepository.AddToQueue(result);
+		}
+
+		[HttpPost]
         [Route("ApplyDiscount/{code}")]
         public IActionResult ApplyDiscount(string code)
         {
