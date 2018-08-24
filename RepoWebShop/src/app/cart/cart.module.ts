@@ -4,7 +4,7 @@ import { MaterialModule } from '../material/material.module';
 import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { DeliveryComponent } from './components/delivery/delivery.component';
@@ -17,6 +17,7 @@ import { TotalsComponent } from './components/totals/totals.component';
 import { ProductsComponent } from './components/products/products.component';
 import { ProductSubtotalComponent } from './components/shared/product-subtotal/product-subtotal.component';
 import { InvoiceComponent } from './components/invoice/invoice.component';
+import { CommentsComponent } from './components/comments/comments.component';
 
 const cartRoutes: Routes = [
     { path: 'cart', component: CartComponent }
@@ -32,7 +33,8 @@ const cartRoutes: Routes = [
         TotalsComponent,
         ProductsComponent,
         ProductSubtotalComponent,
-        InvoiceComponent
+        InvoiceComponent,
+        CommentsComponent
     ],
     imports: [
         AgmCoreModule.forRoot({
@@ -42,6 +44,7 @@ const cartRoutes: Routes = [
         SharedModule,
         CommonModule,
         MaterialModule,
+        FormsModule,
         ReactiveFormsModule,
         RouterModule.forChild(cartRoutes),
         StoreModule.forFeature('cart', reducers),

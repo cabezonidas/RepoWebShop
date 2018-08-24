@@ -13,11 +13,11 @@ export class PickupOptionsComponent implements OnInit, OnChanges {
   constructor() { }
 
   ngOnInit() {
-    
+
   }
 
   ngOnChanges() {
-    console.log(this.options);
+    // console.log(this.options);
   }
 
 }

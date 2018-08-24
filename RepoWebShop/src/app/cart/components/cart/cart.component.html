@@ -11,7 +11,13 @@
       <app-totals></app-totals>
       <mat-vertical-stepper linear #stepper>
         <mat-step >
-          <ng-template matStepLabel>Productos</ng-template>
+          <ng-template matStepLabel>Comentarios</ng-template>
+          <app-comments (next)="_onNext()" (addComments)="addComments($event)"
+          [savedComments]="comments$ | async" [commentsLoaded]="commentsLoaded$ | async" [commentsLoading]="commentsLoading$ | async"
+          ></app-comments>
+        </mat-step>
+        <mat-step >
+          <ng-template matStepLabel>Resumen</ng-template>
           <app-products [items]="items$ | async" [caterings]="caterings$ | async" [customCatering]="customCatering$ | async"
           [itemsLoaded]="cuitLoaded$ | async" [itemsLoading]="cuitLoading$ | async"
           (next)="_onNext()" (addItem)="addItem($event)" (removeItem)="removeItem($event)"
@@ -35,12 +41,6 @@
         <mat-step >
           <ng-template matStepLabel>Envío</ng-template>
           <app-delivery (next)="_onNext()"></app-delivery>
-        </mat-step>
-        <mat-step >
-          <ng-template matStepLabel>Comentarios</ng-template>
-        </mat-step>
-        <mat-step >
-          <ng-template matStepLabel>Resumen</ng-template>
         </mat-step>
         <mat-step >
           <ng-template matStepLabel>Pago</ng-template>

@@ -33,7 +33,10 @@ export class PickupEffects {
       return this.pickupService
         .setPickupOption(pickupId)
         .pipe(
-          map(pickupOption => new pickupActions.SetPickupOptionSuccess(pickupOption)),
+          map(pickupOption => [
+            new pickupActions.SetPickupOptionSuccess(pickupOption),
+            new pickupActions.LoadPickupOptions()
+          ]),
           catchError(error => of(new pickupActions.SetPickupOptionFail(error)))
         );
     })

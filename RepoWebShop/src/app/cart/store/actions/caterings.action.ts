@@ -5,7 +5,7 @@ export enum CateringActionTypes {
     AddCatering = '[Cart] Add catering',
     AddCateringSuccess = '[Cart] Add catering success',
     AddCateringFail = '[Cart] Add catering fail',
-    
+
     RemoveCatering = '[Cart] Remove catering',
     RemoveCateringSuccess = '[Cart] Remove catering success',
     RemoveCateringFail = '[Cart] Remove catering fail',

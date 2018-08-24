@@ -1,12 +1,12 @@
 import { Action } from '@ngrx/store';
 
 export enum CommentActionTypes {
-    AddComments = '[Comments] Add',
-    AddCommentsFail = '[Comments] Add fail',
-    AddCommentsSuccess = '[Comments] Add success',
-    LoadComments = '[Comments] Load',
-    LoadCommentsFail = '[Comments] Load fail',
-    LoadCommentsSuccess = '[Comments] Load success'
+    AddComments = '[Comments] Add comments',
+    AddCommentsFail = '[Comments] Add comments fail',
+    AddCommentsSuccess = '[Comments] Add comments success',
+    LoadComments = '[Comments] Load comments',
+    LoadCommentsFail = '[Comments] Load comments fail',
+    LoadCommentsSuccess = '[Comments] Load comments success'
 }
 
 export class AddComments implements Action {

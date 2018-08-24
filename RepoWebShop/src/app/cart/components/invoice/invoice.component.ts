@@ -29,7 +29,7 @@ export class InvoiceComponent implements OnInit, OnChanges {
       'cuit': new FormControl('', [Validators.required], [this.isCuitValid()])
     });
   }
-  
+
   isCuitValid(): AsyncValidatorFn {
     return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
       return timer(1000).pipe(
@@ -41,11 +41,11 @@ export class InvoiceComponent implements OnInit, OnChanges {
             this.saveCuit(control.value as string);
             return null;
           } else {
-            return { 'cuitInvalid': true }
-          } 
+            return { 'cuitInvalid': true };
+          }
         })
-    )};
-  };
+    ); };
+  }
 
   ngOnChanges() {
   }

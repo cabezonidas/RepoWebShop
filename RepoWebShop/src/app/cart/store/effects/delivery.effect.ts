@@ -6,6 +6,8 @@ import { of } from 'rxjs';
 
 import * as deliveryActions from '../actions/delivery.action';
 import * as fromServices from '../../services';
+import * as fromTotals from '../actions/totals.action';
+import * as fromPickup from '../actions/pickup.action';
 
 @Injectable()
 export class DeliveryEffects {
@@ -33,7 +35,13 @@ export class DeliveryEffects {
       return this.deliveryService
         .saveDelivery(delivery)
         .pipe(
-          map(delivery => new deliveryActions.SaveDeliverySuccess(delivery)),
+          map(deliveryAddress => [
+            new deliveryActions.SaveDeliverySuccess(deliveryAddress),
+            new fromTotals.GetTotals(),
+            new fromPickup.LoadPickupOptions(),
+            new fromPickup.GetPickupOption(),
+            new fromPickup.GetPreparationTime()
+          ]),
           catchError(error => of(new deliveryActions.SaveDeliveryFail(error)))
         );
     })
@@ -46,7 +54,13 @@ export class DeliveryEffects {
       return this.deliveryService
         .updateInstructions(delivery)
         .pipe(
-          map(delivery => new deliveryActions.UpdateInstructionsSuccess(delivery)),
+          map(deliveryAddress => [
+            new deliveryActions.UpdateInstructionsSuccess(deliveryAddress),
+            new fromTotals.GetTotals(),
+            new fromPickup.LoadPickupOptions(),
+            new fromPickup.GetPickupOption(),
+            new fromPickup.GetPreparationTime()
+          ]),
           catchError(error => of(new deliveryActions.UpdateInstructionsFail(error)))
         );
     })
@@ -58,7 +72,13 @@ export class DeliveryEffects {
       return this.deliveryService
         .clearDelivery()
         .pipe(
-          map(() => new deliveryActions.ClearDeliverySuccess()),
+          map(() => [
+            new deliveryActions.ClearDeliverySuccess(),
+            new fromTotals.GetTotals(),
+            new fromPickup.LoadPickupOptions(),
+            new fromPickup.GetPickupOption(),
+            new fromPickup.GetPreparationTime()
+          ]),
           catchError(error => of(new deliveryActions.ClearDeliveryFail(error)))
         );
     })

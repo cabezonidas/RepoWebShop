@@ -5,7 +5,7 @@ export enum DeliveryActionTypes {
     ClearDelivery = '[Delivery] Clear delivery',
     ClearDeliveryFail = '[Delivery] Clear delivery fail',
     ClearDeliverySuccess = '[Delivery] Clear delivery success',
-    
+
     UpdateInstructions = '[Delivery] Update delivery instructions',
     UpdateInstructionsFail = '[Delivery] Update delivery instructions fail',
     UpdateInstructionsSuccess = '[Delivery] Update delivery instructions success',

@@ -25,7 +25,7 @@ export class InvoicesEffects {
           catchError(error => of(new invoiceActions.IsCuitValidFail(error)))
         );
     })
-  );  
+  );
 
   @Effect()
   addCuit$ = this.actions$.ofType(invoiceActions.InvoiceActionTypes.AddCuit).pipe(

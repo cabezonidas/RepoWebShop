@@ -6,6 +6,8 @@ import { of } from 'rxjs';
 
 import * as itemActions from '../actions/items.action';
 import * as fromServices from '../../services';
+import * as fromTotals from '../actions/totals.action';
+import * as fromPickup from '../actions/pickup.action';
 
 @Injectable()
 export class ItemsEffects {
@@ -33,7 +35,13 @@ export class ItemsEffects {
       return this.itemService
         .addItem(itemId)
         .pipe(
-          map(items => new itemActions.AddItemSuccess(items)),
+          map(items => [
+            new itemActions.AddItemSuccess(items),
+            new fromTotals.GetTotals(),
+            new fromPickup.LoadPickupOptions(),
+            new fromPickup.GetPickupOption(),
+            new fromPickup.GetPreparationTime()
+          ]),
           catchError(error => of(new itemActions.AddItemFail(error)))
         );
     })
@@ -46,12 +54,18 @@ export class ItemsEffects {
       return this.itemService
         .removeItem(itemId)
         .pipe(
-          map(items => new itemActions.RemoveItemSuccess(items)),
+          map(items => [
+            new itemActions.RemoveItemSuccess(items),
+            new fromTotals.GetTotals(),
+            new fromPickup.LoadPickupOptions(),
+            new fromPickup.GetPickupOption(),
+            new fromPickup.GetPreparationTime()
+          ]),
           catchError(error => of(new itemActions.RemoveItemFail(error)))
         );
     })
   );
-
+}
 //   @Effect()
 //   handlePizzaSuccess$ = this.actions$
 //     .ofType(
@@ -65,4 +79,3 @@ export class ItemsEffects {
 //         });
 //       })
 //     );
-}

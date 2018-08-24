@@ -6,6 +6,8 @@ import { of } from 'rxjs';
 
 import * as discountActions from '../actions/discounts.action';
 import * as fromServices from '../../services';
+import * as fromTotals from '../actions/totals.action';
+import * as fromPickup from '../actions/pickup.action';
 
 @Injectable()
 export class DiscountsEffects {
@@ -32,7 +34,12 @@ export class DiscountsEffects {
       return this.discountService
         .apply(discountId)
         .pipe(
-          map(items => new discountActions.ApplyDiscountSuccess(items)),
+          map(items => [
+            new discountActions.ApplyDiscountSuccess(items),
+            new fromTotals.GetTotals(),
+            new fromPickup.LoadPickupOptions(),
+            new fromPickup.GetPickupOption()
+          ]),
           catchError(error => of(new discountActions.ApplyDiscountFail(error)))
         );
     })
@@ -44,7 +51,12 @@ export class DiscountsEffects {
       return this.discountService
         .clear()
         .pipe(
-          map(() => new discountActions.ClearDiscountSuccess()),
+          map(() => [
+            new discountActions.ClearDiscountSuccess(),
+            new fromTotals.GetTotals(),
+            new fromPickup.LoadPickupOptions(),
+            new fromPickup.GetPickupOption()
+          ]),
           catchError(error => of(new discountActions.ClearDiscountFail(error)))
         );
     })

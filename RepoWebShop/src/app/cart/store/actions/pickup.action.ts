@@ -6,7 +6,7 @@ export enum PickupActionTypes {
     LoadPickupOptions = '[Pickup] Load Pickup',
     LoadPickupOptionsFail = '[Pickup] Load Pickup fail',
     LoadPickupOptionsSuccess = '[Pickup] Load Pickup success',
-    
+
     SetPickupOption = '[Pickup] Set Pickup Option',
     SetPickupOptionFail = '[Pickup] Set Pickup Option fail',
     SetPickupOptionSuccess = '[Pickup] Set Pickup Option success',

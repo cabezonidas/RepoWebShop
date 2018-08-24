@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Effect, Actions } from '@ngrx/effects';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { map, switchMap, catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import * as commentActions from '../actions/comments.action';
@@ -20,8 +20,10 @@ export class CommentsEffects {
       return this.commentService.loadComments()
         .pipe(
           map(comments => new commentActions.LoadCommentsSuccess(comments)),
-          catchError(error => of(new commentActions.LoadCommentsFail(error)))
-        );
+          catchError(error => {
+            return of(new commentActions.LoadCommentsFail(error));
+          }
+        ));
     })
   );
 
@@ -32,7 +34,7 @@ export class CommentsEffects {
       return this.commentService
         .addComments(commentId)
         .pipe(
-          map(items => new commentActions.AddCommentsSuccess(items)),
+          map(comments => new commentActions.AddCommentsSuccess(comments)),
           catchError(error => of(new commentActions.AddCommentsFail(error)))
         );
     })

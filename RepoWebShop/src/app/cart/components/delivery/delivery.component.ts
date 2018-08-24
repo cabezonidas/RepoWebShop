@@ -31,7 +31,7 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit {
   searchDisabled = false;
   fullAddress = false;
 
-  @ViewChild('search') public searchElement: ElementRef;  
+  @ViewChild('search') public searchElement: ElementRef;
   @ViewChild('addressInstr') public addressInstructions: ElementRef;
   @Output() next = new EventEmitter<void>();
 
@@ -82,9 +82,10 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  distance = (): number => this.delivery.getDistanceFromLatLonInKm(this.storeLatitude, this.storeLongitude, this.address.latitude, this.address.longitude);
+  distance = (): number => this.delivery.getDistanceFromLatLonInKm(
+    this.storeLatitude, this.storeLongitude, this.address.latitude, this.address.longitude)
 
-  inZone = (): boolean => this.distance() <= this.deliveryKmRadius
+  inZone = (): boolean => this.distance() <= this.deliveryKmRadius;
 
 
   ngOnDestroy() {
@@ -98,9 +99,9 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit {
   clear() {
     this.saveDelivery$.unsubscribe();
     this.searchSelected = false;
-    this.address = null;   
+    this.address = null;
   }
-  
+
   clearDelivery() {
     this.searchElement.nativeElement.value = '';
     this.savingDelivery = true;
@@ -110,8 +111,7 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit {
     }, (err) => {
       this.savingDelivery = false;
       console.log(err);
-    })
-    
+    });
   }
 
   proceed = () => this.next.emit();
@@ -119,7 +119,7 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     this.deliveryInstrStream$ = fromEvent(this.addressInstructions.nativeElement, 'keyup')
       .pipe(
-        map((e:any) => e.target.value as string),
+        map((e: any) => e.target.value as string),
         debounceTime(500),
         distinctUntilChanged(),
         tap(instructions => this.address.deliveryInstructions = instructions),
@@ -127,5 +127,4 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit {
       )
       .subscribe(res => console.log(res));
   }
-
 }

@@ -16,30 +16,30 @@ export const initialState: CommentState = {
 
 export function reducer(state = initialState, action: fromComments.CommentActions): CommentState {
     switch (action.type) {
-        case fromComments.CommentActionTypes.LoadComments: 
+        case fromComments.CommentActionTypes.LoadComments:
         case fromComments.CommentActionTypes.AddComments:
         return {
             ...state,
             loading: true,
         };
 
-        case fromComments.CommentActionTypes.LoadCommentsSuccess: 
-        case fromComments.CommentActionTypes.AddCommentsSuccess: 
+        case fromComments.CommentActionTypes.LoadCommentsSuccess:
+        case fromComments.CommentActionTypes.AddCommentsSuccess:
         return {
             ...state,
             comments: action.payload,
             loading: false,
             loaded: true,
-        }
+        };
 
-        case fromComments.CommentActionTypes.LoadCommentsFail: 
-        case fromComments.CommentActionTypes.AddCommentsFail: 
+        case fromComments.CommentActionTypes.LoadCommentsFail:
+        case fromComments.CommentActionTypes.AddCommentsFail:
         return {
             ...state,
             error: action.payload,
             loading: false,
             loaded: true,
-        }
+        };
         default:
             return state;
     }

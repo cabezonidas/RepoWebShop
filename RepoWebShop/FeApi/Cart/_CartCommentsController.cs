@@ -19,15 +19,18 @@ namespace RepoWebShop.FeApi
 		public string Get()
 		{
 			var comments = _cart.GetComments(null);
-			return comments?.Comments ?? string.Empty;
+			var result = comments?.Comments ?? string.Empty;
+			return result;
 		}
 
-		[HttpGet]
+		[HttpPost]
 		[Route("Add")]
 		public string Add([FromBody] string comments)
 		{
 			_cart.AddComments(comments);
-			return _cart.GetComments(null)?.Comments ?? string.Empty;
+			var result = _cart.GetComments(null)?.Comments ?? string.Empty;
+
+			return result;
 		}
 	}
 }

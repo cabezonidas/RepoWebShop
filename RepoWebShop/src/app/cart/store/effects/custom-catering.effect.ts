@@ -6,6 +6,8 @@ import { of } from 'rxjs';
 
 import * as customCateringActions from '../actions/custom-catering.action';
 import * as fromServices from '../../services';
+import * as fromTotals from '../actions/totals.action';
+import * as fromPickup from '../actions/pickup.action';
 
 @Injectable()
 export class CustomCateringEffects {
@@ -32,7 +34,13 @@ export class CustomCateringEffects {
       return this.customCateringService
         .clearSessionCatering()
         .pipe(
-          map(() => new customCateringActions.RemoveSessionCateringSuccess()),
+          map(() => [
+            new customCateringActions.RemoveSessionCateringSuccess(),
+            new fromTotals.GetTotals(),
+            new fromPickup.LoadPickupOptions(),
+            new fromPickup.GetPickupOption(),
+            new fromPickup.GetPreparationTime()
+          ]),
           catchError(error => of(new customCateringActions.RemoveSessionCateringFail(error)))
         );
     })
