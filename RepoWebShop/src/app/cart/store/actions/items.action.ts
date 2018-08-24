@@ -5,7 +5,7 @@ export enum ItemActionTypes {
     Add = '[Cart] Add item',
     AddSuccess = '[Cart] Add item success',
     AddFail = '[Cart] Add item fail',
-    
+
     Remove = '[Cart] Remove item',
     RemoveSuccess = '[Cart] Remove item success',
     RemoveFail = '[Cart] Remove item fail',

@@ -54,7 +54,7 @@ export class CateringsEffects {
       return this.cateringService
         .removeCatering(cateringId)
         .pipe(
-          map(items => [
+          switchMap(items => [
             new cateringActions.RemoveCateringSuccess(items),
             new fromTotals.GetTotals(),
             new fromPickup.LoadPickupOptions(),

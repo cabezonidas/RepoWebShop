@@ -37,7 +37,9 @@ namespace RepoWebShop.FeApi
 		{
 			var discount = _discount.FindByCode(code ?? string.Empty);
 			return discount != null ?
-				discount.InstancesLeft.HasValue && discount.InstancesLeft.Value <= 0 : true;
+				(discount.InstancesLeft.HasValue && discount.InstancesLeft.Value > 0) ||
+				(discount.Weekly):
+			true;
 		}
 
 		[HttpGet]
@@ -108,8 +110,13 @@ namespace RepoWebShop.FeApi
 		public Discount Apply(string code)
 		{
 			var discount = _discount.FindByCode(code);
-			_cart.AddDiscount(discount);
-			return discount;
+			if(_discount.IsValid(code))
+			{
+				_cart.AddDiscount(discount);
+				return discount;
+			}
+			else
+				return null;
 		}
 
 		[HttpGet]

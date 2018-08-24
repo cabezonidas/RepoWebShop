@@ -46,4 +46,4 @@ export type CustomCateringActions = LoadSessionCatering
     | LoadSessionCateringFail
     | RemoveSessionCatering
     | RemoveSessionCateringSuccess
-    | RemoveSessionCateringFail
+    | RemoveSessionCateringFail;

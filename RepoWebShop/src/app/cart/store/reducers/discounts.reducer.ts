@@ -32,15 +32,15 @@ export function reducer(state = initialState, action: fromDiscounts.DiscountActi
             discount: action.payload,
             loading: false,
             loaded: true,
-        }
-        
+        };
+
         case fromDiscounts.DiscountActionTypes.ClearDiscountSuccess: 
         return {
             ...state,
             discount: null,
             loading: false,
             loaded: true,
-        }
+        };
 
         case fromDiscounts.DiscountActionTypes.GetDiscountFail: 
         case fromDiscounts.DiscountActionTypes.ApplyDiscountFail: 
@@ -50,7 +50,7 @@ export function reducer(state = initialState, action: fromDiscounts.DiscountActi
             error: action.payload,
             loading: false,
             loaded: true,
-        }
+        };
         default:
             return state;
     }

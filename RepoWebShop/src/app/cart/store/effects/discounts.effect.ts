@@ -34,7 +34,7 @@ export class DiscountsEffects {
       return this.discountService
         .apply(discountId)
         .pipe(
-          map(items => [
+          switchMap(items => [
             new discountActions.ApplyDiscountSuccess(items),
             new fromTotals.GetTotals(),
             new fromPickup.LoadPickupOptions(),
@@ -51,7 +51,7 @@ export class DiscountsEffects {
       return this.discountService
         .clear()
         .pipe(
-          map(() => [
+          switchMap(() => [
             new discountActions.ClearDiscountSuccess(),
             new fromTotals.GetTotals(),
             new fromPickup.LoadPickupOptions(),

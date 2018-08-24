@@ -35,7 +35,7 @@ export class ItemsEffects {
       return this.itemService
         .addItem(itemId)
         .pipe(
-          map(items => [
+          switchMap(items => [
             new itemActions.AddItemSuccess(items),
             new fromTotals.GetTotals(),
             new fromPickup.LoadPickupOptions(),
@@ -54,7 +54,7 @@ export class ItemsEffects {
       return this.itemService
         .removeItem(itemId)
         .pipe(
-          map(items => [
+          switchMap(items => [
             new itemActions.RemoveItemSuccess(items),
             new fromTotals.GetTotals(),
             new fromPickup.LoadPickupOptions(),

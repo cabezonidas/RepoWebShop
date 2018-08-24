@@ -1,30 +1,42 @@
 <form [formGroup]="discountGroup">
-  <mat-form-field>
-    <input matInput placeholder="Código de Descuento" 
-      formControlName="discount" name="discount" #discount>
-  </mat-form-field>
-  <div class="error" *ngIf="discountGroup.controls.discount.errors?.notExists">
-    Código no encontrado.
-  </div>
-  <div class="error" *ngIf="!discountGroup.controls.discount.errors?.notExists && discountGroup.controls.discount.errors?.notActive">
-    El descuento está en desuso. 
-  </div>
-  <div class="error" *ngIf="!discountGroup.controls.discount.errors?.notExists && discountGroup.controls.discount.errors?.notAvailable">
-    Descuento no disponible. 
-  </div>
-  <div class="error" *ngIf="!discountGroup.controls.discount.errors?.notExists && discountGroup.controls.discount.errors?.minOrderNotReached">
-    El total de tu orden no alcanza el mínimo para aplicar este descuento.
-  </div>
-  <div class="error" *ngIf="!discountGroup.controls.discount.errors?.notExists && discountGroup.controls.discount.errors?.notValidToday">
-    El descuento no es válido hoy.
-  </div>
-  <div class="error" *ngIf="!discountGroup.controls.discount.errors?.notExists && discountGroup.controls.discount.errors?.expired">
-    El descuento ya expiró.
-  </div>
-  <div class="error" *ngIf="!discountGroup.controls.discount.errors?.notExists && discountGroup.controls.discount.errors?.pending">
-    El descuento todavía no está activo.
+    <mat-form-field [ngClass]="savedDiscount ? 'hidden' : ''">
+      <input matInput placeholder="Código de Descuento" 
+        formControlName="discount" name="discount" #discount >
+    </mat-form-field>
+    <mat-form-field *ngIf="savedDiscount">
+      <mat-label>Descuento</mat-label>
+      <input matInput [value]="savedDiscount.phrase" disabled>
+    </mat-form-field>
+</form>
+  
+  <mat-progress-bar *ngIf="discountsLoading" mode="indeterminate"></mat-progress-bar>
+
+  <div class="error">
+    <small *ngIf="discountGroup.controls.discount.errors?.notExists">
+      Código no encontrado. <br>
+    </small>
+    <small *ngIf="!discountGroup.controls.discount.errors?.notExists && discountGroup.controls.discount.errors?.notActive">
+      El descuento está en desuso. <br>
+    </small>
+    <small *ngIf="!discountGroup.controls.discount.errors?.notExists && discountGroup.controls.discount.errors?.notAvailable">
+      Descuento no disponible. <br>
+    </small>
+    <small *ngIf="!discountGroup.controls.discount.errors?.notExists && discountGroup.controls.discount.errors?.minOrderNotReached">
+      El total de tu orden no alcanza el mínimo para aplicar este descuento.
+    </small>
+    <small *ngIf="!discountGroup.controls.discount.errors?.notExists && discountGroup.controls.discount.errors?.notValidToday">
+      El descuento no es válido hoy.<br>
+    </small>
+    <small *ngIf="!discountGroup.controls.discount.errors?.notExists && discountGroup.controls.discount.errors?.expired">
+      El descuento ya expiró.<br>
+    </small>
+    <small *ngIf="!discountGroup.controls.discount.errors?.notExists && discountGroup.controls.discount.errors?.pending">
+      El descuento todavía no está activo.<br>
+    </small>
+
   </div>
   <div>
-    <button mat-raised-button color="primary" (tap)="onNext()">Siguiente</button>
+      <button mat-raised-button (tap)="clearDiscount.emit()" *ngIf="savedDiscount">Quitar Descuento</button>
+      <button mat-raised-button color="primary" (tap)="onNext()" *ngIf="savedDiscount">Siguiente</button>
+      <button mat-raised-button (tap)="onNext()" *ngIf="!savedDiscount">No tengo código</button>
   </div>
-</form>
