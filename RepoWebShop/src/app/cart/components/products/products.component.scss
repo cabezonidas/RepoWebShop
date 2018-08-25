@@ -8,3 +8,16 @@ h4, p, .incrementer {
 .customCatering {
     cursor: pointer;
 }
+.subtotal {
+    text-align: center;
+}
+.subtotal-online {
+    color: green;
+}
+.subtotal-store {
+    color: red;
+    text-decoration-line: line-through;
+}
+.hidden {
+    display: none;
+}

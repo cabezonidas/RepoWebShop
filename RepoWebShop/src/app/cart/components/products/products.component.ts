@@ -16,26 +16,28 @@ export class ProductsComponent implements OnInit {
   @Input() customCatering: ICatering;
   @Input() itemsLoaded: boolean;
   @Input() itemsLoading: boolean;
-  
+  @Input() totalGoods: number;
+  @Input() totalGoodsInStore: number;
+
   @Output() next = new EventEmitter<void>();
   @Output() addItem = new EventEmitter<number>();
   @Output() removeItem = new EventEmitter<number>();
   @Output() addCatering = new EventEmitter<number>();
   @Output() removeCatering = new EventEmitter<number>();
   @Output() removeCustomCatering = new EventEmitter<void>();
-  
+
   constructor() { }
 
   ngOnInit() {
   }
-  
+
   continue = () => this.next.emit();
   addItemToCart = (id: number) => this.addItem.emit(id);
   removeItemFromCart = (id: number) => this.removeItem.emit(id);
   addCateringToCart = (id: number) => this.addCatering.emit(id);
   removeCateringFromCart = (id: number) => this.removeCatering.emit(id);
   removeCustomCateringFromCart = () => this.removeCustomCatering.emit();
-  
+
   getSum = (total, num) => total + num;
 
   customCateringPrice = (): number => {

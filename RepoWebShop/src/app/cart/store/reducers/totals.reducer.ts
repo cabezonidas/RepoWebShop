@@ -34,13 +34,13 @@ export const initialState: TotalState = {
 
 export function reducer(state = initialState, action: fromTotals.TotalActions): TotalState {
     switch (action.type) {
-        case fromTotals.TotalsActionTypes.GetTotals: 
+        case fromTotals.TotalsActionTypes.GetTotals:
         return {
             ...state,
             loading: true,
         };
 
-        case fromTotals.TotalsActionTypes.GetTotalsSuccess: 
+        case fromTotals.TotalsActionTypes.GetTotalsSuccess:
         return {
             ...state,
             total: action.payload.total,
@@ -55,15 +55,15 @@ export function reducer(state = initialState, action: fromTotals.TotalActions): 
             cateringsSavings: action.payload.cateringsSavings,
             loading: false,
             loaded: true,
-        }
+        };
 
-        case fromTotals.TotalsActionTypes.GetTotalsFail:  
+        case fromTotals.TotalsActionTypes.GetTotalsFail:
         return {
             ...state,
             error: action.payload,
             loading: false,
             loaded: true,
-        }
+        };
         default:
             return state;
     }
@@ -82,3 +82,6 @@ export const getCateringsSavings = (state: TotalState) => state.cateringsSavings
 export const getTotalsLoading = (state: TotalState) => state.loading;
 export const getTotalsLoaded = (state: TotalState) => state.loaded;
 export const getTotalsError = (state: TotalState) => state.error;
+
+export const getTotalGoods = (state: TotalState) => state.items + state.customCatering + state.caterings;
+export const getTotalGoodsInStore = (state: TotalState) => state.itemsInStore + state.customCateringInStore + state.cateringsInStore;

@@ -35,7 +35,7 @@ export class DeliveryEffects {
       return this.deliveryService
         .saveDelivery(delivery)
         .pipe(
-          map(deliveryAddress => [
+          switchMap(deliveryAddress => [
             new deliveryActions.SaveDeliverySuccess(deliveryAddress),
             new fromTotals.GetTotals(),
             new fromPickup.LoadPickupOptions(),
@@ -54,7 +54,7 @@ export class DeliveryEffects {
       return this.deliveryService
         .updateInstructions(delivery)
         .pipe(
-          map(deliveryAddress => [
+          switchMap(deliveryAddress => [
             new deliveryActions.UpdateInstructionsSuccess(deliveryAddress),
             new fromTotals.GetTotals(),
             new fromPickup.LoadPickupOptions(),
@@ -72,7 +72,7 @@ export class DeliveryEffects {
       return this.deliveryService
         .clearDelivery()
         .pipe(
-          map(() => [
+          switchMap(() => [
             new deliveryActions.ClearDeliverySuccess(),
             new fromTotals.GetTotals(),
             new fromPickup.LoadPickupOptions(),

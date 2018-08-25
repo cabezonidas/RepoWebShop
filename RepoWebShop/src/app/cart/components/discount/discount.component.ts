@@ -38,7 +38,6 @@ export class DiscountComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
   }
 
   ngOnChanges() {
-    console.log('Changes', this.savedDiscount);
   }
 
   ngAfterViewInit() {

@@ -11,37 +11,41 @@
       <app-totals></app-totals>
       <mat-vertical-stepper linear #stepper>
         <mat-step >
-          <ng-template matStepLabel>Resumen</ng-template>
+          <ng-template matStepLabel>Pedido</ng-template>
           <app-products [items]="items$ | async" [caterings]="caterings$ | async" [customCatering]="customCatering$ | async"
           [itemsLoaded]="cuitLoaded$ | async" [itemsLoading]="cuitLoading$ | async"
+          [totalGoods]="totalGoods$ | async" [totalGoodsInStore]="totalGoodsInStore$ | async"
           (next)="_onNext()" (addItem)="addItem($event)" (removeItem)="removeItem($event)"
           (addCatering)="addCatering($event)" (removeCatering)="removeCatering($event)" (removeCustomCatering)="removeCustomCatering($event)"
           >
           </app-products>
         </mat-step>
-        <mat-step >
-          <ng-template matStepLabel>Código Promocional</ng-template>
-          <app-discount [savedDiscount]="discount$ | async" [discountsLoaded]="discountsLoaded$ | async" [discountsLoading]="discountsLoading$ | async" 
-          (next)="_onNext()" (clearDiscount)="clearDiscount()" (applyDiscount)="applyDiscount($event)" ></app-discount>
-        </mat-step>
+          <mat-step >
+            <ng-template matStepLabel>Envío</ng-template>
+            <app-delivery (next)="_onNext()" (addDelivery)="saveDelivery($event)" (removeDelivery)="clearDelivery($event)"
+            (updateInstructions)="updateInstructions($event)" [deliveryAddress]="delivery$ | async"
+            [deliveryLoaded]="deliveryLoaded$ | async" [deliveryLoading]="deliveryLoading$ | async"
+            ></app-delivery>
+          </mat-step>
+          <mat-step >
+            <ng-template matStepLabel>Código Promocional</ng-template>
+            <app-discount [savedDiscount]="discount$ | async" [discountsLoaded]="discountsLoaded$ | async" [discountsLoading]="discountsLoading$ | async" 
+            (next)="_onNext()" (clearDiscount)="clearDiscount()" (applyDiscount)="applyDiscount($event)" ></app-discount>
+          </mat-step>
         <mat-step >
           <ng-template matStepLabel>Comentarios</ng-template>
           <app-comments (next)="_onNext()" (addComments)="addComments($event)"
           [savedComments]="comments$ | async" [commentsLoaded]="commentsLoaded$ | async" [commentsLoading]="commentsLoading$ | async"
           ></app-comments>
         </mat-step>
-          <mat-step >
-            <ng-template matStepLabel>Facturación Electrónica</ng-template>
-            <app-invoice [savedCuit]="cuit$ | async" [cuitLoaded]="cuitLoaded$ | async" [cuitLoading]="cuitLoading$ | async"
-            (next)="_onNext()" (addCuit)="addCuit($event)" (clearCuit)="clearCuit()"></app-invoice>
-          </mat-step>
-        <mat-step >
-          <ng-template matStepLabel>Envío</ng-template>
-          <app-delivery (next)="_onNext()"></app-delivery>
-        </mat-step>
         <mat-step >
           <ng-template matStepLabel>Entrega</ng-template>
           <app-pickup-options-shell></app-pickup-options-shell>
+        </mat-step>
+        <mat-step >
+          <ng-template matStepLabel>Facturación Electrónica</ng-template>
+          <app-invoice [savedCuit]="cuit$ | async" [cuitLoaded]="cuitLoaded$ | async" [cuitLoading]="cuitLoading$ | async"
+          (next)="_onNext()" (addCuit)="addCuit($event)" (clearCuit)="clearCuit()"></app-invoice>
         </mat-step>
         <mat-step >
           <ng-template matStepLabel>Pago</ng-template>

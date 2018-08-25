@@ -35,6 +35,16 @@ export class CartComponent implements OnInit, OnDestroy {
   preparationTime$: Observable<number>;
   pickup$: Observable<IPickupDate>;
   total$: Observable<number>;
+  totalGoods$: Observable<number>;
+  totalGoodsInStore$: Observable<number>;
+  totalInStore$: Observable<number>;
+  totalTotalWithoutDiscount$: Observable<number>;
+  totalItems$: Observable<number>;
+  totalItemsInStore$: Observable<number>;
+  totalTotalCaterings$: Observable<number>;
+  totalTotalCateringsInStore$: Observable<number>;
+  totalTotalCustomCatering$: Observable<number>;
+  totalTotalCustomCateringInStore$: Observable<number>;
 
   cateringsLoaded$: Observable<boolean>;
   cateringsLoading$: Observable<boolean>;
@@ -106,6 +116,16 @@ export class CartComponent implements OnInit, OnDestroy {
 
     this.store.dispatch(new fromStore.GetTotals());
     this.total$ = this.store.pipe(select(fromStore.getTotal));
+    this.totalGoods$ = this.store.pipe(select(fromStore.getTotalGoods));
+    this.totalGoodsInStore$ = this.store.pipe(select(fromStore.getTotalGoodsInStore));
+    this.totalInStore$ = this.store.pipe(select(fromStore.getTotalInStore));
+    this.totalTotalWithoutDiscount$ = this.store.pipe(select(fromStore.getTotalWithoutDiscount));
+    this.totalItems$ = this.store.pipe(select(fromStore.getTotalItems));
+    this.totalItemsInStore$ = this.store.pipe(select(fromStore.getTotalItemsInStore));
+    this.totalTotalCaterings$ = this.store.pipe(select(fromStore.getTotalCaterings));
+    this.totalTotalCateringsInStore$ = this.store.pipe(select(fromStore.getTotalCateringsInStore));
+    this.totalTotalCustomCatering$ = this.store.pipe(select(fromStore.getTotalCustomCatering));
+    this.totalTotalCustomCateringInStore$ = this.store.pipe(select(fromStore.getTotalCustomCateringInStore));
     this.totalsLoaded$ = this.store.pipe(select(fromStore.getTotalsLoaded));
     this.totalsLoading$ = this.store.pipe(select(fromStore.getTotalsLoading));
   }

@@ -32,4 +32,8 @@
     </div>
   </mat-list-item>
 </mat-list>
+<div class="subtotal">
+  <h3 [ngClass]="totalGoods < totalGoodsInStore ? 'subtotal-online' : ''">Total a pagar: ${{ totalGoods }}</h3>
+  <h3 class="subtotal-store" *ngIf="totalGoods < totalGoodsInStore" >Sucursal: ${{ totalGoodsInStore }}</h3>
+</div>
 <button mat-raised-button color="primary" (tap)="continue()">Continuar</button>

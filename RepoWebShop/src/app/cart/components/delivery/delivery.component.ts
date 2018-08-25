@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, NgZone, OnDestroy, AfterViewInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, NgZone, OnDestroy, AfterViewInit, EventEmitter, Output, Input } from '@angular/core';
 import { MapsAPILoader } from '@agm/core';
 import { DeliveryAddress } from '../../classes/delivery-address';
 import { DeliveryService } from '../../services/delivery.service';
@@ -11,12 +11,7 @@ import { debounceTime, map, distinctUntilChanged, switchMap, tap } from 'rxjs/op
   styleUrls: ['./delivery.component.scss']
 })
 export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit {
-  savingDelivery = false;
-  deliverySaved = false;
-  saveDelivery$ = new Subscription();
-  deliveryGet$ = new Subscription();
   canDeliver$ = new Subscription();
-  clearDelivery$ = new Subscription();
   deliveryInstrStream$ = new Subscription();
   canDeliver = true;
   storeLatitude = -34.625265;
@@ -33,7 +28,15 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('search') public searchElement: ElementRef;
   @ViewChild('addressInstr') public addressInstructions: ElementRef;
+
+  @Input() deliveryAddress: DeliveryAddress;
+  @Input() deliveryLoaded: boolean;
+  @Input() deliveryLoading: boolean;
+
   @Output() next = new EventEmitter<void>();
+  @Output() addDelivery = new EventEmitter<DeliveryAddress>();
+  @Output() updateInstructions = new EventEmitter<DeliveryAddress>();
+  @Output() removeDelivery = new EventEmitter<void>();
 
 
 
@@ -47,12 +50,6 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit {
           this.autocomplete.addListener('place_changed', () => this.onPlaceSelection());
         }
       );
-    this.deliveryGet$ = this.delivery.get().subscribe((address) => {
-      if (address) {
-        this.address = address;
-        this.deliverySaved = true;
-      }
-    });
   }
 
   onPlaceSelection() {
@@ -66,17 +63,7 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.fullAddress = !!this.address.zipCode && !!this.address.streetName && !!this.address.streetNumber;
         this.outOfZone = !this.inZone();
         if (this.fullAddress && !this.outOfZone) {
-          this.savingDelivery = true;
-          this.saveDelivery$ = this.delivery.saveDelivery(this.address).subscribe((address) => {
-            console.log(address);
-            this.savingDelivery = false;
-            this.address = address;
-            this.deliverySaved = true;
-          }, (err) => {
-            this.deliverySaved = false;
-            this.savingDelivery = false;
-            console.log(err);
-          });
+          this.addDelivery.emit(this.address);
         }
       }
     });
@@ -89,32 +76,19 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   ngOnDestroy() {
-    this.saveDelivery$.unsubscribe();
-    this.deliveryGet$.unsubscribe();
     this.canDeliver$.unsubscribe();
-    this.clearDelivery$.unsubscribe();
     this.deliveryInstrStream$.unsubscribe();
   }
 
   clear() {
-    this.saveDelivery$.unsubscribe();
     this.searchSelected = false;
     this.address = null;
   }
 
   clearDelivery() {
     this.searchElement.nativeElement.value = '';
-    this.savingDelivery = true;
-    this.clearDelivery$ = this.delivery.clearDelivery().subscribe(() => {
-      this.savingDelivery = false;
-      this.deliverySaved = false;
-    }, (err) => {
-      this.savingDelivery = false;
-      console.log(err);
-    });
+    this.removeDelivery.emit();
   }
-
-  proceed = () => this.next.emit();
 
   ngAfterViewInit() {
     this.deliveryInstrStream$ = fromEvent(this.addressInstructions.nativeElement, 'keyup')
@@ -123,7 +97,7 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit {
         debounceTime(500),
         distinctUntilChanged(),
         tap(instructions => this.address.deliveryInstructions = instructions),
-        switchMap(() => this.delivery.updateInstructions(this.address))
+        tap(() => this.updateInstructions.emit(this.address))
       )
       .subscribe(res => console.log(res));
   }

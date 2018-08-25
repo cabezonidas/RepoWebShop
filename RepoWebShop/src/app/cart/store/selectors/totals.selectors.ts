@@ -7,7 +7,6 @@ export const getTotalState = createSelector(
     (state: fromFeature.CartState) => state.totals
   );
 
-export const getTotal = createSelector(getTotalState, fromTotals.getTotal);
 export const getTotalInStore = createSelector(getTotalState, fromTotals.getTotalInStore);
 export const getTotalWithoutDiscount = createSelector(getTotalState, fromTotals.getTotalWithoutDiscount);
 export const getTotalItems = createSelector(getTotalState, fromTotals.getItems);
@@ -17,6 +16,9 @@ export const getTotalCustomCateringInStore = createSelector(getTotalState, fromT
 export const getTotalCaterings = createSelector(getTotalState, fromTotals.getCaterings);
 export const getTotalCateringsInStore = createSelector(getTotalState, fromTotals.getCateringsInStore);
 export const getTotalCateringsSavings = createSelector(getTotalState, fromTotals.getCateringsSavings);
+export const getTotal = createSelector(getTotalState, fromTotals.getTotal);
+export const getTotalGoods = createSelector(getTotalState, fromTotals.getTotalGoods);
+export const getTotalGoodsInStore = createSelector(getTotalState, fromTotals.getTotalGoodsInStore);
 
 export const getTotalsLoaded = createSelector(
   getTotalState,
