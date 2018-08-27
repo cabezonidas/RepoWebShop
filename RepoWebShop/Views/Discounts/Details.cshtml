@@ -112,38 +112,44 @@
             </div>
     }
         }
-        <div class="head">
-            <br />
-            <a href="http://delasartes.com.ar" target="_blank" style="text-decoration: none; ">
-                <div style="padding-left: 20px; padding-right: 20px;">
-                    <img src="http://delasartes.com.ar/Pictures/LogoRepo.png" width="250" style="max-width: 100%; max-height: 100%;" />
-                </div>
-            </a>
-            <div id="title">¡¡PROMO!!</div>
-        </div>
+			<div class="head">
+				<br />
+				<a href="http://delasartes.com.ar" target="_blank" style="text-decoration: none; ">
+					<div style="padding-left: 20px; padding-right: 20px;">
+						<img src="http://delasartes.com.ar/Pictures/LogoRepo.png" width="250" style="max-width: 100%; max-height: 100%;" />
+					</div>
+				</a>
+				<div id="title">¡¡PROMO!!</div>
+				<div style="font-size: x-large" >www.delasartes.com.ar</div>
+			</div>
 
-        <div class="body">
-            <div>
-                <div class="voucher-amount">
-                    @Html.Raw(Model.Percentage == 100 ? $"${Model.Roof}" : $"-{Model.Percentage}% OFF")
-                </div>
-                <div class="voucher">
-                    @Html.Raw(Model.Percentage == 100 ? $"VOUCHER" : $"DESCUENTO")
-                </div>
-            </div>
-            <br />
-            <div style="margin-top: 20px; ">
-                <span class="code-title">
-                    CÓDIGO
-                </span>
-            </div>
-            <div style="margin-top: 25px;">
-                <span class="alert-success" style="font-size: 30px;">
-                    @Model.Phrase.ToUpper()
-                </span>
-            </div>
+		<div class="body">
+			<div>
+				<div class="voucher-amount">
+					@Html.Raw(Model.Percentage == 100 ? $"${Model.Roof}" : $"-{Model.Percentage}% OFF")
+				</div>
+				<div class="voucher">
+					@Html.Raw(Model.Percentage == 100 ? $"VOUCHER" : $"DESCUENTO")
+				</div>
+			</div>
+			<br />
+			<div style="margin-top: 20px; ">
+				<span class="code-title">
+					CÓDIGO
+				</span>
+			</div>
+			<div style="margin-top: 25px;">
+				<span class="alert-success" style="font-size: 30px;">
+					@Model.Phrase.ToUpper()
+				</span>
+			</div>
+			<div style="margin-top: 25px;">
+				<span class="" style="font-size: 30px;">
+					SOLO POR LA WEB
+				</span>
+			</div>
 
-        </div>
+		</div>
 
         <div class="foot">
             *@Model.Comments

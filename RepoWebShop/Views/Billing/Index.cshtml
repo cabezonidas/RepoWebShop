@@ -1,10 +1,14 @@
 ﻿@model IEnumerable<InvoiceData>
 
 <div class="container">
-    <h2>
+    <h2 >
         Historial de Comprobantes Autorizados Electrónicos
     </h2>
-    <table class="table">
+	<div>
+		<a class="btn btn-primary" asp-action="SummaryByMonth" asp-controller="Billing">Registros por mes</a>
+		<br />
+	</div>
+    <table class="table" >
         <thead>
             <tr>
                 <th>

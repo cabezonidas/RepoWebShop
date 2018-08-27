@@ -29,6 +29,13 @@ namespace RepoWebShop.MvcControllers
         {
             InvoiceData result = await _billing.GetById(id);
             return View(result);
-        }
-    }
+		}
+
+		[HttpGet]
+		public IActionResult SummaryByMonth()
+		{
+			IEnumerable<Cae> result = _billing.AllCaes();
+			return View(result);
+		}
+	}
 }

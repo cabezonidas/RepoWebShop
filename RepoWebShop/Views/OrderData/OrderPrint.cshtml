@@ -12,173 +12,176 @@
         <timeout>10000</timeout>
     </Parameter>
     <PrintData>
-        <epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">
-            <text lang="en" />
-            <text smooth="true" />
-            <text align="center" />
-            <text reverse="false" ul="false" em="true" color="color_1" />
-            @if (!_env.IsProduction())
-            {
-                <text>
-                    <text font="font_b" />
-                    <text width="2" height="2" />
-                    <text>-- PRUEBA --&#10;</text>
-                    <feed unit="12" />
-                </text>
-            }
-            <feed unit="6" />
-            <logo key1="32" key2="32" />
-            <text font="font_b" />
-            <text width="2" height="1" />
-            <feed unit="6" line="1" />
-            <text>@Html.Raw($"{_calendar.FriendlyDate(Model.PickUpTimeFrom)} {Model.PickUpTimeFrom.Value.ToString("HH:mm")}")&#10;</text>
+		<epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">
+			<text lang="en" />
+			<text smooth="true" />
+			<text align="center" />
+			<text reverse="false" ul="false" em="true" color="color_1" />
+			@if (!_env.IsProduction())
+			{
+				<text>
+					<text font="font_b" />
+					<text width="2" height="2" />
+					<text>-- PRUEBA --&#10;</text>
+					<feed unit="12" />
+				</text>
+			}
+			<feed unit="6" />
+			<logo key1="32" key2="32" />
+			<text font="font_b" />
+			<text width="2" height="1" />
+			<feed unit="6" line="1" />
+			<text>@Html.Raw($"{_calendar.FriendlyDate(Model.PickUpTimeFrom)} {Model.PickUpTimeFrom.Value.ToString("HH:mm")}")&#10;</text>
 
 
-            @if (Model.Factura != null && Model.Factura.Resultado == "A")
-            {
-                <text>
-                    <text align="center" />
-                    <text font="font_a" />
-                    <text width="1" height="1" />
-                    <text reverse="false" ul="false" em="false" color="color_1" />
-                    <text>@Model.Factura.Factura - </text>
-                    <text>Cuit @Model.Factura.Cuit - </text>
-                    <text>Pto Vta @Model.Factura.PtoVta&#10;</text>
-                    <text align="left" />
-                    <text x="50" />
-                    <text>Comprobante / Cae</text>
-                    <text x="300" />
-                    <text>Emisión</text>
-                    <text x="440" />
-                    <text>Total&#10;</text>
-                    @foreach (var cae in Model.Factura.Caes)
-                    {
-                        <text>
-                        <text x="50" />
-                        <text>@cae.CbteDesde / @cae.CAE</text>
-                        <text x="300" />
-                        <text>@cae.CbteFch</text>
-                        <text x="440" />
-                        <text>@cae.ImpTotal.ToString("c")&#10;</text>
-                </text>
-            }
-                    <feed unit="12" line="1" />
-                    </text>
-                }
-            <text align="left" />
-            <text font="font_a" />
-            <text width="1" height="1" />
-            <text reverse="false" ul="false" em="false" color="color_1" />
-            <text>Pedido&#9;@Html.Raw(Model.FriendlyBookingId)&#10;</text>
-            <text>Cliente&#9;@Model.CustomerName&#10;</text>
-            <text>Tel&#9;@Model.PhoneNumber&#10;</text>
+			@if (Model.Factura != null && Model.Factura.Resultado == "A")
+			{
+				<text>
+					<text align="center" />
+					<text font="font_a" />
+					<text width="1" height="1" />
+					<text reverse="false" ul="false" em="false" color="color_1" />
+					<text>@Model.Factura.Factura - </text>
+					<text>Cuit @Model.Factura.Cuit - </text>
+					<text>Pto Vta @Model.Factura.PtoVta&#10;</text>
+					<text align="left" />
+					<text x="50" />
+					<text>Comprobante / Cae</text>
+					<text x="300" />
+					<text>Emisión</text>
+					<text x="440" />
+					<text>Total&#10;</text>
+					@foreach (var cae in Model.Factura.Caes)
+					{
+						<text>
+						<text x="50" />
+						<text>@cae.CbteDesde / @cae.CAE</text>
+						<text x="300" />
+						<text>@cae.CbteFch</text>
+						<text x="440" />
+						<text>@cae.ImpTotal.ToString("c")&#10;</text>
+				</text>
+			}
+					<feed unit="12" line="1" />
+					</text>
+				}
+			<text align="left" />
+			<text font="font_a" />
+			<text width="1" height="1" />
+			<text reverse="false" ul="false" em="false" color="color_1" />
+			<text>Pedido&#9;@Html.Raw(Model.FriendlyBookingId)&#10;</text>
+			<text>Cliente&#9;@Model.CustomerName&#10;</text>
+			<text>Tel&#9;@Model.PhoneNumber&#10;</text>
 
-            @if (!string.IsNullOrEmpty(Model.CustomerComments))
-            {
-                <text>
-                    <text>Notas&#10;</text>
-                    <text align="center" />
-                    <text>@Model.CustomerComments&#10;</text>
-                    <text align="left" />
-                </text>
-            }
+			@if (!string.IsNullOrEmpty(Model.CustomerComments))
+			{
+				<text>
+					<text>Notas&#10;</text>
+					<text align="center" />
+					<text>@Model.CustomerComments&#10;</text>
+					<text align="left" />
+				</text>
+			}
 
-            <text>&#10;</text>
-            <text width="1" height="2" />
-            <text reverse="false" ul="false" em="false" color="color_1" />
+			<text>&#10;</text>
+			<text width="1" height="2" />
+			<text reverse="false" ul="false" em="false" color="color_1" />
 
-            @foreach (var item in Model.ItemDetails)
-            {
-                <text>
+			@foreach (var item in Model.ItemDetails)
+			{
+				<text>
 
-                    <text align="left" />
-                    <text>@item.Key</text>
-                    @foreach (var disp in displayNameOnTicket(item.Value, 43))
-                    {
-                        <text>
-                        <text x="60" />
-                        <text>@disp&#10;</text>
-                </text>
-            }
-                    <text>&#10;</text>
-                    </text>
-                }
+					<text align="left" />
+					<text>@item.Key</text>
+					@foreach (var disp in displayNameOnTicket(item.Value, 43))
+					{
+						<text>
+						<text x="60" />
+						<text>@disp&#10;</text>
+				</text>
+			}
+					<text>&#10;</text>
+					</text>
+				}
 
-            <text reverse="false" ul="false" em="true" />
+			<text reverse="false" ul="false" em="true" />
 
-            @if (Model.Factura != null && Model.Factura.Resultado == "A" && Model.Factura.CbteTipo == 1)
-            {
-                foreach (var cae in Model.Factura.Caes)
-                {
-                    var iva = Decimal.Round(Convert.ToDecimal(cae.ImpTotal) * (_iva / 100), 2);
-                    var neto = Convert.ToDecimal(cae.ImpTotal) - iva;
+			@if (Model.Factura != null && Model.Factura.Resultado == "A" && Model.Factura.CbteTipo == 1)
+			{
+				foreach (var cae in Model.Factura.Caes)
+				{
+					var iva = Decimal.Round(Convert.ToDecimal(cae.ImpTotal) * (_iva / 100), 2);
+					var neto = Convert.ToDecimal(cae.ImpTotal) - iva;
 
-                    <text>
-                        <text width="2" height="1" />
-                        <text>NETO</text>
-                        <text x="300" />
-                        <text>@neto.ToString("c")&#10;</text>
-                        <text>IVA</text>
-                        <text x="300" />
-                        <text>@iva.ToString("c")&#10;</text>
+					<text>
+						<text width="2" height="1" />
+						<text>NETO</text>
+						<text x="300" />
+						<text>@neto.ToString("c")&#10;</text>
+						<text>IVA</text>
+						<text x="300" />
+						<text>@iva.ToString("c")&#10;</text>
 
-                    </text>
-                }
-            }
-            else
-            {
-                <text>
-                    <text width="2" height="1" />
-                    <text>TOTAL</text>
-                    <text x="300" />
-                    <text>@Model.OrderTotal.ToString("c")&#10;</text>
-                </text>
-            }
-            <text reverse="false" ul="false" em="false" />
-            <text width="1" height="1" />
-            <feed unit="12" />
-            <text align="center" />
-            <feed line="2" />
-            @if (Model.DeliveryAddress != null)
-            {
-                <text>
-                    <text align="center" />
-                    <text font="font_b" />
-                    <text width="2" height="2" />
-                    <text reverse="false" ul="false" em="true" color="color_1" />
-                    <text>Delivery&#10;</text>
-                    <feed unit="12" />
+					</text>
+				}
+			}
+			else
+			{
+				<text>
+					<text width="2" height="1" />
+					<text>TOTAL</text>
+					<text x="300" />
+					<text>@Model.OrderTotal.ToString("c")&#10;</text>
+				</text>
+			}
+			<text reverse="false" ul="false" em="false" />
+			<text width="1" height="1" />
+			<feed unit="12" />
+			<text align="center" />
+			<feed line="2" />
+			@if (Model.DeliveryAddress != null)
+			{
+				<text>
+					<text align="center" />
+					<text font="font_b" />
+					<text width="2" height="2" />
+					<text reverse="false" ul="false" em="true" color="color_1" />
+					<text>Delivery&#10;</text>
+					<feed unit="12" />
 
-                    <text>&#10;</text>
-                    <text font="font_a" />
-                    <text width="1" height="1" />
-                    <text reverse="false" ul="false" em="false" color="color_1" />
-                    <text>@Model.DeliveryAddress.AddressLine1&#10;</text>
-                    <feed line="3" />
-                    <text>@Model.DeliveryAddress.DeliveryInstructions&#10;</text>
-                    <feed unit="12" />
-                    <text align="center" />
-                    <feed line="3" />
-                </text>
-            }
-            @if (Model.Status == "reservation")
-            {
-                <text>
-                    <text align="center" />
-                    <text font="font_b" />
-                    <text width="2" height="2" />
-                    <text reverse="false" ul="false" em="true" color="color_1" />
-                    <text>Pago Pendiente&#10;</text>
-                    <feed unit="6" />
-                </text>
+					<text>&#10;</text>
+					<text font="font_a" />
+					<text width="1" height="1" />
+					<text reverse="false" ul="false" em="false" color="color_1" />
+					<text>@Model.DeliveryAddress.AddressLine1&#10;</text>
+					<feed line="3" />
+					<text>@Model.DeliveryAddress.DeliveryInstructions&#10;</text>
+					<feed unit="12" />
+					<text align="center" />
+					<feed line="3" />
+				</text>
+			}
+			@if (Model.Status == "reservation")
+			{
+				<text>
+					<text align="center" />
+					<text font="font_b" />
+					<text width="2" height="2" />
+					<text reverse="false" ul="false" em="true" color="color_1" />
+					<text>Pago Pendiente&#10;</text>
+					<text width="1" height="1" />
+					<feed unit="12" />
+					<text>Entregar voucher con pago en efectivo&#10;</text>
+					<feed unit="6" />
+				</text>
 
-            }
+			}
 
 
 
 
-            <cut type="feed" />
-        </epos-print>
+			<cut type="feed" />
+		</epos-print>
     </PrintData>
 </ePOSPrint>
 

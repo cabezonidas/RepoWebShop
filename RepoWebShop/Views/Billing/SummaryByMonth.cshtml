@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Cae>
+
+@{
+	var months = Model
+		.GroupBy(x => x.CbteFch.Substring(0, 6))
+		.Select(group => new { key = group.Key, tot = group.Sum(x => x.ImpTotal) })
+		.OrderByDescending(x => x.key);
+	<h2 style="text-align: center">Resumen mensual de CAEs</h2>
+	
+	<div class="container" style="width: 60%">
+		<table style="width: 100%">
+			<thead>
+				<tr>
+					<th>Mes</th>
+					<th>Importe acumulado</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var yearmonth in months)
+				{
+					<tr>
+						<td>@month(yearmonth.key) @year(yearmonth.key)</td>
+						<td>$@yearmonth.tot</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+</div>
+}
+@{ 
+	string year(string yearmonth)
+	{
+		if (yearmonth.Length != 6)
+			return string.Empty;
+		else
+			return yearmonth.Substring(0, 4);
+	}
+
+	string month(string yearmonth)
+	{
+		if (yearmonth.Length != 6)
+			return string.Empty;
+
+		var monthnumber = yearmonth.Substring(4, 2);
+		switch(monthnumber)
+		{
+			case "01":
+				return "Enero";
+			case "02":
+				return "Febrero";
+			case "03":
+				return "Marzo";
+			case "04":
+				return "Abril";
+			case "05":
+				return "Mayo";
+			case "06":
+				return "Junio";
+			case "07":
+				return "Julio";
+			case "08":
+				return "Agosto";
+			case "09":
+				return "Septiembre";
+			case "10":
+				return "Octubre";
+			case "11":
+				return "Noviembre";
+			case "12":
+				return "Diciembre";
+			default:
+				return string.Empty;
+		}
+	}
+}
+

@@ -72,7 +72,7 @@
             <tr>
                 <td>
                     <a href="/Catalog/Edit/@p.Product.ProductId">
-                        @p.Product.Name
+                        @p.Product.DisplayName
                     </a>
                 </td>
                 <td>@p.Product.Category</td>
@@ -100,13 +100,15 @@
         window.location = "/Catalog/Inflation/" + $('#preview-perc').val() + "/" + $('#preview-round').val();
     }
 
-    function adjustPrices() {
+	function adjustPrices() {
+		loaderOn();
         $.post('/api/CatalogData/Inflation/@Model.Inflation/@Model.RoundTo').then(() => {
             window.location.reload();
         }, () => alert('No se pudo hacer el cambio'));
     }
 
-    function restorePrices() {
+	function restorePrices() {
+		loaderOn();
         $.post('/api/CatalogData/RestorePrices').then(() => {
             window.location.reload();
         }, () => ('No se pudo hacer el cambio'));

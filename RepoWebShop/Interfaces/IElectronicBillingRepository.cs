@@ -12,5 +12,6 @@ namespace RepoWebShop.Interfaces
         Task<IEnumerable<InvoiceData>> GetAll(Func<InvoiceData, bool> condition = null);
         Task<InvoiceData> GetById(int id);
         IEnumerable<Cuit> CuitInfo(InvoiceData invoice);
-    }
+		IEnumerable<Cae> AllCaes();
+	}
 }

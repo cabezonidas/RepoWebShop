@@ -441,5 +441,7 @@ namespace RepoWebShop.Repositories
 
             return result.AsEnumerable();
         }
+
+		public IEnumerable<Cae> AllCaes() => _dbCtx.Caes.ToList().AsEnumerable();
     }
 }

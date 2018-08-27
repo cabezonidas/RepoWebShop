@@ -137,8 +137,10 @@
                         '</div>';
                 }
             },
-            onChange: function (event) {
-                appendItem(event);
+			onChange: function (event) {
+				if (event) {
+					appendItem(event);
+				}
             }
         });
     };
