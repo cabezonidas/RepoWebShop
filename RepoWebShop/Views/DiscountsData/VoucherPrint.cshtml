@@ -18,11 +18,11 @@
 			<text font="font_b" />
 			@if (!_env.IsProduction())
 			{
-			<text>
-				<feed line="1" />
-				<text width="2" height="2" />
-				<text>-- PRUEBA --&#10;</text>
-			</text>
+				<text>
+					<feed line="1" />
+					<text width="2" height="2" />
+					<text>-- PRUEBA --&#10;</text>
+				</text>
 			}
 			<feed line="1" />
 			<logo key1="32" key2="32" />
@@ -35,14 +35,17 @@
 			<text>VOUCHER&#10;</text>
 			<text width="5" height="5" />
 			<text>$@Model.Roof&#10;</text>
+			<feed line="1" />
+			<text width="1" height="2" />
+			<text>Código @Model.Phrase.ToUpper()&#10;</text>
 			<text width="1" height="1" />
 			<feed line="4" />
 			@{
-				var termsLines = ("*" + Model.Comments).ToCharsPerLine(43);
-				foreach(var line in termsLines)
+				var termsLines = ("*" + Model.Comments + " Ingresar código de descuento al finalizar la compra.").ToCharsPerLine(43);
+				foreach (var line in termsLines)
 				{
 					<text>
-						<text>@line&#10;</text>		
+						<text>@line&#10;</text>
 					</text>
 				}
 			}

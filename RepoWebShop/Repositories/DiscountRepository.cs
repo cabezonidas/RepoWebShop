@@ -126,7 +126,7 @@ namespace RepoWebShop.Repositories
 
 			disc = new Discount
 			{
-				Base = value + 1,
+				Base = value * 2,
 				DurationDays = 15,
 				InstancesLeft = 1,
 				IsActive = true,

@@ -18,9 +18,12 @@ import { ProductsComponent } from './components/products/products.component';
 import { ProductSubtotalComponent } from './components/shared/product-subtotal/product-subtotal.component';
 import { InvoiceComponent } from './components/invoice/invoice.component';
 import { CommentsComponent } from './components/comments/comments.component';
+import { ReservationComponent } from './components/reservation/reservation.component';
+import { MobileGuardService } from '../core/services/guard/mobile-guard.service';
 
 const cartRoutes: Routes = [
-    { path: 'cart', component: CartComponent }
+    { path: 'cart', component: CartComponent },
+    { path: 'reservation', component: ReservationComponent, canActivate: [MobileGuardService] }
   ];
 
 @NgModule({
@@ -34,7 +37,8 @@ const cartRoutes: Routes = [
         ProductsComponent,
         ProductSubtotalComponent,
         InvoiceComponent,
-        CommentsComponent
+        CommentsComponent,
+        ReservationComponent
     ],
     imports: [
         AgmCoreModule.forRoot({

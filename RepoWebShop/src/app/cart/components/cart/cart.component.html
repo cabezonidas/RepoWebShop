@@ -32,15 +32,15 @@
             <app-discount [savedDiscount]="discount$ | async" [discountsLoaded]="discountsLoaded$ | async" [discountsLoading]="discountsLoading$ | async" 
             (next)="_onNext()" (clearDiscount)="clearDiscount()" (applyDiscount)="applyDiscount($event)" ></app-discount>
           </mat-step>
-        <mat-step >
+        <!-- <mat-step >
           <ng-template matStepLabel>Comentarios</ng-template>
+        </mat-step> -->
+        <mat-step >
+          <ng-template matStepLabel>Retiro / Entrega</ng-template>
+          <app-pickup-options-shell></app-pickup-options-shell>
           <app-comments (next)="_onNext()" (addComments)="addComments($event)"
           [savedComments]="comments$ | async" [commentsLoaded]="commentsLoaded$ | async" [commentsLoading]="commentsLoading$ | async"
           ></app-comments>
-        </mat-step>
-        <mat-step >
-          <ng-template matStepLabel>Entrega</ng-template>
-          <app-pickup-options-shell></app-pickup-options-shell>
         </mat-step>
         <mat-step >
           <ng-template matStepLabel>Facturación Electrónica</ng-template>
@@ -49,6 +49,7 @@
         </mat-step>
         <mat-step >
           <ng-template matStepLabel>Pago</ng-template>
+          <button mat-raised-button routerLink="/reservation">Reservar</button>
         </mat-step>
       </mat-vertical-stepper>
     </mat-card>

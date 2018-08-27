@@ -7,4 +7,4 @@
 
 <mat-progress-bar *ngIf="commentsLoading" mode="indeterminate"></mat-progress-bar>
 <button mat-raised-button color="primary" (tap)="next.emit()" *ngIf="savedComments" >Continuar</button>
-<button mat-raised-button (tap)="next.emit()" *ngIf="!savedComments">No quiero comentarios</button>
+<button mat-raised-button (tap)="next.emit()" *ngIf="!savedComments">Siguiente</button>
