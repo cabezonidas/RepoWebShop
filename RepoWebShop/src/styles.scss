@@ -23,9 +23,20 @@ $mat-primary: (
   )
 );
 
+$mat-accent: (
+  500: #B93A1C,
+  A100: #F6996D,
+  A200: #B44848,
+  contrast: (
+    500: papayawhip,
+    A100: #460b07,
+    A200: $light-primary-text,
+  )
+);
+
 // default, lighter, and darker
 $repo-app-primary: mat-palette($mat-primary, A200, A100, 500);
-$repo-app-accent:  mat-palette($mat-purple);
+$repo-app-accent:  mat-palette($mat-accent, A200, A100, 500);
 $repo-app-warn:    mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).

@@ -9,6 +9,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ContactComponent } from './components/contact/contact.component';
 import { InfoComponent } from './components/info/info.component';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
+import { HoursComponent } from './components/hours/hours.component';
 
 const homeRoutes: Routes = [
   { path: 'start', component: HomeShellComponent }
@@ -28,6 +29,7 @@ const homeRoutes: Routes = [
     HomeShellComponent,
     ContactComponent,
     InfoComponent,
+    HoursComponent,
   ],
   providers: []
 })

@@ -5,6 +5,8 @@ using RepoWebShop.Interfaces;
 using RepoWebShop.Extensions;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using RepoWebShop.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace RepoWebShop.Repositories
 {
@@ -76,6 +78,7 @@ namespace RepoWebShop.Repositories
             _appDbContext = appDbContext;
             _config = config;
         }
+
 
         public DateTime LocalTime()
         {
@@ -162,5 +165,16 @@ namespace RepoWebShop.Repositories
             var result = dateTime.Zoned(_config.GetSection("LocalZone").Value);
             return result;
         }
-    }
+
+		public OpenHoursViewModel PublicCalendar()
+		{
+			var result = new OpenHoursViewModel()
+			{
+				OpenHours = _appDbContext.OpenHours.Where(x => x.DayId >= 0 && x.DayId <= 7).OrderBy(x => x.StartingAt),
+				PublicHolidays = _appDbContext.Holidays.Where(x => x.Date >= LocalTime().Date).Include(x => x.OpenHours),
+				Vacations = _appDbContext.Vacations.Where(x => x.EndDate >= LocalTime().Date)
+			};
+			return result;
+		}
+	}
 }

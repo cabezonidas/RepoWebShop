@@ -1,4 +1,5 @@
 ﻿using RepoWebShop.Models;
+using RepoWebShop.ViewModels;
 using System;
 using System.Collections.Generic;
 
@@ -16,5 +17,6 @@ namespace RepoWebShop.Interfaces
         string FriendlyDate(DateTime? date);
         IEnumerable<KeyValuePair<DateTime, TimeSpan>> GetPickUpOption(int preparationTime, Discount discount);
         DateTime ToLocalTime(DateTime dateTime);
-    }
+		OpenHoursViewModel PublicCalendar();
+	}
 }

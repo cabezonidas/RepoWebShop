@@ -1,13 +1,15 @@
-<mat-toolbar>
-    <mat-toolbar-row>
+<mat-toolbar color="accent">
+    <mat-toolbar-row >
         <span></span>
         <span class="spacer"></span>
         <button mat-button (click)="triggerScrollTo('us', -56)">Nosotros</button>
+        <button mat-button (click)="triggerScrollTo('hours', -56)">Horarios</button>
         <button mat-button (click)="triggerScrollTo('contact', -56)">Contacto</button>
     </mat-toolbar-row>
 </mat-toolbar>
 <app-video></app-video>
 <app-info id="us"></app-info>
+<app-hours id="hours"></app-hours>
 <app-contact id="contact"></app-contact>
 
 <section id="afip">

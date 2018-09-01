@@ -67,12 +67,7 @@ namespace RepoWebShop.MvcControllers
         [AllowAnonymous]
         public ViewResult OpenHours()
         {
-            var result = new OpenHoursViewModel()
-            {
-                OpenHours = _appDbContext.OpenHours.Where(x => x.DayId >= 0 && x.DayId <= 7).OrderBy(x => x.StartingAt),
-                PublicHolidays = _appDbContext.Holidays.Where(x => x.Date >= _calendarRepository.LocalTime().Date).Include(x => x.OpenHours),
-                Vacations = _appDbContext.Vacations.Where(x => x.EndDate >= _calendarRepository.LocalTime().Date)
-            };
+			var result = _calendarRepository.PublicCalendar();
             return View(result);
         }
 
