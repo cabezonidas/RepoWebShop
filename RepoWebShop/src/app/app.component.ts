@@ -3,6 +3,7 @@ import { AuthService } from './authentication/services/auth.service';
 import { Subscription } from 'rxjs';
 import { MatSidenav } from '@angular/material/sidenav';
 import { IAppUser } from './authentication/interfaces/iapp-user';
+import { ScrollService } from './home/services/scroll.service';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +17,7 @@ export class AppComponent implements OnInit, OnDestroy {
   userSub = new Subscription();
   reason = '';
 
-  constructor(private auth: AuthService) {}
-
+  constructor(private auth: AuthService, private scroll: ScrollService) {}
   ngOnInit() {
     this.userSub = this.auth.loadUser().subscribe(user => this.user = user);
   }

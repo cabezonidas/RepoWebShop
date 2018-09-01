@@ -13,79 +13,82 @@
 }
 
 #content {
-    h1 {
+    text-align: center;
+    .logo
+    {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        img {         
+            width: 100%;
+            max-width: 350px;
+        }
+    } 
+    h2 {
         color: papayawhip;
         text-shadow: 2px 2px 4px #000000;
     }
-    text-align: center;
     #call-to-action {
         width: 100%;
         margin-bottom: 20px;
-    }
-    .logo > img {
-        width: 100%;
-        max-width: 350px;
+        button {
+            margin-top: 20px;
+        }
     }
 }
 
 @media screen and (max-width: 374px) {
     #content {
-        #call-to-action {
-            button {
-                margin-top: 20px;
-            }
-        }
         .logo {
             display: none;
         }
-        h1 {
-            display: none;
-        }
-    }
-}
-
-@media screen and (max-width: 500px) {
-    #content {
-        .logo > img {
-            width: 100%;
-            max-width: 200px;
-        }
-        h1 {
-            display: none;
-        }
-    }
-}
-
-@media screen and (max-width: 800px) {
-    #content {
-        h1 {
+        h2 {
             display: none;
         }
         #call-to-action {
-            margin-top: 50px;
+            margin-top: 110px;
+        }
+    }
+}
+
+@media screen and (max-width: 570px) {
+    #content {
+        height: 600px;
+        .logo {
+            img {
+
+                max-width: 200px;
+            }
+        }
+        h2 {
+            display: none;
+        }
+    }
+}
+
+
+@media screen and (max-width: 750px) {
+    #content {
+        height: 600px;
+        h2 {
+            display: none;
         }
     }
 }
 
 @media screen and (max-width: 1200px) {
     #content {
-        h1 {
-            font-size: 3em;
-        }
-        #call-to-action {
-            margin-top: 80px;
+        height: 650px;
+        h2 {
+            font-size: 2.5em;
         }
     }
 }
 
 @media screen and (min-width: 1201px) {
     #content {
-        h1 {
+        height: 700px;
+        h2 {
             font-size: 4em;
-        }
-        #call-to-action {
-            margin-top: 80px;
-            margin-bottom: 100px;
         }
     }
 }

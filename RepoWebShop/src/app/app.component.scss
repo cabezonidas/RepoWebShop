@@ -53,6 +53,7 @@ div#content {
   font-family: 'Noto Serif';
   background-color: papayawhip;
   margin-top: 64px;
+  min-width: 375px;
   // No poner text-align: center -> rompe la animación
 }
 
@@ -62,3 +63,4 @@ div#content {
       margin-top: 56px;
   }
 }
+

@@ -1,4 +1,3 @@
-import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { MaterialModule } from '../material/material.module';
 import { VideoComponent } from './components/video/video.component';
@@ -7,6 +6,9 @@ import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
+import { ContactComponent } from './components/contact/contact.component';
+import { InfoComponent } from './components/info/info.component';
+import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 
 const homeRoutes: Routes = [
   { path: 'start', component: HomeShellComponent }
@@ -14,6 +16,7 @@ const homeRoutes: Routes = [
 
 @NgModule({
   imports: [
+    ScrollToModule.forRoot(),
     RouterModule.forChild(homeRoutes),
     CommonModule,
     BrowserAnimationsModule,
@@ -23,6 +26,8 @@ const homeRoutes: Routes = [
   declarations: [
     VideoComponent,
     HomeShellComponent,
+    ContactComponent,
+    InfoComponent,
   ],
   providers: []
 })

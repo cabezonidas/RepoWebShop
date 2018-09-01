@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ScrollService } from '../../services/scroll.service';
 
 @Component({
   selector: 'app-home-shell',
@@ -7,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeShellComponent implements OnInit {
 
-  constructor() { }
+  constructor(private scroll: ScrollService) { }
 
   ngOnInit() {
   }
-
+  triggerScrollTo(target: string, offset: number) {
+    this.scroll.triggerScrollTo(target, offset);
+  }
 }
