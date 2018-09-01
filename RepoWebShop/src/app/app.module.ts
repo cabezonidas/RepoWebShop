@@ -14,6 +14,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule } from '@angular/material';
 import { MainNavComponent } from './shared/components/main-nav/main-nav.component';
 import { CartModule } from './cart/cart.module';
+import { HomeModule } from './home/home.module';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { CartModule } from './cart/cart.module';
     AuthenticationModule,
     ProductModule,
     CateringModule,
+    HomeModule,
     CartModule,
     AppRoutingModule,
     EffectsModule.forRoot([]),

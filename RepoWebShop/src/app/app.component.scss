@@ -51,7 +51,14 @@ mat-sidenav-content {
 } 
 div#content {
   font-family: 'Noto Serif';
-  margin-top: 100px;
   background-color: papayawhip;
+  margin-top: 64px;
   // No poner text-align: center -> rompe la animación
+}
+
+
+@media only screen and (max-width: 599px) {
+  div#content {
+      margin-top: 56px;
+  }
 }
