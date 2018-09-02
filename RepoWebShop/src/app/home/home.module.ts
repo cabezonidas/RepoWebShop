@@ -10,6 +10,7 @@ import { ContactComponent } from './components/contact/contact.component';
 import { InfoComponent } from './components/info/info.component';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { HoursComponent } from './components/hours/hours.component';
+import { ProductModule } from '../products/products.module';
 
 const homeRoutes: Routes = [
   { path: 'start', component: HomeShellComponent }
@@ -22,7 +23,8 @@ const homeRoutes: Routes = [
     CommonModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    MaterialModule
+    MaterialModule,
+    ProductModule
   ],
   declarations: [
     VideoComponent,

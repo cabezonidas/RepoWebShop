@@ -1,16 +1,20 @@
-<div id="background">
-  <video preload="true" autoplay="autoplay" [muted]="true" loop="loop" #video>
-    <source src="../../../assets/videos/background_landscape.mp4" type="video/mp4">
-  </video>
-  <div id="content">
-    <div class='logo'>
-      <img src='../../../assets/images/logoRepo.PNG'>
-    </div>
-    <h2>Pastelería Artesanal</h2>
-    <div id="call-to-action">
-      <button mat-raised-button color="primary">Comprar</button>
+<div class="container">
+
+  <div id="background" [ngStyle]="{'height.px': videoHeight}">
+    <video preload="true" autoplay="autoplay" [muted]="true" loop="loop" #video (window:resize)="onResize($event)">
+      <source src="../../../assets/videos/background_landscape.mp4" type="video/mp4">
+      </video>
+      <div id="content">
+        <div class='logo'>
+          <img src='../../../assets/images/logoRepo.PNG'>
+        </div>
+        <h2>Pastelería Artesanal</h2>
+        <div id="call-to-action">
+          <button mat-raised-button color="primary">Comprar</button>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-
-
+    
+    
+    

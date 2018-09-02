@@ -52,7 +52,7 @@ mat-sidenav-content {
 div#content {
   font-family: 'Noto Serif';
   background-color: papayawhip;
-  margin-top: 64px;
+  padding-top: 64px;
   min-width: 375px;
   // No poner text-align: center -> rompe la animación
 }
@@ -60,7 +60,7 @@ div#content {
 
 @media only screen and (max-width: 599px) {
   div#content {
-      margin-top: 56px;
+      padding-top: 56px;
   }
 }
 

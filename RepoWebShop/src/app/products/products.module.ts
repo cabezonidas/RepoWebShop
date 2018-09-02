@@ -37,6 +37,9 @@ const productRoutes: Routes = [
     ProductShellComponent, ChooseItemComponent, FullCatalogComponent,
     PriceComparisonComponent, ProductCarouselPreviewComponent, ProductPreviewComponent, SoonestPickupComponent
   ],
+  exports: [
+    ProductCarouselPreviewComponent
+  ],
   entryComponents: [ChooseItemComponent],
 })
 export class ProductModule { }

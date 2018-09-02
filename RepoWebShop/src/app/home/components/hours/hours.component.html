@@ -1,37 +1,48 @@
+<div class="container">
 <div class="calendar">
-  <div *ngIf="publicCalendarArray.length">
-    <h1>Horarios de Atención</h1>
-    <div *ngFor="let calendarDay of publicCalendarArray">
-      <span *ngFor="let hours of calendarDay; let i = index">
-        <span *ngIf="i === 0" class="day">
-          <strong>{{ day(hours.dayId) }}</strong>
-        </span>
-        <span class="hours">
-          {{ i !== 0 ? ' y' : ''}} de {{ starting(hours) | date:'shortTime' }} a {{ closing(hours) | date:'shortTime' }}
-        </span>
-      </span>
+  <div class="photo-desc">
+    <div class="col">
+        <mat-card >
+            <img mat-card-image src="https://farm2.staticflickr.com/1849/30545892208_acd9c2eb38_c.jpg" alt="">
+          </mat-card>
+    </div>
+    <div class="col">
+      <div *ngIf="publicCalendarArray.length" >
+          <h1>Horarios de Atención</h1>
+        <div *ngFor="let calendarDay of publicCalendarArray">
+          <span *ngFor="let hours of calendarDay; let i = index">
+            <span *ngIf="i === 0" class="day">
+              <strong>{{ day(hours.dayId) }}</strong>
+            </span>
+            <span class="hours">
+              {{ i !== 0 ? ' y' : ''}} de {{ starting(hours) | date:'shortTime' }} a {{ closing(hours) | date:'shortTime' }}
+            </span>
+          </span>
+        </div>
+      </div>
+      <div *ngIf="publicHolidayArray.length">
+        <h2>Próximos Feriados</h2>
+        <div *ngFor="let holiday of publicHolidayArray">
+          <span *ngFor="let day of holiday; let i = index">
+            <span *ngIf="i === 0" class="day">
+              <strong>{{ spDay(day.date) }}</strong>
+            </span>
+            <span class="hours">
+              {{ i !== 0 ? ' y' : ''}} de {{ starting(day.openHours) | date:'shortTime' }} a {{ closing(day.openHours) | date:'shortTime' }}
+            </span>
+          </span>
+        </div>
+      </div>
+
+
+      <div *ngIf="vacations.length">
+        <h2>Cerrado por Vacaciones</h2>
+        <div *ngFor="let vacation of vacations">
+            Del <strong>{{ spDay(vacation.startDate) }}</strong> al <strong>{{ spDay(vacation.endDate) }}</strong>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div *ngIf="publicHolidayArray.length">
-    <h2>Próximos Feriados</h2>
-    <div *ngFor="let holiday of publicHolidayArray">
-      <span *ngFor="let day of holiday; let i = index">
-        <span *ngIf="i === 0" class="day">
-          <strong>{{ spDay(day.date) }}</strong>
-        </span>
-        <span class="hours">
-          {{ i !== 0 ? ' y' : ''}} de {{ starting(day.openHours) | date:'shortTime' }} a {{ closing(day.openHours) | date:'shortTime' }}
-        </span>
-      </span>
-    </div>
-  </div>
-
-
-  <div *ngIf="vacations.length">
-    <h2>Cerrado por Vacaciones</h2>
-    <div *ngFor="let vacation of vacations">
-        Del <strong>{{ spDay(vacation.startDate) }}</strong> al <strong>{{ spDay(vacation.endDate) }}</strong>
-    </div>
-  </div>
+</div>
 </div>

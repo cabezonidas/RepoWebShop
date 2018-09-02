@@ -1,4 +1,11 @@
+.container {
+    background-color: white;
+}
 .calendar {
+    clip-path: polygon(0 9%, 100% 0, 100% 90%, 0% 100%);
+    padding-top: 100px;
+    padding-bottom: 100px;
+    background-color: peachpuff;
     text-align: center;
     .day {
         font-size: 1.2em;
@@ -6,5 +13,21 @@
     
     .hours {
         text-transform: lowercase;
+    }
+    div.photo-desc {
+        div.col {
+            display: inline-block;
+            vertical-align: middle;
+            max-width: 500px;
+            padding: 25px;
+            mat-card {
+                max-width: 350px;
+                img {
+                    max-width: 100%;
+                    max-height: 100%;
+                    margin: auto;
+                }
+            }
+        }
     }
 }

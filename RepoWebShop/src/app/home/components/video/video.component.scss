@@ -1,6 +1,9 @@
 
-
+.container {
+    background-color: white;
+}
 #background {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 92%);
     position: relative;
     z-index: 1;
     overflow: hidden;
@@ -16,8 +19,8 @@
     text-align: center;
     .logo
     {
-        margin-top: 30px;
-        margin-bottom: 30px;
+        padding-top: 30px;
+        padding-bottom: 30px;
         img {         
             width: 100%;
             max-width: 350px;
@@ -29,7 +32,7 @@
     }
     #call-to-action {
         width: 100%;
-        margin-bottom: 20px;
+        padding-bottom: 20px;
         button {
             margin-top: 20px;
         }
@@ -45,14 +48,13 @@
             display: none;
         }
         #call-to-action {
-            margin-top: 110px;
+            padding-top: 110px;
         }
     }
 }
 
 @media screen and (max-width: 570px) {
     #content {
-        height: 600px;
         .logo {
             img {
 
@@ -68,7 +70,6 @@
 
 @media screen and (max-width: 750px) {
     #content {
-        height: 600px;
         h2 {
             display: none;
         }
@@ -77,7 +78,6 @@
 
 @media screen and (max-width: 1200px) {
     #content {
-        height: 650px;
         h2 {
             font-size: 2.5em;
         }
@@ -86,7 +86,6 @@
 
 @media screen and (min-width: 1201px) {
     #content {
-        height: 700px;
         h2 {
             font-size: 4em;
         }
