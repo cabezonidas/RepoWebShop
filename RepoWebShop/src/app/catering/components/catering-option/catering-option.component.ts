@@ -12,6 +12,7 @@ export class CateringOptionComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    console.log(this.catering);
   }
 
 }

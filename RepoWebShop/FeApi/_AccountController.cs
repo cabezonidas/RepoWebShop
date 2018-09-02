@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -54,7 +57,12 @@ namespace RepoWebShop.FeApi
 
 		[HttpPost]
 		[Route("SignOut")]
-		public async Task SignOut() => await _signInManager.SignOutAsync();
+		// Not working
+		public async Task SignOut()
+		{
+			await HttpContext.SignOutAsync();
+			await _signInManager.SignOutAsync();
+		}
 
 		[HttpPost]
 		[Route("SocialLogin")]

@@ -27,7 +27,11 @@ export class MembersComponent implements OnInit, OnDestroy {
 
   logout() {
     this.afAuth.auth.signOut().then(() => {
-      this.logOut = this.auth.logOut().subscribe(() => this.appService.setUser(null));
+      this.logOut = this.auth.logOut().subscribe(() => {
+        this.appService.setUser(null);
+      });
+      // api logout doesn't work -> force log out with MVC engine
+      window.location.assign('/account/LogoutSpa/start');
     });
   }
 

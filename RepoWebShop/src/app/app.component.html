@@ -1,32 +1,24 @@
-<!-- <app-main-nav></app-main-nav>
-<router-outlet></router-outlet> -->
 <div id="container">
   <mat-sidenav-container class="left-container" (backdropClick)="close('backdrop')">
     <mat-sidenav #sidenav (keydown.escape)="close('escape')" disableClose>
       <mat-card>
-        <mat-card-title color="primary">De las Artes</mat-card-title>
+        <mat-card-title color="primary" routerLink="/start" (tap)="close('toggle button')">De las Artes</mat-card-title>
       </mat-card>
       <mat-nav-list>
-          <a mat-list-item (tap)="close('toggle button')" routerLink='/profile'>
-            <mat-icon matListIcon>person</mat-icon>
-            Perfil
-          </a>
-          <a mat-list-item (tap)="close('toggle button')" routerLink='/products'>
-            <mat-icon matListIcon>cake</mat-icon>
-            Destacados
-          </a>
-          <a mat-list-item (tap)="close('toggle button')" routerLink='/new-catering'>
-            <mat-icon matListIcon>person</mat-icon>
-            Armá tu Catering
-          </a>
-          <a mat-list-item (tap)="close('toggle button')" routerLink='/catering-options'>
-            <mat-icon matListIcon>person</mat-icon>
-            Opciones de Catering
-          </a>
-          <a mat-list-item (tap)="close('toggle button')" routerLink='/cart'>
-            <mat-icon matListIcon>shopping_cart</mat-icon>
-            Carrito
-          </a>
+        <a mat-list-item (tap)="close('toggle button')" routerLink='/profile'>
+          <mat-icon matListIcon>person</mat-icon>Perfil
+        </a>
+        <a mat-list-item (tap)="close('toggle button')" routerLink='/products'>
+          <mat-icon matListIcon>cake</mat-icon>¡Comprar!
+        </a>
+        <a mat-list-item (tap)="close('toggle button')" routerLink='/catering-options'>
+          <mat-icon matListIcon>restaurant_menu</mat-icon>
+          Catering
+        </a>
+        <a mat-list-item (tap)="close('toggle button')" routerLink='/cart'>
+          <mat-icon matListIcon>shopping_cart</mat-icon>
+          Carrito
+        </a>
       </mat-nav-list>
       <button mat-raised-button (click)="close('toggle button')" color="primary" class='closeButton'>Cerrar</button>
     </mat-sidenav>
@@ -42,7 +34,7 @@
             <mat-icon class="icon"  routerLink="/start">home</mat-icon>
           </mat-toolbar-row>
         </mat-toolbar>
-        <div id="content">
+        <div id="content" #content [ngStyle]="{'padding-top.px': heightPadding}" (window:resize)="onResize()">
           <router-outlet></router-outlet>
         </div>
       </div>

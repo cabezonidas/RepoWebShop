@@ -393,16 +393,27 @@ namespace RepoWebShop.MvcControllers
                 }
             }
             return View(appUserViewModel);
-        }
+		}
 
-        [HttpPost]
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
-        }
+		[HttpPost]
+		public async Task<IActionResult> Logout()
+		{
+			await _signInManager.SignOutAsync();
+			return RedirectToAction("Index", "Home");
+		}
 
-        [HttpGet]
+		[HttpGet]
+		[Route("[controller]/LogoutSpa/{*returnUrl}")]
+		public async Task<IActionResult> LogoutSpa(string returnUrl)
+		{
+			await _signInManager.SignOutAsync();
+			if (string.IsNullOrEmpty(returnUrl))
+				return RedirectToAction("Index", "Home");
+			else
+				return Redirect($"{Request.HostUrl()}/{returnUrl}");
+		}
+
+		[HttpGet]
         [Route("[Controller]/VerifyNumber/{*returnUrl}")]
         public IActionResult VerifyNumber(string returnUrl)
         {

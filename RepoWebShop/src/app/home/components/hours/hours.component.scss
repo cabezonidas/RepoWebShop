@@ -1,5 +1,9 @@
 .container {
     background-color: white;
+    h1{
+        font-family: 'Playball';
+        font-size: 60px;
+    }
 }
 .calendar {
     clip-path: polygon(0 9%, 100% 0, 100% 90%, 0% 100%);

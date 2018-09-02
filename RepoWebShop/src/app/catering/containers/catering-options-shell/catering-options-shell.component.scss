@@ -1,17 +1,30 @@
 @import url('//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css');
-@import url('//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css');
+// @import url('//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css');
+
+.container {
+    h1 {
+        margin-top: 0;
+        padding-top: 20px;
+    }
+}
 
 ngx-slick {
-    height: 100%;
+    z-index: 1;
 }
-app-catering-option {
-    width: 350px;
+
+.arrow {
+    position: fixed;
+    top: 50%;
+    bottom: 50%;
+    z-index: 2;
 }
-.buttons {
-    display: flex;
-    padding-left: 20px;
-    padding-right: 20px;
-    .spacer{
-        flex: 1 1 auto;
-    }
+.arrow-left {
+    left: 5px;
+}
+.arrow-right {
+    right: 5px;
+}
+
+.catering-header {
+    text-align: center;
 }

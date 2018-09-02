@@ -17,11 +17,13 @@ export class CateringOptionsShellComponent implements OnInit {
   caterings$: Observable<ICatering[]>;
   carouselInit = false;
   slideConfig = {
+    arrows: false,
     slidesToShow: 1,
     slidesToScroll: 1,
     variableWidth: true,
     centerMode: true,
-    centerPadding: '40px'
+    centerPadding: '40px',
+    infinite: true,
   };
 
   constructor(private store: Store<fromCatering.State>) { }
