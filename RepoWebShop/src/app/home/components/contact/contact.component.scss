@@ -1,5 +1,8 @@
 .container {
     background-color: white;
+    text-align: center;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 93%);
+    padding-bottom: 100px;
 }
 
 h1 {
@@ -7,30 +10,19 @@ h1 {
     padding-top: 50px;
     text-align: center;
 }
-table {
-    width: 100%;
-}
-td {
-    text-align: center;
+
+.chip-container {
+    width: 80%;
     margin: auto;
-    width: 20%;
-    img {
-        width: 50px;
-        height: 50px;
-    }
-}
-
-@media screen and (max-width: 960px) {
-    tr.info {
-        display: none;
-    }
-}
-
-@media screen and (max-width: 300px) {
-    td {
+    text-align: center;
+    padding: 25px;
+    mat-chip-list {
+        margin: auto;
+        text-align: center;
         img {
-            width: 25px;
-            height: 25px;
+            max-width: 25px;
+            max-height: 25px;
+            padding-right: 10px;
         }
     }
 }

@@ -19,7 +19,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatGridListModule} from '@angular/material/grid-list';
-
+import {MatChipsModule} from '@angular/material/chips';
 
 @NgModule({
     imports: [
@@ -43,7 +43,8 @@ import {MatGridListModule} from '@angular/material/grid-list';
         MatPaginatorModule,
         MatAutocompleteModule,
         MatExpansionModule,
-        MatGridListModule
+        MatGridListModule,
+        MatChipsModule
     ],
     exports: [
         MatButtonModule,
@@ -66,7 +67,8 @@ import {MatGridListModule} from '@angular/material/grid-list';
         MatPaginatorModule,
         MatAutocompleteModule,
         MatExpansionModule,
-        MatGridListModule
+        MatGridListModule,
+        MatChipsModule
     ],
     declarations: []
 })

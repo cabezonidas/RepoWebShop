@@ -1,23 +1,30 @@
 <div class="container">
-<h1 #contact>Contacto</h1>
-<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d40509.165163836115!2d-58.42386838681868!3d-34.620141749222064!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x36138e4afdfc67e8!2sDe+las+Artes!5e0!3m2!1sen!2snz!4v1503363586219" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
-<table>
-  <thead></thead>
-  <tbody>
-    <tr class="icons">
-        <td><a href="https://api.whatsapp.com/send?phone=5491127778899"><img src="../../../../assets/images/icons/whapp.png"></a></td>
-        <td><a href="tel:+5491149250262"><img src="../../../../assets/images/icons/phone.png"></a></td>
-        <td><a href="https://www.facebook.com/ReposteriaDeLasArtes"><img src="../../../../assets/images/icons/fb.png"></a></td>
-        <td><a href="https://www.instagram.com/ReposteriaDeLasArtes"><img src="../../../../assets/images/icons/insta.png"></a></td>
-        <td><a href="mailto:info@delasartes.com.ar"><img src="../../../../assets/images/icons/mail.png"></a></td>
-    </tr>
-    <tr class="info">
-      <td><a href="https://api.whatsapp.com/send?phone=5491127778899">11 2777 8899</a></td>
-      <td><a href="tel:+5491149250262">4925 0262</a></td>
-      <td><a href="https://www.facebook.com/ReposteriaDeLasArtes">/ReposteriaDelasArtes</a></td>
-      <td><a href="https://www.instagram.com/ReposteriaDeLasArtes">@ReposteriaDelasArtes</a></td>
-      <td><a href="mailto:info@delasartes.com.ar">info@delasartes.com.ar</a></td>
-    </tr>
-  </tbody>
-</table>
+  <div>
+  <h1 #contact>Contacto</h1>
+  <p>
+    ¡Encontranos en cualquiera de estos medios!
+  </p>
+  <div class='chip-container'>
+
+    <mat-chip-list>
+        <mat-chip (tap)="open('https://api.whatsapp.com/send?phone=5491127778899')">
+          <img src="../../../../assets/images/icons/whapp.png">11 2777 8899
+        </mat-chip>
+        <mat-chip (tap)="open('tel:+5491149250262')">
+          <img src="../../../../assets/images/icons/phone.png">4925 0262
+        </mat-chip>
+        <mat-chip (tap)="open('https://www.facebook.com/ReposteriaDeLasArtes')">
+          <img src="../../../../assets/images/icons/fb.png">/ReposteriaDelasArtes
+        </mat-chip>
+        <mat-chip (tap)="open('https://www.instagram.com/ReposteriaDeLasArtes')">
+          <img src="../../../../assets/images/icons/insta.png">@ReposteriaDelasArtes
+        </mat-chip>
+        <mat-chip (tap)="open('mailto:info@delasartes.com.ar')">
+          <img src="../../../../assets/images/icons/mail.png">info@delasartes.com.ar
+        </mat-chip>
+    </mat-chip-list>
+  </div>
+
+  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d40509.165163836115!2d-58.42386838681868!3d-34.620141749222064!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x36138e4afdfc67e8!2sDe+las+Artes!5e0!3m2!1sen!2snz!4v1503363586219" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+</div>
 </div>

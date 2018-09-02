@@ -11,5 +11,7 @@ export class ContactComponent implements OnInit {
 
   ngOnInit() {
   }
-
+  open(url: string) {
+    window.location.assign(url);
+  }
 }
