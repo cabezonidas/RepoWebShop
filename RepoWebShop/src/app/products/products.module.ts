@@ -38,7 +38,8 @@ const productRoutes: Routes = [
     PriceComparisonComponent, ProductCarouselPreviewComponent, ProductPreviewComponent, SoonestPickupComponent
   ],
   exports: [
-    ProductCarouselPreviewComponent
+    ProductCarouselPreviewComponent,
+    SoonestPickupComponent
   ],
   entryComponents: [ChooseItemComponent],
 })

@@ -2,7 +2,7 @@
   <div class="header-text">
     <mat-card-title >{{ product.name }}</mat-card-title>
   </div>
-  <app-product-carousel-preview *ngIf="product.flickrAlbumId" [albumId]="product.flickrAlbumId"></app-product-carousel-preview>
+  <app-product-carousel-preview *ngIf="product.flickrAlbumId" [albumId]="product.flickrAlbumId" [itemId]="product.pieDetailId"></app-product-carousel-preview>
   <div class="footer">
     <mat-card-content>
       <p> {{ product.shortDescription }} </p>

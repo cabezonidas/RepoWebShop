@@ -20,6 +20,7 @@ import { IProduct } from '../../interfaces/iproduct';
 export class ProductCarouselPreviewComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   @Input() albumId: string;
+  @Input() itemId: number;
 
   constructor(private images: ImagesService, private store: Store<fromProduct.State>) { }
 
@@ -32,7 +33,7 @@ export class ProductCarouselPreviewComponent implements OnInit, AfterViewChecked
   ngAfterViewChecked(): void {
     if (this.currentAlbum && !this.albumInit) {
       this.albumInit = true;
-      M.Carousel.init(document.getElementById(this.albumId), { });
+      M.Carousel.init(document.getElementById(this.albumId + '-' + this.itemId), { });
     }
   }
 

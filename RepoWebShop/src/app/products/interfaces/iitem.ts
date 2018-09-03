@@ -13,4 +13,5 @@ export interface IItem {
     displayName: string;
     displayDescription: string;
     pickUpAsHtml: string;
+    estimation: Date;
 }

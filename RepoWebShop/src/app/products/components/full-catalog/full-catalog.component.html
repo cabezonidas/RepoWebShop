@@ -1,23 +1,26 @@
-<section>
+<section *ngIf="items && items.length">
 
-  <div *ngIf="products$">
+  <div class="container" >
     <h1>Catálogo Completo</h1>
 
-    <!-- <mat-form-field >
-    </mat-form-field> -->
-    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar">
+    <mat-form-field >
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar"
+        autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off"
+      >
+    </mat-form-field>
 
-    <table mat-table [dataSource]="items" class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
       
       <ng-container matColumnDef="displayName">
-        <th mat-header-cell *matHeaderCellDef> Producto </th>
+        <th mat-header-cell *matHeaderCellDef>
+          <h2>Todos los productos</h2>
+        </th>
         <td mat-cell *matCellDef="let element">
           <div>
-            <h5>{{ element.displayName }}</h5>
+            <h3>{{ element.displayName }}</h3>
             <div>{{ element.displayDescription }}</div>
-            <div>Porciones: {{ element.portions }}</div>
-            <div>Elaboración: {{ element.preparationTime}} hs</div>
-            <app-soonest-pickup></app-soonest-pickup>
+            <div>Porciones: {{ element.portions }} Elaboración: {{ element.preparationTime}} hs</div>
+            <app-soonest-pickup [soonestPickup]="element.estimation"></app-soonest-pickup>
           </div>
         </td>
       </ng-container>

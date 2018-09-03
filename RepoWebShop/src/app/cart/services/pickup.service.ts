@@ -10,7 +10,7 @@ import { IPickupDate } from '../interfaces/ipickup-date';
 export class PickupService {
 
   constructor(private http: HttpClient) { }
-  
+
   loadPickupOptions = () => (this.http.get('/api/_cartPickup/pickUpOptionsByDay') as Observable<Array<IPickupOption>>);
   setPickupOption = (ticksId: string) => this.http.post<IPickupDate>('/api/_cartPickup/setPickUpOption', ticksId);
   getPickupOption = () => this.http.get<IPickupDate>('/api/_cartPickup/getPickUpOption');

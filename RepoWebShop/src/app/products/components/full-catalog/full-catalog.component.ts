@@ -1,38 +1,49 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { IItem } from '../../interfaces/iitem';
 import { IProduct } from '../../interfaces/iproduct';
 import { MatTableDataSource } from '@angular/material';
+import { Store } from '@ngrx/store';
+import * as fromProduct from '../../state';
+import * as fromStore from '../../../cart/store';
 
 @Component({
   selector: 'app-full-catalog',
   templateUrl: './full-catalog.component.html',
   styleUrls: ['./full-catalog.component.scss']
 })
-export class FullCatalogComponent implements OnInit {
+export class FullCatalogComponent implements OnInit, OnChanges {
 
-  @Input() products$: Array<IProduct>;
+  @Input() products: Array<IProduct>;
 
-  items;
+  dataSource: MatTableDataSource<IItem>;
+  items: Array<IItem>;
 
   displayedColumns: string[] = [
     'displayName',
     'action'
   ];
 
-  constructor() {}
+  constructor(private store: Store<fromProduct.State>) {}
 
   ngOnInit() {
-    const items: Array<IItem> = [];
-    this.products$.forEach(x => x.items.forEach(y => items.push(y)));
-    this.items = new MatTableDataSource(items);
+    this.feedTable();
+  }
+  ngOnChanges() {
+    this.feedTable();
   }
 
-  addToCart(id: MouseEvent): void {
-    // this.cart.addProductToCart(id);
+  feedTable = () => {
+    this.items = [];
+    this.products.forEach(x => x.items.forEach(y => this.items.push(y)));
+    this.dataSource = new MatTableDataSource(this.items);
+  }
+
+  addToCart(id: number): void {
+    this.store.dispatch(new fromStore.AddItem(id));
   }
 
   applyFilter(filterValue: string) {
-    this.items.filter = filterValue.trim().toLowerCase();
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
 }

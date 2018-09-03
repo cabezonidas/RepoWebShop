@@ -21,7 +21,11 @@ export class ProductEffects {
         ofType(productActions.ProductActionTypes.LoadProducts),
         mergeMap((action: productActions.LoadProducts) => this.productService.getProducts().pipe(
             map((products: IProduct[]) => {
-                products.forEach(product => this.store.dispatch(new productActions.LoadAlbum(product.flickrAlbumId)));
+                products.forEach(product => {
+                    if (product.flickrAlbumId) {
+                        this.store.dispatch(new productActions.LoadAlbum(product.flickrAlbumId));
+                    }
+                });
                 return new productActions.LoadProductsSuccess(products);
             }),
             catchError(err => of(new productActions.LoadProductsFail(err)))

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using System;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace RepoWebShop.FeModels
 {
@@ -33,5 +34,6 @@ namespace RepoWebShop.FeModels
 
 		[BindNever]
 		public string DisplayDescription { get; set; }
+		public DateTime Estimation { get; internal set; }
 	}
 }

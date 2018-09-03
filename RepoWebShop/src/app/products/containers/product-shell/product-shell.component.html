@@ -1,10 +1,11 @@
 <div class='product-shell'>
     <!-- <mat-card-title>Productos</mat-card-title> -->
-    <div *ngIf="products$ | async as products">
+    <div *ngIf="items$ | async as products">
         <mat-spinner *ngIf="!products.length"> </mat-spinner>
         <div *ngFor="let product of products" class='products'>
             <app-product-preview *ngIf="product.flickrAlbumId" [product]="product">
             </app-product-preview>
         </div>
     </div>
+    <app-full-catalog [products]="products$ | async"></app-full-catalog>
 </div>

@@ -30,5 +30,9 @@ namespace RepoWebShop.FeApi
 		[HttpGet]
 		[Route("PublicCalendar")]
 		public OpenHoursViewModel PublicCalendar() => _calendar.PublicCalendar();
+
+		[HttpGet]
+		[Route("ReadyFor/{hours}")]
+		public DateTime ReadyFor(int hours) => _calendar.GetPickupEstimate(hours);
 	}
 }

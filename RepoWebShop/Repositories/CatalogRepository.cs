@@ -136,9 +136,6 @@ namespace RepoWebShop.Models
                 result.OldPrice = vm.Price != existingProduct.Price ? existingProduct.Price : existingProduct.OldPrice;
                 result.OldPriceInStore = vm.PriceInStore != existingProduct.PriceInStore ? existingProduct.PriceInStore : existingProduct.OldPriceInStore;
             }
-
-            //result.Description = result.Description.ToTitleCase();
-            //result.Name = result.Name.ToTitleCase();
             result.Category = result.Category.ToTitleCase();
             result.Flavour = result.Flavour.ToTitleCase();
             result.SizeDescription = result.SizeDescription.ToTitleCase();
@@ -177,8 +174,14 @@ namespace RepoWebShop.Models
 
 		public IEnumerable<_Product> ProductsGroupedByParent()
 		{
-			var _items = GetAvailableToBuyOnline().Select(x => _mapper.Map<Product, _Item>(x));
-			IEnumerable<_Product> _products = _pieDetailRepository.PieDetails.Where(x => x.IsActive).ToArray().Select(x => _mapper.Map<PieDetail, _Product>(x));
+			IEnumerable<_Item> _items = new List<_Item>().AsEnumerable();
+			foreach(var item in GetAvailableToBuyOnline().OrderBy(x => x.DisplayName))
+			{
+				var _item = _mapper.Map<Product, _Item>(item);
+				_item.Estimation = _calendarRepository.GetPickupEstimate(item.PreparationTime);
+				_items = _items.Append(_item);
+			}
+			IEnumerable<_Product> _products = _pieDetailRepository.PieDetails.ToArray().Select(x => _mapper.Map<PieDetail, _Product>(x)).OrderBy(x => x.Name.TrimStart());
 
 			var result = _products.Select(x =>
 			{

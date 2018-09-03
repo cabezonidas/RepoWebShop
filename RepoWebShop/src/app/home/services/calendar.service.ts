@@ -64,4 +64,8 @@ export class CalendarService {
   spDay = (date: Date): string => {
     return `${this.day((date.getDay()))} ${date.getDate()} de ${this.month(date.getMonth())}`;
   }
+
+  soonestPickup = (date: Date): string => {
+    return `el ${this.day((date.getDay()))} ${date.getDate()} a las ${date.getHours()}:${date.getMinutes()}`;
+  }
 }
