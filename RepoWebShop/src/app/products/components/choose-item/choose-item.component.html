@@ -1,10 +1,26 @@
+<h1>Opciones</h1>
 <table>
   <tr *ngFor="let item of items$">
     <td class="description">
-      <div>{{ item.flavour }} {{ item.sizeDescription }}</div>
-      <div>Porciones: {{ item.portions }}</div>
-      <div [innerHTML]="item.pickUpAsHtml"></div>
+      <div> {{ item.displayName }} <strong>${{ item.price }}</strong>
+        <small class="discount" *ngIf="item.price < item.priceInStore">
+          -${{item.priceInStore - item.price}}
+        </small>
+      </div>
+      <div><small>Porciones: {{ item.portions }}</small></div>
+      <div><small>Elaboración: {{ item.preparationTime}}hs</small></div>
     </td>
-    <td class="nuyButton"><button mat-raised-button (click)="addToCart(item.productId)" color="primary" >Comprar</button></td>
+    <td class="buyButton">
+      <h3 [ngClass]="item.price < item.priceInStore ? 'green' : ''">${{ item.price }}</h3>
+      <button mat-raised-button (click)="addToCart(item.productId)" color="primary" >Comprar</button>
+      <div>
+        <small class="priceInStore" *ngIf="item.price < item.priceInStore">
+          Sucursal ${{ item.priceInStore }}
+        </small>
+      </div>
+    </td>
   </tr>
 </table>
+<div>
+  *Las opciones de envío y/o retiro las elegís al finalizar la compra.
+</div>

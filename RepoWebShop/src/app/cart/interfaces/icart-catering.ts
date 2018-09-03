@@ -1,4 +1,4 @@
-import { ILunch } from "./ilunch";
+import { ILunch } from './ilunch';
 
 export interface ICartCatering {
     shoppingCartComboCateringId: number;

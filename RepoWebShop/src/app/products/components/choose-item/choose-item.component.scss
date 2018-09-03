@@ -1,9 +1,37 @@
 table {
     width: 100%;
+    tr:nth-child(even) {
+        color: #460b07;
+    }
+    tr:nth-child(odd) {
+        color: #460b07
+    }
 }
     .description {
         width: 100%;
     }
     .buyButton {
+        text-align: center;
         width: 100%;
+        h3 {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        .green {
+            color: green;
+        }
     }
+
+.discount {
+    background-color: green;
+    color: white;
+    padding-left: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-right: 10px;
+    vertical-align: top;
+    border-radius: 4px;
+}
+.priceInStore {
+    color: red;
+}
