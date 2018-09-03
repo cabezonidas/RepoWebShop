@@ -6,13 +6,17 @@ export interface ItemState {
     loaded: boolean;
     loading: boolean;
     error: any;
+    newItemAdded: boolean;
+    newItemRemoved: boolean;
 }
 
 export const initialState: ItemState = {
     items: [],
     loaded: false,
     loading: false,
-    error: null
+    error: null,
+    newItemAdded: false,
+    newItemRemoved: false
 };
 
 export function reducer(state = initialState, action: fromItems.ItemActions): ItemState {
@@ -22,7 +26,7 @@ export function reducer(state = initialState, action: fromItems.ItemActions): It
         case fromItems.ItemActionTypes.Remove:
         return {
             ...state,
-            loading: true,
+            loading: true
         };
 
         case fromItems.ItemActionTypes.LoadSuccess:
@@ -32,7 +36,7 @@ export function reducer(state = initialState, action: fromItems.ItemActions): It
             ...state,
             items: action.payload,
             loading: false,
-            loaded: true,
+            loaded: true
         };
 
         case fromItems.ItemActionTypes.LoadFail:
@@ -42,7 +46,7 @@ export function reducer(state = initialState, action: fromItems.ItemActions): It
             ...state,
             error: action.payload,
             loading: false,
-            loaded: true,
+            loaded: true
         };
         default:
             return state;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Effect, Actions } from '@ngrx/effects';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { map, switchMap, catchError, share } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import * as itemActions from '../actions/items.action';
@@ -44,7 +44,8 @@ export class ItemsEffects {
           ]),
           catchError(error => of(new itemActions.AddItemFail(error)))
         );
-    })
+    }),
+    share()
   );
 
   @Effect()
@@ -63,7 +64,8 @@ export class ItemsEffects {
           ]),
           catchError(error => of(new itemActions.RemoveItemFail(error)))
         );
-    })
+    }),
+    share()
   );
 }
 //   @Effect()

@@ -15,29 +15,47 @@ import { Router } from '@angular/router';
 export class SnackbarComponent implements OnInit, OnDestroy {
 
   snackBarRef: MatSnackBarRef<any>;
-  snackBarRefSub = new Subscription();
 
   itemAddedSub = new Subscription();
+  itemRemoveSub = new Subscription();
+  cateringAddedSub = new Subscription();
+  cateringRemovedSub = new Subscription();
+
   constructor(
+    private store: Store<fromStore.CartState>,
     private router: Router,
     public snackBar: MatSnackBar,
-    private itemEffects: fromEffects.ItemsEffects
+    private itemEffects: fromEffects.ItemsEffects,
+    private cateringEffects: fromEffects.CateringsEffects
   ) { }
 
   ngOnInit() {
-    this.itemAddedSub = this.itemEffects.addItem$.pipe(filter(action => action.type === fromStore.ItemActionTypes.AddSuccess))
-      .subscribe(() => this.openSnackBar('Item agregado!'));
+    this.itemAddedSub = this.itemEffects.addItem$
+      .pipe(filter(action => action.type === fromStore.ItemActionTypes.AddSuccess))
+      .subscribe(() => this.openSnackBar('¡Item agregado!'));
+    this.itemRemoveSub = this.itemEffects.removeItem$
+      .pipe(filter(action => action.type === fromStore.ItemActionTypes.RemoveSuccess))
+      .subscribe(() => this.openSnackBar('¡Item quitado!'));
+
+    this.cateringAddedSub = this.cateringEffects.addCatering$
+      .pipe(filter(action => action.type === fromStore.CateringActionTypes.AddCateringSuccess))
+      .subscribe(() => this.openSnackBar('¡Catering agregado!'));
+    this.cateringRemovedSub = this.cateringEffects.removeCatering$
+      .pipe(filter(action => action.type === fromStore.CateringActionTypes.RemoveCateringSuccess))
+      .subscribe(() => this.openSnackBar('¡Catering quitado!'));
   }
 
   ngOnDestroy() {
-    this.snackBarRefSub.unsubscribe();
     this.itemAddedSub.unsubscribe();
+    this.itemRemoveSub.unsubscribe();
+    this.cateringAddedSub.unsubscribe();
+    this.cateringRemovedSub.unsubscribe();
   }
 
   openSnackBar = (msg: string) => {
     const action = this.router.url !== '/cart' ? 'Ir al carrito' : null;
-    this.snackBarRef = this.snackBar.open(msg, action, {duration: 3000});
-    this.snackBarRef.onAction().subscribe(() => {
+    const snackBarRef = this.snackBar.open(msg, action, {duration: 3000});
+    snackBarRef.onAction().subscribe(() => {
       this.router.navigateByUrl('/cart');
     });
   }

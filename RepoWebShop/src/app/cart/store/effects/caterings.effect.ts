@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as fromTotals from '../actions/totals.action';
 
 import { Effect, Actions } from '@ngrx/effects';
-import { map, switchMap, catchError, tap } from 'rxjs/operators';
+import { map, switchMap, catchError, tap, share } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import * as cateringActions from '../actions/caterings.action';
@@ -44,7 +44,8 @@ export class CateringsEffects {
           ]),
           catchError(error => of(new cateringActions.AddCateringFail(error)))
         );
-    })
+    }),
+    share()
   );
 
   @Effect()
@@ -63,6 +64,7 @@ export class CateringsEffects {
           ]),
           catchError(error => of(new cateringActions.RemoveCateringFail(error)))
         );
-    })
+    }),
+    share()
   );
 }

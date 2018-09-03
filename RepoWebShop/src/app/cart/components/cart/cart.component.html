@@ -1,8 +1,5 @@
 <div class="form-container">
     <mat-card>
-      <mat-card-header>
-        <a routerLink="/login">Volver</a>
-      </mat-card-header>
       <mat-card-title>
         <div class='logo'>
           <img src='../../../../assets/images/logoRepo.PNG'>
@@ -32,9 +29,6 @@
             <app-discount [savedDiscount]="discount$ | async" [discountsLoaded]="discountsLoaded$ | async" [discountsLoading]="discountsLoading$ | async" 
             (next)="_onNext()" (clearDiscount)="clearDiscount()" (applyDiscount)="applyDiscount($event)" ></app-discount>
           </mat-step>
-        <!-- <mat-step >
-          <ng-template matStepLabel>Comentarios</ng-template>
-        </mat-step> -->
         <mat-step >
           <ng-template matStepLabel>Retiro / Entrega</ng-template>
           <app-pickup-options-shell></app-pickup-options-shell>

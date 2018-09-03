@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { LoadingComponent } from './components/loading/loading.component';
 import { MaterialModule } from '../material/material.module';
 import { SnackbarComponent } from './components/snackbar/snackbar.component';
+import { TrolleyIconComponent } from './components/trolley-icon/trolley-icon.component';
+import { TrolleyIconShellComponent } from './containers/trolley-icon-shell/trolley-icon-shell.component';
 
 @NgModule({
   imports: [
@@ -11,8 +13,10 @@ import { SnackbarComponent } from './components/snackbar/snackbar.component';
   ],
   exports: [
     LoadingComponent,
-    SnackbarComponent
+    SnackbarComponent,
+    TrolleyIconComponent,
+    TrolleyIconShellComponent
   ],
-  declarations: [LoadingComponent, SnackbarComponent]
+  declarations: [LoadingComponent, SnackbarComponent, TrolleyIconComponent, TrolleyIconShellComponent]
 })
 export class SharedModule { }
