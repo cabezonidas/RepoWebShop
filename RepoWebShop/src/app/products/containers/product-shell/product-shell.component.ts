@@ -6,6 +6,8 @@ import * as fromProduct from '../../state';
 import * as productActions from '../../state/product.actions';
 import { IProduct } from '../../interfaces/iproduct';
 import { filter, map, tap } from 'rxjs/operators';
+import { CalendarService } from '../../../home/services/calendar.service';
+import * as moment from 'moment-timezone';
 
 @Component({
   templateUrl: './product-shell.component.html',
@@ -17,7 +19,7 @@ export class ProductShellComponent implements OnInit {
   items$: Observable<IProduct[]>;
   errorMessage$: Observable<string>;
 
-  constructor(private store: Store<fromProduct.State>) {}
+  constructor(private store: Store<fromProduct.State>, private calendar: CalendarService) {}
 
   ngOnInit(): void {
     this.store.dispatch(new productActions.LoadProducts());

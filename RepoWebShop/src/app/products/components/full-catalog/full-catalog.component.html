@@ -19,8 +19,9 @@
           <div>
             <h3>{{ element.displayName }}</h3>
             <div>{{ element.displayDescription }}</div>
-            <div>Porciones: {{ element.portions }} Elaboración: {{ element.preparationTime}} hs</div>
-            <app-soonest-pickup [soonestPickup]="element.estimation"></app-soonest-pickup>
+            <h5>Porciones: {{ element.portions }} / Elaboración: {{ element.preparationTime}} hs</h5>
+            <app-soonest-pickup [soonestPickup]="soonestPickup(element.estimation)"></app-soonest-pickup>
+            <br>
           </div>
         </td>
       </ng-container>

@@ -7,8 +7,8 @@
           -${{item.priceInStore - item.price}}
         </small>
       </div>
-      <div><small>Porciones: {{ item.portions }} Elaboración: {{ item.preparationTime}}hs</small></div>
-      <app-soonest-pickup [soonestPickup]="item.estimation"></app-soonest-pickup>
+      <h5>Porciones: {{ item.portions }} / Elaboración: {{ item.preparationTime}}hs</h5>
+      <app-soonest-pickup [soonestPickup]="soonestPickup(item.estimation)"></app-soonest-pickup>
     </td>
     <td class="buyButton">
       <h3 [ngClass]="item.price < item.priceInStore ? 'green' : ''">${{ item.price }}</h3>

@@ -10,11 +10,9 @@ import { CalendarService } from '../../../home/services/calendar.service';
 })
 export class SoonestPickupComponent implements OnInit {
 
-  @Input() soonestPickup: Date;
+  @Input() soonestPickup: string;
   constructor(private calendar: CalendarService) { }
 
   ngOnInit() {
   }
-
-  friendlyPickup = () => this.calendar.soonestPickup(new Date(this.soonestPickup));
 }

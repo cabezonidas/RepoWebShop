@@ -1,3 +1,12 @@
-<small *ngIf="soonestPickup">
-  Podés encargarlo para {{friendlyPickup()}} o más adelante
-</small>
+<div *ngIf="soonestPickup">
+  <div>
+    <small> 
+      Lo más temprano que podemos tenerlo es {{soonestPickup}}.
+    </small>
+  </div>
+  <div>
+    <small> 
+        Si querés otra fecha, elegila al finalizar la compra.
+    </small>
+  </div>
+</div>

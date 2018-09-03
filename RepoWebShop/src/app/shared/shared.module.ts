@@ -5,13 +5,16 @@ import { MaterialModule } from '../material/material.module';
 import { SnackbarComponent } from './components/snackbar/snackbar.component';
 import { TrolleyIconComponent } from './components/trolley-icon/trolley-icon.component';
 import { TrolleyIconShellComponent } from './containers/trolley-icon-shell/trolley-icon-shell.component';
+import { MomentModule } from 'ngx-moment';
 
 @NgModule({
   imports: [
     CommonModule,
-    MaterialModule
+    MaterialModule,
+    MomentModule
   ],
   exports: [
+    MomentModule,
     LoadingComponent,
     SnackbarComponent,
     TrolleyIconComponent,

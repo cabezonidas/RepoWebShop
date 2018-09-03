@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material';
 import { Store } from '@ngrx/store';
 import * as fromProduct from '../../state';
 import * as fromStore from '../../../cart/store';
+import { CalendarService } from '../../../home/services/calendar.service';
 
 @Component({
   selector: 'app-full-catalog',
@@ -23,7 +24,7 @@ export class FullCatalogComponent implements OnInit, OnChanges {
     'action'
   ];
 
-  constructor(private store: Store<fromProduct.State>) {}
+  constructor(private store: Store<fromProduct.State>, private calendar: CalendarService) {}
 
   ngOnInit() {
     this.feedTable();
@@ -46,4 +47,5 @@ export class FullCatalogComponent implements OnInit, OnChanges {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  soonestPickup = (date: Date) => this.calendar.soonestPickup(new Date(date));
 }

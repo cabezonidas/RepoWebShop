@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IPublicCalendar } from '../interfaces/ipublic-calendar';
 import { IWorkingHour } from '../interfaces/iworking-hour';
-import { IPublicHoliday } from '../interfaces/ipublic-holiday';
+import * as moment from 'moment-timezone';
 
 @Injectable({
   providedIn: 'root'
@@ -65,7 +65,28 @@ export class CalendarService {
     return `${this.day((date.getDay()))} ${date.getDate()} de ${this.month(date.getMonth())}`;
   }
 
-  soonestPickup = (date: Date): string => {
-    return `el ${this.day((date.getDay()))} ${date.getDate()} a las ${date.getHours()}:${date.getMinutes()}`;
+  soonestPickup = (estimation: Date): string => {
+
+    estimation = new Date(estimation);
+    const baTime = new Date(moment().tz('America/Argentina/Buenos_Aires').format('l LT'));
+    const baTimeTomorrow = new Date(moment().tz('America/Argentina/Buenos_Aires').add(1, 'days').format('l LT'));
+
+    let minutes = estimation.getMinutes().toString();
+    minutes = minutes.length === 1 ? '0' + minutes : minutes;
+    let hours = estimation.getHours().toString();
+    hours = hours.length === 1 ? '0' + hours : hours;
+
+    let day = `el ${this.day((estimation.getDay()))} ${estimation.getDate()} `;
+    const time = `a las ${hours}:${minutes}`;
+
+    if (estimation.getMonth() === baTime.getMonth() && estimation.getDate() === baTime.getDate()) {
+      day = 'hoy ';
+    }
+
+    if (estimation.getMonth() === baTimeTomorrow.getMonth() && estimation.getDate() === baTimeTomorrow.getDate()) {
+      day = 'mañana ';
+    }
+
+    return day + time;
   }
 }
