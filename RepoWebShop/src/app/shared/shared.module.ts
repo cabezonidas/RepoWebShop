@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoadingComponent } from './components/loading/loading.component';
 import { MaterialModule } from '../material/material.module';
+import { SnackbarComponent } from './components/snackbar/snackbar.component';
 
 @NgModule({
   imports: [
@@ -9,8 +10,9 @@ import { MaterialModule } from '../material/material.module';
     MaterialModule
   ],
   exports: [
-    LoadingComponent
+    LoadingComponent,
+    SnackbarComponent
   ],
-  declarations: [LoadingComponent]
+  declarations: [LoadingComponent, SnackbarComponent]
 })
 export class SharedModule { }

@@ -2,25 +2,25 @@
   <mat-sidenav-container class="left-container" (backdropClick)="close('backdrop')">
     <mat-sidenav #sidenav (keydown.escape)="close('escape')" disableClose>
       <mat-card>
-        <mat-card-title color="primary" routerLink="/start" (tap)="close('toggle button')">De las Artes</mat-card-title>
+        <mat-card-title color="primary" routerLink="/start" (tap)="close()">De las Artes</mat-card-title>
       </mat-card>
       <mat-nav-list>
-        <a mat-list-item (tap)="close('toggle button')" routerLink='/profile'>
+        <a mat-list-item (tap)="close()" routerLink='/profile'>
           <mat-icon matListIcon>person</mat-icon>Perfil
         </a>
-        <a mat-list-item (tap)="close('toggle button')" routerLink='/products'>
+        <a mat-list-item (tap)="close()" routerLink='/products'>
           <mat-icon matListIcon>cake</mat-icon>¡Comprar!
         </a>
-        <a mat-list-item (tap)="close('toggle button')" routerLink='/catering-options'>
+        <a mat-list-item (tap)="close()" routerLink='/catering-options'>
           <mat-icon matListIcon>restaurant_menu</mat-icon>
           Catering
         </a>
-        <a mat-list-item (tap)="close('toggle button')" routerLink='/cart'>
+        <a mat-list-item (tap)="close()" routerLink='/cart'>
           <mat-icon matListIcon>shopping_cart</mat-icon>
           Carrito
         </a>
       </mat-nav-list>
-      <button mat-raised-button (click)="close('toggle button')" color="primary" class='closeButton'>Cerrar</button>
+      <button mat-raised-button (click)="close()" color="primary" class='closeButton'>Cerrar</button>
     </mat-sidenav>
     
     <mat-sidenav-content>
@@ -34,10 +34,11 @@
             <mat-icon class="icon"  routerLink="/start">home</mat-icon>
           </mat-toolbar-row>
         </mat-toolbar>
-        <div id="content" #content [ngStyle]="{'padding-top.px': heightPadding}" (window:resize)="onResize()">
+        <div id="content" #content [ngStyle]="{'padding-top.px': heightPadding}" (window:resize)="adjustPadding()">
           <router-outlet></router-outlet>
         </div>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container> 
 </div>
+<app-snackbar></app-snackbar>
