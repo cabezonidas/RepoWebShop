@@ -9,8 +9,8 @@ mat-card {
     div.header {
       width: 100%;
       margin: auto;  
-      padding-top: 20px;
-      padding-bottom: 20px;
+      padding-top: 10px;
+      padding-bottom: 10px;
       background-color: #B44848;
       color: papayawhip;
       h3 {
@@ -19,8 +19,32 @@ mat-card {
       h3.suggested {
         color: goldenrod;
       }
-      h4 {
+      p.customerCall {
+        background-color: papayawhip;
+        border-radius: 5px;
+        color: black;
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+      p {
         margin-top: 0px;
+      }
+    }
+    .price {
+      .onLine {
+        font-size: 3em;
+      }
+      .moneySaved {
+        color: white;
+        vertical-align: top;
+        background-color: green;
+        padding-right: 10px;
+        padding-left: 5px;
+        border-radius: 5px;
+      }
+      .inStore {
+        color: red;
+        font-size: 0.8em;
       }
     }
     mat-card-content {
@@ -31,6 +55,17 @@ mat-card {
     }
     mat-card-actions {
       padding: 20px;
+      padding-bottom: 10px;
+      margin-bottom: 0;
+    }
+    div.footer {
+      width: 100%;
+      margin: auto;  
+      margin-top: 20px;  
+      padding-top: 20px;
+      padding-bottom: 20px;
+      background-color: #B44848;
+      color: papayawhip;
     }
   }
 }

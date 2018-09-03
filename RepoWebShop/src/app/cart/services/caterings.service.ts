@@ -10,13 +10,13 @@ import { Observable } from 'rxjs';
 export class CateringsService {
 
   constructor(private http: HttpClient) {}
-  
+
   getCartCaterings = () => this.http.get<ICartCatering[]>('/api/_cartCaterings/all')
-    .pipe(catchError((error: any) => Observable.throw(error.json())));
+    .pipe(catchError((error: any) => Observable.throw(error.json())))
 
   addCatering = (cateringId: number) => this.http.post<ICartCatering[]>('/api/_cartCaterings/add', cateringId)
-    .pipe(catchError((error: any) => Observable.throw(error.json())));
+    .pipe(catchError((error: any) => Observable.throw(error.json())))
 
   removeCatering = (cateringId: number) => this.http.post<ICartCatering[]>('/api/_cartCaterings/remove', cateringId)
-    .pipe(catchError((error: any) => Observable.throw(error.json())));
+    .pipe(catchError((error: any) => Observable.throw(error.json())))
 }

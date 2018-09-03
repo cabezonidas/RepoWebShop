@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ICatering } from '../../interfaces/ICatering';
+import { CalendarService } from '../../../home/services/calendar.service';
 
 @Component({
   selector: 'app-catering-option',
@@ -9,10 +10,10 @@ import { ICatering } from '../../interfaces/ICatering';
 export class CateringOptionComponent implements OnInit {
 
   @Input() catering: ICatering;
-  constructor() { }
+  @Output() addCatering = new EventEmitter<number>();
+  constructor(private calendar: CalendarService) { }
 
   ngOnInit() {
-    console.log(this.catering);
   }
-
+  soonestPickup = (date: Date) => this.calendar.soonestPickup(new Date(date));
 }

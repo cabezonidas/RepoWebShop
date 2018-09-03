@@ -30,5 +30,11 @@ namespace RepoWebShop.FeModels
 		public int EventDuration { get; set; }
 
 		public int Attendants { get; set; }
+
+		public decimal Price { get; set; }
+
+		public decimal PriceInStore { get; set; }
+
+		public DateTime Estimation { get; set; }
 	}
 }

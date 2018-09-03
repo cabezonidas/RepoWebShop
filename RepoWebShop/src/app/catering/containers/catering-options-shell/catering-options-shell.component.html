@@ -14,9 +14,9 @@
         <mat-icon aria-label="">arrow_forward_io</mat-icon>
     </button>
     
-    <ngx-slick class="accent" #slickModal="slick-modal" [config]="slideConfig" (afterChange)="afterChange($event)">
+    <ngx-slick class="accent" #slickModal="slick-modal" [config]="slideConfig">
         <div ngxSlickItem *ngFor="let catering of caterings$ | async" class="slide">
-            <app-catering-option [catering]="catering"></app-catering-option>
+            <app-catering-option [catering]="catering" (addCatering)="addCatering($event)"></app-catering-option>
         </div>
     </ngx-slick>
     

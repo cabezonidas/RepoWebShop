@@ -75,15 +75,6 @@ namespace RepoWebShop.FeApi
 			return catering;
 		}
 
-		[HttpGet]
-		[Route("AvailableCaterings")]
-		public async Task<IEnumerable<_Catering>> AvailableCaterings()
-		{
-			IEnumerable<Lunch> caterings = await _catering.GetAllLunchesAsync(x => x.IsCombo);
-			IEnumerable<_Catering> result = caterings.Select(c => _cart.Map(c));
-			return result;
-		}
-
 		[HttpPost]
 		[Route("AddToCart")]
 		public async Task<IActionResult> AddToCart(int id)

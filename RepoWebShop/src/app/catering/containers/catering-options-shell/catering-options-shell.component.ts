@@ -6,6 +6,7 @@ import * as fromCatering from '../../state';
 import * as cateringActions from '../../state/catering.actions';
 import { ICatering } from '../../interfaces/ICatering';
 import { moveIn } from '../../../animations/router.animations';
+import * as fromStore from '../../../cart/store';
 
 @Component({
   selector: 'app-catering-options-shell',
@@ -34,15 +35,5 @@ export class CateringOptionsShellComponent implements OnInit {
     this.caterings$ = this.store.pipe(select(fromCatering.getCaterings));
   }
 
-  addSlide() {
-    console.log('addSlide');
-  }
-
-  removeSlide() {
-    console.log('removeSlide');
-  }
-
-  afterChange(e) {
-    console.log('afterChange');
-  }
+  addCatering = (id: number) => this.store.dispatch(new fromStore.AddCatering(id));
 }

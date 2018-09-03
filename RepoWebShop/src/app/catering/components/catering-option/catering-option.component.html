@@ -1,20 +1,39 @@
 <mat-card class="card">
   <div class='content'>
     <div class="header">
-      <h3>{{ catering.title }}</h3>
       <h3 class="suggested" *ngIf="catering.isGeneric">
         ¡Recomendado!
       </h3>
-      <h4>{{ catering.description }}</h4>
+      <p class="customerCall" *ngIf="!catering.isGeneric">
+        Elegido por nuestros clientes
+      </p>
+      <p>{{ catering.title }}</p>
+      <p>{{ catering.description }}</p>
     </div>
     <mat-card-content>
       <div class="item" *ngFor="let item of catering.items">
-          {{ item.itemCount }} {{ item.item.displayName }}
+        {{ item.itemCount }} {{ item.item.displayName }}
       </div>
     </mat-card-content>
+    <div class="price">
+      <div >
+        <span class="onLine">${{catering.price}}</span>
+        <span *ngIf="catering.price < catering.priceInStore" class="moneySaved">
+          -${{catering.priceInStore - catering.price}}
+        </span>
+      </div>
+      <div class="inStore" *ngIf="catering.price < catering.priceInStore">${{catering.priceInStore}} en sucursal</div>
+    </div>
     <mat-card-actions>
-      <button mat-raised-button color="accent">Comprar</button>
-      <button mat-raised-button color="accent">Modificar</button>
+      <div></div>
+      <button mat-raised-button color="primary" (tap)="addCatering.emit(catering.lunchId)">Comprar</button>
+      <button mat-raised-button >Modificar</button>
     </mat-card-actions>
+    <app-soonest-pickup [soonestPickup]="soonestPickup(catering.estimation)"></app-soonest-pickup>
+    <div class="footer">
+      <p *ngIf="catering.attendants && catering.eventDuration">
+        Sugerido para hasta {{ catering.attendants }} comensales, considerando unas {{ catering.eventDuration }} horas de evento
+      </p>
+    </div>
   </div>
 </mat-card>
