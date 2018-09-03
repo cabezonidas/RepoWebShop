@@ -25,8 +25,7 @@ export class SnackbarComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.itemAddedSub = this.itemEffects.addItem$
-      .pipe(filter(action => action.type === fromStore.ItemActionTypes.AddSuccess))
+    this.itemAddedSub = this.itemEffects.addItem$.pipe(filter(action => action.type === fromStore.ItemActionTypes.AddSuccess))
       .subscribe(() => this.openSnackBar('Item agregado!'));
   }
 
