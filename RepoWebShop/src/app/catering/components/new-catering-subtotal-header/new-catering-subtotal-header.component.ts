@@ -1,6 +1,7 @@
 import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { trigger, transition, query, animate, style, stagger, keyframes } from '@angular/animations';
 import { ICatering } from '../../interfaces/ICatering';
+import { CateringService } from '../../services/catering.service';
 
 @Component({
   selector: 'app-new-catering-subtotal-header',
@@ -21,20 +22,13 @@ export class NewCateringSubtotalHeaderComponent implements OnInit, OnChanges {
   @Input() catering: ICatering;
   subtotal = 0;
   subtotalInStore = 0;
-  constructor() { }
+  constructor(private cateringService: CateringService) { }
 
   ngOnInit() {
   }
 
   ngOnChanges() {
-    if (this.catering && this.catering.items && this.catering.miscellanea) {
-      this.subtotal = 0;
-      this.subtotalInStore = 0;
-      this.catering.items.forEach(i => this.subtotal += i.subTotal);
-      this.catering.miscellanea.forEach(i => this.subtotal += i.price);
-      this.catering.items.forEach(i => this.subtotalInStore += i.subTotalInStore);
-      this.catering.miscellanea.forEach(i => this.subtotalInStore += i.price);
-    }
+      this.subtotal = this.cateringService.totalOnline(this.catering);
+      this.subtotalInStore = this.cateringService.totalInStore(this.catering);
   }
-
 }

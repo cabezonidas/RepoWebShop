@@ -1,9 +1,13 @@
 .form-container {
     margin: auto;
+    .logo {
+        text-align: center;
+    }
+    padding-bottom: 100px;
 }
 .logo > img {
     width: 100%;
-    max-width: 280px;
+    max-width: 350px;
 }
 mat-card {
     max-width: 600px;

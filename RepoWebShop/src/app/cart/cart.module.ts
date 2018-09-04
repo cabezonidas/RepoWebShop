@@ -15,7 +15,6 @@ import { reducers, effects } from './store';
 import { DiscountComponent } from './components/discount/discount.component';
 import { TotalsComponent } from './components/totals/totals.component';
 import { ProductsComponent } from './components/products/products.component';
-import { ProductSubtotalComponent } from './components/shared/product-subtotal/product-subtotal.component';
 import { InvoiceComponent } from './components/invoice/invoice.component';
 import { CommentsComponent } from './components/comments/comments.component';
 import { ReservationComponent } from './components/reservation/reservation.component';
@@ -35,7 +34,6 @@ const cartRoutes: Routes = [
         DiscountComponent,
         TotalsComponent,
         ProductsComponent,
-        ProductSubtotalComponent,
         InvoiceComponent,
         CommentsComponent,
         ReservationComponent

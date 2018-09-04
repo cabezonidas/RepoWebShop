@@ -14,9 +14,11 @@ import { EffectsModule } from '@ngrx/effects';
 import { reducer } from './state/product.reducer';
 import { ProductEffects } from './state/product.effects';
 import { ProductShellComponent } from './containers/product-shell/product-shell.component';
+import { FullCatalogShellComponent } from './containers/full-catalog-shell/full-catalog-shell.component';
 
 const productRoutes: Routes = [
   { path: 'products', component: ProductShellComponent } ,
+  { path: 'all-items', component: FullCatalogShellComponent } ,
   // { path: 'products/:id', component: DetailsComponent }
 ];
 
@@ -35,7 +37,7 @@ const productRoutes: Routes = [
   ],
   declarations: [
     ProductShellComponent, ChooseItemComponent, FullCatalogComponent,
-    PriceComparisonComponent, ProductCarouselPreviewComponent, ProductPreviewComponent, SoonestPickupComponent
+    PriceComparisonComponent, ProductCarouselPreviewComponent, ProductPreviewComponent, SoonestPickupComponent, FullCatalogShellComponent
   ],
   exports: [
     ProductCarouselPreviewComponent,

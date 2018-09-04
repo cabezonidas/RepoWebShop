@@ -1,0 +1,9 @@
+<div class="price" *ngIf="price">
+  <div >
+    <span class="onLine">${{price}}</span>
+    <span *ngIf="price < priceInStore" class="moneySaved">
+      -${{priceInStore - price}}
+    </span>
+  </div>
+  <div class="inStore" *ngIf="price < priceInStore">${{priceInStore}} en sucursal</div>
+</div>

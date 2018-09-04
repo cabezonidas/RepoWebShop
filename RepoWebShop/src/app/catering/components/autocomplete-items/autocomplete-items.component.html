@@ -1,7 +1,7 @@
 <mat-form-field class="example-full-width">
   <input matInput placeholder="Buscar productos..." aria-label="Item" [matAutocomplete]="auto" [formControl]="itemCtrl"> 
-  <mat-autocomplete #auto="matAutocomplete">
-    <mat-option *ngFor="let item of filteredProducts | async" [value]="item.displayName" (tap)="_onSelect(item)">
+  <mat-autocomplete #auto="matAutocomplete" showPanel="true" [disableRipple]="false" >
+    <mat-option *ngFor="let item of filteredProducts | async" [value]="item.displayName" (onSelectionChange)="_onSelect(item.productId)"  >
       <!-- <img class="example-option-img" aria-hidden [src]="state.flag" height="25"> -->
       <small>
         <span><strong>{{item.displayName}} ${{ item.price * item.minOrderAmount}}</strong></span>

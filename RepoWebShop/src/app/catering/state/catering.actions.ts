@@ -6,14 +6,12 @@ export enum CateringActionTypes {
     LoadItems = '[Catering] Load Items',
     LoadItemsSuccess = '[Catering] Load Items Success',
     LoadItemsFail = '[Catering] Load Items Fail',
-    LoadSessionCatering = '[Catering] Load Session Catering',
-    LoadSessionCateringSuccess = '[Catering] Load Session Catering Success',
-    LoadSessionCateringFail = '[Catering] Load Session Catering Fail',
     AddItem = '[Catering] Add Item to Catering',
     RemoveItem = '[Catering] Remove Item from Catering',
     LoadCaterings = '[Catering] Load Caterings',
     LoadCateringsSuccess = '[Catering] Load Caterings Success',
-    LoadCateringsFail = '[Catering] Load Caterings Fail'
+    LoadCateringsFail = '[Catering] Load Caterings Fail',
+    LoadSessionCateringDone = '[Catering] Session Catering Loaded [Success/Fail]'
 }
 
 export class LoadItems implements Action {
@@ -25,22 +23,13 @@ export class LoadItemsSuccess implements Action {
     constructor(public payload: IItem[]) {}
 }
 
+export class LoadSessionCateringDone implements Action {
+    readonly type = CateringActionTypes.LoadSessionCateringDone;
+    constructor() {}
+}
+
 export class LoadItemsFail implements Action {
     readonly type = CateringActionTypes.LoadItemsFail;
-    constructor(public payload: string) {}
-}
-
-export class LoadSessionCatering implements Action {
-    readonly type = CateringActionTypes.LoadSessionCatering;
-}
-
-export class LoadSessionCateringSuccess implements Action {
-    readonly type = CateringActionTypes.LoadSessionCateringSuccess;
-    constructor(public payload: ICatering) {}
-}
-
-export class LoadSessionCateringFail implements Action {
-    readonly type = CateringActionTypes.LoadSessionCateringFail;
     constructor(public payload: string) {}
 }
 
@@ -68,12 +57,10 @@ export class RemoveItem implements Action {
     constructor(public payload: number) {}
 }
 
-export type CateringActions = LoadItems
+export type CateringActions = LoadSessionCateringDone
+    | LoadItems
     | LoadItemsSuccess
     | LoadItemsFail
-    | LoadSessionCatering
-    | LoadSessionCateringSuccess
-    | LoadSessionCateringFail
     | AddItem
     | RemoveItem
     | LoadCaterings

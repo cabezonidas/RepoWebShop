@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Effect, Actions } from '@ngrx/effects';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { map, switchMap, catchError, share } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import * as customCateringActions from '../actions/custom-catering.action';
@@ -25,7 +25,8 @@ export class CustomCateringEffects {
           map(catering => new customCateringActions.LoadSessionCateringSuccess(catering)),
           catchError(error => of(new customCateringActions.LoadSessionCateringFail(error)))
         );
-    })
+    }),
+    share()
   );
 
   @Effect()

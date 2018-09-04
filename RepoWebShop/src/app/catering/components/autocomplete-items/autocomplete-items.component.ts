@@ -40,8 +40,8 @@ export class AutocompleteItemsComponent implements OnInit {
     });
   }
 
-  _onSelect(item: IItem) {
-    this.addItem.emit(item.productId);
+  _onSelect(itemId: number) {
+    this.addItem.emit(itemId);
   }
 
 }

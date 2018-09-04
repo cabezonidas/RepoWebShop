@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { CateringService } from '../services/catering.service';
 import * as cateringActions from './catering.actions';
-import { mergeMap, map, catchError, tap } from 'rxjs/operators';
+import { mergeMap, map, catchError, tap, switchMap, share } from 'rxjs/operators';
 import { IItem } from '../../products/interfaces/iitem';
 import { of, Observable } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
 import * as fromCatering from '.';
 import { ICatering } from '../interfaces/ICatering';
+import * as customCateringActions from '../../cart/store/actions/custom-catering.action';
 
 @Injectable()
 export class CateringEffects {
@@ -26,40 +27,37 @@ export class CateringEffects {
     );
 
     @Effect()
-    loadSessionCatering$: Observable<Action> = this.actions$.pipe(
-        ofType(cateringActions.CateringActionTypes.LoadSessionCatering),
-        mergeMap((action: cateringActions.LoadSessionCatering) => this.cateringService.loadSessionCatering().pipe(
-            map((catering: ICatering) => {
-                return new cateringActions.LoadSessionCateringSuccess(catering);
-            }),
-            catchError(err => of(new cateringActions.LoadSessionCateringFail(err)))
-        ))
-    );
-
-    @Effect()
-    addItem$: Observable<Action> = this.actions$.pipe(
-      ofType(cateringActions.CateringActionTypes.AddItem),
+    addItem$: Observable<Action> = this.actions$.ofType(cateringActions.CateringActionTypes.AddItem).pipe(
       map((action: cateringActions.AddItem) => action.payload),
-      mergeMap((itemId: number) => this.cateringService.addItem(itemId).pipe(
-            map((catering: ICatering) => {
-                return new cateringActions.LoadSessionCateringSuccess(catering);
-            }),
-          catchError(err => of(new cateringActions.LoadItemsFail(err)))
-        )
-      )
+      switchMap(itemId => {
+          return this.cateringService
+            .addItem(itemId)
+            .pipe(
+                switchMap(catering => [
+                    new customCateringActions.LoadSessionCateringSuccess(catering),
+                    new cateringActions.LoadSessionCateringDone()
+                ]),
+            catchError(err => of(new customCateringActions.LoadSessionCateringFail(err)))
+            );
+      }),
+      share()
     );
 
     @Effect()
-    removeItem$: Observable<Action> = this.actions$.pipe(
-      ofType(cateringActions.CateringActionTypes.RemoveItem),
+    removeItem$: Observable<Action> = this.actions$.ofType(cateringActions.CateringActionTypes.RemoveItem).pipe(
       map((action: cateringActions.RemoveItem) => action.payload),
-      mergeMap((itemId: number) => this.cateringService.removeItem(itemId).pipe(
-            map((catering: ICatering) => {
-                return new cateringActions.LoadSessionCateringSuccess(catering);
-            }),
-          catchError(err => of(new cateringActions.LoadItemsFail(err)))
-        )
-      )
+      switchMap(itemId => {
+          return this.cateringService
+            .removeItem(itemId)
+            .pipe(
+                switchMap(catering => [
+                    new customCateringActions.LoadSessionCateringSuccess(catering),
+                    new cateringActions.LoadSessionCateringDone()
+                ]),
+            catchError(err => of(new customCateringActions.LoadSessionCateringFail(err)))
+            );
+      }),
+      share()
     );
 
     @Effect()

@@ -10,7 +10,7 @@ export class ProductSubtotalComponent implements OnInit {
   @Input() price: number;
   @Input() priceInStore: number;
   @Input() amount: number;
-  
+
   constructor() { }
 
   ngOnInit() {

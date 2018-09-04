@@ -4,7 +4,6 @@ import { ICatering } from '../interfaces/ICatering';
 
 export interface CateringState {
     items: IItem[];
-    catering: ICatering | null;
     error: string;
     loading: boolean;
     loadingCaterings: boolean;
@@ -13,7 +12,6 @@ export interface CateringState {
 
 const initialState: CateringState = {
     items: [],
-    catering: null,
     error: '',
     loading: false,
     loadingCaterings: false,
@@ -40,15 +38,15 @@ export function reducer(state = initialState, action: CateringActions): Catering
             error: ''
         };
 
-        case CateringActionTypes.LoadCaterings: return {
+        case CateringActionTypes.LoadSessionCateringDone: return {
             ...state,
-            loadingCaterings: true,
+            loading: false,
             error: ''
         };
 
-        case CateringActionTypes.LoadSessionCatering: return {
+        case CateringActionTypes.LoadCaterings: return {
             ...state,
-            loading: true,
+            loadingCaterings: true,
             error: ''
         };
 
@@ -64,18 +62,7 @@ export function reducer(state = initialState, action: CateringActions): Catering
             loading: false,
             error: action.payload
         };
-        case CateringActionTypes.LoadSessionCateringSuccess: return {
-            ...state,
-            catering: action.payload,
-            loading: false,
-            error: ''
-        };
-        case CateringActionTypes.LoadSessionCateringFail: return {
-            ...state,
-            catering: null,
-            loading: false,
-            error: action.payload
-        };
+
         case CateringActionTypes.LoadCateringsSuccess: return {
             ...state,
             caterings: action.payload,

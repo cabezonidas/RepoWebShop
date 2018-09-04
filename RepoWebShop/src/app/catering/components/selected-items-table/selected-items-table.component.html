@@ -1,20 +1,16 @@
-<div *ngIf="catering">
-  <mat-list>
+<mat-list *ngIf="catering">
     <mat-list-item *ngFor="let item of catering.items">
-      <mat-icon color="primary" mat-list-icon (tap)="onDecrement(item.item.productId)">arrow_drop_down</mat-icon>
-      <mat-icon color="primary" mat-list-icon (tap)="onIncrement(item.item.productId)">arrow_drop_up</mat-icon>
-      <p mat-line>
-        {{ item.itemCount === 1 ? '' : item.itemCount }} {{ item.item.displayName }} (${{ item.item.price }} c/u)
-      </p>
-      <!-- <p mat-line>
-        <i class="material-icons">arrow_drop_down</i>
-        <i class="material-icons" >arrow_drop_up</i>
-      </p> -->
-      <div class="subtotal">
-        <div class='price'><strong>${{ item.subTotal }}</strong></div>
-        <div class='priceInStore' *ngIf="item.subTotal < item.subTotalInStore"><small>${{ item.subTotalInStore }}</small></div>
+      <h4 mat-line color="primary">{{item.itemCount}}x {{item.item.displayName}} ({{item.item.preparationTime}} hs)</h4>
+      <p mat-line> {{item.item.displayDescription}} </p>
+      <app-product-subtotal  mat-line [amount]="item.itemCount" [priceInStore]="item.item.priceInStore" [price]="item.item.price">
+      </app-product-subtotal>
+      <div mat-line class="incrementer">
+        <span>Cantidad: </span>
+        <button mat-icon-button color="primary" (tap)="onDecrement(item.item.productId)"><i class="material-icons">arrow_left</i></button>
+        <span>{{item.itemCount}}</span>
+        <button mat-icon-button color="primary" (tap)="onIncrement(item.item.productId)"><i class="material-icons">arrow_right</i></button>
       </div>
     </mat-list-item>
   </mat-list>
-</div>
+  <app-total [price]="subtotal" [priceInStore]="subtotalInStore"></app-total>
 

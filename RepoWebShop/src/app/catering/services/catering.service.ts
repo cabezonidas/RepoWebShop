@@ -23,4 +23,21 @@ export class CateringService {
     this.http.delete<ICatering>('/api/_cartCustomCatering/removeItem/' + productId)
 
   clearItem = (productId: number): Observable<ICatering> => this.http.delete<ICatering>('/api/_cartCustomCatering/clearItem/' + productId);
+
+  totalInStore = (catering: ICatering): number => {
+    let subtotal = 0;
+    if (catering && catering.items && catering.miscellanea) {
+      catering.items.forEach(i => subtotal += i.subTotalInStore);
+      catering.miscellanea.forEach(i => subtotal += i.price);
+    }
+    return subtotal;
+  }
+  totalOnline = (catering: ICatering): number => {
+    let subtotal = 0;
+    if (catering && catering.items && catering.miscellanea) {
+      catering.items.forEach(i => subtotal += i.subTotal);
+      catering.miscellanea.forEach(i => subtotal += i.price);
+    }
+    return subtotal;
+  }
 }

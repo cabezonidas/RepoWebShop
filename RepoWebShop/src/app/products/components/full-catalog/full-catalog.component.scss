@@ -1,4 +1,13 @@
-
+.loader {
+    width: 100%;
+    mat-spinner {
+        text-align: center;
+        margin: auto;
+    }
+}
+.container {
+    text-align: center;
+}
 section {
     max-width: 800px;
     margin: auto;

@@ -15,15 +15,8 @@
         {{ item.itemCount }} {{ item.item.displayName }}
       </div>
     </mat-card-content>
-    <div class="price">
-      <div >
-        <span class="onLine">${{catering.price}}</span>
-        <span *ngIf="catering.price < catering.priceInStore" class="moneySaved">
-          -${{catering.priceInStore - catering.price}}
-        </span>
-      </div>
-      <div class="inStore" *ngIf="catering.price < catering.priceInStore">${{catering.priceInStore}} en sucursal</div>
-    </div>
+    <app-total [price]="catering.price" [priceInStore]="catering.priceInStore"></app-total>
+
     <mat-card-actions>
       <div></div>
       <button mat-raised-button color="primary" (tap)="addCatering.emit(catering.lunchId)">Comprar</button>

@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
+import { Component, OnInit, HostBinding, OnChanges } from '@angular/core';
 import { IItem } from '../../../products/interfaces/iitem';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -8,6 +8,8 @@ import * as cateringActions from '../../state/catering.actions';
 import { map } from 'rxjs/operators';
 import { ICatering } from '../../interfaces/ICatering';
 import { moveIn } from '../../../animations/router.animations';
+import * as fromStore from '../../../cart/store';
+import { CateringService } from '../../services/catering.service';
 
 @Component({
   selector: 'app-new-catering-shell',
@@ -25,10 +27,8 @@ export class NewCateringShellComponent implements OnInit {
   @HostBinding('@moveIn') role = '';
 
   ngOnInit() {
-    this.store.dispatch(new cateringActions.LoadSessionCatering());
-    this.catering$ = this.store.pipe(
-      select(fromCatering.getSessionCatering)
-    );
+
+    this.catering$ = this.store.pipe(select(fromStore.getCustomCatering));
 
     this.store.dispatch(new cateringActions.LoadItems());
     this.items$ = this.store.pipe(
@@ -36,11 +36,12 @@ export class NewCateringShellComponent implements OnInit {
       map(items => items.sort((a, b) => a.displayName.localeCompare(b.displayName))
     ));
 
-    this.errorMessage$ = this.store.pipe(select(fromCatering.getError));
-
     this.loading$ = this.store.pipe(
       select(fromCatering.getLoading)
     );
+
+
+    this.errorMessage$ = this.store.pipe(select(fromCatering.getError));
   }
 
   addItem(itemId: number): void {
