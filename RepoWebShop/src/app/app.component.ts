@@ -3,9 +3,9 @@ import { AuthService } from './authentication/services/auth.service';
 import { Subscription } from 'rxjs';
 import { MatSidenav } from '@angular/material/sidenav';
 import { IAppUser } from './authentication/interfaces/iapp-user';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
-import { ScrollService } from './home/services/scroll.service';
+import { Store } from '@ngrx/store';
+import * as fromProduct from './products/state';
+import * as productActions from './products/state/product.actions';
 
 @Component({
   selector: 'app-root',
@@ -18,20 +18,19 @@ export class AppComponent implements OnInit, OnDestroy {
 
   user: IAppUser;
   userSub = new Subscription();
-  routerSubscription: Subscription;
 
   @ViewChild('content') public contentElement: ElementRef;
 
-  constructor(private auth: AuthService) {}
+  constructor(private auth: AuthService, private store: Store<fromProduct.State>) {}
 
   ngOnInit() {
     this.userSub = this.auth.loadUser().subscribe(user => this.user = user);
     this.adjustPadding();
+    this.store.dispatch(new productActions.LoadProducts());
   }
 
   ngOnDestroy(): void {
     this.userSub.unsubscribe();
-    this.routerSubscription.unsubscribe();
   }
 
   adjustPadding = () => this.heightPadding = window.innerWidth < 600 ? 56 : 64;

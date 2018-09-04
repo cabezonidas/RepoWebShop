@@ -1,1 +1,3 @@
-<mat-icon *ngIf="count()" [matBadge]="count()" matBadgeColor="accent">shopping_cart</mat-icon>
+<button *ngIf="count()" mat-mini-fab [matBadge]="count()" matBadgeColor="warn" routerLink="/start" color="accent" class="home-button">
+    <mat-icon >shopping_cart</mat-icon>
+</button>
