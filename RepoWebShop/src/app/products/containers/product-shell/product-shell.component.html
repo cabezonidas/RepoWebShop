@@ -1,3 +1,4 @@
+
 <div class='product-shell'>
     <!-- <mat-card-title>Productos</mat-card-title> -->
     <div class='logo'>
@@ -9,6 +10,11 @@
             <app-product-preview *ngIf="product.flickrAlbumId" [product]="product">
             </app-product-preview>
         </div>
+        <div class="even-more" *ngIf="products.length">
+            <h3>¿Te quedaste con ganas de más?</h3>
+            <a routerLink="/all-items"><h1>¡Fijate nuestro catálogo completo!</h1></a>
+            <h2>Más de 100 delicias que podés comprar</h2>
+            <button mat-raised-button color="primary" routerLink="/all-items">¡Quiero ver!</button>
+        </div>
     </div>
-    <app-full-catalog [products]="products$ | async"></app-full-catalog>
 </div>

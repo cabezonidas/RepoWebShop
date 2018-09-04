@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -23,5 +23,4 @@ export class FullCatalogShellComponent implements OnInit {
     this.store.dispatch(new productActions.LoadProducts());
     this.products$ = this.store.pipe(select(fromProduct.getProducts));
   }
-
 }
