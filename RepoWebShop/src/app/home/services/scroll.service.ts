@@ -16,4 +16,13 @@ export class ScrollService {
     };
     this._scrollToService.scrollTo(config);
   }
+  public instantScrollTo(target: string, offset: number = 65) {
+
+    const config: ScrollToConfigOptions = {
+      offset,
+      target: target,
+      duration: 1
+    };
+    this._scrollToService.scrollTo(config);
+  }
 }

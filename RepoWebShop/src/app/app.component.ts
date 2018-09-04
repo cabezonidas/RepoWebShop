@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { MatSidenav } from '@angular/material/sidenav';
 import { IAppUser } from './authentication/interfaces/iapp-user';
 import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { ScrollService } from './home/services/scroll.service';
 
 @Component({
   selector: 'app-root',
@@ -16,10 +18,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   user: IAppUser;
   userSub = new Subscription();
+  routerSubscription: Subscription;
 
   @ViewChild('content') public contentElement: ElementRef;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService) {}
 
   ngOnInit() {
     this.userSub = this.auth.loadUser().subscribe(user => this.user = user);
@@ -28,6 +31,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.userSub.unsubscribe();
+    this.routerSubscription.unsubscribe();
   }
 
   adjustPadding = () => this.heightPadding = window.innerWidth < 600 ? 56 : 64;
