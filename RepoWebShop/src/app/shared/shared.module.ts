@@ -8,12 +8,14 @@ import { ProductSubtotalComponent } from './components/product-subtotal/product-
 import { TrolleyIconShellComponent } from './containers/trolley-icon-shell/trolley-icon-shell.component';
 import { MomentModule } from 'ngx-moment';
 import { TotalComponent } from './components/total/total.component';
+import { StoreRouterModule } from '../router/store-router.module';
 
 @NgModule({
   imports: [
     CommonModule,
     MaterialModule,
-    MomentModule
+    MomentModule,
+    StoreRouterModule
   ],
   exports: [
     MomentModule,
@@ -22,7 +24,8 @@ import { TotalComponent } from './components/total/total.component';
     TrolleyIconComponent,
     TrolleyIconShellComponent,
     ProductSubtotalComponent,
-    TotalComponent
+    TotalComponent,
+    StoreRouterModule
   ],
   declarations: [ProductSubtotalComponent, LoadingComponent, SnackbarComponent,
     TrolleyIconComponent, TrolleyIconShellComponent, TotalComponent]

@@ -8,6 +8,8 @@ import { of } from 'rxjs';
 import * as cateringActions from '../actions/caterings.action';
 import * as fromServices from '../../services';
 import * as fromPickup from '../actions/pickup.action';
+import * as customCateringActions from '../actions/custom-catering.action';
+import * as fromRouter from '../../../router/store';
 
 @Injectable()
 export class CateringsEffects {
@@ -66,5 +68,27 @@ export class CateringsEffects {
         );
     }),
     share()
+  );
+
+  @Effect()
+  copyCatering$ = this.actions$.ofType(cateringActions.CateringActionTypes.CopyCatering).pipe(
+    map((action: cateringActions.CopyCatering) => action.payload),
+    switchMap(cateringId => {
+      return this.cateringService
+        .copyCatering(cateringId)
+        .pipe(
+          switchMap((catering) => [
+            new customCateringActions.LoadSessionCateringSuccess(catering),
+            new cateringActions.CopyCateringSuccess(),
+            new fromTotals.GetTotals(),
+            new fromPickup.LoadPickupOptions(),
+            new fromPickup.GetPickupOption(),
+            new fromPickup.GetPreparationTime()
+          ]),
+          catchError(error => of(new cateringActions.CopyCateringFail(error)))
+        );
+    }),
+    share()
+    // map(() => new fromRouter.Go({path: ['/new-catering']}))
   );
 }

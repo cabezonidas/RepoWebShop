@@ -11,6 +11,7 @@ export class CateringOptionComponent implements OnInit {
 
   @Input() catering: ICatering;
   @Output() addCatering = new EventEmitter<number>();
+  @Output() copyCatering = new EventEmitter<number>();
   constructor(private calendar: CalendarService) { }
 
   ngOnInit() {

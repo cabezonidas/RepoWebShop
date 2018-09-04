@@ -6,6 +6,7 @@ import { IAppUser } from './authentication/interfaces/iapp-user';
 import { Store } from '@ngrx/store';
 import * as fromProduct from './products/state';
 import * as productActions from './products/state/product.actions';
+import * as cateringActions from './catering/state/catering.actions';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.userSub = this.auth.loadUser().subscribe(user => this.user = user);
     this.adjustPadding();
     this.store.dispatch(new productActions.LoadProducts());
+    this.store.dispatch(new cateringActions.LoadCaterings());
   }
 
   ngOnDestroy(): void {

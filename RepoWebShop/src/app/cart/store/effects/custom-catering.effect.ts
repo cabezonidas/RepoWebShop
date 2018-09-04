@@ -35,7 +35,7 @@ export class CustomCateringEffects {
       return this.customCateringService
         .clearSessionCatering()
         .pipe(
-          map(() => [
+          switchMap(() => [
             new customCateringActions.RemoveSessionCateringSuccess(),
             new fromTotals.GetTotals(),
             new fromPickup.LoadPickupOptions(),

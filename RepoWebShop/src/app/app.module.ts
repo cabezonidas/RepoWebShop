@@ -16,7 +16,6 @@ import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, Mat
 import { MainNavComponent } from './shared/components/main-nav/main-nav.component';
 import { CartModule } from './cart/cart.module';
 import { HomeModule } from './home/home.module';
-import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [

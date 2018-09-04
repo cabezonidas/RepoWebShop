@@ -55,6 +55,15 @@ namespace RepoWebShop.FeApi
 			return catering;
 		}
 
+		[HttpPost]
+		[Route("CopyCatering/{id}")]
+		public async Task<_Catering> CopyCatering(int id)
+		{
+			_cart.ClearCustomCateringFromCart();
+			await _catering.CopyLunchAsync(id);
+			return _cart.SessionCatering();
+		}
+
 		[HttpDelete]
 		[Route("RemoveItem/{id}")]
 		public async Task<_Catering> RemoveItem(int id)

@@ -18,10 +18,7 @@ export class TrolleyIconShellComponent implements OnInit {
   caterings$: Observable<ICartCatering[]>;
   customCatering$: Observable<ICatering>;
   constructor(
-    private store: Store<fromStore.CartState>,
-    private itemEffects: fromEffects.ItemsEffects,
-    private cateringEffects: fromEffects.CateringsEffects,
-    private customCateringEffects: fromEffects.CustomCateringEffects,
+    private store: Store<fromStore.CartState>
   ) { }
 
   ngOnInit() {

@@ -2,6 +2,10 @@ import { Action } from '@ngrx/store';
 import { ICartCatering } from '../../interfaces/icart-catering';
 
 export enum CateringActionTypes {
+    CopyCatering = '[Cart] Copy catering',
+    CopyCateringSuccess = '[Cart] Copy catering success',
+    CopyCateringFail = '[Cart] Copy catering fail',
+
     AddCatering = '[Cart] Add catering',
     AddCateringSuccess = '[Cart] Add catering success',
     AddCateringFail = '[Cart] Add catering fail',
@@ -13,6 +17,21 @@ export enum CateringActionTypes {
     LoadCaterings = '[Cart] Load caterings',
     LoadCateringsSuccess = '[Cart] Load caterings success',
     LoadCateringsFail = '[Cart] Load caterings fail'
+}
+
+export class CopyCatering implements Action {
+    readonly type = CateringActionTypes.CopyCatering;
+    constructor(public payload: number) {}
+}
+
+export class CopyCateringFail implements Action {
+    readonly type = CateringActionTypes.CopyCateringFail;
+    constructor(public payload: any) {}
+}
+
+export class CopyCateringSuccess implements Action {
+    readonly type = CateringActionTypes.CopyCateringSuccess;
+    constructor() {}
 }
 
 export class AddCatering implements Action {
@@ -61,12 +80,15 @@ export class LoadCateringsSuccess implements Action {
 }
 
 export type CateringActions =
-  | AddCatering
-  | AddCateringFail
-  | AddCateringSuccess
-  | RemoveCatering
-  | RemoveCateringFail
-  | RemoveCateringSuccess
-  | LoadCaterings
-  | LoadCateringsFail
-  | LoadCateringsSuccess;
+ | CopyCatering
+ | CopyCateringSuccess
+ | CopyCateringFail
+ | AddCatering
+ | AddCateringFail
+ | AddCateringSuccess
+ | RemoveCatering
+ | RemoveCateringFail
+ | RemoveCateringSuccess
+ | LoadCaterings
+ | LoadCateringsFail
+ | LoadCateringsSuccess;

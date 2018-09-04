@@ -26,6 +26,7 @@
     "@angular/router": "^6.0.5",
     "@ngrx/effects": "^6.0.1",
     "@ngrx/store": "^6.0.1",
+    "@ngrx/router-store": "6.0.1",
     "@ngrx/store-devtools": "^6.0.1",
     "@nicky-lenaers/ngx-scroll-to": "^1.0.0",
     "@types/googlemaps": "^3.30.11",
