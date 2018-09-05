@@ -1,49 +1,13 @@
 <div id="container">
-  <mat-sidenav-container class="left-container" (backdropClick)="close('backdrop')">
-    <mat-sidenav #sidenav (keydown.escape)="close('escape')" disableClose>
-      <mat-card >
-        <a routerLink="/start" (tap)="close()">
-          <img class="logo" src='../assets/images/logoRepo.PNG'>
-        </a>
-      </mat-card>
-      <mat-nav-list>
-        <a mat-list-item (tap)="close()" routerLink='/products'>
-          <mat-icon matListIcon [ngStyle]="{'color': 'gold'}">star</mat-icon>Productos con fotos
-        </a>
-        <a mat-list-item (tap)="close()" routerLink='/all-items'>
-          <mat-icon matListIcon [ngStyle]="{'color': 'purple'}">search</mat-icon>Catálogo completo
-        </a>
-        <a mat-list-item (tap)="close()" routerLink='/catering-options'>
-          <mat-icon matListIcon [ngStyle]="{'color': 'silver'}">restaurant_menu</mat-icon>
-          Opciones de Catering
-        </a>
-        <a mat-list-item (tap)="close()" routerLink='/profile'>
-          <mat-icon matListIcon [ngStyle]="{'color': 'olive'}">tag_faces</mat-icon>Perfil
-        </a>
-        <a mat-list-item (tap)="close()" routerLink='/cart'>
-          <mat-icon matListIcon [ngStyle]="{'color': 'teal'}"> shopping_cart</mat-icon>
-          Carrito
-        </a>
-      </mat-nav-list>
-      <button mat-raised-button (click)="close()" color="primary" class='closeButton'>Cerrar</button>
+  <mat-sidenav-container (backdropClick)="close('backdrop')">
+    <mat-sidenav #sidenav (keydown.escape)="close()" disableClose>
+      <app-leftnav-container (close)="close()"></app-leftnav-container>
     </mat-sidenav>
     
     <mat-sidenav-content>
-      <div >
-        <mat-toolbar color="primary" role="heading" class='navbar-fixed'>
-          <mat-toolbar-row>
-            <mat-icon class="icon" (click)="sidenav.open()">menu</mat-icon>
-            <span>De las Artes</span>
-            <span class="spacer"></span>
-            <app-trolley-icon-shell routerLink="/cart" ></app-trolley-icon-shell>
-            <button mat-mini-fab  routerLink="/start" color="accent" class="home-button">
-              <mat-icon >home</mat-icon>
-            </button>
-          </mat-toolbar-row>
-        </mat-toolbar>
-        <div id="content" #content [ngStyle]="{'padding-top.px': heightPadding}" (window:resize)="adjustPadding()">
-          <router-outlet ></router-outlet>
-        </div>
+      <app-tool-bar (openSideNave)="sidenav.open()"></app-tool-bar>
+      <div id="content" #content [ngStyle]="{'padding-top.px': heightPadding}" (window:resize)="adjustPadding()">
+        <router-outlet ></router-outlet>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container> 

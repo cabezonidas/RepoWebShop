@@ -16,11 +16,15 @@ import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, Mat
 import { MainNavComponent } from './shared/components/main-nav/main-nav.component';
 import { CartModule } from './cart/cart.module';
 import { HomeModule } from './home/home.module';
+import { LeftnavContainerComponent } from './components/leftnav-container/leftnav-container.component';
+import { ToolBarComponent } from './components/tool-bar/tool-bar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MainNavComponent
+    LeftnavContainerComponent,
+    MainNavComponent,
+    ToolBarComponent
   ],
   imports: [
     SharedModule,

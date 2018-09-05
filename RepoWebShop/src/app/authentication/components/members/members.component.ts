@@ -36,9 +36,12 @@ export class MembersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.userSub = this.auth.loadUser().subscribe(user => {
-      this.user = user;
+    this.userSub = this.appService.user.subscribe(user$ => {
+      this.user = user$;
     });
+    // this.userSub = this.auth.loadUser().subscribe(user => {
+    //   this.user = user;
+    // });
   }
   ngOnDestroy() {
     this.userSub.unsubscribe();

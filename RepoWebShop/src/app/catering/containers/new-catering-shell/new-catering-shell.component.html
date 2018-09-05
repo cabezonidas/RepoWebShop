@@ -1,9 +1,8 @@
-<div class="header">
-    <img src='../../../../assets/images/logoRepo.PNG'>
-    <h2>Catering Personalizado</h2>
-</div>
-
+<app-logo-header [header]="'Catering personalizado'"></app-logo-header>
 <div class='form-container'>
+    <div class="intro">
+        ¿Preferís un catering ya armado? <button mat-button routerLink="/catering-options">ver opciones</button>
+    </div>
     <div class="form-content">
         <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
         <mat-card>

@@ -1,16 +1,13 @@
+
+<app-logo-header [header]="'Inicio con email'"></app-logo-header>
 <div class="form-container">
   <mat-card>
-    <mat-card-header>
-      <a routerLink="/login">Volver</a>
-    </mat-card-header>
-    <mat-card-title>
-      <div class='logo'>
-        <img src='../../../../assets/images/logoRepo.PNG'>
-      </div>
-      Inicio con email
-    </mat-card-title>
-    <mat-card-content>
 
+    <mat-card-header>
+        <a routerLink="/login">Volver</a>
+      </mat-card-header>
+    <mat-card-content>
+      
       <form [formGroup]="rForm" (ngSubmit)="onSubmit(rForm.value)">
         <mat-form-field>
           <input matInput placeholder="Email" formControlName="email" type="email" name="email" />

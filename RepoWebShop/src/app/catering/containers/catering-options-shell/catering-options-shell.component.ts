@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding, OnDestroy } from '@angular/core';
+import { Component, OnInit, HostBinding, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 
@@ -10,6 +10,8 @@ import { moveIn } from '../../../animations/router.animations';
 import * as fromStore from '../../../cart/store';
 import { filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { SlickComponent } from 'ngx-slick';
+import { MatButton } from '@angular/material';
 
 @Component({
   selector: 'app-catering-options-shell',
@@ -17,7 +19,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./catering-options-shell.component.scss'],
   animations: [moveIn()]
 })
-export class CateringOptionsShellComponent implements OnInit, OnDestroy {
+export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnDestroy {
   cateringCopiedSub = new Subscription();
   caterings$: Observable<ICatering[]>;
   carouselInit = false;
@@ -28,9 +30,10 @@ export class CateringOptionsShellComponent implements OnInit, OnDestroy {
     variableWidth: true,
     centerMode: true,
     centerPadding: '40px',
-    infinite: true,
+    // infinite: true,
   };
 
+  @ViewChild('slickModal') slickModal: SlickComponent;
   constructor(
     private store: Store<fromCatering.State>,
     private itemEffects: fromEffects.CateringsEffects,
@@ -45,6 +48,11 @@ export class CateringOptionsShellComponent implements OnInit, OnDestroy {
       .pipe(filter(action => action.type === fromStore.CateringActionTypes.CopyCateringSuccess))
       .subscribe(() => this.router.navigateByUrl('/new-catering'));
   }
+
+  ngAfterViewInit() {
+    (document.getElementById('next') as HTMLElement).click();
+  }
+
   ngOnDestroy() {
     this.cateringCopiedSub.unsubscribe();
   }

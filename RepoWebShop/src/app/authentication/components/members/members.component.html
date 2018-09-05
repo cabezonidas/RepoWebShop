@@ -1,10 +1,11 @@
+<app-logo-header [header]="'Perfil'"></app-logo-header>
 <div class="form-container" *ngIf="user">
   <mat-card>
     <mat-card-title [@fallIn]="state">
-      Hey {{ user.firstName }}!
+      Hola {{ user.firstName }}!
     </mat-card-title>
     <mat-card-content [@moveInLeft]="state">
-      <button mat-raised-button (click)="logout()" class="basic-btn">Logout</button>
+      <button mat-raised-button (click)="logout()" class="basic-btn">Cerrar sesión</button>
     </mat-card-content>
   </mat-card>
 </div>

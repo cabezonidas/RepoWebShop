@@ -1,0 +1,19 @@
+.navbar-fixed {
+    top: 0;
+    position: fixed;
+    z-index:999;
+    background-color: #883636;
+    width: 100%;
+  }
+  .icon {
+    margin-left: 20px;
+    margin-right: 20px;
+      cursor: pointer;
+  }
+  .home-button{
+    margin-right: 10px;
+  }
+    
+    .spacer {
+      flex: 1 1 auto;
+    }

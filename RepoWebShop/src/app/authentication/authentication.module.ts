@@ -17,6 +17,7 @@ import { AuthService } from './services/auth.service';
 import { SmsService } from './services/sms.service';
 import { environment } from '../../environments/environment';
 import { AuthGuardService } from '../core/services/guard/auth-guard.service';
+import { SharedModule } from '../shared/shared.module';
 
 const authRoutes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -35,6 +36,7 @@ const authRoutes: Routes = [
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase), AngularFireAuthModule,
     MaterialModule, FormsModule, ReactiveFormsModule,
+    SharedModule
   ],
   declarations: [
     EmailComponent,

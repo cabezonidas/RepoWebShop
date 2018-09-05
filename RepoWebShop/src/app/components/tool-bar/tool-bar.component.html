@@ -1,0 +1,13 @@
+<mat-toolbar color="primary" role="heading" class='navbar-fixed'>
+    <mat-toolbar-row>
+      <button mat-mini-fab  (click)="openSideNave.emit()" color="accent" class="home-button">
+        <mat-icon >menu</mat-icon>
+      </button>
+      <span>De las Artes</span>
+      <span class="spacer"></span>
+      <app-trolley-icon-shell routerLink="/cart" ></app-trolley-icon-shell>
+      <button mat-mini-fab  routerLink="/start" color="accent" class="home-button">
+        <mat-icon >home</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>

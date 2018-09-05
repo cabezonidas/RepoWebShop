@@ -1,5 +1,5 @@
 <mat-form-field class="example-full-width">
-  <input matInput placeholder="Buscar productos..." aria-label="Item" [matAutocomplete]="auto" [formControl]="itemCtrl"> 
+  <input matInput placeholder="Elegir productos..." aria-label="Item" [matAutocomplete]="auto" [formControl]="itemCtrl"> 
   <mat-autocomplete #auto="matAutocomplete" showPanel="true" [disableRipple]="false" >
     <mat-option *ngFor="let item of filteredProducts | async" [value]="item.displayName" (onSelectionChange)="_onSelect(item.productId)"  >
       <!-- <img class="example-option-img" aria-hidden [src]="state.flag" height="25"> -->
@@ -12,7 +12,7 @@
         <br />
         <span>Precio Unitario: <span class="price"><strong>${{item.price}}</strong> </span></span>
         <span class='storePrice' *ngIf="item.price < item.priceInStore">(${{item.priceInStore}})</span>
-        <span> | Porciones por unidad: {{item.portions}}</span>
+        <span *ngIf="item.portions !== 1"> | Porciones: {{item.portions}}</span>
       </small>
     </mat-option>
   </mat-autocomplete>

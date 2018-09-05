@@ -1,0 +1,28 @@
+img.logo {
+    width: 100%;
+  }
+  mat-card {
+    background-color: #883636;
+  }
+  .leftPanelButton {
+    width: 100%;
+    border-radius: 0%;
+    text-align: left;
+    // margin-top: 5px;
+  }
+  .closeButton {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-radius: 0%;
+  }
+  
+  mat-list-item {
+    cursor: pointer;
+  }
+
+  img.icon {
+    width: 24px;
+    padding: 4px;
+  }

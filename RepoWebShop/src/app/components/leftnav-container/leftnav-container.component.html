@@ -1,0 +1,34 @@
+<mat-card >
+    <a routerLink="/start" (tap)="close.emit()">
+        <img class="logo" src='../assets/images/logoRepo.PNG'>
+    </a>
+</mat-card>
+<mat-nav-list>
+    <a mat-list-item (tap)="close.emit()" routerLink='/products'>
+        <mat-icon matListIcon [ngStyle]="{'color': 'gold'}">star</mat-icon>Productos con fotos
+    </a>
+    <a mat-list-item (tap)="close.emit()" routerLink='/all-items'>
+        <mat-icon matListIcon [ngStyle]="{'color': 'purple'}">search</mat-icon>Catálogo completo
+    </a>
+    <a mat-list-item (tap)="close.emit()" routerLink='/catering-options'>
+        <mat-icon matListIcon [ngStyle]="{'color': 'silver'}">restaurant_menu</mat-icon>
+        Opciones de catering para eventos
+    </a>
+    <a mat-list-item (tap)="close.emit()" routerLink='/new-catering'>
+        <mat-icon matListIcon [ngStyle]="{'color': 'green'}">restaurant</mat-icon>
+        Armá tu catering propio
+    </a>
+    <a mat-list-item (tap)="close.emit()" routerLink='/profile'>
+        <mat-icon matListIcon [ngStyle]="{'color': 'olive'}">tag_faces</mat-icon>Perfil
+    </a>        
+    <a mat-list-item href='https://api.whatsapp.com/send?phone=5491127778899'>
+        <img src="../../../assets/images/icons/whapp.png" class="icon">Whatsapp: 11 2777 8899
+    </a>     
+    <a mat-list-item href='tel:+5491149250262'>
+        <img src="../../../assets/images/icons/phone.png" class="icon">Teléfono: 4925 0262
+    </a> 
+    <a mat-list-item href='mailto:info@delasartes.com.ar'>
+        <img src="../../../assets/images/icons/mail.png" class="icon">Mail: info@delasartes.com.ar
+    </a>
+</mat-nav-list>
+<button mat-raised-button (click)="close.emit()" color="primary" class='closeButton'>Cerrar</button>

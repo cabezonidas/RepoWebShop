@@ -48,6 +48,9 @@ export class MobileComponent implements OnInit, OnDestroy {
     this.user$ = this.appService.user.subscribe(user$ => {
       this.user = user$;
     });
+    // this.user$ = this.auth.loadUser().subscribe(user => {
+    //   this.user = user;
+    // });
   }
 
   validCode(control: AbstractControl): {[key: string]: any} | null {

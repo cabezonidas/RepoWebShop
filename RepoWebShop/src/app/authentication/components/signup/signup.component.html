@@ -1,16 +1,11 @@
- 
+<app-logo-header [header]="'Registrate'"></app-logo-header> 
 <div class="form-container">
   <mat-card>
     
     <mat-card-header>
       <a routerLink="/login">Volver</a>
     </mat-card-header>
-    <mat-card-title>
-      <div class='logo'>
-        <img src='../../../../assets/images/logoRepo.PNG'>
-      </div>
-      Registrate
-    </mat-card-title>
+
     <div class="error" *ngIf="error" [@fallIn]='state'>{{ error }}</div>
     <mat-vertical-stepper linear #stepper>
       <mat-step [stepControl]="emailGroup" editable="false">
