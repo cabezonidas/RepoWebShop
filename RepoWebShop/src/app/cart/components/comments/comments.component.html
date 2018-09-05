@@ -1,10 +1,10 @@
-<form class="example-form">
+<form class="form">
   <mat-form-field>
     <mat-label>Agregar comentarios</mat-label>
     <textarea matInput placeholder="Quisiera agregar 'Feliz cumple Tomi' / etc..." #orderComments [value]="savedComments"></textarea>
   </mat-form-field>
+  <mat-progress-bar mode="indeterminate" *ngIf="commentsLoading"></mat-progress-bar> <!--   -->
 </form>
 
-<mat-progress-bar *ngIf="commentsLoading" mode="indeterminate"></mat-progress-bar>
 <button mat-raised-button color="primary" (tap)="next.emit()" *ngIf="savedComments" >Continuar</button>
 <button mat-raised-button (tap)="next.emit()" *ngIf="!savedComments">Siguiente</button>

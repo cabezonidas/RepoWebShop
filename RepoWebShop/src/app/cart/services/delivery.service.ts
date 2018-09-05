@@ -12,7 +12,8 @@ export class DeliveryService {
 
   canDeliver = () => this.http.get<boolean>('/api/_cartDelivery/canDeliver');
   clearDelivery = () => this.http.delete<void>('/api/_cartDelivery/remove');
-  updateInstructions = (instructions: DeliveryAddress) => this.http.post<DeliveryAddress>('/api/_cartDelivery/updateInstructions', instructions);
+  updateInstructions = (instructions: DeliveryAddress) =>
+    this.http.post<DeliveryAddress>('/api/_cartDelivery/updateInstructions', instructions)
   saveDelivery = (addresss: DeliveryAddress) => this.http.post<DeliveryAddress>('/api/_cartDelivery/saveDelivery', addresss);
   get = () => this.http.get<DeliveryAddress>('/api/_cartDelivery/get');
 

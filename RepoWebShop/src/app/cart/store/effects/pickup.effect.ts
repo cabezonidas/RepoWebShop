@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Effect, Actions } from '@ngrx/effects';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { map, switchMap, catchError, share, mergeMap, concatMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import * as pickupActions from '../actions/pickup.action';
@@ -23,23 +23,25 @@ export class PickupEffects {
           map(pickupOption => new pickupActions.LoadPickupOptionsSuccess(pickupOption)),
           catchError(error => of(new pickupActions.LoadPickupOptionsFail(error)))
         );
-    })
+    }),
+    share()
   );
 
   @Effect()
   setPickupOption$ = this.actions$.ofType(pickupActions.PickupActionTypes.SetPickupOption).pipe(
     map((action: pickupActions.SetPickupOption) => action.payload),
-    switchMap(pickupId => {
+    concatMap(pickupId => {
       return this.pickupService
         .setPickupOption(pickupId)
         .pipe(
-          map(pickupOption => [
-            new pickupActions.SetPickupOptionSuccess(pickupOption),
-            new pickupActions.LoadPickupOptions()
+          switchMap(pickupDate => [
+            new pickupActions.SetPickupOptionSuccess(pickupDate),
+            new pickupActions.LoadPickupOptions(),
           ]),
           catchError(error => of(new pickupActions.SetPickupOptionFail(error)))
         );
-    })
+    }),
+    share()
   );
 
   @Effect()

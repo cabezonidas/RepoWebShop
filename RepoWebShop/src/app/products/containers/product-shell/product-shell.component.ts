@@ -19,7 +19,7 @@ export class ProductShellComponent implements OnInit {
   constructor(private store: Store<fromProduct.State>, private calendar: CalendarService) {}
 
   ngOnInit(): void {
-    this.store.dispatch(new productActions.LoadProducts());
+    // this.store.dispatch(new productActions.LoadProducts());
     this.items$ = this.store.pipe(
       select(fromProduct.getProducts),
       map(a => a.filter(x => x.isActive))

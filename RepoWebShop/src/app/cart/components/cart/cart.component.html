@@ -1,9 +1,15 @@
 <div class="form-container">
     <div class='logo'>
       <img src='../../../../assets/images/logoRepo.PNG'>
-      <h2>Revisar Orden</h2>
+      <h2 *ngIf="total$ | async; else empty">Revisar Orden</h2>
+      <ng-template #empty>
+        <div>
+          <h3>Parece que tu carrito está vacío</h3>
+          <button mat-button routerLink="/products"><h2>Date una vuelta por nuestras exquisiteces</h2></button>
+        </div>
+      </ng-template>
     </div>
-    <mat-card>
+    <mat-card *ngIf="total$ | async">
       <!-- <app-totals></app-totals> -->
       <mat-vertical-stepper linear #stepper>
 
@@ -30,13 +36,17 @@
               [totalInStore]="totalInStore$ | async" [totalOnline]="total$ | async" [totalWithoutDiscount]="totalWithoutDiscount$ | async"
               (next)="_onNext()" (clearDiscount)="clearDiscount()" (applyDiscount)="applyDiscount($event)" ></app-discount>
             </mat-step>
-        <mat-step >
-          <ng-template matStepLabel>Retiro / Entrega</ng-template>
-          <app-pickup-options-shell></app-pickup-options-shell>
-          <app-comments (next)="_onNext()" (addComments)="addComments($event)"
-          [savedComments]="comments$ | async" [commentsLoaded]="commentsLoaded$ | async" [commentsLoading]="commentsLoading$ | async"
-          ></app-comments>
-        </mat-step>
+            <mat-step >
+                <ng-template matStepLabel>Retiro / Entrega</ng-template>
+                <app-pickup-options [options]="pickupOptions$ | async" [pickup]="pickup$ | async" 
+                [total]="total$ | async" [totalWithoutDiscount]="totalWithoutDiscount$ | async"
+                [deliveryAddress]="delivery$ | async"
+                (selectPickup)="setPickupOption($event)"
+                ></app-pickup-options>
+                <app-comments (next)="_onNext()" (addComments)="addComments($event)"
+                [savedComments]="comments$ | async" [commentsLoaded]="commentsLoaded$ | async" [commentsLoading]="commentsLoading$ | async"
+                ></app-comments>
+              </mat-step>
         <mat-step >
           <ng-template matStepLabel>Facturación Electrónica</ng-template>
           <app-invoice [savedCuit]="cuit$ | async" [cuitLoaded]="cuitLoaded$ | async" [cuitLoading]="cuitLoading$ | async"

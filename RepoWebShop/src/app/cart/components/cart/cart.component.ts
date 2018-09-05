@@ -21,7 +21,8 @@ import { IPickupDate } from '../../interfaces/ipickup-date';
 
 export class CartComponent implements OnInit, OnDestroy {
 
-  constructor(public dialog: MatDialog, private store: Store<fromStore.CartState>) {}
+  constructor(public dialog: MatDialog,
+    private store: Store<fromStore.CartState>) {}
 
   items$: Observable<ICartCatalogItem[]>;
   caterings$: Observable<ICartCatering[]>;
@@ -128,6 +129,8 @@ export class CartComponent implements OnInit, OnDestroy {
     this.totalCustomCateringInStore$ = this.store.pipe(select(fromStore.getTotalCustomCateringInStore));
     this.totalsLoaded$ = this.store.pipe(select(fromStore.getTotalsLoaded));
     this.totalsLoading$ = this.store.pipe(select(fromStore.getTotalsLoading));
+
+
   }
 
   ngOnDestroy() {

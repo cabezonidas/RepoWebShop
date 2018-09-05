@@ -42,7 +42,7 @@ export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnD
   @HostBinding('@moveIn') role = '';
 
   ngOnInit() {
-    this.store.dispatch(new cateringActions.LoadCaterings());
+    // this.store.dispatch(new cateringActions.LoadCaterings());
     this.caterings$ = this.store.pipe(select(fromCatering.getCaterings));
     this.cateringCopiedSub = this.itemEffects.copyCatering$
       .pipe(filter(action => action.type === fromStore.CateringActionTypes.CopyCateringSuccess))

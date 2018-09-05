@@ -21,8 +21,8 @@ namespace RepoWebShop.FeApi
 		public IEnumerable<_PickUpOptions> PickUpOptionsByDay() => _cart.PickUpOptionsByDay();
 
 		[HttpPost]
-		[Route("SetPickupOption")]
-		public ShoppingCartPickUpDate SetPickupOption([FromBody] string ticksId)
+		[Route("SetPickupOption/{ticksId}")]
+		public ShoppingCartPickUpDate SetPickupOption(string ticksId)
 		{
 			var ticksNumber = Convert.ToInt64(ticksId);
 			string error;

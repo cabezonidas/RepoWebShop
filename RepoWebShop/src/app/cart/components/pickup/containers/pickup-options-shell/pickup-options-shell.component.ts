@@ -10,7 +10,7 @@ import { IPickupOption } from '../../interfaces/ipickup-option';
 })
 export class PickupOptionsShellComponent implements OnInit {
 
-  options$: Observable<IPickupOption[]>
+  options$: Observable<IPickupOption[]>;
   constructor(public pickup: PickupService) { }
 
   ngOnInit() {

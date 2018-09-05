@@ -21,7 +21,7 @@ export class FullCatalogShellComponent implements OnInit, AfterViewInit {
   constructor(private store: Store<fromProduct.State>, private calendar: CalendarService, private scroll: ScrollService) {}
 
   ngOnInit() {
-    this.store.dispatch(new productActions.LoadProducts());
+    // this.store.dispatch(new productActions.LoadProducts());
     this.products$ = this.store.pipe(select(fromProduct.getProducts));
     this.scroll.instantScrollTo('top', -64);
   }

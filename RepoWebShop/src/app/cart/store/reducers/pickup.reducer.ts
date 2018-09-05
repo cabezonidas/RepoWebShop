@@ -22,24 +22,24 @@ export const initialState: PickupState = {
 
 export function reducer(state = initialState, action: fromPickup.PickupActions): PickupState {
     switch (action.type) {
-        case fromPickup.PickupActionTypes.GetPickupOption: 
-        case fromPickup.PickupActionTypes.GetPreparationTime: 
-        case fromPickup.PickupActionTypes.LoadPickupOptions: 
-        case fromPickup.PickupActionTypes.SetPickupOption: 
+        case fromPickup.PickupActionTypes.GetPickupOption:
+        case fromPickup.PickupActionTypes.GetPreparationTime:
+        case fromPickup.PickupActionTypes.LoadPickupOptions:
+        case fromPickup.PickupActionTypes.SetPickupOption:
         return {
             ...state,
             loading: true,
         };
 
-        case fromPickup.PickupActionTypes.GetPickupOptionSuccess: 
+        case fromPickup.PickupActionTypes.GetPickupOptionSuccess:
         return {
             ...state,
             pickup: action.payload,
             loading: false,
             loaded: true,
-        }
+        };
 
-        case fromPickup.PickupActionTypes.GetPreparationTimeSuccess: 
+        case fromPickup.PickupActionTypes.GetPreparationTimeSuccess:
         return {
             ...state,
             preparationTime: action.payload,
@@ -47,7 +47,7 @@ export function reducer(state = initialState, action: fromPickup.PickupActions):
             loaded: true,
         };
 
-        case fromPickup.PickupActionTypes.LoadPickupOptionsSuccess: 
+        case fromPickup.PickupActionTypes.LoadPickupOptionsSuccess:
         return {
             ...state,
             options: action.payload,
@@ -55,7 +55,7 @@ export function reducer(state = initialState, action: fromPickup.PickupActions):
             loaded: true,
         };
 
-        case fromPickup.PickupActionTypes.SetPickupOptionSuccess: 
+        case fromPickup.PickupActionTypes.SetPickupOptionSuccess:
         return {
             ...state,
             pickup: action.payload,
@@ -63,16 +63,16 @@ export function reducer(state = initialState, action: fromPickup.PickupActions):
             loaded: true,
         };
 
-        case fromPickup.PickupActionTypes.GetPickupOptionFail: 
-        case fromPickup.PickupActionTypes.GetPreparationTimeFail: 
-        case fromPickup.PickupActionTypes.LoadPickupOptionsFail: 
-        case fromPickup.PickupActionTypes.SetPickupOptionFail: 
+        case fromPickup.PickupActionTypes.GetPickupOptionFail:
+        case fromPickup.PickupActionTypes.GetPreparationTimeFail:
+        case fromPickup.PickupActionTypes.LoadPickupOptionsFail:
+        case fromPickup.PickupActionTypes.SetPickupOptionFail:
         return {
             ...state,
             error: action.payload,
             loading: false,
             loaded: true,
-        }
+        };
         default:
             return state;
     }
