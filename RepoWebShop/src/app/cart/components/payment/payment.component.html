@@ -1,0 +1,8 @@
+<div>
+  <button mat-raised-button routerLink="/reservation">Reservar</button>
+</div>
+<div *ngIf="mercadoLink">
+  <a id="mercadolink" (click)="goPay()" name="MP-Checkout" mp-mode="redirect" class="MP-blue-common-CDl MP-ar-l-rn-Dl" target="">
+      Pagar
+  </a>
+</div>

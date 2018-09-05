@@ -10,16 +10,16 @@ import { catchError } from 'rxjs/operators';
 export class ItemsService {
 
   constructor(private http: HttpClient) {}
-  
-  getCartItems = () => 
+
+  getCartItems = () =>
     this.http.get<ICartCatalogItem[]>('/api/_cartItems/getProductItems')
       .pipe(catchError((error: any) => Observable.throw(error.json())));
-  
-  addItem = (productId: number) => 
+
+  addItem = (productId: number) =>
     this.http.post<ICartCatalogItem[]>('/api/_cartItems/addProductItem', productId)
       .pipe(catchError((error: any) => Observable.throw(error.json())));
-  
-  removeItem = (productId: number) => 
+
+  removeItem = (productId: number) =>
     this.http.post<ICartCatalogItem[]>('/api/_cartItems/removeProductItem', productId)
       .pipe(catchError((error: any) => Observable.throw(error.json())));
 }

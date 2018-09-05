@@ -1,0 +1,33 @@
+.MP-blue-common-CDl:visited {
+    color: rgb(255, 255, 255);
+}
+
+.MP-blue-common-CDl:link {
+    color: rgb(255, 255, 255);
+}
+
+.MP-ar-l-rn-Dl {
+    font-size: 20px;
+    line-height: 40px;
+    font-family: Arial;
+    padding: 0px 20px;
+    border-radius: 7px;
+}
+
+.MP-blue-common-CDl {
+    cursor: pointer;
+    display: inline-block;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 40px;
+    color: rgb(255, 255, 255);
+    text-shadow: rgb(41, 62, 117) 1px 1px;
+    margin: 10px;
+    text-decoration: none;
+    padding: 0px 20px;
+    background: url(http://secure.mlstatic.com/mptools/assets/MP-payButton-blue.png) rgb(40, 83, 111);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(41, 62, 117);
+    border-image: initial;
+}

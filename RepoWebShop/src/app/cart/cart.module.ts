@@ -19,6 +19,7 @@ import { InvoiceComponent } from './components/invoice/invoice.component';
 import { CommentsComponent } from './components/comments/comments.component';
 import { ReservationComponent } from './components/reservation/reservation.component';
 import { MobileGuardService } from '../core/services/guard/mobile-guard.service';
+import { PaymentComponent } from './components/payment/payment.component';
 
 const cartRoutes: Routes = [
     { path: 'cart', component: CartComponent },
@@ -36,7 +37,8 @@ const cartRoutes: Routes = [
         ProductsComponent,
         InvoiceComponent,
         CommentsComponent,
-        ReservationComponent
+        ReservationComponent,
+        PaymentComponent
     ],
     imports: [
         AgmCoreModule.forRoot({
