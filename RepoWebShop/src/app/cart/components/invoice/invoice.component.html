@@ -1,6 +1,6 @@
 <form [formGroup]="cuitGroup">
   <p *ngIf="!savedCuit">
-      Si necesitás factura A, por favor ingresa tu cuit. 
+      ¿Sos empresa y necesitás factura A? Por favor ingresa tu cuit. 
   </p>  
 
 
@@ -22,7 +22,7 @@
   <div>
 
     <button mat-raised-button (tap)="removeCuit()" *ngIf="savedCuit">Quitar Cuit</button>
-    <button mat-raised-button *ngIf="!savedCuit" (tap)="continue()">No necesito factura A</button>
+    <button mat-raised-button *ngIf="!savedCuit" (tap)="continue()">No soy empresa</button>
   </div>
 </form>
 

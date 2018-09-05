@@ -3,10 +3,33 @@
       <input matInput placeholder="Código de Descuento" 
         formControlName="discount" name="discount" #discount >
     </mat-form-field>
-    <mat-form-field *ngIf="savedDiscount">
-      <mat-label>Descuento</mat-label>
-      <input matInput [value]="savedDiscount.phrase" disabled>
-    </mat-form-field>
+    <div *ngIf="savedDiscount">
+      <mat-form-field >
+        <mat-label>Descuento</mat-label>
+        <input matInput [value]="savedDiscount.phrase" disabled>
+      </mat-form-field>
+      <div *ngIf="savedDiscount.percentage === 100">
+        ¡Voucher ${{ savedDiscount.roof }}!
+      </div>
+      <div *ngIf="savedDiscount.percentage !== 100">
+        ¡Descuento {{ savedDiscount.percentage }}%!
+        <small> Hasta ${{ savedDiscount.roof }}</small>
+      </div>
+      <div class="discounted" >
+        <h5 *ngIf="totalInStore && totalInStore > totalWithoutDiscount" [ngStyle]="{'color': 'red'}">
+          Total en sucursal ${{ totalInStore }}
+        </h5>
+        <h4 *ngIf="totalWithoutDiscount" [ngStyle]="{'color': '#883636'}">
+          Total online ${{ totalWithoutDiscount }}
+        </h4>
+        <div *ngIf="totalOnline !== totalWithoutDiscount" >
+          <span class="dif">-{{ (totalWithoutDiscount - totalOnline) | currency}}</span>
+        </div>
+        <h3 *ngIf="totalOnline !== totalWithoutDiscount">
+          ¡Total con descuento {{ totalOnline | currency }}!
+        </h3>
+      </div>
+    </div>
 </form>
   
   <mat-progress-bar *ngIf="discountsLoading" mode="indeterminate"></mat-progress-bar>

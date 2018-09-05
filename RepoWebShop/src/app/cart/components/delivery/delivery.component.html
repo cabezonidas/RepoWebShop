@@ -35,6 +35,9 @@
       autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" value="{{ deliveryAddress ? deliveryAddress.deliveryInstructions : '' }}"
       >
     </mat-form-field>
+    <div *ngIf="deliveryAddress" class='confirmed'>
+      <strong>Subtotal</strong> ${{ totalWithoutDiscount }} <br/>
+    </div>
     <mat-progress-bar *ngIf="deliveryLoading" mode="indeterminate"></mat-progress-bar>
     <button mat-raised-button (tap)="clearDelivery()">Cancelar Envío</button>
     <button mat-raised-button color="primary" (tap)="next.emit()">Siguiente</button>

@@ -30,7 +30,7 @@ export class NewCateringShellComponent implements OnInit {
 
     this.catering$ = this.store.pipe(select(fromStore.getCustomCatering));
 
-    this.store.dispatch(new cateringActions.LoadItems());
+    // this.store.dispatch(new cateringActions.LoadItems());
     this.items$ = this.store.pipe(
       select(fromCatering.getItems),
       map(items => items.sort((a, b) => a.displayName.localeCompare(b.displayName))

@@ -10,13 +10,16 @@ h4, p, .incrementer {
 }
 .subtotal {
     text-align: center;
+    h3 {
+        margin-bottom: 5px;
+    }
 }
 .subtotal-online {
     color: green;
 }
 .subtotal-store {
     color: red;
-    text-decoration-line: line-through;
+    margin-bottom: 15px;
 }
 .hidden {
     display: none;

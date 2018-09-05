@@ -9,3 +9,18 @@ button {
 .hidden {
     display: none;
 }
+
+.discounted {
+    h3, h4, h5 {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    span.dif {
+        font-size: 2em;
+        background-color: green;
+        color: white;
+        padding-left: 15px;
+        padding-right: 20px;
+        border-radius: 5px;
+    }
+}

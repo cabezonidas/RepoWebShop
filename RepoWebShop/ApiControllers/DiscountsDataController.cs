@@ -27,10 +27,6 @@ namespace RepoWebShop.ApiControllers
 		}
 
 		[HttpPost]
-		[Route("ApplyDiscount")]
-		public IActionResult ApplyDiscount() => ApplyDiscount(string.Empty);
-
-		[HttpPost]
 		[Authorize(Roles = "Administrator")]
 		[Route("QuickDiscount/{value}")]
 		public async void QuickDiscount(decimal value)
@@ -44,8 +40,12 @@ namespace RepoWebShop.ApiControllers
 		}
 
 		[HttpPost]
+		[Route("ApplyDiscount")]
+		public Discount ApplyDiscount() => null;
+
+		[HttpPost]
         [Route("ApplyDiscount/{code}")]
-        public IActionResult ApplyDiscount(string code)
+        public Discount ApplyDiscount(string code)
         {
             var discount = _discountRepository.FindByCode(code ?? string.Empty);
             var error = "";
@@ -53,12 +53,12 @@ namespace RepoWebShop.ApiControllers
 
             if (!string.IsNullOrEmpty(error))
             {
-                return BadRequest(error);
+				return null;
             }
             else
             {
                 _cartRepository.AddDiscount(discount);
-                return Ok();
+				return discount;
             }
         }
     }

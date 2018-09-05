@@ -57,6 +57,18 @@ export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnD
     this.cateringCopiedSub.unsubscribe();
   }
 
+  slickPrev() {
+    if (this.slickModal) {
+      this.slickModal.slickPrev();
+    }
+  }
+
+  slickNext() {
+    try {
+      this.slickModal.slickNext();
+    } catch {}
+  }
+
   addCatering = (id: number) => this.store.dispatch(new fromStore.AddCatering(id));
   copyCatering = (id: number) => {
     this.store.dispatch(new fromStore.CopyCatering(id));

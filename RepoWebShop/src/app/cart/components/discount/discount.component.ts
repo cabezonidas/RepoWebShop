@@ -17,6 +17,10 @@ export class DiscountComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
   @Input() discountsLoading: boolean;
   @Input() discountsLoaded: boolean;
 
+  @Input() totalInStore: number;
+  @Input() totalOnline: number;
+  @Input() totalWithoutDiscount: number;
+
   isCodeValid = true;
   discountStream$ = new Subscription();
   discountGroup: FormGroup;

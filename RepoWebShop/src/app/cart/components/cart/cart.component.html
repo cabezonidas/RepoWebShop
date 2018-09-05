@@ -6,6 +6,7 @@
     <mat-card>
       <!-- <app-totals></app-totals> -->
       <mat-vertical-stepper linear #stepper>
+
         <mat-step >
           <ng-template matStepLabel>Pedido</ng-template>
           <app-products [items]="items$ | async" [caterings]="caterings$ | async" [customCatering]="customCatering$ | async"
@@ -20,14 +21,15 @@
             <ng-template matStepLabel>Envío</ng-template>
             <app-delivery (next)="_onNext()" (addDelivery)="saveDelivery($event)" (removeDelivery)="clearDelivery($event)"
             (updateInstructions)="updateInstructions($event)" [deliveryAddress]="delivery$ | async"
-            [deliveryLoaded]="deliveryLoaded$ | async" [deliveryLoading]="deliveryLoading$ | async"
+            [deliveryLoaded]="deliveryLoaded$ | async" [deliveryLoading]="deliveryLoading$ | async" [totalWithoutDiscount]="totalWithoutDiscount$ | async"
             ></app-delivery>
           </mat-step>
           <mat-step >
-            <ng-template matStepLabel>Código Promocional</ng-template>
-            <app-discount [savedDiscount]="discount$ | async" [discountsLoaded]="discountsLoaded$ | async" [discountsLoading]="discountsLoading$ | async" 
-            (next)="_onNext()" (clearDiscount)="clearDiscount()" (applyDiscount)="applyDiscount($event)" ></app-discount>
-          </mat-step>
+              <ng-template matStepLabel>Código Promocional</ng-template>
+              <app-discount [savedDiscount]="discount$ | async" [discountsLoaded]="discountsLoaded$ | async" [discountsLoading]="discountsLoading$ | async" 
+              [totalInStore]="totalInStore$ | async" [totalOnline]="total$ | async" [totalWithoutDiscount]="totalWithoutDiscount$ | async"
+              (next)="_onNext()" (clearDiscount)="clearDiscount()" (applyDiscount)="applyDiscount($event)" ></app-discount>
+            </mat-step>
         <mat-step >
           <ng-template matStepLabel>Retiro / Entrega</ng-template>
           <app-pickup-options-shell></app-pickup-options-shell>

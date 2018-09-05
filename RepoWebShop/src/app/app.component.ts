@@ -33,6 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.adjustPadding();
     this.store.dispatch(new productActions.LoadProducts());
     this.store.dispatch(new cateringActions.LoadCaterings());
+    this.store.dispatch(new cateringActions.LoadItems());
   }
 
   ngOnDestroy(): void {

@@ -32,6 +32,7 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() deliveryAddress: DeliveryAddress;
   @Input() deliveryLoaded: boolean;
   @Input() deliveryLoading: boolean;
+  @Input() totalWithoutDiscount: number;
 
   @Output() next = new EventEmitter<void>();
   @Output() addDelivery = new EventEmitter<DeliveryAddress>();
