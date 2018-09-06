@@ -10,6 +10,7 @@ import { MomentModule } from 'ngx-moment';
 import { TotalComponent } from './components/total/total.component';
 import { StoreRouterModule } from '../router/store-router.module';
 import { LogoHeaderComponent } from './components/logo-header/logo-header.component';
+import { AdminGearComponent } from './components/admin-gear/admin-gear.component';
 
 @NgModule({
   imports: [
@@ -27,9 +28,10 @@ import { LogoHeaderComponent } from './components/logo-header/logo-header.compon
     TrolleyIconShellComponent,
     ProductSubtotalComponent,
     TotalComponent,
-    StoreRouterModule
+    StoreRouterModule,
+    AdminGearComponent
   ],
   declarations: [LogoHeaderComponent, ProductSubtotalComponent, LoadingComponent, SnackbarComponent,
-    TrolleyIconComponent, TrolleyIconShellComponent, TotalComponent]
+    TrolleyIconComponent, TrolleyIconShellComponent, TotalComponent, AdminGearComponent]
 })
 export class SharedModule { }

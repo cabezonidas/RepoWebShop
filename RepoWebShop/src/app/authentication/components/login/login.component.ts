@@ -2,10 +2,13 @@ import { Component, OnInit, HostBinding, OnDestroy } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
 import { moveIn } from '../../../animations/router.animations';
-import * as firebase from 'firebase';
+// import * as firebase from 'firebase/auth';
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
 import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
 import { AppService } from '../../../core/services/app/app.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +26,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   returnUrl$ = new Subscription();
   userSub$ = new Subscription();
 
-  constructor(public afAuth: AngularFireAuth, private router: Router, private auth: AuthService, private appService: AppService) { }
+  constructor(public afAuth: AngularFireAuth, private titleService: Title,
+    private router: Router, private auth: AuthService, private appService: AppService) { }
 
   @HostBinding('@moveIn') role = '';
 
@@ -54,6 +58,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Inicio de sesión');
     this.returnUrl$ = this.appService.returnUrl.subscribe(url => this.returnUrl = url);
     this.userSub$ = this.appService.user.subscribe(user$ => {
       if (user$) {

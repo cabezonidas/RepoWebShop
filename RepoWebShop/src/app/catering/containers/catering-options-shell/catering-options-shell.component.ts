@@ -12,6 +12,7 @@ import { filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { SlickComponent } from 'ngx-slick';
 import { MatButton } from '@angular/material';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-catering-options-shell',
@@ -37,11 +38,13 @@ export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnD
   constructor(
     private store: Store<fromCatering.State>,
     private itemEffects: fromEffects.CateringsEffects,
-    private router: Router
+    private router: Router,
+    private titleService: Title
   ) { }
   @HostBinding('@moveIn') role = '';
 
   ngOnInit() {
+    this.titleService.setTitle('Catering para eventos');
     // this.store.dispatch(new cateringActions.LoadCaterings());
     this.caterings$ = this.store.pipe(select(fromCatering.getCaterings));
     this.cateringCopiedSub = this.itemEffects.copyCatering$

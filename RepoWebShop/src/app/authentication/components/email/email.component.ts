@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControl } from
 import { Subscription } from 'rxjs';
 import { EmailLogin } from '../../classes/EmailLogin';
 import { AppService } from '../../../core/services/app/app.service';
+import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-email',
   templateUrl: './email.component.html',
@@ -25,7 +26,7 @@ export class EmailComponent implements OnInit, OnDestroy {
   userSub = new Subscription();
   onSubmitSub = new Subscription();
 
-  constructor(private router: Router, private appService: AppService, private auth: AuthService, private fb: FormBuilder) {
+  constructor(private titleService: Title, private appService: AppService, private auth: AuthService, private fb: FormBuilder) {
     this.rForm = fb.group({
       'email': [null, Validators.compose([Validators.required, Validators.email])],
       'password': [null, Validators.compose([Validators.required, Validators.minLength(6)])]
@@ -35,6 +36,7 @@ export class EmailComponent implements OnInit, OnDestroy {
   @HostBinding('@moveIn') role = '';
 
   ngOnInit() {
+    this.titleService.setTitle('Email');
     this.returnUrlSub = this.appService.returnUrl.subscribe(url => this.returnUrl = url);
     this.userSub = this.appService.user.subscribe(user$ => {
       if (user$) {

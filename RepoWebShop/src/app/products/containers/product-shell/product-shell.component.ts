@@ -7,6 +7,7 @@ import * as productActions from '../../state/product.actions';
 import { IProduct } from '../../interfaces/iproduct';
 import { map } from 'rxjs/operators';
 import { CalendarService } from '../../../home/services/calendar.service';
+import { Title } from '@angular/platform-browser';
 @Component({
   templateUrl: './product-shell.component.html',
   styleUrls: ['./product-shell.component.scss']
@@ -16,9 +17,10 @@ export class ProductShellComponent implements OnInit {
   items$: Observable<IProduct[]>;
   errorMessage$: Observable<string>;
 
-  constructor(private store: Store<fromProduct.State>, private calendar: CalendarService) {}
+  constructor(private store: Store<fromProduct.State>, private calendar: CalendarService, private titleService: Title) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Productos destacados');
     // this.store.dispatch(new productActions.LoadProducts());
     this.items$ = this.store.pipe(
       select(fromProduct.getProducts),

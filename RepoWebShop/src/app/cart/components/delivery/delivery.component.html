@@ -43,7 +43,7 @@
     <button mat-raised-button color="primary" (tap)="next.emit()">Siguiente</button>
     
   </div>
-  <mat-progress-bar *ngIf="savingDelivery" mode="indeterminate"></mat-progress-bar>
+  <!-- <mat-progress-bar *ngIf="savingDelivery" mode="indeterminate"></mat-progress-bar> -->
 </div>
 <div [ngClass]="!canDeliver ? 'show' : 'hidden'">
   Tu orden no califica para envíos. Podés agregar algo más, o completar tu orden y retirar en sucursal.

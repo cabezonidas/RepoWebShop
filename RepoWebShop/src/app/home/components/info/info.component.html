@@ -6,9 +6,11 @@
   <mat-grid-list [cols]="breakpoint" rowHeight="500px" (window:resize)="onResize($event)">
     <mat-grid-tile >
       <p [ngClass]="breakpoint === 1 ? 'mobile' : ''" class="story">
+        <small>
         De las Artes es un emprendimiento familiar fundado en 1992. Somos apasionados de los sabores, y obsesivos de la calidad. Nuestra especialidad son los postres. Con fuerte influencia europea, y de otras partes del mundo, nuestra cocina expresa sabores con identidad que acompañan momentos únicos.
         <br>
         De las Artes también se dedica a armar el catering ideal para tus eventos. Sea una mesa dulce, una torta festiva, o el menú entero, nuestro personal siempre lo va a ayudar a dimensionar su catering. Nuestras opciones crecen al ritmo de las tendencias gastronómicas. Con experiencia, y profesionales de la gastronomía a cargo, un catering con sello 'De las Artes' está bien dimensionado, es novedoso, accesible y por sobre todo, de primera calidad.
+        </small>
       </p>
     </mat-grid-tile>
 

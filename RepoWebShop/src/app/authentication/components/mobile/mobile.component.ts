@@ -8,6 +8,7 @@ import { SmsService } from '../../services/sms.service';
 import { Subscription } from 'rxjs';
 import { AppService } from '../../../core/services/app/app.service';
 import { map } from 'rxjs/operators';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-mobile',
@@ -29,7 +30,7 @@ export class MobileComponent implements OnInit, OnDestroy {
   codeSent$ = new Subscription();
 
   constructor(private router: Router, private auth: AuthService, private fb: FormBuilder,
-    private sms: SmsService, private appService: AppService) {
+    private sms: SmsService, private appService: AppService, private titleService: Title) {
 
       this.mobileForm = fb.group({
         'mobile': [null, Validators.required, this.validMobile.bind(this)],
@@ -44,6 +45,7 @@ export class MobileComponent implements OnInit, OnDestroy {
   @HostBinding('@moveIn') role = '';
 
   ngOnInit() {
+    this.titleService.setTitle('Celular');
     this.returnUrl$ = this.appService.returnUrl.subscribe(url => this.returnUrl = url);
     this.user$ = this.appService.user.subscribe(user$ => {
       this.user = user$;

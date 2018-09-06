@@ -7,6 +7,7 @@ import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/fo
 import { MatStepper } from '@angular/material';
 import { AppService } from '../../../core/services/app/app.service';
 import { map } from 'rxjs/operators';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-password',
@@ -34,11 +35,12 @@ export class PasswordComponent implements OnInit, OnDestroy {
   emailCodeSent$ = new Subscription();
   returnUrl$ = new Subscription();
   savePassword$ = new Subscription();
-  constructor(private _formBuilder: FormBuilder, private auth: AuthService, private appService: AppService) { }
+  constructor(private _formBuilder: FormBuilder, private auth: AuthService, private appService: AppService, private titleService: Title) { }
   @HostBinding('@moveIn') role = '';
   @ViewChild('stepper') stepper: MatStepper;
 
   ngOnInit() {
+    this.titleService.setTitle('Contraseña');
     this.returnUrl$ = this.appService.returnUrl.subscribe(url => this.returnUrl = url);
     this.stepper$ = this.stepper.selectionChange.subscribe(() => this.sendCodeToEmail());
     this.emailGroup = this._formBuilder.group({

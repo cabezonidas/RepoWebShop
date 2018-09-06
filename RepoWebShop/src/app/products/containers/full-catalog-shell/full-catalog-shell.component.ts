@@ -8,6 +8,7 @@ import { IProduct } from '../../interfaces/iproduct';
 import { map } from 'rxjs/operators';
 import { CalendarService } from '../../../home/services/calendar.service';
 import { ScrollService } from '../../../home/services/scroll.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-full-catalog-shell',
@@ -18,10 +19,12 @@ export class FullCatalogShellComponent implements OnInit, AfterViewInit {
   products$: Observable<IProduct[]>;
   errorMessage$: Observable<string>;
 
-  constructor(private store: Store<fromProduct.State>, private calendar: CalendarService, private scroll: ScrollService) {}
+  constructor(private store: Store<fromProduct.State>, private calendar: CalendarService, private titleService: Title,
+    private scroll: ScrollService) {}
 
   ngOnInit() {
     // this.store.dispatch(new productActions.LoadProducts());
+    this.titleService.setTitle('Catálogo completo');
     this.products$ = this.store.pipe(select(fromProduct.getProducts));
     this.scroll.instantScrollTo('top', -64);
   }

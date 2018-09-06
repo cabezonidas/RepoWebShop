@@ -6,6 +6,7 @@ import { IAppUser } from '../../interfaces/iapp-user';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Subscription } from 'rxjs';
 import { AppService } from '../../../core/services/app/app.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-other',
@@ -21,7 +22,8 @@ export class MembersComponent implements OnInit, OnDestroy {
   logOut = new Subscription();
   userSub = new Subscription();
 
-  constructor(private router: Router, private auth: AuthService, private afAuth: AngularFireAuth, private appService: AppService) { }
+  constructor(private router: Router, private auth: AuthService, private titleService: Title,
+    private afAuth: AngularFireAuth, private appService: AppService) { }
 
   @HostBinding('@moveIn') role = '';
 
@@ -36,6 +38,7 @@ export class MembersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Perfil');
     this.userSub = this.appService.user.subscribe(user$ => {
       this.user = user$;
     });

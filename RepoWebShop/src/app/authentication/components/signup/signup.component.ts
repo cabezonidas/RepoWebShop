@@ -8,6 +8,7 @@ import { MatStepper } from '@angular/material';
 import { EmailRegistration } from '../../classes/EmailRegistration';
 import { AppService } from '../../../core/services/app/app.service';
 import { map } from 'rxjs/operators';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-signup',
@@ -33,7 +34,8 @@ export class SignupComponent implements OnInit, OnDestroy {
   user$ = new Subscription();
   stepper$ = new Subscription();
 
-  constructor(private _formBuilder: FormBuilder, private auth: AuthService, private router: Router, private appService: AppService) {}
+  constructor(private _formBuilder: FormBuilder, private auth: AuthService, private titleService: Title,
+    private router: Router, private appService: AppService) {}
 
   @HostBinding('@moveIn') role = '';
   @ViewChild('stepper') stepper: MatStepper;
@@ -41,6 +43,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   returnUrl = '';
 
   ngOnInit() {
+    this.titleService.setTitle('Registro');
     this.returnUrl$ = this.appService.returnUrl.subscribe(url => this.returnUrl = url);
     this.stepper$ = this.stepper.selectionChange.subscribe(() => this.bookEmail());
     this.user$ = this.appService.user.subscribe(user$ => {

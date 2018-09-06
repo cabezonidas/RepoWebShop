@@ -1,5 +1,5 @@
 <div id="container">
-  <mat-sidenav-container (backdropClick)="close('backdrop')">
+  <mat-sidenav-container (backdropClick)="close()">
     <mat-sidenav #sidenav (keydown.escape)="close()" disableClose>
       <app-leftnav-container (close)="close()"></app-leftnav-container>
     </mat-sidenav>

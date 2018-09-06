@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Reflection;
 using System.IO;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace RepoWebShop
 {
@@ -44,12 +43,6 @@ namespace RepoWebShop
 				opts.ExpireTimeSpan = TimeSpan.FromDays(90);
 				opts.Cookie.Name = "auth";
 			});
-			//.Services.ConfigureApplicationCookie(opts => 
-			//{
-			//	opts.SlidingExpiration = true;
-			//	opts.ExpireTimeSpan = TimeSpan.FromDays(90);
-			//	opts.Cookie.Name = "auth";
-			//});
 			services.AddAuthentication().AddFacebook(options => { options.AppId = _config["FacebookAppId"]; options.AppSecret = _config["FacebookAppSecret"]; });
 			services.AddAuthentication().AddGoogle(options => { options.ClientId = _config["GoogleAppId"]; options.ClientSecret = _config["GoogleAppSecret"]; });
 
@@ -95,14 +88,13 @@ namespace RepoWebShop
 			services.AddScoped(sp => ShoppingCart.GetCart(sp));
 			#endregion
 
-			services.AddMvc(o => { o.Filters.Add<GlobalExceptionFilter>(); }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1); ;
-			//services.AddReact();
+			services.AddMvc(o => { o.Filters.Add<GlobalExceptionFilter>(); }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-			if (_env.IsDevelopment())
-			{
-				services.AddSpaStaticFiles(configuration => { configuration.RootPath = "wwwroot/dist"; });
-				services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info { Title = "De las Artes API", Version = "v1" }); c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml")); });
-			}
+			//if (!_env.IsProduction())
+			//{
+			services.AddSpaStaticFiles(configuration => { configuration.RootPath = "wwwroot/dist"; });
+			services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info { Title = "De las Artes API", Version = "v1" }); c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml")); });
+			//}
 
 			services.AddAutoMapper();
 			services.AddMemoryCache();
@@ -115,6 +107,7 @@ namespace RepoWebShop
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
 		{
+			var spaReady = !env.IsProduction();
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
@@ -124,20 +117,21 @@ namespace RepoWebShop
 			else
 				app.UseExceptionHandler("/AppException");
 
-			//app.UseReact(config => { config.AddScript("~/Scripts/LunchEstimate.jsx").AddScript("~/Scripts/LunchItem.jsx"); });
-
 			app.UseSession();
 			app.UseAuthentication();
 
 			app.UseStaticFiles();
 
-			var spaReady = !env.IsProduction();
+			if(spaReady)
+			{
+				app.UseSpaStaticFiles();
+				app.UseDefaultFiles();
+			}
 
 			app.UseMvc(routes =>
 			{
 				routes.MapRoute(name: "categoryfilter", template: "Pie/{action}/{category?}", defaults: new { Controller = "Pie", action = "List" });
-				var defaultController = spaReady ? "" : "=Home";
-				routes.MapRoute(name: "default", template: "{controller" + defaultController + "}/{action=Index}/{id?}");
+				routes.MapRoute(name: "default", template: "{controller" + (spaReady ? "" : "=Home") + "}/{action=Index}/{id?}");
 			});
 
 			if (spaReady)
@@ -149,16 +143,11 @@ namespace RepoWebShop
 					c.RoutePrefix = "api";
 				});
 
-				//app.UseSpaStaticFiles();
-				//app.UseDefaultFiles();
 				app.UseSpa(spa =>
 				{
 					spa.Options.SourcePath = "wwwroot/dist";
 					if (env.IsDevelopment())
-					{
-						//spa.UseAngularCliServer(npmScript: "hmr");
 						spa.UseProxyToSpaDevelopmentServer("http://localhost:4200/");
-					}
 				});
 			}
 		}

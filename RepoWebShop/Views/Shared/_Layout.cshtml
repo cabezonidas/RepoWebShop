@@ -11,70 +11,77 @@
 <!DOCTYPE html>
 <html lang="es-ar">
 <head>
-    @RenderSection("metatags", required: false)
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-114850184-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+		gtag('config', 'UA-114850184-1');
+	</script>
+	@RenderSection("metatags", required: false)
 
-    <meta property="og:image" content="@host/Pictures/LogoWithBackground.png" />
-    @Html.Partial("~/Views/Shared/Favicon.cshtml")
-    @Html.Partial("~/Views/Shared/ExternalCss.cshtml")
-    @Html.Partial("~/Views/Shared/SharedCss.cshtml")
-    <meta property="fb:app_id" content="744831982380043" />
-    @RenderSection("styles", required: false)
+	<meta property="og:image" content="@host/Pictures/LogoWithBackground.png" />
+	@Html.Partial("~/Views/Shared/Favicon.cshtml")
+	@Html.Partial("~/Views/Shared/ExternalCss.cshtml")
+	@Html.Partial("~/Views/Shared/SharedCss.cshtml")
+	<meta property="fb:app_id" content="744831982380043" />
+	@RenderSection("styles", required: false)
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>De las Artes</title>
+	<title>De las Artes</title>
 
-    <link href="~/Content/Shared/_Layout.css" rel="stylesheet" />
+	<link href="~/Content/Shared/_Layout.css" rel="stylesheet" />
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/moment/moment.js"></script>
-    <script src="~/lib/moment/locale/es.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="~/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-    <script src="~/lib/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
-    <script src="~/lib/DataTables/media/js/jquery.dataTables.min.js"></script>
-    @*<script src="~/lib/owl.carousel/dist/owl.carousel.js"></script>*@
-    <script src="~/lib/slick-carousel/slick/slick.min.js"></script>
-    <script src="~/lib/matchheight/dist/jquery.matchHeight-min.js"></script>
-    <script src="~/lib/Snap.svg/dist/snap.svg-min.js"></script>
-    <script type="text/javascript" src="~/lib/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-    <script type="text/javascript" src="~/lib/lodash/dist/lodash.min.js"></script>
-    @if (env.IsProduction() && !isAdmin)
-    {
-        <script type="text/javascript" src="~/CommonJs/ZopimChat.js"></script>
-    }
-    <script src="~/lib/parallax.js/parallax.min.js"></script>
-    <script src="~/lib/slick-lightbox/dist/slick-lightbox.js"></script>
-    <script src="~/lib/selectize/dist/js/standalone/selectize.min.js"></script>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/moment/moment.js"></script>
+	<script src="~/lib/moment/locale/es.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="~/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+	<script src="~/lib/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+	<script src="~/lib/DataTables/media/js/jquery.dataTables.min.js"></script>
+	@*<script src="~/lib/owl.carousel/dist/owl.carousel.js"></script>*@
+	<script src="~/lib/slick-carousel/slick/slick.min.js"></script>
+	<script src="~/lib/matchheight/dist/jquery.matchHeight-min.js"></script>
+	<script src="~/lib/Snap.svg/dist/snap.svg-min.js"></script>
+	<script type="text/javascript" src="~/lib/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="~/lib/lodash/dist/lodash.min.js"></script>
+	@if (env.IsProduction() && !isAdmin)
+	{
+		<script type="text/javascript" src="~/CommonJs/ZopimChat.js"></script>
+	}
+	<script src="~/lib/parallax.js/parallax.min.js"></script>
+	<script src="~/lib/slick-lightbox/dist/slick-lightbox.js"></script>
+	<script src="~/lib/selectize/dist/js/standalone/selectize.min.js"></script>
 
-    @if (env.IsProduction() && !isAdmin)
-    {
-        <!-- Facebook Pixel Code -->
-        <script>
-            !function (f, b, e, v, n, t, s) {
-                if (f.fbq) return; n = f.fbq = function () {
-                    n.callMethod ?
-                        n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-                };
-                if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
-                n.queue = []; t = b.createElement(e); t.async = !0;
-                t.src = v; s = b.getElementsByTagName(e)[0];
-                s.parentNode.insertBefore(t, s)
-            }(window, document, 'script',
-                'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '165224134283131');
-            fbq('track', 'PageView');
-        </script>
-        <noscript>
-            <img height="1" width="1" style="display:none"
-                 src="https://www.facebook.com/tr?id=165224134283131&ev=PageView&noscript=1" />
-        </noscript>
-        <!-- End Facebook Pixel Code -->
-    }
-    <script src="~/Scripts/loader.js"></script>
-    <meta name="google-site-verification" content="TUVubu2wlOkQR100TXZkZ92DF5zmVpN22oYsYPpaZ9A" />
+	@if (env.IsProduction() && !isAdmin)
+	{
+		<!-- Facebook Pixel Code -->
+		<script>
+			!function (f, b, e, v, n, t, s) {
+				if (f.fbq) return; n = f.fbq = function () {
+					n.callMethod ?
+						n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+				};
+				if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+				n.queue = []; t = b.createElement(e); t.async = !0;
+				t.src = v; s = b.getElementsByTagName(e)[0];
+				s.parentNode.insertBefore(t, s)
+			}(window, document, 'script',
+				'https://connect.facebook.net/en_US/fbevents.js');
+			fbq('init', '165224134283131');
+			fbq('track', 'PageView');
+		</script>
+		<noscript>
+			<img height="1" width="1" style="display:none"
+				 src="https://www.facebook.com/tr?id=165224134283131&ev=PageView&noscript=1" />
+		</noscript>
+		<!-- End Facebook Pixel Code -->
+	}
+	<script src="~/Scripts/loader.js"></script>
+	<meta name="google-site-verification" content="TUVubu2wlOkQR100TXZkZ92DF5zmVpN22oYsYPpaZ9A" />
 </head>
 <body>
     @Html.Partial("~/Views/Shared/Loader.cshtml")

@@ -49,6 +49,7 @@ export class AuthService {
   registerMobile = (mobile: string): Observable<any> => (this.http.post('/api/_account/registerMobile/' + mobile, null) as Observable<any>);
   confirmMobile = (code: string): Observable<any> => (this.http.post('/api/_account/confirmMobile/' + code, null) as Observable<any>);
   updatePassword = (pass: string): Observable<any> => (this.http.post('/api/_account/updatePassword/' + pass, null) as Observable<any>);
+  isAdmin = (): Observable<boolean> => this.http.get<boolean>('/api/_account/isAdmin/');
 
 }
 

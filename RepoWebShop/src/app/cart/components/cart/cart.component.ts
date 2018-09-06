@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, HostBinding, ViewChild } from '@angular/core';
 import { MatDialog, MatStepper } from '@angular/material';
-import { Subscription, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ICartCatalogItem } from '../../interfaces/icart-catalog-item';
 import { moveIn, fallIn } from '../../../animations/router.animations';
 import { Store, select } from '@ngrx/store';
@@ -12,7 +12,7 @@ import { IDiscount } from '../../interfaces/idiscount';
 import { IPickupOption } from '../pickup/interfaces/ipickup-option';
 import { IPickupDate } from '../../interfaces/ipickup-date';
 import * as fromEffects from '../../store/effects';
-import { filter } from 'rxjs/operators';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-cart',
@@ -25,6 +25,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   constructor(public dialog: MatDialog,
     private totalsEffects: fromEffects.TotalsEffects,
+    private titleService: Title,
     private store: Store<fromStore.CartState>) {}
 
   items$: Observable<ICartCatalogItem[]>;
@@ -73,13 +74,7 @@ export class CartComponent implements OnInit, OnDestroy {
   @ViewChild('stepper') stepper: MatStepper;
 
   ngOnInit() {
-
-    // this.totalsLoaded$ = this.totalsEffects.loadTotals$
-    //   .pipe(
-    //     filter(action => action.type === fromStore.TotalsActionTypes.GetTotalsSuccess),
-    //     select(() => true)
-    //   );
-      // .subscribe(() => this.openSnackBar('¡Item agregado!'));
+    this.titleService.setTitle('Carrito');
 
     this.store.dispatch(new fromStore.LoadCaterings());
     this.caterings$ = this.store.pipe(select(fromStore.getCaterings));

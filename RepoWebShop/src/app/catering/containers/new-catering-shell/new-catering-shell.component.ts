@@ -10,6 +10,7 @@ import { ICatering } from '../../interfaces/ICatering';
 import { moveIn } from '../../../animations/router.animations';
 import * as fromStore from '../../../cart/store';
 import { CateringService } from '../../services/catering.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-new-catering-shell',
@@ -23,10 +24,11 @@ export class NewCateringShellComponent implements OnInit {
   loading$: Observable<boolean>;
   errorMessage$: Observable<string>;
 
-  constructor(private store: Store<fromCatering.State>) { }
+  constructor(private store: Store<fromCatering.State>, private titleService: Title) { }
   @HostBinding('@moveIn') role = '';
 
   ngOnInit() {
+    this.titleService.setTitle('Catering personalizado');
 
     this.catering$ = this.store.pipe(select(fromStore.getCustomCatering));
 
