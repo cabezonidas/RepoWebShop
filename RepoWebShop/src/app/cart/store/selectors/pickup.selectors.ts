@@ -30,4 +30,3 @@ export const getPickupState = createSelector(
     getPickupState,
     fromPickup.getPickupLoading
   );
-  

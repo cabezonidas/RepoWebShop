@@ -1,8 +1,36 @@
-<div>
-  <button mat-raised-button routerLink="/reservation">Reservar</button>
-</div>
-<div *ngIf="mercadoLink">
-  <a id="mercadolink" (click)="goPay()" name="MP-Checkout" mp-mode="redirect" class="MP-blue-common-CDl MP-ar-l-rn-Dl" target="">
-      Pagar
-  </a>
-</div>
+<mat-tab-group [dynamicHeight]="false">
+  <mat-tab label="Reserva online">
+    <p>
+      Pagalo cuando lo recibís. Si abonás en <strong class="appealing">efectivo</strong> te regalamos un <strong class="appealing">voucher de $50</strong> para tu próxima compra.
+    </p>
+    <div>
+      <button mat-raised-button routerLink="/reservation" color="primary">Reservar</button>
+    </div>
+    <p>
+      <small>
+        ¡Te mandamos un sms cuando el pedido está listo!
+      </small>
+    </p>  
+  </mat-tab>
+  <mat-tab label="Pago con MercadoPago">
+    <p>
+      Pagá ahora con <strong>MercadoPago</strong> con la tarjeta que más te convenga.  
+    </p>  
+    <div *ngIf="mercadoLink else loadingLink">
+      <a id="mercadolink" (click)="goPay()" name="MP-Checkout" mp-mode="redirect" class="MP-blue-common-CDl MP-ar-l-rn-Dl" target="">
+          Pagar
+      </a>
+    </div>
+    <ng-template #loadingLink>
+      <div>
+        <mat-spinner [diameter]="50"></mat-spinner>
+      </div>
+    </ng-template>
+    <p>
+      <small>
+        ¡No es necesario estar registrado!
+      </small>
+    </p>  
+  </mat-tab>
+</mat-tab-group>
+

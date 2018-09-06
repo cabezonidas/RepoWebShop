@@ -1,3 +1,13 @@
-<p>
-  Gracias por tu reserva!
-</p>
+<app-logo-header [header]="'Reserva de pedido'"></app-logo-header>
+<mat-card>
+
+  <div *ngIf="loading">
+    <p>Estamos procesando tu reserva</p>
+    <mat-spinner></mat-spinner>
+  </div>
+  
+  <div *ngIf="!loading && !booked">
+    <p>Algo salió mal con tu reserva y no está confirmada.</p>
+    <button mat-raised-button routerLink="/cart" color="primary">Volver al carrito</button>
+  </div>
+</mat-card>

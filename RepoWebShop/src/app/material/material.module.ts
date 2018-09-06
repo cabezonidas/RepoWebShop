@@ -21,6 +21,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatTabsModule} from '@angular/material/tabs';
 
 @NgModule({
     imports: [
@@ -46,7 +47,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
         MatExpansionModule,
         MatGridListModule,
         MatChipsModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatTabsModule
     ],
     exports: [
         MatButtonModule,
@@ -71,7 +73,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
         MatExpansionModule,
         MatGridListModule,
         MatChipsModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatTabsModule
     ],
     declarations: []
 })

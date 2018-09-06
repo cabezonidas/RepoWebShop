@@ -2,22 +2,23 @@
 <div class="form-container">
     <div class='logo'>
       <img src='../../../../assets/images/logoRepo.PNG'>
-      <h2 *ngIf="total$ | async; else empty">Revisar Orden</h2>
-      <ng-template #empty>
-        <div>
+      <h2 *ngIf="total$ | async">Revisar Orden</h2>
+      
+      <div *ngIf="!(totalsLoaded$ | async)">
+          <mat-spinner></mat-spinner>
+      </div>
+      
+      <div *ngIf="totalsLoaded$ | async">
+        <div *ngIf="!(total$ | async)">
           <h3>Parece que tu carrito está vacío</h3>
           <button mat-button routerLink="/products"><h2>Date una vuelta por nuestras exquisiteces</h2></button>
         </div>
-      </ng-template>
+      </div>
     </div>
     <mat-card *ngIf="total$ | async">
-      <!-- <app-totals></app-totals> -->
+
       <mat-vertical-stepper linear #stepper>
-          <mat-step >
-              <ng-template matStepLabel>Pago</ng-template>
-              <app-payment></app-payment>
-              
-            </mat-step>
+
         <mat-step >
           <ng-template matStepLabel>Pedido</ng-template>
           <app-products [items]="items$ | async" [caterings]="caterings$ | async" [customCatering]="customCatering$ | async"
@@ -57,7 +58,11 @@
           <app-invoice [savedCuit]="cuit$ | async" [cuitLoaded]="cuitLoaded$ | async" [cuitLoading]="cuitLoading$ | async"
           (next)="_onNext()" (addCuit)="addCuit($event)" (clearCuit)="clearCuit()"></app-invoice>
         </mat-step>
-
+        <mat-step >
+            <ng-template matStepLabel>Pago</ng-template>
+            <app-payment></app-payment>
+            
+          </mat-step>
       </mat-vertical-stepper>
     </mat-card>
   </div>

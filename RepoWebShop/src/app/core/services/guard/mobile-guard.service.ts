@@ -12,7 +12,6 @@ export class MobileGuardService implements CanActivate {
 
   url = '';
   constructor(private router: Router, private appService: AppService, private http: HttpClient) {
-    console.log('Mobile Guard constructor called');
     this.appService.returnUrl.subscribe(url => this.url = url);
   }
 
