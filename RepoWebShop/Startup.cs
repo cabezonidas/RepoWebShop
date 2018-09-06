@@ -131,13 +131,16 @@ namespace RepoWebShop
 
 			app.UseStaticFiles();
 
+			var spaReady = !env.IsProduction();
+
 			app.UseMvc(routes =>
 			{
 				routes.MapRoute(name: "categoryfilter", template: "Pie/{action}/{category?}", defaults: new { Controller = "Pie", action = "List" });
-				routes.MapRoute(name: "default", template: "{controller}/{action=Index}/{id?}");
+				var defaultController = spaReady ? "" : "=Home";
+				routes.MapRoute(name: "default", template: "{controller" + defaultController + "}/{action=Index}/{id?}");
 			});
 
-			if (env.IsDevelopment())
+			if (spaReady)
 			{
 				app.UseSwagger();
 				app.UseSwaggerUI(c =>
@@ -153,8 +156,8 @@ namespace RepoWebShop
 					spa.Options.SourcePath = "wwwroot/dist";
 					if (env.IsDevelopment())
 					{
-				//spa.UseAngularCliServer(npmScript: "hmr");
-				spa.UseProxyToSpaDevelopmentServer("http://localhost:4200/");
+						//spa.UseAngularCliServer(npmScript: "hmr");
+						spa.UseProxyToSpaDevelopmentServer("http://localhost:4200/");
 					}
 				});
 			}

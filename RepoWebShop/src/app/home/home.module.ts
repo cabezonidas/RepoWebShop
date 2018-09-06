@@ -13,7 +13,8 @@ import { HoursComponent } from './components/hours/hours.component';
 import { ProductModule } from '../products/products.module';
 
 const homeRoutes: Routes = [
-  { path: 'start', component: HomeShellComponent }
+  { path: 'start', component: HomeShellComponent },
+  { path: '', component: HomeShellComponent }
 ];
 
 @NgModule({
