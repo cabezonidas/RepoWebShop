@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef, NgZone, OnDestroy, AfterViewInit, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, NgZone, OnDestroy,
+  AfterViewInit, EventEmitter, Output, Input, OnChanges } from '@angular/core';
 import { MapsAPILoader } from '@agm/core';
 import { DeliveryAddress } from '../../classes/delivery-address';
 import { DeliveryService } from '../../services/delivery.service';
@@ -10,7 +11,7 @@ import { debounceTime, map, distinctUntilChanged, switchMap, tap } from 'rxjs/op
   templateUrl: './delivery.component.html',
   styleUrls: ['./delivery.component.scss']
 })
-export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit {
+export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   canDeliver$ = new Subscription();
   deliveryInstrStream$ = new Subscription();
   canDeliver = true;
@@ -51,6 +52,9 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit {
           this.autocomplete.addListener('place_changed', () => this.onPlaceSelection());
         }
       );
+  }
+
+  ngOnChanges() {
   }
 
   onPlaceSelection() {

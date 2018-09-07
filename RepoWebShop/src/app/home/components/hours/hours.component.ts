@@ -57,6 +57,7 @@ export class HoursComponent implements OnInit, OnDestroy {
     this.publicHolidaysSub.unsubscribe();
     this.vacationsSub.unsubscribe();
   }
+  cardHidden = () => !(window.innerWidth <= 980);
 
   day = (i: number): string => this.calendar.day(i);
   spDay = (date: Date): string => this.calendar.spDay(new Date(date));

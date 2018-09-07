@@ -1,6 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { PaymentService } from '../../services/payment.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
+import { ITotals } from '../../interfaces/itotals';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-payment',
@@ -10,11 +12,14 @@ import { Subscription } from 'rxjs';
 export class PaymentComponent implements OnInit, OnDestroy {
 
   paymentSub = new Subscription();
+  @Input() total: Observable<number>;
   mercadoLink: string;
   constructor(private payment: PaymentService) { }
 
   ngOnInit() {
-    this.paymentSub = this.payment.getMercadoPagoLink().subscribe(obj => {
+    this.paymentSub = this.total.pipe(
+      switchMap(() => this.payment.getMercadoPagoLink())
+    ).subscribe(obj => {
       this.mercadoLink = obj.link;
     });
   }

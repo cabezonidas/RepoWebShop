@@ -2,13 +2,13 @@
 <div class="calendar">
   <div class="photo-desc">
     <div class="col">
-        <mat-card >
+        <mat-card *ngIf="cardHidden()">
             <img mat-card-image src="https://farm2.staticflickr.com/1849/30545892208_acd9c2eb38_c.jpg" alt="">
           </mat-card>
     </div>
     <div class="col">
-      <div *ngIf="publicCalendarArray.length" >
-          <h1>Horarios de Atención</h1>
+      <h1>Horarios de Atención</h1>
+      <div *ngIf="publicCalendarArray.length else loading" >
         <div *ngFor="let calendarDay of publicCalendarArray">
           <span *ngFor="let hours of calendarDay; let i = index">
             <span *ngIf="i === 0" class="day">
@@ -20,6 +20,9 @@
           </span>
         </div>
       </div>
+      <ng-template #loading>
+        <mat-spinner></mat-spinner>
+      </ng-template>
       <div *ngIf="publicHolidayArray.length">
         <h2>Próximos Feriados</h2>
         <div *ngFor="let holiday of publicHolidayArray">
