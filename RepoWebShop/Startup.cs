@@ -90,11 +90,8 @@ namespace RepoWebShop
 
 			services.AddMvc(o => { o.Filters.Add<GlobalExceptionFilter>(); }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-			//if (!_env.IsProduction())
-			//{
 			services.AddSpaStaticFiles(configuration => { configuration.RootPath = "wwwroot/dist"; });
 			services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info { Title = "De las Artes API", Version = "v1" }); c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml")); });
-			//}
 
 			services.AddAutoMapper();
 			services.AddMemoryCache();
@@ -107,7 +104,6 @@ namespace RepoWebShop
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
 		{
-			var spaReady = !env.IsProduction();
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
@@ -121,35 +117,28 @@ namespace RepoWebShop
 			app.UseAuthentication();
 
 			app.UseStaticFiles();
-
-			if(spaReady)
-			{
-				app.UseSpaStaticFiles();
-				app.UseDefaultFiles();
-			}
+			app.UseSpaStaticFiles();
+			app.UseDefaultFiles();
 
 			app.UseMvc(routes =>
 			{
 				routes.MapRoute(name: "categoryfilter", template: "Pie/{action}/{category?}", defaults: new { Controller = "Pie", action = "List" });
-				routes.MapRoute(name: "default", template: "{controller" + (spaReady ? "" : "=Home") + "}/{action=Index}/{id?}");
+				routes.MapRoute(name: "default", template: "{controller}/{action=Index}/{id?}");
 			});
 
-			if (spaReady)
+			app.UseSwagger();
+			app.UseSwaggerUI(c =>
 			{
-				app.UseSwagger();
-				app.UseSwaggerUI(c =>
-				{
-					c.SwaggerEndpoint("/swagger/v1/swagger.json", "De las Artes API V1");
-					c.RoutePrefix = "api";
-				});
+				c.SwaggerEndpoint("/swagger/v1/swagger.json", "De las Artes API V1");
+				c.RoutePrefix = "api";
+			});
 
-				app.UseSpa(spa =>
-				{
-					spa.Options.SourcePath = "wwwroot/dist";
-					if (env.IsDevelopment())
-						spa.UseProxyToSpaDevelopmentServer("http://localhost:4200/");
-				});
-			}
+			app.UseSpa(spa =>
+			{
+				spa.Options.SourcePath = "wwwroot/dist";
+				if (env.IsDevelopment())
+					spa.UseProxyToSpaDevelopmentServer("http://localhost:4200/");
+			});
 		}
 	}
 }
