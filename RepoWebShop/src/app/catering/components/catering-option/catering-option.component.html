@@ -19,8 +19,8 @@
 
     <mat-card-actions>
       <div></div>
-      <button mat-raised-button color="primary" (tap)="addCatering.emit(catering.lunchId)">Comprar</button>
-      <button mat-raised-button (tap)="copyCatering.emit(catering.lunchId)">Modificar</button>
+      <button mat-raised-button color="primary" (click)="addCatering.emit(catering.lunchId)">Comprar</button>
+      <button mat-raised-button (click)="copyCatering.emit(catering.lunchId)">Modificar</button>
     </mat-card-actions>
     <app-soonest-pickup [soonestPickup]="soonestPickup(catering.estimation)"></app-soonest-pickup>
     <div class="footer">

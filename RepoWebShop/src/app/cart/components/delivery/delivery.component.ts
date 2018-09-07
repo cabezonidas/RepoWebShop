@@ -17,7 +17,10 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
   canDeliver = true;
   storeLatitude = -34.625265;
   storeLongitude = -58.434483;
-  deliveryKmRadius = 3;
+
+  centerDeliveryLatitude = -34.607026;
+  centerDeliveryLongitude = -58.444537;
+  deliveryKmRadius = 4.5;
 
   autocomplete: google.maps.places.Autocomplete;
   place: google.maps.places.PlaceResult;
@@ -75,7 +78,7 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
   }
 
   distance = (): number => this.delivery.getDistanceFromLatLonInKm(
-    this.storeLatitude, this.storeLongitude, this.address.latitude, this.address.longitude)
+    this.centerDeliveryLatitude, this.centerDeliveryLongitude, this.address.latitude, this.address.longitude)
 
   inZone = (): boolean => this.distance() <= this.deliveryKmRadius;
 

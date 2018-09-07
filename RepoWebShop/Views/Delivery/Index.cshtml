@@ -35,8 +35,8 @@
         <form asp-controller="Delivery" asp-action="Index" class="form-horizontal" method="post" role="form" autocomplete="off">
             <div class="form-group" id="locationField">
                 <div class="text-center text-muted" style="margin-bottom: 20px;">
-                    <h3>Horarios de envío</h3>
-                    <h4 class="">De Martes a Sábados<br />Entre 10:30 y 12:30 o entre 18:00 y 20:00</h4>
+                    @*<h3>Horarios de envío</h3>
+                    <h4 class="">De Martes a Sábados<br />Entre 10:30 y 12:30 o entre 18:00 y 20:00</h4>*@
                 </div>
                 <label asp-for="AddressLine1" class="col-md-2 control-label"></label>
                 <div class="col-md-10">
@@ -133,8 +133,7 @@
         <h3 class="text-muted text-center">Zona de Cobertura - Radio de @Model.DeliveryRadius mts</h3>
         <h4 class="text-center text-muted">El costo de envío se calcula automáticamente</h4>
         <h5 class="text-center text-muted">
-            @{var maxCostDelivery = (Model.DeliveryRadius / 100) * Model.CostByBlock; }
-            El costo varía entre $@Model.MinimumCharge y $@maxCostDelivery dependiendo la distancia.<br />
+            El costo mínimo es $@Model.MinimumCharge y aumenta dependiendo la distancia.<br />
 
         </h5>
         <div id="map" style="height:350px; width:100%;"></div>
@@ -224,10 +223,11 @@
 
     function initMap() {
         var citymap = {
-            center: { lat: -34.625265, lng: -58.434483 }
+            // center: { lat: -34.625265, lng: -58.434483 } store location
+			center: { lat: -34.607026, lng: -58.444537 }
         };
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 12,
+            zoom: 11,
             center: citymap.center,
             mapTypeId: 'terrain'
         });
@@ -239,7 +239,7 @@
             fillOpacity: 0.35,
             map: map,
             center: citymap.center,
-            radius: 3000
+            radius: 4500
         });
     }
 

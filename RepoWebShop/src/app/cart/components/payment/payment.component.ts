@@ -3,6 +3,7 @@ import { PaymentService } from '../../services/payment.service';
 import { Subscription, Observable } from 'rxjs';
 import { ITotals } from '../../interfaces/itotals';
 import { switchMap } from 'rxjs/operators';
+import { ScrollService } from '../../../home/services/scroll.service';
 
 @Component({
   selector: 'app-payment',
@@ -14,7 +15,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
   paymentSub = new Subscription();
   @Input() total: Observable<number>;
   mercadoLink: string;
-  constructor(private payment: PaymentService) { }
+  constructor(private payment: PaymentService, private scroll: ScrollService) { }
 
   ngOnInit() {
     this.paymentSub = this.total.pipe(

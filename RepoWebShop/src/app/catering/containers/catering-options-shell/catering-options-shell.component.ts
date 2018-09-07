@@ -1,6 +1,7 @@
-import { Component, OnInit, HostBinding, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, HostBinding, OnDestroy, ViewChild, ElementRef, AfterViewInit, OnChanges } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
+import * as M from 'materialize-css';
 
 import * as fromEffects from '../../../cart/store/effects';
 import * as fromCatering from '../../state';
@@ -21,6 +22,7 @@ import { Title } from '@angular/platform-browser';
   animations: [moveIn()]
 })
 export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnDestroy {
+
   cateringCopiedSub = new Subscription();
   caterings$: Observable<ICatering[]>;
   carouselInit = false;
@@ -29,9 +31,9 @@ export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnD
     slidesToShow: 1,
     slidesToScroll: 1,
     variableWidth: true,
-    centerMode: true,
-    centerPadding: '40px',
-    // infinite: true,
+    // centerMode: true, This breaks clicks on slides
+    // centerPadding: '40px',
+    infinite: false, // This when set true, breaks clicks on slides
   };
 
   @ViewChild('slickModal') slickModal: SlickComponent;

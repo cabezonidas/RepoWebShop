@@ -89,8 +89,9 @@ namespace RepoWebShop.MvcControllers
             if(distance > deliveryAddres.DeliveryRadius)
             {
                 if(distance > 0)
-                    ModelState.AddModelError("DistanceNotCovered", $"La distancia debe ser menor a {deliveryAddres.DeliveryRadius/1000}kms. Tu ubicación está a {(distance / 1000.0).ToString("#.##")} kms.");
-                else
+					// ModelState.AddModelError("DistanceNotCovered", $"La distancia debe ser menor a {deliveryAddres.DeliveryRadius/1000}kms. Tu ubicación está a {(distance / 1000.0).ToString("#.##")} kms.");
+					ModelState.AddModelError("DistanceNotCovered", $"Lamentablemente no nuestro envío por ahora no llega hasta tu dirección. Llamanos al 4925-0262 para coordinar.");
+				else
                     ModelState.AddModelError("DistanceError", "No pudimos calcular la distancia.");
 
                 return View(deliveryAddres);

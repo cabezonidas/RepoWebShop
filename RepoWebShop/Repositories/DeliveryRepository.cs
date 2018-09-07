@@ -70,7 +70,7 @@ namespace RepoWebShop.Repositories
         public async Task<int> GetDistanceAsync(string addressLine1)
         {
             var destination = await GetGeoLocationAsync(addressLine1);
-            var res1 = Distance(destination.Key, destination.Value, 'K');
+            var res1 = DistanceFromStore(destination.Key, destination.Value, 'K');
 
             return res1;
         }
@@ -81,7 +81,7 @@ namespace RepoWebShop.Repositories
             var placeConfirmed = await GetPlaceAsync(potentialPlace);
 
             var destination = await GetGeoLocationAsync(addressLine1);
-            var res1 = Distance(destination.Key, destination.Value, 'K');
+            var res1 = DistanceFromStore(destination.Key, destination.Value, 'K');
 
             return res1;
         }
@@ -116,15 +116,16 @@ namespace RepoWebShop.Repositories
             return result;
         }
 
-        public int Distance(string lat, string lon, char unit)
+		public int DistanceFromStore(string lat, string lon, char unit) => Distance(-34.625265, -58.434483, lat, lon, unit);
+		public int DistanceFromDeliveryCenter(string lat, string lon, char unit) => Distance(-34.607026, -58.444537, lat, lon, unit);
+
+
+		private int Distance(double lat2, double lon2, string lat, string lon, char unit)
         {
             var lat1 = Double.Parse(lat, CultureInfo.InvariantCulture);
             var lon1 = Double.Parse(lon, CultureInfo.InvariantCulture);
 
-
-            var lat2 = -34.625265;
-            var lon2 = -58.434483;
-            double theta = lon1 - lon2;
+			double theta = lon1 - lon2;
             double dist = Math.Sin(deg2rad(lat1)) * Math.Sin(deg2rad(lat2)) + Math.Cos(deg2rad(lat1)) * Math.Cos(deg2rad(lat2)) * Math.Cos(deg2rad(theta));
             dist = Math.Acos(dist);
             dist = rad2deg(dist);
@@ -148,13 +149,13 @@ namespace RepoWebShop.Repositories
         {
             var radius = _config.GetValue<int>("DeliveryRadius");
             var result = ((int)(distance / 100)) * _costByBlock;
-            if (radius >= distance)
-            {
-                if (result < _minimumCharge)
-                    result = _minimumCharge;
-                return result;
-            }
-            throw new Exception($"El destino está fuera del rango. El costo sería ${result}, pero el destino está a {distance} mts y nuestra distancia de cobertura son {radius} mts. ");
+            if (result < _minimumCharge)
+                result = _minimumCharge;
+            return result;
+            //if (radius >= distance)
+            //{
+	        //    throw new Exception($"El destino está fuera del rango. El costo sería ${result}, pero lamentablemente tu dirección está fuera de nuestra area de cobertura. Podés llamarnos al 4925-0262 para combinar un envío especial.");
+            //}
         }
 
         public async Task<string> GuessPlaceIdAsync(string address)
@@ -230,13 +231,13 @@ namespace RepoWebShop.Repositories
 
 		public bool IsValidDistance(string lat, string lng)
 		{
-			int distance = Distance(lat, lng, 'K');
+			int distance = DistanceFromDeliveryCenter(lat, lng, 'K');
 			return distance <= _deliveryRadius;
 		}
 
 		public _DeliveryAddress SaveAddress(_DeliveryAddress _address)
 		{
-			_address.Distance = Distance(_address.Latitude, _address.Longitude, 'K');
+			_address.Distance = DistanceFromStore(_address.Latitude, _address.Longitude, 'K');
 			_address.DeliveryCost = GetDeliveryEstimate(_address.Distance);
 
 			var address = _mapper.Map<DeliveryAddress>(_address);

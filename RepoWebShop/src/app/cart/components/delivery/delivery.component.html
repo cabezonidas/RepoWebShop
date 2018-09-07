@@ -2,9 +2,10 @@
 <div [ngClass]="deliveryLoaded ? 'show' : 'hidden'">
 <div [ngClass]="canDeliver ? 'show' : 'hidden'">
   <div [ngClass]="deliveryAddress ? 'hidden' : 'show'">
-    <agm-map [latitude]="storeLatitude" [longitude]="storeLongitude" [zoom]="12" [clickableIcons]='false' [streetViewControl]='false'>
+    <small>Area de cobertura</small>
+    <agm-map [latitude]="centerDeliveryLatitude" [longitude]="centerDeliveryLongitude" [zoom]="11" [clickableIcons]='false' [streetViewControl]='false'>
       <agm-marker *ngIf="fullAddress" [latitude]="address.latitude" [longitude]="address.longitude"></agm-marker>
-      <agm-circle [latitude]="storeLatitude" [longitude]="storeLongitude" [radius]="deliveryKmRadius * 1000" [fillOpacity]="0.5" [fillColor]="'CadetBlue'">
+      <agm-circle [latitude]="centerDeliveryLatitude" [longitude]="centerDeliveryLongitude" [radius]="deliveryKmRadius * 1000" [fillOpacity]="0.5" [fillColor]="'CadetBlue'">
       </agm-circle>
     </agm-map>
     

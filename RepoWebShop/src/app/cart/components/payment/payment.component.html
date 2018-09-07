@@ -1,5 +1,8 @@
-<mat-tab-group [dynamicHeight]="false">
-  <mat-tab label="Reserva">
+<div class="container">
+
+
+<mat-tab-group >
+  <mat-tab label="Reserva" >
     <p>
       Pagalo cuando lo recibís. Si abonás en <strong class="appealing">efectivo</strong> te regalamos un <strong class="appealing">voucher de $50</strong> para tu próxima compra.
     </p>
@@ -16,7 +19,7 @@
     <p>
       Pagá ahora con <strong>MercadoPago</strong> con la tarjeta que más te convenga.  
     </p>  
-    <div *ngIf="mercadoLink else loadingLink">
+    <div *ngIf="mercadoLink else loadingLink" >
       <a id="mercadolink" (click)="goPay()" name="MP-Checkout" mp-mode="redirect" class="MP-blue-common-CDl MP-ar-l-rn-Dl" target="">
           Pagar
       </a>
@@ -33,4 +36,6 @@
     </p>  
   </mat-tab>
 </mat-tab-group>
+</div>
+<div id="bottom"></div>
 

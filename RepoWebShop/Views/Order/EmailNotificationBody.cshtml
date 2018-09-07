@@ -33,15 +33,16 @@
                         <div>
                         </div>
                         @if (Model.OrderReady.HasValue)
-                        {
+						{
                             <div>
                                 <br />
-                                Entrega: A partir del @_calendar.FriendlyDate(Model.OrderReady) a las @Model.OrderReady.Value.ToString("HH\\:mm").ToLower()
-                                @if (Model.TimeLeftUntilStoreCloses.HasValue)
-                                {
+								@{var handing = Model.Delivery != null ? "Envío:" : "Entrega:"; }
+                                @handing @_calendar.FriendlyDate(Model.OrderReady) a las @Model.OrderReady.Value.ToString("HH\\:mm").ToLower()
+                                @if (Model.TimeLeftUntilStoreCloses.HasValue && Model.Delivery == null)
+								{
                                     <br />
                                     <div>
-                                        Recordá que <span style="text-decoration: underline">a las @Model.OrderReady.Value.Add(Model.TimeLeftUntilStoreCloses.Value).ToString("HH\\:mm").ToLower() cerramos</span>.
+                                        Hasta <span style="text-decoration: underline">las @Model.OrderReady.Value.Add(Model.TimeLeftUntilStoreCloses.Value).ToString("HH\\:mm").ToLower() estamos abiertos</span>.
                                     </div>
                                 }
                             </div>
@@ -263,13 +264,6 @@
                         <br />
                         <div style="font-size: larger"><strong>Instrucciones de envío</strong><br /></div>
                         <div class="text-muted">@Model.Delivery.DeliveryInstructions</div>
-                    }
-
-                    @if (Model.Delivery != null)
-                    {
-                        <br />
-                        <div style="font-size: larger"><strong>Horarios de envío</strong></div>
-                        <div>Entre 10:30 y 12:30 o entre 18:00 y 20:00</div>
                     }
 
                     @if (!String.IsNullOrEmpty(Model.Comments))
