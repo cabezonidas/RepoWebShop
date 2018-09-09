@@ -1,0 +1,6 @@
+<span>
+  {{ price | currency : '$' : true : '1.0-0'}}
+</span>
+<span *ngIf="price < priceInStore" class="discount">
+  <span>-{{ priceInStore - price | currency : '$' : true : '1.0-0'}}</span>
+</span>

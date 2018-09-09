@@ -1,4 +1,4 @@
-<mat-card class="card">
+<mat-card class="card" (window:resize)="onResize()" [ngStyle]="{'width.px': cardWidth}">
   <div class='content'>
     <div class="header">
       <h3 class="suggested" *ngIf="catering.isGeneric">
@@ -15,12 +15,41 @@
         {{ item.itemCount }} {{ item.item.displayName }}
       </div>
     </mat-card-content>
-    <app-total [price]="catering.price" [priceInStore]="catering.priceInStore"></app-total>
+
+    <table>
+      <tbody>
+        <tr>
+          <td class="arrow">
+            <button mat-icon-button  (click)="prev.emit()">
+              <mat-icon >keyboard_arrow_left</mat-icon>
+            </button>
+          </td>
+          <td><app-total [price]="catering.price" [priceInStore]="catering.priceInStore"></app-total></td>
+          <td class="arrow">
+            <button mat-icon-button  (click)="next.emit()">
+              <mat-icon >keyboard_arrow_right</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    
 
     <mat-card-actions>
       <div></div>
-      <button mat-raised-button color="primary" (click)="addCatering.emit(catering.lunchId)">Comprar</button>
-      <button mat-raised-button (click)="copyCatering.emit(catering.lunchId)">Modificar</button>
+      <!-- <button mat-mini-fab  (click)="addCatering.emit(catering.lunchId)" >
+        <mat-icon >add_shopping_cart</mat-icon>
+      </button> -->
+      <button mat-raised-button color="primary" (click)="addCatering.emit(catering.lunchId)">
+        <mat-icon aria-label="">add_shopping_cart</mat-icon>
+        <small>Agregar al carrito</small>
+      </button>
+      <!-- <button mat-raised-button color="primary" (click)="addCatering.emit(catering.lunchId)">Comprar</button> -->
+      <button mat-raised-button (click)="copyCatering.emit(catering.lunchId)">
+        <mat-icon aria-label="Example icon-button with a heart icon">build</mat-icon>
+        Modificar
+      </button>
     </mat-card-actions>
     <app-soonest-pickup [soonestPickup]="soonestPickup(catering.estimation)"></app-soonest-pickup>
     <div class="footer">

@@ -21,7 +21,7 @@ export class FullCatalogComponent implements OnInit, OnChanges {
 
   displayedColumns: string[] = [
     'displayName',
-    'action'
+    // 'action'
   ];
 
   constructor(private store: Store<fromProduct.State>, private calendar: CalendarService) {}

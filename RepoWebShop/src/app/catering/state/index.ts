@@ -20,6 +20,10 @@ export const getLoading = createSelector(
     getCateringFeatureState,
     state => state.loading
 );
+export const getCateringsLoaded = createSelector(
+    getCateringFeatureState,
+    state => state.cateringsLoaded
+);
 export const getCaterings = createSelector(
     getCateringFeatureState,
     state => state.caterings

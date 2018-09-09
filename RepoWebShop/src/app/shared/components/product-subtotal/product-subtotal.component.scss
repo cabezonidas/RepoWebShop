@@ -10,6 +10,9 @@
 .priceBundle {
     display: flex !important;
 }
+.priceInStore {
+    text-decoration: line-through;
+}
 
 .hidden {
     display: none;

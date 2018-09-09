@@ -5,6 +5,8 @@ import { DeliveryAddress } from '../../classes/delivery-address';
 import { DeliveryService } from '../../services/delivery.service';
 import { Observable, Subscription, fromEvent, of } from 'rxjs';
 import { debounceTime, map, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
+import * as fromStore from '../../store';
+import { Store, select } from '@ngrx/store';
 
 @Component({
   selector: 'app-delivery',
@@ -45,16 +47,21 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 
 
-  constructor(private mapsAPILoader: MapsAPILoader, private ngZone: NgZone, private delivery: DeliveryService) { }
+  constructor(private store: Store<fromStore.CartState>,
+    private mapsAPILoader: MapsAPILoader, private ngZone: NgZone, private delivery: DeliveryService) { }
 
   ngOnInit() {
-    this.canDeliver$ = this.delivery.canDeliver().subscribe(can => this.canDeliver = can);
-      this.mapsAPILoader.load().then(() => {
-          this.autocomplete = new google.maps.places.Autocomplete(
-            this.searchElement.nativeElement, { types: ['address'], componentRestrictions: { country: 'ar' }});
-          this.autocomplete.addListener('place_changed', () => this.onPlaceSelection());
-        }
-      );
+    this.canDeliver$ = this.store.pipe(
+      select(fromStore.getTotal),
+      switchMap(() => this.delivery.canDeliver())
+    ).subscribe(can => this.canDeliver = can);
+
+    this.mapsAPILoader.load().then(() => {
+        this.autocomplete = new google.maps.places.Autocomplete(
+          this.searchElement.nativeElement, { types: ['address'], componentRestrictions: { country: 'ar' }});
+        this.autocomplete.addListener('place_changed', () => this.onPlaceSelection());
+      }
+    );
   }
 
   ngOnChanges() {

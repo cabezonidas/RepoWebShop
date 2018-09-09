@@ -8,6 +8,7 @@ import { IProduct } from '../../interfaces/iproduct';
 import { map } from 'rxjs/operators';
 import { CalendarService } from '../../../home/services/calendar.service';
 import { Title } from '@angular/platform-browser';
+import { ScrollService } from '../../../home/services/scroll.service';
 @Component({
   templateUrl: './product-shell.component.html',
   styleUrls: ['./product-shell.component.scss']
@@ -17,7 +18,8 @@ export class ProductShellComponent implements OnInit {
   items$: Observable<IProduct[]>;
   errorMessage$: Observable<string>;
 
-  constructor(private store: Store<fromProduct.State>, private calendar: CalendarService, private titleService: Title) {}
+  constructor(private store: Store<fromProduct.State>, private calendar: CalendarService,
+    private titleService: Title, private scroll: ScrollService) {}
 
   ngOnInit(): void {
     this.titleService.setTitle('Productos destacados');
@@ -28,5 +30,6 @@ export class ProductShellComponent implements OnInit {
     );
 
     this.errorMessage$ = this.store.pipe(select(fromProduct.getError));
+    this.scroll.instantScrollTo('top', -64);
   }
 }

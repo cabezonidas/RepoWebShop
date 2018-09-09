@@ -11,6 +11,7 @@ import { TotalComponent } from './components/total/total.component';
 import { StoreRouterModule } from '../router/store-router.module';
 import { LogoHeaderComponent } from './components/logo-header/logo-header.component';
 import { AdminGearComponent } from './components/admin-gear/admin-gear.component';
+import { ProductPriceComponent } from './components/product-price/product-price.component';
 
 @NgModule({
   imports: [
@@ -29,9 +30,10 @@ import { AdminGearComponent } from './components/admin-gear/admin-gear.component
     ProductSubtotalComponent,
     TotalComponent,
     StoreRouterModule,
-    AdminGearComponent
+    AdminGearComponent,
+    ProductPriceComponent
   ],
   declarations: [LogoHeaderComponent, ProductSubtotalComponent, LoadingComponent, SnackbarComponent,
-    TrolleyIconComponent, TrolleyIconShellComponent, TotalComponent, AdminGearComponent]
+    TrolleyIconComponent, TrolleyIconShellComponent, TotalComponent, AdminGearComponent, ProductPriceComponent]
 })
 export class SharedModule { }

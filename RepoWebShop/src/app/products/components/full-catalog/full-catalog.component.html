@@ -20,24 +20,40 @@
         </th>
         <td mat-cell *matCellDef="let element">
           <div>
-            <h3>{{ element.displayName }}</h3>
+            <h3>
+              {{ element.displayName }}
+              <!-- <app-product-price [price]="element.price" [priceInStore]="element.priceInStore"></app-product-price> -->
+            </h3>
             <div>{{ element.displayDescription }}</div>
-            <h5>Porciones: {{ element.portions }} / Elaboración: {{ element.preparationTime}} hs</h5>
+            <div>
+              <small>
+                <strong>Porciones: {{ element.portions }}</strong>
+              </small>
+            </div>
+            <div class='buyButton'>
+              <button mat-raised-button color="primary" (click)="addToCart(element.productId)">
+                <mat-icon aria-label="">add_shopping_cart</mat-icon>
+                <small>Agregar al carrito</small>
+              </button>
+            </div>
             <app-soonest-pickup [soonestPickup]="soonestPickup(element.estimation)"></app-soonest-pickup>
             <br>
           </div>
         </td>
       </ng-container>
             
-      <ng-container matColumnDef="action">
+      <!-- <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
           <app-price-comparison [price]="element.price" [priceInStore]="element.priceInStore"></app-price-comparison>
           <div class='buyButton'>
-            <button mat-raised-button (click)="addToCart(element.productId)" color="primary" >Comprar</button>
+            <button mat-raised-button color="primary" (click)="addToCart(element.productId)">
+              <mat-icon aria-label="">add_shopping_cart</mat-icon>
+              <small>Agregar al carrito</small>
+            </button>
           </div>
         </td>
-      </ng-container>
+      </ng-container> -->
     
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

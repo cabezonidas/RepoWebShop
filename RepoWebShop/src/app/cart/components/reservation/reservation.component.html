@@ -1,5 +1,5 @@
 <app-logo-header [header]="'Reserva de pedido'"></app-logo-header>
-<mat-card>
+<mat-card >
 
   <div *ngIf="loading">
     <p>Estamos procesando tu reserva</p>
@@ -10,4 +10,7 @@
     <p>Algo salió mal con tu reserva y no está confirmada.</p>
     <button mat-raised-button routerLink="/cart" color="primary">Volver al carrito</button>
   </div>
+  <p *ngIf="!loading && booked">
+    ¡Confirmado! Redirigiendo...
+  </p>
 </mat-card>

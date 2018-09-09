@@ -1,31 +1,48 @@
+.header {
+    display: flex;
+    .spacer {
+        flex: 1 1 auto;
+    }
+}
+
 table {
     width: 100%;
     tr:nth-child(even) {
         color: #460b07;
     }
     tr:nth-child(odd) {
-        color: #460b07
+        color: #460b07;
+    }
+    td {
+        display: flex;
+        .buyButton {
+            text-align: center;
+            min-width: 60px;
+            h3 {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+            .green {
+                color: green;
+            }
+        }
+        .spacer {
+            flex: 1 1 auto;
+        }
+        .description {
+            min-width: 220px;
+            h5 {
+                margin-top: 2px;
+                margin-bottom: 2px;
+            }
+        }
     }
 }
-    .description {
-        width: 100%;
-        h5 {
-            margin-top: 2px;
-            margin-bottom: 2px;
-        }
-    }
-    .buyButton {
-        text-align: center;
-        width: 100%;
-        h3 {
-            margin-top: 0;
-            margin-bottom: 0;
-        }
-        .green {
-            color: green;
-        }
-    }
 
+    
+small.add-to-trolley {
+    font-size: 0.8em;
+}
 .discount {
     background-color: green;
     color: white;
@@ -38,4 +55,5 @@ table {
 }
 .priceInStore {
     color: red;
+    text-decoration: line-through
 }

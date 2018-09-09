@@ -1,3 +1,4 @@
+<div id='top'></div>
 <app-logo-header [header]="'Postres destacados'"></app-logo-header>
 <div class='product-shell'>
     <div *ngIf="items$ | async as products">
@@ -10,8 +11,8 @@
 
             <div class="even-more" >
                 <h3>¿Te quedaste con ganas de más?</h3>
-                <button mat-button routerLink="/all-items"><p>¡Fijate nuestro catálogo completo!</p></button>
-                <h2>Más de 100 delicias que podés comprar</h2>
+                <button mat-button routerLink="/all-items" class="view-more">¡Ver catálogo completo!</button>
+                <p>Más de 100 delicias que podés comprar</p>
                 <button mat-raised-button color="primary" routerLink="/all-items">¡Quiero ver!</button>
             </div>
         </mat-card>

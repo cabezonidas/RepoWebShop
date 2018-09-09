@@ -5,18 +5,26 @@
         Echale un vistazo a nuestros deliciosos menúes que podemos preparar para tu evento o... <button mat-button routerLink="/new-catering">¡Armátelo vos!</button>
         Normalmente nosotros recomendamos entre 10 y 12 bocados por comensal, dependiendo de cuánto dure la celebración.
     </div>
+    <mat-spinner [ngStyle]="{'margin': 'auto'}" *ngIf="!(loaded$ | async)">
 
-    <button mat-fab color="accent" (click)="slickPrev()" class="arrow arrow-left">
-        <mat-icon aria-label="">arrow_back_io</mat-icon>
-    </button>          
+    </mat-spinner>
 
-    <button mat-fab color="accent" (click)="slickNext()" class="arrow arrow-right" id="next">
-        <mat-icon aria-label="">arrow_forward_io</mat-icon>
-    </button>
+    <div [ngStyle]='{"display":"none"}'>
+
+        <button mat-fab color="accent" (click)="slickPrev()" class="arrow arrow-left">
+            <mat-icon aria-label="">arrow_back_io</mat-icon>
+        </button>          
+        
+        <button mat-fab color="accent" (click)="slickNext()" class="arrow arrow-right" id="next">
+            <mat-icon aria-label="">arrow_forward_io</mat-icon>
+        </button>
+    </div>
     
     <ngx-slick class="accent" #slickModal="slick-modal" [config]="slideConfig">
         <app-catering-option ngxSlickItem *ngFor="let catering of caterings$ | async" class="slide"
-        [catering]="catering" (addCatering)="addCatering($event)" (copyCatering)="copyCatering($event)">
+        [catering]="catering" (addCatering)="addCatering($event)" (copyCatering)="copyCatering($event)"
+        (next)="slickNext()" (prev)="slickPrev()"
+        >
         </app-catering-option>
     </ngx-slick>
 </div>

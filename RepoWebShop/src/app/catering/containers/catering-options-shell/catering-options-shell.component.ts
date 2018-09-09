@@ -25,13 +25,14 @@ export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnD
 
   cateringCopiedSub = new Subscription();
   caterings$: Observable<ICatering[]>;
+  loaded$: Observable<boolean>;
   carouselInit = false;
   slideConfig = {
     arrows: false,
     slidesToShow: 1,
     slidesToScroll: 1,
     variableWidth: true,
-    // centerMode: true, This breaks clicks on slides
+    // centerMode: true,
     // centerPadding: '40px',
     infinite: false, // This when set true, breaks clicks on slides
   };
@@ -49,6 +50,7 @@ export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnD
     this.titleService.setTitle('Catering para eventos');
     // this.store.dispatch(new cateringActions.LoadCaterings());
     this.caterings$ = this.store.pipe(select(fromCatering.getCaterings));
+    this.loaded$ = this.store.pipe(select(fromCatering.getCateringsLoaded));
     this.cateringCopiedSub = this.itemEffects.copyCatering$
       .pipe(filter(action => action.type === fromStore.CateringActionTypes.CopyCateringSuccess))
       .subscribe(() => this.router.navigateByUrl('/new-catering'));

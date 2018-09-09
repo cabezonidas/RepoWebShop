@@ -6,6 +6,7 @@ export interface CateringState {
     items: IItem[];
     error: string;
     loading: boolean;
+    cateringsLoaded: boolean;
     loadingCaterings: boolean;
     caterings: ICatering[];
 }
@@ -14,6 +15,7 @@ const initialState: CateringState = {
     items: [],
     error: '',
     loading: false,
+    cateringsLoaded: false,
     loadingCaterings: false,
     caterings: []
 };
@@ -47,6 +49,7 @@ export function reducer(state = initialState, action: CateringActions): Catering
         case CateringActionTypes.LoadCaterings: return {
             ...state,
             loadingCaterings: true,
+            cateringsLoaded: false,
             error: ''
         };
 
@@ -67,12 +70,14 @@ export function reducer(state = initialState, action: CateringActions): Catering
             ...state,
             caterings: action.payload,
             loadingCaterings: false,
+            cateringsLoaded: true,
             error: ''
         };
         case CateringActionTypes.LoadCateringsFail: return {
             ...state,
             caterings: null,
             loadingCaterings: false,
+            cateringsLoaded: true,
             error: action.payload
         };
         default:

@@ -1,24 +1,40 @@
-<h1>Opciones</h1>
+<div class="header">
+  <h1>Opciones</h1>
+  <span class="spacer"></span>
+  <button mat-icon-button  (click)="bottomSheetRef.dismiss()">
+    <mat-icon >keyboard_arrow_down</mat-icon>
+  </button>
+</div>
 <table>
   <tr *ngFor="let item of items$">
-    <td class="description">
-      <div> {{ item.displayName }} <strong>${{ item.price }}</strong>
-        <small class="discount" *ngIf="item.price < item.priceInStore">
-          -${{item.priceInStore - item.price}}
-        </small>
+    <td>     
+      <div class="description">
+        <div> {{ item.displayName }} <strong>${{ item.price }}</strong>
+          <small class="discount" *ngIf="item.price < item.priceInStore">
+            -${{item.priceInStore - item.price}}
+          </small>
+        </div>
+        <h5>Porciones: {{ item.portions }} / Elaboración: {{ item.preparationTime}}hs</h5>
+        <app-soonest-pickup [soonestPickup]="soonestPickup(item.estimation)"></app-soonest-pickup>
       </div>
-      <h5>Porciones: {{ item.portions }} / Elaboración: {{ item.preparationTime}}hs</h5>
-      <app-soonest-pickup [soonestPickup]="soonestPickup(item.estimation)"></app-soonest-pickup>
-    </td>
-    <td class="buyButton">
-      <h3 [ngClass]="item.price < item.priceInStore ? 'green' : ''">${{ item.price }}</h3>
-      <button mat-raised-button (click)="addToCart(item.productId)" color="primary" >Comprar</button>
-      <div>
-        <small class="priceInStore" *ngIf="item.price < item.priceInStore">
-          Sucursal ${{ item.priceInStore }}
-        </small>
+      <span class="spacer"></span>
+      <div class="buyButton">
+        <h3 [ngClass]="item.price < item.priceInStore ? 'green' : ''">${{ item.price }}</h3>
+        <div>
+          <small class="priceInStore" *ngIf="item.price < item.priceInStore">
+            ${{ item.priceInStore }}
+          </small>
+        </div>
+        <button mat-raised-button color="primary"  (click)="addToCart(item.productId)" >
+          <mat-icon >add_shopping_cart</mat-icon>
+        </button>
+        <div (click)="addToCart(item.productId)" [ngStyle]="{'cursor': 'pointer'}">
+          <small class="add-to-trolley">Agregar al carrito</small>
+        </div>
+        
       </div>
     </td>
+    <mat-divider></mat-divider>
   </tr>
 </table>
 <div>

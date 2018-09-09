@@ -16,7 +16,7 @@
       </div>
     </div>
     <mat-card *ngIf="total$ | async">
-
+      <p [ngStyle]="{'color':'grey'}">Al completar tu reserva podrás elegir si querés pagar cuando lo recibís, o bien pagar en el momento a través MercadoPago.</p>
       <mat-vertical-stepper linear #stepper>
 
         <mat-step >

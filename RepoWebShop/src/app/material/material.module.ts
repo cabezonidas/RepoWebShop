@@ -22,6 +22,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatDividerModule} from '@angular/material/divider';
 
 @NgModule({
     imports: [
@@ -48,7 +49,8 @@ import {MatTabsModule} from '@angular/material/tabs';
         MatGridListModule,
         MatChipsModule,
         MatSnackBarModule,
-        MatTabsModule
+        MatTabsModule,
+        MatDividerModule
     ],
     exports: [
         MatButtonModule,
@@ -74,7 +76,8 @@ import {MatTabsModule} from '@angular/material/tabs';
         MatGridListModule,
         MatChipsModule,
         MatSnackBarModule,
-        MatTabsModule
+        MatTabsModule,
+        MatDividerModule
     ],
     declarations: []
 })
