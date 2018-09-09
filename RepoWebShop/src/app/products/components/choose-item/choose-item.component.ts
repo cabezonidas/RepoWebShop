@@ -15,7 +15,7 @@ export class ChooseItemComponent implements OnInit {
 
   constructor(
     @Inject(MAT_BOTTOM_SHEET_DATA) public items$: Array<IItem>,
-    private bottomSheetRef: MatBottomSheetRef<ChooseItemComponent>,
+    public bottomSheetRef: MatBottomSheetRef<ChooseItemComponent>,
     private store: Store<fromProduct.State>,
     private calendar: CalendarService
   ) {}
