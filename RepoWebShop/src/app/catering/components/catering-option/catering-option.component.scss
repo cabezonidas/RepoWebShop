@@ -5,12 +5,14 @@ mat-card {
 
   div.content {
     padding: 5px;
+    table {
+      background-color: #B44848;
+    }
     div.header {
       width: 100%;
       margin: auto;  
       padding-top: 10px;
       padding-bottom: 10px;
-      background-color: #B44848;
       color: papayawhip;
       h3 {
         margin-top: 0px;

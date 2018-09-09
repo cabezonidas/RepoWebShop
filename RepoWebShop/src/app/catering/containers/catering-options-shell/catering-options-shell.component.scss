@@ -20,8 +20,8 @@ ngx-slick {
 
 .arrow {
     position: fixed;
-    top: 50%;
-    bottom: 50%;
+    top: 40%;
+    bottom: 60%;
     z-index: 2;
 }
 .arrow-left {
@@ -33,4 +33,8 @@ ngx-slick {
 
 .catering-header {
     text-align: center;
+}
+
+.hidden {
+    display: none;
 }

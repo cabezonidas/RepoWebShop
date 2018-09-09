@@ -1,20 +1,5 @@
 <mat-card class="card" (window:resize)="onResize()" [ngStyle]="{'width.px': cardWidth}">
   <div class='content'>
-    <div class="header">
-      <h3 class="suggested" *ngIf="catering.isGeneric">
-        ¡Recomendado!
-      </h3>
-      <p class="customerCall" *ngIf="!catering.isGeneric">
-        Elegido por nuestros clientes
-      </p>
-      <p>{{ catering.title }}</p>
-      <p>{{ catering.description }}</p>
-    </div>
-    <mat-card-content>
-      <div class="item" *ngFor="let item of catering.items">
-        {{ item.itemCount }} {{ item.item.displayName }}
-      </div>
-    </mat-card-content>
 
     <table>
       <tbody>
@@ -24,7 +9,18 @@
               <mat-icon >keyboard_arrow_left</mat-icon>
             </button>
           </td>
-          <td><app-total [price]="catering.price" [priceInStore]="catering.priceInStore"></app-total></td>
+          <td>
+              <div class="header">
+                  <h3 class="suggested" *ngIf="catering.isGeneric">
+                    ¡Recomendado!
+                  </h3>
+                  <p class="customerCall" *ngIf="!catering.isGeneric">
+                    Elegido por nuestros clientes
+                  </p>
+                  <p>{{ catering.title }}</p>
+                  <p>{{ catering.description }}</p>
+                </div>            
+          </td>
           <td class="arrow">
             <button mat-icon-button  (click)="next.emit()">
               <mat-icon >keyboard_arrow_right</mat-icon>
@@ -34,7 +30,13 @@
       </tbody>
     </table>
 
+    <mat-card-content>
+      <div class="item" *ngFor="let item of catering.items">
+        {{ item.itemCount }} {{ item.item.displayName }}
+      </div>
+    </mat-card-content>
     
+    <app-total [price]="catering.price" [priceInStore]="catering.priceInStore"></app-total>  
 
     <mat-card-actions>
       <div></div>

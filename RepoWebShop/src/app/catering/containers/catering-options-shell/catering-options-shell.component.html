@@ -9,7 +9,7 @@
 
     </mat-spinner>
 
-    <div [ngStyle]='{"display":"none"}'>
+    <div [ngClass]="!(loaded$ | async) ? 'hidden' : ''">
 
         <button mat-fab color="accent" (click)="slickPrev()" class="arrow arrow-left">
             <mat-icon aria-label="">arrow_back_io</mat-icon>
@@ -20,7 +20,7 @@
         </button>
     </div>
     
-    <ngx-slick class="accent" #slickModal="slick-modal" [config]="slideConfig">
+    <ngx-slick class="accent" #slickModal="slick-modal" [config]="slideConfig" id='slick-carousel'>
         <app-catering-option ngxSlickItem *ngFor="let catering of caterings$ | async" class="slide"
         [catering]="catering" (addCatering)="addCatering($event)" (copyCatering)="copyCatering($event)"
         (next)="slickNext()" (prev)="slickPrev()"

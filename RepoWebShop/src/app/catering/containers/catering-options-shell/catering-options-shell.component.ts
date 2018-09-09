@@ -56,6 +56,10 @@ export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnD
       .subscribe(() => this.router.navigateByUrl('/new-catering'));
   }
 
+  showArrows = () => {
+    document.getElementById('slick-carousel');
+  }
+
   ngAfterViewInit() {
     (document.getElementById('next') as HTMLElement).click();
   }
