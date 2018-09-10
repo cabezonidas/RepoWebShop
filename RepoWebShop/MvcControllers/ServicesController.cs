@@ -99,12 +99,12 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        public ViewResult FullCatalog()
+        public async Task<ViewResult> FullCatalog()
         {
             //var access_token = await GetSharePointAccessTokenAsync();
             //return View("FullCatalog", access_token);
 
-            var result = _catalog.GetActive().Where(x => x.Category.ToLower().Trim() != "lunch").OrderBy(x => x.DisplayName);
+            var result = (await _catalog.GetActive()).Where(x => x.Category.ToLower().Trim() != "lunch").OrderBy(x => x.DisplayName);
             return View("FullCatalog", result);
         }
 

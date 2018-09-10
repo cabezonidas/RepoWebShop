@@ -115,9 +115,9 @@ namespace RepoWebShop.MvcControllers
 
         [HttpGet]
         [PageVisitAsync]
-        public RedirectToActionResult AddProductToShoppingCart(int id)
+        public async Task<RedirectToActionResult> AddProductToShoppingCart(int id)
         {
-            var product = _catalogRepository.GetAvailableToBuyOnline().FirstOrDefault(p => p.ProductId == id);
+            var product = (await _catalogRepository.GetAvailableToBuyOnline()).FirstOrDefault(p => p.ProductId == id);
 
             if (product != null)
             {
@@ -177,9 +177,9 @@ namespace RepoWebShop.MvcControllers
 
         [HttpGet]
         [PageVisitAsync]
-        public RedirectToActionResult RemoveCatalogProductFromShoppingCart(int productId)
+        public async Task<RedirectToActionResult> RemoveCatalogProductFromShoppingCart(int productId)
         {
-            var selectedProduct = _catalogRepository.GetById(productId);
+            var selectedProduct = await _catalogRepository.GetById(productId);
             _cartRepository.RemoveProductFromCart(selectedProduct);
             return RedirectToAction("Index");
         }

@@ -28,9 +28,9 @@ namespace RepoWebShop.FeApi
 
 		[HttpGet]
 		[Route("CateringItems")]
-		public IEnumerable<_Item> CateringItems()
+		public async Task<IEnumerable<_Item>> CateringItems()
 		{
-			var _items = _catalog.GetAll(x => x.IsActive).Select(x => _mapper.Map<Product, _Item>(x));
+			var _items = (await _catalog.GetAll(x => x.IsActive)).Select(x => _mapper.Map<Product, _Item>(x));
 			return _items;
 		}
 

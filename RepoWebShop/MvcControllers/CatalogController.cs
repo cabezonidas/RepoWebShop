@@ -71,9 +71,9 @@ namespace RepoWebShop.MvcControllers
 
         [HttpGet]
         [Route("[controller]/Product/{id}")]
-        public IActionResult Product(int id)
+        public async Task<IActionResult> Product(int id)
         {
-            var result = _catalogRepo.GetById(id);
+            var result = await _catalogRepo.GetById(id);
             result.MultipleAmount = result.MultipleAmount == 0 ? result.MinOrderAmount : result.MultipleAmount;
             var vm = _mapper.Map<Product, ProductViewModel>(result);
             vm.PieDetails = _pieDetailRepo.PieDetails;
@@ -98,11 +98,11 @@ namespace RepoWebShop.MvcControllers
 
         [HttpGet]
         [Route("[controller]/Inflation/{percentage}/{roundTo}")]
-        public IActionResult Inflation(int percentage, int roundTo)
+        public async Task<IActionResult> Inflation(int percentage, int roundTo)
         {
             var vm = new InflationEstimateViewModel
             {
-                Products = _catalogRepo.InflationEstimate(percentage, roundTo),
+                Products = await _catalogRepo.InflationEstimate(percentage, roundTo),
                 Inflation = percentage,
                 RoundTo = roundTo
             };
@@ -110,9 +110,9 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        public IActionResult Inflation()
+        public async Task<IActionResult> Inflation()
         {
-            return Inflation(10, 5);
+            return await Inflation(10, 5);
         }
     }
 }

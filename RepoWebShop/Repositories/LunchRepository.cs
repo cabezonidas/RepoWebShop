@@ -34,7 +34,7 @@ namespace RepoWebShop.Repositories
         public async Task<LunchItem> AddItemInstanceAsync(int lunchId, int productId)
         {
             var lunch = await GetLunchByIdAsync(lunchId);
-            var product = _catalog.GetById(productId);
+            var product = await _catalog.GetById(productId);
 
             var shoppingCartLunchItem = lunch.Items?.FirstOrDefault(x => x.Product == product);
 
@@ -58,7 +58,7 @@ namespace RepoWebShop.Repositories
         public async Task<LunchItem> AddItemAsync(int lunchId, int productId)
         {
             var lunch = await GetLunchByIdAsync(lunchId);
-            var product = _catalog.GetById(productId);
+            var product = await _catalog.GetById(productId);
 
             var shoppingCartLunchItem = lunch.Items?.FirstOrDefault(x => x.Product == product);
 
@@ -76,7 +76,7 @@ namespace RepoWebShop.Repositories
         {
             LunchItem result = null;
             var lunch = await GetLunchByIdAsync(lunchId);
-            var product = _catalog.GetById(productId);
+            var product = await _catalog.GetById(productId);
 
             var shoppingCartLunchItem = lunch.Items.FirstOrDefault(x => x.Product == product);
 
@@ -102,7 +102,7 @@ namespace RepoWebShop.Repositories
         {
             LunchItem result = null;
             var lunch = await GetLunchByIdAsync(lunchId);
-            var product = _catalog.GetById(productId);
+            var product = await _catalog.GetById(productId);
 
             var shoppingCartLunchItem = lunch.Items.FirstOrDefault(x => x.Product == product);
 

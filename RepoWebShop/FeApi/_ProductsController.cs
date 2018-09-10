@@ -6,6 +6,7 @@ using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.FeApi
 {
@@ -22,9 +23,9 @@ namespace RepoWebShop.FeApi
 
 		[HttpGet]
 		[Route("All")]
-		public IEnumerable<_Product> All()
+		public async Task<IEnumerable<_Product>> All()
 		{
-			var result = _catalogRepo.ProductsGroupedByParent();
+			var result = await _catalogRepo.ProductsGroupedByParent();
 			return result;
 		}
 	}

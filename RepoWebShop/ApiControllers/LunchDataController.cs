@@ -88,9 +88,9 @@ namespace RepoWebShop.ApiControllers
         [HttpGet]
         [AllowAnonymous]
         [Route("GetProducts")]
-        public IActionResult GetProducts()
+        public async Task<IActionResult> GetProducts()
         {
-            var result = _catalogRepository.GetAll();
+            var result = await _catalogRepository.GetAll();
             result = result.OrderBy(x => x.DisplayName.TrimStart());
             result = result.OrderBy(x => x.Category);
             return Ok(result);

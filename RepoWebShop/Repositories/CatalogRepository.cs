@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using RepoWebShop.Extensions;
@@ -15,19 +16,22 @@ namespace RepoWebShop.Models
         private readonly AppDbContext _appDbContext;
         private readonly ICalendarRepository _calendarRepository;
         private readonly IPieDetailRepository _pieDetailRepository;
+        private readonly IProductsCacheRepository _prodCache;
         private readonly IMapper _mapper;
 
-        public CatalogRepository(IMapper mapper, IPieDetailRepository pieDetailRepository, AppDbContext appDbContext, ICalendarRepository calendarRepository)
+        public CatalogRepository(IMapper mapper, IPieDetailRepository pieDetailRepository, IProductsCacheRepository prodCache, 
+			AppDbContext appDbContext, ICalendarRepository calendarRepository)
         {
-            _mapper = mapper;
+			_prodCache = prodCache;
+			_mapper = mapper;
             _pieDetailRepository = pieDetailRepository;
             _appDbContext = appDbContext;
             _calendarRepository = calendarRepository;
         }
 
-        public void Activate(int productId)
+        public async Task Activate(int productId)
         {
-            var result = GetById(productId);
+            var result = await GetById(productId);
             if(result != null)
             {
                 result.IsActive = true;
@@ -63,9 +67,9 @@ namespace RepoWebShop.Models
             _appDbContext.SaveChanges();
         }
 
-        public void Deactivate(int productId)
+        public async Task Deactivate(int productId)
         {
-            var product = GetById(productId);
+            var product = await GetById(productId);
             if(product != null)
             {
                 product.IsActive = false;
@@ -90,29 +94,29 @@ namespace RepoWebShop.Models
             _appDbContext.SaveChanges();
         }
 
-        public IEnumerable<Product> GetActive()
+        public async Task<IEnumerable<Product>> GetActive()
         {
             var result = GetAll(x => x.IsActive);
-            return result;
+            return await result;
         }
 
-        public IEnumerable<Product> GetAvailableToBuyOnline()
+        public async Task<IEnumerable<Product>> GetAvailableToBuyOnline()
         {
             var result = GetAll(x => x.IsActive && x.IsOnSale);
-            return result;
+            return await result;
         }
 
-        public IEnumerable<Product> GetAll(Func<Product, bool> condition = null)
+        public async Task<IEnumerable<Product>> GetAll(Func<Product, bool> condition = null)
         {
-            var result = _appDbContext.Products.Where(x => condition == null || condition(x)).Include(x => x.PieDetail).ToArray();
-            return result;
+			return (await _prodCache.AllProducts()).Where(x => condition == null || condition(x));
         }
 
-        public Product GetById(int id) => GetAll(x => x.ProductId == id).FirstOrDefault();
+        public async Task<Product> GetById(int id) => (await GetAll(x => x.ProductId == id)).FirstOrDefault();
 
-        public IEnumerable<ProductInflationEstimateViewModel> InflationEstimate(decimal percentage, int roundTo)
+        public async Task<IEnumerable<ProductInflationEstimateViewModel>> InflationEstimate(decimal percentage, int roundTo)
         {
-            var result = GetAll().Select(x => new ProductInflationEstimateViewModel { Product = x, EstimateOnline = x.Price.ApplyPercentage(percentage).RoundTo(roundTo), EstimateInStore = x.PriceInStore.ApplyPercentage(percentage).RoundTo(roundTo) });
+            var result = (await GetAll())
+				.Select(x => new ProductInflationEstimateViewModel { Product = x, EstimateOnline = x.Price.ApplyPercentage(percentage).RoundTo(roundTo), EstimateInStore = x.PriceInStore.ApplyPercentage(percentage).RoundTo(roundTo) });
             return result;
         }
 
@@ -172,23 +176,9 @@ namespace RepoWebShop.Models
             _appDbContext.SaveChanges();
         }
 
-		public IEnumerable<_Product> ProductsGroupedByParent()
+		public async Task<IEnumerable<_Product>> ProductsGroupedByParent()
 		{
-			IEnumerable<_Item> _items = new List<_Item>().AsEnumerable();
-			foreach(var item in GetAvailableToBuyOnline().OrderBy(x => x.DisplayName))
-			{
-				var _item = _mapper.Map<Product, _Item>(item);
-				_item.Estimation = _calendarRepository.GetPickupEstimate(item.PreparationTime);
-				_items = _items.Append(_item);
-			}
-			IEnumerable<_Product> _products = _pieDetailRepository.PieDetails.ToArray().Select(x => _mapper.Map<PieDetail, _Product>(x)).OrderBy(x => x.Name.TrimStart());
-
-			var result = _products.Select(x =>
-			{
-				x.Items = _items.Where(item => item.PieDetailId == x.PieDetailId);
-				return x;
-			}).ToArray();
-
+			var result = await _prodCache.ProductsGroupedByParent();
 			return result;
 		}
 	}

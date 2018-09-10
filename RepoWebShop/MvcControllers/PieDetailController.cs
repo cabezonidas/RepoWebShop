@@ -39,11 +39,11 @@ namespace RepoWebShop.MvcControllers
 
         [HttpGet]
         [Route("[Controller]/List")]
-        public ViewResult List()
+        public async Task<ViewResult> List()
         {
             var viewProducts = _pieDetailRepository.PieDetailsWithChildren.OrderBy(p => p.Name).Select(x => (_pieDetailRepository.MapDbPieDetailToPieDetailViewModel(x)));
 
-            var products = _catalogRepository
+            var products = await _catalogRepository
                 .GetAll(x => x.IsActive && x.IsOnSale && x.Category.ToLower() != "lunch" && x.Category.ToLower() != "appetizer");
 
             // Dictionary<int, string> times = _pieDetailRepository.TimeEstimations(products);

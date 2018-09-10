@@ -9,18 +9,18 @@ namespace RepoWebShop.Interfaces
 {
     public interface ICatalogRepository
     {
-        IEnumerable<Product> GetAll(Func<Product, bool> condition = null);
-        IEnumerable<Product> GetAvailableToBuyOnline();
-        Product GetById(int id);
-        IEnumerable<Product> GetActive();
-        void Deactivate(int productId);
-        void Activate(int productId);
+        Task<IEnumerable<Product>> GetAll(Func<Product, bool> condition = null);
+        Task<IEnumerable<Product>> GetAvailableToBuyOnline();
+        Task<Product> GetById(int id);
+        Task<IEnumerable<Product>> GetActive();
+        Task Deactivate(int productId);
+        Task Activate(int productId);
         void Create(Product product);
         void Edit(Product product);
         void RestorePrices();
         void ApplyPriceRise(decimal percentage, int roundTo);
-        IEnumerable<ProductInflationEstimateViewModel> InflationEstimate(decimal percentage, int roundTo);
-		IEnumerable<_Product> ProductsGroupedByParent();
+        Task<IEnumerable<ProductInflationEstimateViewModel>> InflationEstimate(decimal percentage, int roundTo);
+		Task<IEnumerable<_Product>> ProductsGroupedByParent();
 		Product CreateOrUpdate(ProductViewModel vm);
         IEnumerable<Product> GetByParent(int id);
         void QuickUpdate(int productId, decimal price, decimal priceInStore, bool onlineSale, string category, string temp, int minAmountOrder, int increments, int portions, int prepTime);
