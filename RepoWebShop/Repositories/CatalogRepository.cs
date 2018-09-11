@@ -16,13 +16,11 @@ namespace RepoWebShop.Models
         private readonly AppDbContext _appDbContext;
         private readonly ICalendarRepository _calendarRepository;
         private readonly IPieDetailRepository _pieDetailRepository;
-        private readonly IProductsCacheRepository _prodCache;
         private readonly IMapper _mapper;
 
-        public CatalogRepository(IMapper mapper, IPieDetailRepository pieDetailRepository, IProductsCacheRepository prodCache, 
+        public CatalogRepository(IMapper mapper, IPieDetailRepository pieDetailRepository,
 			AppDbContext appDbContext, ICalendarRepository calendarRepository)
         {
-			_prodCache = prodCache;
 			_mapper = mapper;
             _pieDetailRepository = pieDetailRepository;
             _appDbContext = appDbContext;
@@ -108,7 +106,8 @@ namespace RepoWebShop.Models
 
         public async Task<IEnumerable<Product>> GetAll(Func<Product, bool> condition = null)
         {
-			return (await _prodCache.AllProducts()).Where(x => condition == null || condition(x));
+			// return (await _prodCache.AllProducts()).Where(x => condition == null || condition(x));
+			return await _appDbContext.Products.Where(x => condition == null || condition(x)).Include(x => x.PieDetail).ToArrayAsync();
         }
 
         public async Task<Product> GetById(int id) => (await GetAll(x => x.ProductId == id)).FirstOrDefault();
@@ -178,7 +177,24 @@ namespace RepoWebShop.Models
 
 		public async Task<IEnumerable<_Product>> ProductsGroupedByParent()
 		{
-			var result = await _prodCache.ProductsGroupedByParent();
+			var allProds = await GetAll();
+			IEnumerable<_Item> _items = new List<_Item>().AsEnumerable();
+
+			foreach (var item in allProds.Where(x => x.IsActive && x.IsOnSale).OrderBy(x => x.DisplayName))
+			{
+				var _item = _mapper.Map<Product, _Item>(item);
+				_items = _items.Append(_item);
+			}
+
+			IEnumerable<_Product> _products = allProds.Select(x => x.PieDetail).Distinct()
+				.Select(x => _mapper.Map<PieDetail, _Product>(x)).OrderBy(x => x.Name.TrimStart());
+
+			var result = _products.Select(x =>
+			{
+				x.Items = _items.Where(item => item.PieDetailId == x.PieDetailId);
+				return x;
+			}).ToArray();
+
 			return result;
 		}
 	}

@@ -11,10 +11,9 @@ export interface ICatering {
     'title': string;
     'description': string;
     'thumbnailUrl': string;
-    'preparationTime': string;
+    'preparationTime': number;
     'eventDuration': string;
     'attendants': string;
     'price': number;
     'priceInStore': number;
-    'estimation': Date;
 }

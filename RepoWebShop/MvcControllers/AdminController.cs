@@ -41,7 +41,7 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+		public IActionResult Index()
         {
             return View();
         }

@@ -19,7 +19,11 @@
 				@foreach (var yearmonth in months)
 				{
 					<tr>
-						<td>@month(yearmonth.key) @year(yearmonth.key)</td>
+						<td>
+							<a href="/Billing/Period/@yearmonth.key">
+								@month(yearmonth.key) @year(yearmonth.key)
+							</a>
+						</td>
 						<td>$@yearmonth.tot</td>
 					</tr>
 				}

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RepoWebShop.MvcControllers
 {
-    public class BillingController : Controller
+	public class BillingController : Controller
     {
         private readonly IElectronicBillingRepository _billing;
 
@@ -18,23 +19,34 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+		[Authorize(Roles = "Administrator")]
+		public async Task<IActionResult> Index()
         {
             IEnumerable<InvoiceData> result = await _billing.GetAll();
             return View(result);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Detail(int id)
+		[Authorize(Roles = "Administrator")]
+		public async Task<IActionResult> Detail(int id)
         {
             InvoiceData result = await _billing.GetById(id);
             return View(result);
 		}
 
 		[HttpGet]
+		[Authorize(Roles = "Administrator")]
 		public IActionResult SummaryByMonth()
 		{
 			IEnumerable<Cae> result = _billing.AllCaes();
+			return View(result);
+		}
+		[HttpGet]
+		[Route("[controller]/Period/{yearmonth}")]
+		[Authorize(Roles = "Administrator")]
+		public IActionResult Period(string yearmonth)
+		{
+			IEnumerable<Cae> result = _billing.AllCaes().Where(x => x.CbteFch.Substring(0, 6) == yearmonth);
 			return View(result);
 		}
 	}

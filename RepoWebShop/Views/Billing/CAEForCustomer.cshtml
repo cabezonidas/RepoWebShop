@@ -5,7 +5,7 @@
     var _iva = (decimal)_config.GetValue<int>("Iva");
 }
 
-@if (Model != null && Model.Resultado == "A")
+@if (Model != null && Model.Resultado == "A" && Model.Caes.Count() >= 1)
 {
     <div style="text-align: center;">
         <div>

@@ -1,12 +1,8 @@
-<div *ngIf="soonestPickup">
+<div *ngIf="displayPickup">
   <div>
     <small> 
-      Lo más temprano que podemos tenerlo es <strong>{{soonestPickup}}.</strong>
-    </small>
-  </div>
-  <div>
-    <small> 
-        Si querés otra fecha, elegila al finalizar la compra.
+      Lo más temprano que podemos tenerlo es <strong>{{displayPickup}}.</strong> ¿Lo necesitás antes? ¡Llamanos!
     </small>
   </div>
 </div>
+<mat-spinner *ngIf="!displayPickup" [diameter]='25'></mat-spinner>

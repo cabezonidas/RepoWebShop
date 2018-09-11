@@ -34,6 +34,6 @@ namespace RepoWebShop.FeModels
 
 		[BindNever]
 		public string DisplayDescription { get; set; }
-		public DateTime Estimation { get; internal set; }
+		// public DateTime Estimation { get; internal set; }
 	}
 }

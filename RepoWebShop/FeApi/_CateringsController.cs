@@ -34,7 +34,7 @@ namespace RepoWebShop.FeApi
 			IEnumerable<_Catering> result = caterings.Select(c =>
 			{
 				var cat = _cart.Map(c);
-				cat.Estimation = _calendar.GetPickupEstimate(cat.PreparationTime);
+				// cat.Estimation = _calendar.GetPickupEstimate(cat.PreparationTime);
 				cat.Price = _catering.GetTotal(c);
 				cat.PriceInStore = _catering.GetLunchTotalInStore(c);
 				return cat;

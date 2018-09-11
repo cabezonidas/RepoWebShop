@@ -13,6 +13,7 @@ export class CalendarService {
   constructor(private http: HttpClient) { }
 
   getPublicCalendar = (): Observable<IPublicCalendar> => this.http.get<IPublicCalendar>('/api/_calendar/publicCalendar');
+  getPickup = (hours: number): Observable<Date> => this.http.get<Date>('/api/_calendar/readyFor/' + hours);
 
   day(i: number) {
     switch (i) {

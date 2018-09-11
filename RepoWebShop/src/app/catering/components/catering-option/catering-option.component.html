@@ -49,11 +49,11 @@
       </button>
       <!-- <button mat-raised-button color="primary" (click)="addCatering.emit(catering.lunchId)">Comprar</button> -->
       <button mat-raised-button (click)="copyCatering.emit(catering.lunchId)">
-        <mat-icon aria-label="Example icon-button with a heart icon">build</mat-icon>
+        <mat-icon aria-label="">build</mat-icon>
         Modificar
       </button>
     </mat-card-actions>
-    <app-soonest-pickup [soonestPickup]="soonestPickup(catering.estimation)"></app-soonest-pickup>
+    <app-soonest-pickup [soonestPickup]="catering.preparationTime"></app-soonest-pickup>
     <div class="footer">
       <p *ngIf="catering.attendants && catering.eventDuration">
         Sugerido para hasta {{ catering.attendants }} comensales, considerando unas {{ catering.eventDuration }} horas de evento

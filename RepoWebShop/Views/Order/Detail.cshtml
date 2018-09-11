@@ -223,23 +223,29 @@
                 </td>
                 <td>
                     @{
-                        var factura = "";
-                        switch (Model.Order.Factura?.Resultado)
-                        {
-                            case "A":
-                                factura = "Aprobada";
-                                break;
-                            case "P":
-                                factura = "Parcialmente Aprobada";
-                                break;
-                            case "R":
-                                factura = "Rechazada";
-                                break;
-                            default:
-                                factura = "Ticket fiscal emitido / Comprobante en línea emitido";
-                                break;
-                        }
+						var factura = "";
+						switch (Model.Order.Factura?.Resultado)
+						{
+							case "A":
+								factura = "Aprobada";
+								break;
+							case "P":
+								factura = "Parcialmente Aprobada";
+								break;
+							case "R":
+								factura = "Rechazada";
+								break;
+							default:
+								factura = "Ticket fiscal emitido / Comprobante en línea emitido";
+								break;
+						}
+						var error = (Model.Order.Factura != null && Model.Order.Factura.Caes != null && Model.Order.Factura.Caes.Count() == 0);
+						if (error)
+						{
+							factura = "Hubo un error con el CAE";
+						}
                     }
+
                     <div>
                         @factura
                     </div>

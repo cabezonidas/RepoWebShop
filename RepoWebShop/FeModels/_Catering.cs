@@ -35,6 +35,6 @@ namespace RepoWebShop.FeModels
 
 		public decimal PriceInStore { get; set; }
 
-		public DateTime Estimation { get; set; }
+		// public DateTime Estimation { get; set; }
 	}
 }

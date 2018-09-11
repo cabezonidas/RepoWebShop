@@ -1,0 +1,153 @@
+﻿@model IEnumerable<Cae>
+
+
+@{
+	var firstEntry = Model.FirstOrDefault();
+	if (firstEntry != null)
+	{
+<h2 style="text-align: center">Resumen de CAEs @month(firstEntry.CbteFch.Substring(0, 6)) @year(firstEntry.CbteFch.Substring(0, 6)) </h2>
+
+
+
+		<div class="container" style="width: 100%">
+			<table style="width: 90%; margin: auto;">
+				<thead>
+					<tr>
+						<th>
+							Factura
+						</th>
+						<th>
+							Pto Vta
+						</th>
+						<th>
+							Estado Factura
+						</th>
+						<th>
+							CAE
+						</th>
+						<th>
+							Nro
+						</th>
+						<th>
+							Fecha
+						</th>
+						<th>
+							Vto Cae
+						</th>
+						<th>
+							Tipo Doc
+						</th>
+						<th>
+							Documento
+						</th>
+						<th>
+							Concepto
+						</th>
+						<th>
+							Estado CAE
+						</th>
+						<th>
+							Importe Total
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var cae in Model.OrderByDescending(x => x.CbteFch))
+					{
+					<tr>
+						<td>
+							@cae.InvoiceData.Factura
+						</td>
+						<td>
+							@cae.InvoiceData.PtoVta
+						</td>
+						<td>
+							@cae.InvoiceData.FriendlyResultado
+						</td>
+						<td>
+							@cae.CAE
+						</td>
+						<td>
+							@cae.CbteDesde
+						</td>
+						<td>
+							@cae.CbteFch
+						</td>
+						<td>
+							@cae.CAEFchVto
+						</td>
+						<td>
+							@cae.Documento
+						</td>
+						<td>
+							@cae.DocNro
+						</td>
+						<td>
+							@cae.FriendlyConcepto
+						</td>
+						<td>
+							@cae.FriendlyResultado
+						</td>
+						<td>
+							@cae.ImpTotal
+						</td>
+					</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	}
+	else
+	{
+		<h2 style="text-align: center">No se encontraron comprobantes</h2>
+	}
+}
+
+
+@{
+	string year(string yearmonth)
+	{
+		if (yearmonth.Length != 6)
+			return string.Empty;
+		else
+			return yearmonth.Substring(0, 4);
+	}
+
+	string month(string yearmonth)
+	{
+		if (yearmonth.Length != 6)
+			return string.Empty;
+
+		var monthnumber = yearmonth.Substring(4, 2);
+		switch (monthnumber)
+		{
+			case "01":
+				return "Enero";
+			case "02":
+				return "Febrero";
+			case "03":
+				return "Marzo";
+			case "04":
+				return "Abril";
+			case "05":
+				return "Mayo";
+			case "06":
+				return "Junio";
+			case "07":
+				return "Julio";
+			case "08":
+				return "Agosto";
+			case "09":
+				return "Septiembre";
+			case "10":
+				return "Octubre";
+			case "11":
+				return "Noviembre";
+			case "12":
+				return "Diciembre";
+			default:
+				return string.Empty;
+		}
+	}
+}
+

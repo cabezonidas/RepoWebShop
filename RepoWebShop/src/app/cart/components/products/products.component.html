@@ -12,7 +12,7 @@
     </div>
   </mat-list-item>
   <mat-list-item *ngFor="let catering of caterings">
-    <h4 mat-line color="primary">{{catering.amount}}x {{catering.title}} ({{catering.preparationTime}} hs)</h4>
+    <h4 class='customCatering' mat-line color="primary" routerLink="/catering-options">{{catering.amount}}x {{catering.title}} ({{catering.preparationTime}} hs)</h4>
     <p mat-line> {{catering.description}} </p>
     <app-product-subtotal  mat-line [amount]="catering.amount" [priceInStore]="catering.priceInStore" [price]="catering.price">
     </app-product-subtotal>

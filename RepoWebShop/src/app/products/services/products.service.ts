@@ -12,5 +12,4 @@ export class ProductsService {
   constructor(private http: HttpClient) { }
 
   getProducts = (): Observable<IProduct[]> => this.http.get<IProduct[]>('/api/_products/all');
-  getPickup = (hours: number): Observable<Date> => this.http.get<Date>('/api/_calendar/readyFor/' + hours);
 }

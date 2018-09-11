@@ -442,6 +442,6 @@ namespace RepoWebShop.Repositories
             return result.AsEnumerable();
         }
 
-		public IEnumerable<Cae> AllCaes() => _dbCtx.Caes.ToList().AsEnumerable();
+		public IEnumerable<Cae> AllCaes() => _dbCtx.Caes.Include(x => x.InvoiceData).ToList().AsEnumerable();
     }
 }

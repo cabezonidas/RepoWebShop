@@ -26,7 +26,7 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        public IActionResult Index() => View(_catalogRepo.GetAll());
+        public async Task <IActionResult> Index() => View(await _catalogRepo.GetAll());
 
         [HttpGet]
         public IActionResult QuickEdit() => View(_catalogRepo.GetAll(x => x.IsActive));

@@ -107,6 +107,9 @@
     <Content Update="Views\Account\EmailCodeVerificationBody.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Billing\Period.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
   </ItemGroup>
   
   <PropertyGroup>

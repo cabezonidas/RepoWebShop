@@ -9,7 +9,6 @@ export interface IItem {
     temperature: string;
     minOrderAmount: number;
     portions: number;
-    preparationTime: number;
     displayName: string;
     displayDescription: string;
     pickUpAsHtml: string;
