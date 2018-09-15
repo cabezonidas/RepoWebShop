@@ -23,6 +23,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatSortModule} from '@angular/material/sort';
 
 @NgModule({
     imports: [
@@ -50,7 +51,8 @@ import {MatDividerModule} from '@angular/material/divider';
         MatChipsModule,
         MatSnackBarModule,
         MatTabsModule,
-        MatDividerModule
+        MatDividerModule,
+        MatSortModule
     ],
     exports: [
         MatButtonModule,
@@ -77,7 +79,8 @@ import {MatDividerModule} from '@angular/material/divider';
         MatChipsModule,
         MatSnackBarModule,
         MatTabsModule,
-        MatDividerModule
+        MatDividerModule,
+        MatSortModule
     ],
     declarations: []
 })

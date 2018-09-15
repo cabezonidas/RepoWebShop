@@ -408,5 +408,5 @@ namespace RepoWebShop.Models
             await _emailRepository.SendOrderConfirmationAsync(order);
             await _smsRepository.NotifyAdminsAsync($"¡Pedido nuevo! Código {order.FriendlyBookingId}");
         }
-    }
+	}
 }

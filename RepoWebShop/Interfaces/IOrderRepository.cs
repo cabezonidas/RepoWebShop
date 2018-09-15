@@ -13,8 +13,8 @@ namespace RepoWebShop.Interfaces
         void UpdateOrderStatus(int orderId, string status);
         bool InvertPickedUpStatus(int orderId);
         Order GetDraftOrderByBookingId(string friendlyBookingId);
-        Task<IEnumerable<Order>> GetAllAsync(Func<Order, bool> condition = null);
-        Task<IEnumerable<Order>> GetOrdersInProgressAsync();
+		Task<IEnumerable<Order>> GetAllAsync(Func<Order, bool> condition = null);
+		Task<IEnumerable<Order>> GetOrdersInProgressAsync();
         Task<IEnumerable<Order>> GetOrdersCancelledAsync();
         Task<IEnumerable<Order>> GetOrdersCompletedAsync();
         Task<IEnumerable<Order>> GetOrdersPickedUpAsync();

@@ -11,13 +11,24 @@
     
     <mat-form-field>
       <input matInput type="text" 
-        placeholder="Escribe tu dirección" autocorrect="off" spellcheck="off" autocapitalize="off" #search>
+        placeholder="Escribe tu dirección (solo calle y altura)" autocorrect="off" spellcheck="off" autocapitalize="off" #search id="search">
     </mat-form-field>
-
+    <span #locate>
+      <button mat-mini-fab color="primary">
+        <mat-icon>location_searching</mat-icon>
+      </button>
+    </span>
+    <small>
+      <p>
+        El envío tiene un costo y se calcula una vez que ingresás la dirección.
+        ¡No pongas el piso o la unidad todavía! Primero necesitamos que confirmes sólo tu calle y altura con las opciones de Google Maps.
+        Ya con eso, te confirmamos si llegamos, y cuánto te sale, y luego nos podrás indicar piso / unidad / etc..
+      </p>
+    </small>
 
     <div class="errors">
       <div *ngIf="searchSelected && !fullAddress">
-        <small>Por favor, ingresa una dirección completa.</small>
+        <small>Por favor, revisa la dirección.</small>
       </div>
       
       <div *ngIf="searchSelected && fullAddress && outOfZone">
@@ -33,7 +44,7 @@
       <strong>Dirección</strong> {{ deliveryAddress.streetName }} {{ deliveryAddress.streetNumber }}
     </div>
     <mat-form-field>
-      <mat-label>¿Instrucciones de envío?</mat-label>
+      <!-- <mat-label>¿Instrucciones de envío?</mat-label> -->
       <input matInput type="text" placeholder="Piso / Torre / Departamento / etc" #addressInstr
       autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" value="{{ deliveryAddress ? deliveryAddress.deliveryInstructions : '' }}"
       >

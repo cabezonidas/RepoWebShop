@@ -12,13 +12,15 @@ import { StoreRouterModule } from '../router/store-router.module';
 import { LogoHeaderComponent } from './components/logo-header/logo-header.component';
 import { AdminGearComponent } from './components/admin-gear/admin-gear.component';
 import { ProductPriceComponent } from './components/product-price/product-price.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
     MaterialModule,
     MomentModule,
-    StoreRouterModule
+    StoreRouterModule,
+    RouterModule
   ],
   exports: [
     LogoHeaderComponent,

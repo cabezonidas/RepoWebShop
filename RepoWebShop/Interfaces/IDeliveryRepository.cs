@@ -13,7 +13,8 @@ namespace RepoWebShop.Interfaces
         void AddOrUpdateDelivery(DeliveryAddress deliveryAddress);
         Decimal GetDeliveryEstimate(decimal distance);
         Task<string> GuessPlaceIdAsync(string address);
-        Task<AddressViewModel> GetPlaceAsync(string placeId);
+		Task<string> GuessGooglePlaceAsync(string address);
+		Task<AddressViewModel> GetPlaceAsync(string placeId);
 		bool CanDelivery();
 		int DistanceFromStore(string lat, string lng, char v);
 		int DistanceFromDeliveryCenter(string lat, string lng, char v);

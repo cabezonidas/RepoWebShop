@@ -1,0 +1,23 @@
+<div *ngIf="orderReady">
+  <mat-chip-list>
+    <mat-chip (click)='save.emit()' selected>
+      <small>Guardar</small>
+    </mat-chip>
+  </mat-chip-list>
+</div>
+
+<div *ngIf='!orderReady'>
+  <div *ngFor="let item of items">
+    <small>{{ item.amount > 1 ? item.amount + ' ' : '' }}  {{ item.item.displayName }}</small>
+  </div>
+  <div *ngFor="let item of caterings">
+    <small>{{ item.amount > 1 ? item.amount + ' ' : '' }}  {{ item.catering.title ? item.catering.title : 'Catering personalizado' }}</small>
+  </div>
+  <div>
+    <mat-chip-list>
+      <mat-chip (click)='notify.emit()'>
+        <small>Pedido listo</small>
+      </mat-chip>
+    </mat-chip-list>
+  </div>
+</div>

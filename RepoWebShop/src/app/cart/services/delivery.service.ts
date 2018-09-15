@@ -11,6 +11,7 @@ export class DeliveryService {
   constructor(private http: HttpClient) { }
 
   canDeliver = () => this.http.get<boolean>('/api/_cartDelivery/canDeliver');
+  guess = (address: string) => this.http.get<any>('/api/_cartDelivery/guess/' + address);
   clearDelivery = () => this.http.delete<void>('/api/_cartDelivery/remove');
   updateInstructions = (instructions: DeliveryAddress) =>
     this.http.post<DeliveryAddress>('/api/_cartDelivery/updateInstructions', instructions)
@@ -30,4 +31,18 @@ export class DeliveryService {
 
   private deg2rad = (deg) => deg * (Math.PI / 180);
 
+  zipCode = (place: google.maps.GeocoderAddressComponent[]): string => {
+    const code = place.find(x => x.types.includes('postal_code'));
+    return code ? code.long_name : '';
+  }
+
+  streetNumber = (place: google.maps.GeocoderAddressComponent[]): string => {
+    const code = place.find(x => x.types.includes('street_number'));
+    return code ? code.long_name : '';
+  }
+
+  streetName = (place: google.maps.GeocoderAddressComponent[]): string => {
+    const code = place.find(x => x.types.includes('route'));
+    return code ? code.long_name : '';
+  }
 }

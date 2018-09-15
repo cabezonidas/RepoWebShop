@@ -38,6 +38,10 @@ namespace RepoWebShop.FeApi
 		[Route("Get")]
 		public _DeliveryAddress Get() => _mapper.Map<_DeliveryAddress>(_cart.GetDelivery(null));
 
+		[HttpGet]
+		[Route("Guess/{address}")]
+		public Task<string> Guess(string address) => _delivery.GuessGooglePlaceAsync(address);
+
 		[HttpDelete]
 		[Route("Remove")]
 		public void Remove() => _cart.RemoveDelivery();

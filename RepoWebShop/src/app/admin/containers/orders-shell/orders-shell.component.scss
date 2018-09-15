@@ -1,0 +1,19 @@
+.container {
+    width: 90%;
+    margin: auto;
+
+    .table {
+        margin: auto;
+        table {
+            width: 100%;
+            tr {
+                td, th {
+                    margin: auto;
+                    vertical-align: middle;
+                    text-align: center;
+                    padding: 5px 5px;
+                }
+            }
+        }
+    }
+}

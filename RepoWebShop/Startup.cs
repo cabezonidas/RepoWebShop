@@ -74,6 +74,7 @@ namespace RepoWebShop
 			services.AddTransient<IPieDetailRepository, PieDetailRepository>();
 			services.AddTransient<IPaymentNoticeRepository, PaymentNoticeRepository>();
 			services.AddTransient<IOrderRepository, OrderRepository>();
+			services.AddTransient<ILazyOrderRepository, LazyOrderRepository>();
 			services.AddTransient<IEmailRepository, EmailRepository>();
 			services.AddTransient<IAccountRepository, AccountRepository>();
 			services.AddTransient<IShoppingCartRepository, ShoppingCartRepository>();

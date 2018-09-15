@@ -13,6 +13,7 @@ namespace RepoWebShop.Models
     {
 		public MappingProfile()
 		{
+			CreateMap<Order, _Order>();
 			CreateMap<DeliveryAddress, _DeliveryAddress>();
 			CreateMap<_DeliveryAddress, DeliveryAddress>();
 			CreateMap<Lunch, _Catering>();

@@ -14,6 +14,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace RepoWebShop.Repositories
@@ -169,13 +170,31 @@ namespace RepoWebShop.Repositories
             var xmlDocument = XDocument.Parse(body);
             var place_id = xmlDocument.Element("AutocompletionResponse").Element("prediction").Element("place_id").Value;
 
-
-            var test = await GetPlaceAsync(place_id);
-
             return place_id;
         }
+		
+		public async Task<string> GuessGooglePlaceAsync(string address)
+		{
+			try
+			{
+				var placeId = await GuessPlaceIdAsync(address);
+				var httpClient = new HttpClient();
+				var placeApi = "maps.googleapis.com/maps/api/place/details";
+				var apiKey = "key=AIzaSyBxKMKlaxoM9x9Jv-r4KXxhvgHBsKbAmEk";
+				var response = await httpClient.GetAsync($"https://{placeApi}/xml?placeid={placeId}&{apiKey}");
+				var bodyAsString = await response.Content.ReadAsStringAsync();
+				var body = XDocument.Parse(bodyAsString);
+				var doc = new XmlDocument();
+				doc.LoadXml(body.ToString());
+				return JsonConvert.SerializeXmlNode(doc);
+			} catch
+			{
+				return null;
+			}
+		}
 
-        public async Task<AddressViewModel> GetPlaceAsync(string placeId)
+
+		public async Task<AddressViewModel> GetPlaceAsync(string placeId)
         {
             var httpClient = new HttpClient();
             var placeApi = "maps.googleapis.com/maps/api/place/details";

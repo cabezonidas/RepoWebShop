@@ -25,7 +25,4 @@ export class AdminGearComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.userSub.unsubscribe();
   }
-
-  goToAdmin = () => window.location.assign('/admin/index');
-  goToHome = () => this.router.navigateByUrl('/start');
 }

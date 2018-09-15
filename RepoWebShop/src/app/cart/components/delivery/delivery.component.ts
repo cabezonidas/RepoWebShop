@@ -13,9 +13,10 @@ import { Store, select } from '@ngrx/store';
   templateUrl: './delivery.component.html',
   styleUrls: ['./delivery.component.scss']
 })
-export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
+export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges, OnInit {
   canDeliver$ = new Subscription();
   deliveryInstrStream$ = new Subscription();
+  deliveryStream$ = new Subscription();
   canDeliver = true;
   storeLatitude = -34.625265;
   storeLongitude = -58.434483;
@@ -33,6 +34,7 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
   fullAddress = false;
 
   @ViewChild('search') public searchElement: ElementRef;
+  @ViewChild('locate') public locateElement: ElementRef;
   @ViewChild('addressInstr') public addressInstructions: ElementRef;
 
   @Input() deliveryAddress: DeliveryAddress;
@@ -73,15 +75,24 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
       if (this.place.geometry === undefined || this.place.geometry === null) {
         this.clear();
       } else {
-        this.address = new DeliveryAddress(this.place);
-        this.searchSelected = true;
-        this.fullAddress = !!this.address.zipCode && !!this.address.streetName && !!this.address.streetNumber;
-        this.outOfZone = !this.inZone();
-        if (this.fullAddress && !this.outOfZone) {
-          this.addDelivery.emit(this.address);
-        }
+        const zipCode = this.delivery.zipCode(this.place.address_components);
+        const streetNumber = this.delivery.streetNumber(this.place.address_components);
+        const streetName = this.delivery.streetName(this.place.address_components);
+        const lat = this.place.geometry ? this.place.geometry.location.lat() : 0;
+        const lng = this.place.geometry ? this.place.geometry.location.lng() : 0;
+        this.trySaveDelivery(zipCode, streetNumber, streetName, lat, lng);
       }
     });
+  }
+
+  trySaveDelivery = (zipCode: string, streetNumber: string, streetName: string, lat: number, lng: number) => {
+    this.address = new DeliveryAddress(zipCode, streetNumber, streetName, lat, lng);
+    this.searchSelected = true;
+    this.fullAddress = !!this.address.zipCode && !!this.address.streetName && !!this.address.streetNumber;
+    this.outOfZone = !this.inZone();
+    if (this.fullAddress && !this.outOfZone) {
+      this.addDelivery.emit(this.address);
+    }
   }
 
   distance = (): number => this.delivery.getDistanceFromLatLonInKm(
@@ -93,6 +104,7 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
   ngOnDestroy() {
     this.canDeliver$.unsubscribe();
     this.deliveryInstrStream$.unsubscribe();
+    this.deliveryStream$.unsubscribe();
   }
 
   clear() {
@@ -115,5 +127,27 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
         tap(() => this.updateInstructions.emit(this.address))
       )
       .subscribe(res => console.log(res));
+
+    this.deliveryStream$ = fromEvent(this.locateElement.nativeElement, 'click')
+      .pipe(
+        map(() => (<HTMLInputElement>document.getElementById('search')).value),
+        tap((a) => console.log(a)),
+        switchMap(address => this.delivery.guess(address))
+      )
+      .subscribe(place => {
+        if (place) {
+          try {
+            const result = place.PlaceDetailsResponse.result;
+            const zipCode = result.address_component.find(x => x.type === 'postal_code').long_name;
+            const streetNumber = result.address_component.find(x => x.type === 'street_number').long_name;
+            const streetName = result.address_component.find(x => x.type === 'route').long_name;
+            this.trySaveDelivery(zipCode, streetNumber, streetName, result.geometry.location.lat, result.geometry.location.lng);
+          } catch {
+            this.fullAddress = false;
+          }
+        } else {
+          this.fullAddress = false;
+        }
+    });
   }
 }

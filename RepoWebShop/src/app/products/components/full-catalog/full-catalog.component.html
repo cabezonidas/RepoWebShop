@@ -2,58 +2,52 @@
   <mat-spinner *ngIf="!items.length"> </mat-spinner>
 </div>
 
+<mat-form-field *ngIf="items && items.length">
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar"
+    autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off"
+  >
+</mat-form-field>
 <section *ngIf="items && items.length">
-
+  
   <div class="container" >
 
-    <mat-form-field >
-      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar"
-        autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off"
-      >
-    </mat-form-field>
 
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" (matSortChange)="sortData($event)">
       
       <ng-container matColumnDef="displayName">
-        <th mat-header-cell *matHeaderCellDef>
-          <h2>Todos los productos</h2>
-        </th>
+        <th mat-header-cell *matHeaderCellDef > Productos </th>
         <td mat-cell *matCellDef="let element">
           <div>
-            <h3>
+            <strong>
               {{ element.displayName }}
-              <!-- <app-product-price [price]="element.price" [priceInStore]="element.priceInStore"></app-product-price> -->
-            </h3>
-            <div>{{ element.displayDescription }}</div>
+            </strong>
+            <span [ngStyle]="{'text-transform':'lowercase'}">{{ element.displayDescription }} ({{ element.category == 'Lunch' ? 'Catering' : element.category }})</span>
+
+            <app-soonest-pickup [soonestPickup]="element.preparationTime" ></app-soonest-pickup>
+            <br>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef > </th>
+          <td mat-cell *matCellDef="let element">
+            <div>
+              <app-product-price [price]="element.price" [priceInStore]="element.priceInStore"></app-product-price>
+            </div>
             <div>
               <small>
                 <strong>Porciones: {{ element.portions }}</strong>
               </small>
             </div>
             <div class='buyButton'>
-              <button mat-raised-button color="primary" (click)="addToCart(element.productId)">
-                <mat-icon aria-label="">add_shopping_cart</mat-icon>
-                <small>Agregar al carrito</small>
-              </button>
-            </div>
-            <app-soonest-pickup [soonestPickup]="element.preparationTime" ></app-soonest-pickup>
-            <br>
-          </div>
-        </td>
-      </ng-container>
-            
-      <!-- <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element">
-          <app-price-comparison [price]="element.price" [priceInStore]="element.priceInStore"></app-price-comparison>
-          <div class='buyButton'>
-            <button mat-raised-button color="primary" (click)="addToCart(element.productId)">
-              <mat-icon aria-label="">add_shopping_cart</mat-icon>
-              <small>Agregar al carrito</small>
-            </button>
-          </div>
-        </td>
-      </ng-container> -->
+                <button mat-mini-fab color="primary" (click)="addToCart(element.productId)">
+                  <mat-icon aria-label="">add_shopping_cart</mat-icon>
+                </button>
+              </div>
+              <small>Agregar</small>
+            </td>
+        </ng-container>
     
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

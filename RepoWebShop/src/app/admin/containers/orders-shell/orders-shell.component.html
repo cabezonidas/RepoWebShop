@@ -1,0 +1,52 @@
+<div class="container">
+  <div class='table'>
+    <mat-form-field>
+      <input matInput placeholder="Buscar" (keyup)="applyFilter($event.target.value)">
+    </mat-form-field>
+  
+    <div class="">
+      <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">   
+        <ng-container matColumnDef="pickUpTimeFrom">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header='pickUpTimeFrom'> Entrega </th>
+          <td mat-cell *matCellDef="let row"> 
+            <div>
+              {{ calendar.pickupDate(row.pickUpTimeFrom) }} 
+            </div>
+            <div>
+              <button mat-button (click)="openDialog(row)" color="accent" class="home-button">
+                  {{ row.friendlyBookingId }}
+              </button>
+            </div>
+            <div>
+              {{ row.orderTotal | currency : '$' : 'symbol' : '1.0-0' }}
+              <span *ngIf="row.status == 'reservation'" [ngStyle]="{'color': 'green'}">
+                Reserva
+              </span>
+              <span *ngIf="row.status == 'approved'" [ngStyle]="{'color': 'blue'}">
+                Pagado
+              </span>
+            </div>
+            <div *ngIf="row.customerComments">
+              <small>
+                {{ row.customerComments }}
+              </small>
+            </div>
+          </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="items">
+          <th mat-header-cell *matHeaderCellDef> Pedido </th>
+          <td mat-cell *matCellDef="let row">
+            <app-order-details [orderId]="row.orderId" [orderReady]="row.finished" (save)="archive(row)" (notify)="notify(row)"></app-order-details>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" ></mat-paginator>
+    </div>
+  </div>
+</div>
+

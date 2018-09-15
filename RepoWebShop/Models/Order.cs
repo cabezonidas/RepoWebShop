@@ -142,7 +142,7 @@ namespace RepoWebShop.Models
             get
             {
                 var phones = new List<string>() { "", Registration?.PhoneNumber ?? "", Registration?.PhoneNumberDeclared ?? "", PhoneNumber };
-                return string.Join(" / ", phones.Distinct());
+                return string.Join(" / ", phones.Where(x => !string.IsNullOrEmpty(x)).Distinct());
             }
         }
 
@@ -238,5 +238,10 @@ namespace RepoWebShop.Models
         public string CardHolderNumber { get; set; }
         public long Cuit { get; set; }
         public InvoiceData Factura { get; internal set; }
-    }
+
+		public string RegistrationId { get; set; }
+		public int? EmailId { get; set; }
+		public int? DeliveryAddressId { get; set; }
+		public int? DiscountId { get; set; }
+	}
 }

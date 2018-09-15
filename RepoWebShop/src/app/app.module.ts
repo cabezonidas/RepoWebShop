@@ -16,6 +16,7 @@ import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, Mat
 import { MainNavComponent } from './shared/components/main-nav/main-nav.component';
 import { CartModule } from './cart/cart.module';
 import { HomeModule } from './home/home.module';
+import { AdminModule } from './admin/admin.module';
 import { LeftnavContainerComponent } from './components/leftnav-container/leftnav-container.component';
 import { ToolBarComponent } from './components/tool-bar/tool-bar.component';
 
@@ -27,6 +28,7 @@ import { ToolBarComponent } from './components/tool-bar/tool-bar.component';
     ToolBarComponent
   ],
   imports: [
+    AdminModule,
     SharedModule,
     MaterialModule,
     BrowserModule,

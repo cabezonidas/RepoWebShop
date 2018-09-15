@@ -90,4 +90,20 @@ export class CalendarService {
 
     return day + time;
   }
+
+  pickupDate = (estimation: Date): string => {
+    estimation = new Date(estimation);
+    const baTime = new Date(moment().tz('America/Argentina/Buenos_Aires').format('l LT'));
+    const baTimeTomorrow = new Date(moment().tz('America/Argentina/Buenos_Aires').add(1, 'days').format('l LT'));
+
+    let minutes = estimation.getMinutes().toString();
+    minutes = minutes.length === 1 ? '0' + minutes : minutes;
+    let hours = estimation.getHours().toString();
+    hours = hours.length === 1 ? '0' + hours : hours;
+
+    const day = `${this.day((estimation.getDay()))} ${estimation.getDate()} `;
+    const time = `a las ${hours}:${minutes}`;
+
+    return day + time;
+  }
 }
