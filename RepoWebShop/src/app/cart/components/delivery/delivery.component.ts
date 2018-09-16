@@ -126,12 +126,11 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
         tap(instructions => this.address.deliveryInstructions = instructions),
         tap(() => this.updateInstructions.emit(this.address))
       )
-      .subscribe(res => console.log(res));
+      .subscribe();
 
     this.deliveryStream$ = fromEvent(this.locateElement.nativeElement, 'click')
       .pipe(
         map(() => (<HTMLInputElement>document.getElementById('search')).value),
-        tap((a) => console.log(a)),
         switchMap(address => this.delivery.guess(address))
       )
       .subscribe(place => {

@@ -11,6 +11,7 @@
 
 # ASP.NET Core appsettings
 appsettings.production.json
+appsettings.staging.json
 appsettings.development.json
 
 # User-specific files (MonoDevelop/Xamarin Studio)
@@ -292,7 +293,6 @@ __pycache__/
 RepoWebShop/appsettings.development.json
 RepoWebShop/appsettings.staging.json
 RepoWebShop/appsettings.production.json
-
-RepoWebShop/src/environments/environment.hmr.ts
-RepoWebShop/src/environments/environment.prod.ts
-RepoWebShop/src/environments/environment.ts
+RepoWebShop/src/environment.hmr.ts
+RepoWebShop/src/environment.prod.ts
+RepoWebShop/src/environment.ts
