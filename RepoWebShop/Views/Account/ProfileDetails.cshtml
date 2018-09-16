@@ -1,4 +1,10 @@
 ﻿@model ApplicationUserViewModel
+@inject IConfiguration _config
+	
+@{
+	var _googleApiKey = _config.GetValue<string>("GoogleApiKeyViews");
+	var src = $"https://maps.googleapis.com/maps/api/js?key={_googleApiKey}&libraries=places&callback=initAutocomplete";
+}
 
 <div class="container">
     <h2>Modificar datos personales</h2>
@@ -77,22 +83,6 @@
                 </table>
             </div>
         </div>
-
-        @*<div class="form-group">
-            <label asp-for="PhoneNumber" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Email" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-        </div>*@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -175,5 +165,4 @@
         }
     }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAR5nmTSuiZsjA5Yhgx3w9EDEyF-C8zIwU&libraries=places&callback=initAutocomplete"
-        async defer></script>
+<script src="@src" async defer></script>

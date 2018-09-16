@@ -1,252 +1,255 @@
 ﻿@model DeliveryAddressViewModel
+@inject IConfiguration _config
 
 @{
-    var url = (this.Context?.Request?.HostUrl() ?? "") + "/Delivery/Index";
+	var _googleApiKey = _config.GetValue<string>("GoogleApiKeyViews");
+	var src = $"https://maps.googleapis.com/maps/api/js?input=Vict&types;=geocode&language;=es&key={_googleApiKey}&libraries=places&callback=initGoogle";
+
+	var url = (this.Context?.Request?.HostUrl() ?? "") + "/Delivery/Index";
 }
 @section metatags {
-    <meta name="viewport" content="initial-scale=1.0">
-    <meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0">
+	<meta charset="utf-8">
 
-    <meta property="og:url" content="@url" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Envío a domicilio" />
-    <meta property="og:description" content="De las Artes - Desde 1992" />
+	<meta property="og:url" content="@url" />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Envío a domicilio" />
+	<meta property="og:description" content="De las Artes - Desde 1992" />
 
-    <title>De las Artes - Envío a domicilio</title>
+	<title>De las Artes - Envío a domicilio</title>
 }
 <div id="fb-root"></div>
 <script>
-    (function (d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = 'https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v2.11&appId=744831982380043';
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
+	(function (d, s, id) {
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) return;
+		js = d.createElement(s); js.id = id;
+		js.src = 'https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v2.11&appId=744831982380043';
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
 </script>
 <br />
 
 <div class="container">
-    <div class="title-container">
-        <h1 class="title-logo">Delivery</h1>
-    </div>
+	<div class="title-container">
+		<h1 class="title-logo">Delivery</h1>
+	</div>
 
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-        <form asp-controller="Delivery" asp-action="Index" class="form-horizontal" method="post" role="form" autocomplete="off">
-            <div class="form-group" id="locationField">
-                <div class="text-center text-muted" style="margin-bottom: 20px;">
-                    @*<h3>Horarios de envío</h3>
-                    <h4 class="">De Martes a Sábados<br />Entre 10:30 y 12:30 o entre 18:00 y 20:00</h4>*@
-                </div>
-                <label asp-for="AddressLine1" class="col-md-2 control-label"></label>
-                <div class="col-md-10">
-                    <input asp-for="AddressLine1" id="autocomplete" class="form-control"
-                           placeholder="Avenida Jose Maria Moreno 561"
-                           onFocus="geolocate()" autocomplete="off" />
-                    <div style="margin-top: 5px;">
-                        <div style="" id="error" class="hidden alert-danger text-center">
+	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+		<form asp-controller="Delivery" asp-action="Index" class="form-horizontal" method="post" role="form" autocomplete="off">
+			<div class="form-group" id="locationField">
+				<div class="text-center text-muted" style="margin-bottom: 20px;">
+					@*<h3>Horarios de envío</h3>
+						<h4 class="">De Martes a Sábados<br />Entre 10:30 y 12:30 o entre 18:00 y 20:00</h4>*@
+				</div>
+				<label asp-for="AddressLine1" class="col-md-2 control-label"></label>
+				<div class="col-md-10">
+					<input asp-for="AddressLine1" id="autocomplete" class="form-control"
+						   placeholder="Avenida Jose Maria Moreno 561"
+						   onFocus="geolocate()" autocomplete="off" />
+					<div style="margin-top: 5px;">
+						<div style="" id="error" class="hidden alert-danger text-center">
 
-                        </div>
-                        <div id="cost" class="text-center alert-success text-center">
+						</div>
+						<div id="cost" class="text-center alert-success text-center">
 
-                        </div>
-                    </div>
-                    <div asp-validation-summary="All" class="text-danger allerrors"></div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeliveryInstructions" class="col-md-2 control-label"></label>
-                <div class="col-md-10">
-                    <textarea maxlength="250" asp-for="DeliveryInstructions" placeholder="Ingresa instrucciones de envío, piso, departamento, unidad, etc.." class="form-control" rows="4"></textarea>
-                </div>
-            </div>
-
-
-            <div class="form-group hidden">
-                <div class="col-md-2 control-label"></div>
-                <div class="col-md-10">
-                    <table id="address">
-                        <tr>
-                            <td>
-                                <input id="street_number" asp-for="StreetNumber" readonly="readonly" />
-                            </td>
-                            <td>
-                                <input id="route" asp-for="StreetName" readonly="readonly" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input id="locality" asp-for="State" readonly="readonly" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input id="administrative_area_level_1" readonly="readonly" />
-                            </td>
-                            <td>
-                                <input id="postal_code" asp-for="ZipCode" readonly="readonly" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input id="country" asp-for="Country" disabled="disabled" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input id="locality" asp-for="State" disabled="disabled" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input id="distance" asp-for="Distance" type="number" />
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+						</div>
+					</div>
+					<div asp-validation-summary="All" class="text-danger allerrors"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label asp-for="DeliveryInstructions" class="col-md-2 control-label"></label>
+				<div class="col-md-10">
+					<textarea maxlength="250" asp-for="DeliveryInstructions" placeholder="Ingresa instrucciones de envío, piso, departamento, unidad, etc.." class="form-control" rows="4"></textarea>
+				</div>
+			</div>
 
 
+			<div class="form-group hidden">
+				<div class="col-md-2 control-label"></div>
+				<div class="col-md-10">
+					<table id="address">
+						<tr>
+							<td>
+								<input id="street_number" asp-for="StreetNumber" readonly="readonly" />
+							</td>
+							<td>
+								<input id="route" asp-for="StreetName" readonly="readonly" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input id="locality" asp-for="State" readonly="readonly" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input id="administrative_area_level_1" readonly="readonly" />
+							</td>
+							<td>
+								<input id="postal_code" asp-for="ZipCode" readonly="readonly" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input id="country" asp-for="Country" disabled="disabled" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input id="locality" asp-for="State" disabled="disabled" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input id="distance" asp-for="Distance" type="number" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
 
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <a asp-action="Index" asp-controller="ShoppingCart" class="btn btn-primary" value="Volver">
-                        <span class="glyphicon glyphicon-arrow-left">
 
-                        </span>
-                        Volver
-                    </a>
-                    <input type="submit" class="btn btn-primary" value="Guardar envío" />
-                </div>
-            </div>
-        </form>
-        <div class="text-center text-muted">
-            <h3 class="">¿Qué pasa si el delivery no llega a tu zona?</h3>
-            <div>Podemos hacer el envío dependiendo del monto y la antelación del pedido.</div>
-            <div>Para eso deberás ponerte en contacto con nosotros.</div>
-            <div>Llamanos al <a href="tel:+5491149250262">4925-0262</a> o escribirnos a <a href="mailto:info@@delasartes.com.ar">info@@delasartes.com.ar</a></div>
-            <div>Tambien podés ponerte en contacto a través de nuestros medios sociales.</div>
-        </div>
 
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-        <h3 class="text-muted text-center">Zona de Cobertura - Radio de @Model.DeliveryRadius mts</h3>
-        <h4 class="text-center text-muted">El costo de envío se calcula automáticamente</h4>
-        <h5 class="text-center text-muted">
-            El costo mínimo es $@Model.MinimumCharge y aumenta dependiendo la distancia.<br />
+			<div class="form-group">
+				<div class="col-md-offset-2 col-md-10">
+					<a asp-action="Index" asp-controller="ShoppingCart" class="btn btn-primary" value="Volver">
+						<span class="glyphicon glyphicon-arrow-left">
 
-        </h5>
-        <div id="map" style="height:350px; width:100%;"></div>
-        <div class="text-center">
-            <div class="fb-share-button" style="margin: 25px;"
-                 data-href="@url"
-                 data-layout="button_count">
-            </div>
-        </div>
-    </div>
+						</span>
+						Volver
+					</a>
+					<input type="submit" class="btn btn-primary" value="Guardar envío" />
+				</div>
+			</div>
+		</form>
+		<div class="text-center text-muted">
+			<h3 class="">¿Qué pasa si el delivery no llega a tu zona?</h3>
+			<div>Podemos hacer el envío dependiendo del monto y la antelación del pedido.</div>
+			<div>Para eso deberás ponerte en contacto con nosotros.</div>
+			<div>Llamanos al <a href="tel:+5491149250262">4925-0262</a> o escribirnos a <a href="mailto:info@@delasartes.com.ar">info@@delasartes.com.ar</a></div>
+			<div>Tambien podés ponerte en contacto a través de nuestros medios sociales.</div>
+		</div>
+
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+		<h3 class="text-muted text-center">Zona de Cobertura - Radio de @Model.DeliveryRadius mts</h3>
+		<h4 class="text-center text-muted">El costo de envío se calcula automáticamente</h4>
+		<h5 class="text-center text-muted">
+			El costo mínimo es $@Model.MinimumCharge y aumenta dependiendo la distancia.<br />
+
+		</h5>
+		<div id="map" style="height:350px; width:100%;"></div>
+		<div class="text-center">
+			<div class="fb-share-button" style="margin: 25px;"
+				 data-href="@url"
+				 data-layout="button_count">
+			</div>
+		</div>
+	</div>
 
 
 </div>
 
 <script>
-    function getDistance() {
-        loaderOn();
-        $('#cost').empty();
-        $('#error').empty().addClass('hidden');
-        var location = $('#autocomplete').val();
-        $.get("/api/DeliveryData/GetCost/" + location).then((data) => {
-            $('#cost').append("<span class='fa fa-check' style='margin: 5px;'></span>Estás dentro del radio. Costo de envío $" + data.cost);
-            $('.allerrors').empty();
-            loaderOff();
-        }, (XMLHttpRequest, textStatus, errorThrown) => {
-            console.log(XMLHttpRequest);
-            console.log(textStatus);
-            console.log(errorThrown);
-            $('.allerrors').empty();
-            $('#error').append("<span class='fa fa-times' style='margin: 5px;'></span>" + XMLHttpRequest.responseJSON.message);
-            $('#error').removeClass('hidden');
-            loaderOff();
-        });
-    }
+	function getDistance() {
+		loaderOn();
+		$('#cost').empty();
+		$('#error').empty().addClass('hidden');
+		var location = $('#autocomplete').val();
+		$.get("/api/DeliveryData/GetCost/" + location).then((data) => {
+			$('#cost').append("<span class='fa fa-check' style='margin: 5px;'></span>Estás dentro del radio. Costo de envío $" + data.cost);
+			$('.allerrors').empty();
+			loaderOff();
+		}, (XMLHttpRequest, textStatus, errorThrown) => {
+			console.log(XMLHttpRequest);
+			console.log(textStatus);
+			console.log(errorThrown);
+			$('.allerrors').empty();
+			$('#error').append("<span class='fa fa-times' style='margin: 5px;'></span>" + XMLHttpRequest.responseJSON.message);
+			$('#error').removeClass('hidden');
+			loaderOff();
+		});
+	}
 
-    var placeSearch, autocomplete;
-    var componentForm = {
-        street_number: 'short_name',
-        route: 'long_name',
-        locality: 'long_name',
-        administrative_area_level_1: 'short_name',
-        country: 'long_name',
-        postal_code: 'short_name'
-    };
+	var placeSearch, autocomplete;
+	var componentForm = {
+		street_number: 'short_name',
+		route: 'long_name',
+		locality: 'long_name',
+		administrative_area_level_1: 'short_name',
+		country: 'long_name',
+		postal_code: 'short_name'
+	};
 
-    function initAutocomplete() {
-        autocomplete = new google.maps.places.Autocomplete(
-            (document.getElementById('autocomplete')),
-            {
-                types: ['address'],
-                componentRestrictions: { country: 'ar' }
-            });
+	function initAutocomplete() {
+		autocomplete = new google.maps.places.Autocomplete(
+			(document.getElementById('autocomplete')),
+			{
+				types: ['address'],
+				componentRestrictions: { country: 'ar' }
+			});
 
-        autocomplete.addListener('place_changed', fillInAddress);
-    }
+		autocomplete.addListener('place_changed', fillInAddress);
+	}
 
-    function fillInAddress() {
-        var place = autocomplete.getPlace();
-        for (var component in componentForm) {
-            document.getElementById(component).value = '';
-        }
-        for (var i = 0; i < place.address_components.length; i++) {
-            var addressType = place.address_components[i].types[0];
-            if (componentForm[addressType]) {
-                var val = place.address_components[i][componentForm[addressType]];
-                document.getElementById(addressType).value = val;
-            }
-        }
-        getDistance();
-    }
+	function fillInAddress() {
+		var place = autocomplete.getPlace();
+		for (var component in componentForm) {
+			document.getElementById(component).value = '';
+		}
+		for (var i = 0; i < place.address_components.length; i++) {
+			var addressType = place.address_components[i].types[0];
+			if (componentForm[addressType]) {
+				var val = place.address_components[i][componentForm[addressType]];
+				document.getElementById(addressType).value = val;
+			}
+		}
+		getDistance();
+	}
 
-    function geolocate() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                var geolocation = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                };
-                var circle = new google.maps.Circle({
-                    center: geolocation,
-                    radius: position.coords.accuracy
-                });
-                autocomplete.setBounds(circle.getBounds());
-            });
-        }
-    }
+	function geolocate() {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function (position) {
+				var geolocation = {
+					lat: position.coords.latitude,
+					lng: position.coords.longitude
+				};
+				var circle = new google.maps.Circle({
+					center: geolocation,
+					radius: position.coords.accuracy
+				});
+				autocomplete.setBounds(circle.getBounds());
+			});
+		}
+	}
 
-    function initMap() {
-        var citymap = {
-            // center: { lat: -34.625265, lng: -58.434483 } store location
+	function initMap() {
+		var citymap = {
+			// center: { lat: -34.625265, lng: -58.434483 } store location
 			center: { lat: -34.607026, lng: -58.444537 }
-        };
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 11,
-            center: citymap.center,
-            mapTypeId: 'terrain'
-        });
-        var cityCircle = new google.maps.Circle({
-            strokeColor: '#006600',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#66ff66',
-            fillOpacity: 0.35,
-            map: map,
-            center: citymap.center,
-            radius: 4500
-        });
-    }
+		};
+		var map = new google.maps.Map(document.getElementById('map'), {
+			zoom: 11,
+			center: citymap.center,
+			mapTypeId: 'terrain'
+		});
+		var cityCircle = new google.maps.Circle({
+			strokeColor: '#006600',
+			strokeOpacity: 0.8,
+			strokeWeight: 2,
+			fillColor: '#66ff66',
+			fillOpacity: 0.35,
+			map: map,
+			center: citymap.center,
+			radius: 4500
+		});
+	}
 
-    function initGoogle() {
-        initAutocomplete();
-        initMap();
-    }
+	function initGoogle() {
+		initAutocomplete();
+		initMap();
+	}
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?input=Vict&types;=geocode&language;=es&key=AIzaSyAR5nmTSuiZsjA5Yhgx3w9EDEyF-C8zIwU&libraries=places&callback=initGoogle"
-        async defer></script>
+<script src="@src" async defer></script>

@@ -20,6 +20,7 @@ import { CommentsComponent } from './components/comments/comments.component';
 import { ReservationComponent } from './components/reservation/reservation.component';
 import { MobileGuardService } from '../core/services/guard/mobile-guard.service';
 import { PaymentComponent } from './components/payment/payment.component';
+import { environment } from '../../environments/environment';
 
 const cartRoutes: Routes = [
     { path: 'cart', component: CartComponent },
@@ -42,7 +43,7 @@ const cartRoutes: Routes = [
     ],
     imports: [
         AgmCoreModule.forRoot({
-            'apiKey': 'AIzaSyAR5nmTSuiZsjA5Yhgx3w9EDEyF-C8zIwU',
+            'apiKey': environment.googleMapsApiKey,
             'libraries': [ 'places' ]
         }),
         SharedModule,

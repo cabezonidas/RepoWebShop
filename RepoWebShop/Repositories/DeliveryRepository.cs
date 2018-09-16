@@ -28,8 +28,9 @@ namespace RepoWebShop.Repositories
         private readonly int _minimumCharge;
         private readonly int _costByBlock;
         private readonly int _minimumArsForOrderDelivery;
-        private readonly int _deliveryRadius;
-        public DeliveryRepository(AppDbContext appDbContext, IConfiguration config, IShoppingCartRepository cart, IMapper mapper)
+		private readonly int _deliveryRadius;
+		private readonly string _googleApiKey;
+		public DeliveryRepository(AppDbContext appDbContext, IConfiguration config, IShoppingCartRepository cart, IMapper mapper)
         {
 			_cart = cart;
             _appDbContext = appDbContext;
@@ -38,6 +39,7 @@ namespace RepoWebShop.Repositories
             _costByBlock = _config.GetValue<int>("DeliveryCostByBlock");
 			_minimumArsForOrderDelivery = _config.GetValue<int>("MinimumArsForOrderDelivery");
 			_deliveryRadius = _config.GetValue<int>("DeliveryRadius");
+			_googleApiKey = _config.GetValue<string>("GoogleApiKey");
 			_mapper = mapper;
 		}
 
@@ -93,7 +95,7 @@ namespace RepoWebShop.Repositories
             var distanceApi = "maps.googleapis.com/maps/api/distancematrix";
             var metrics = "units=metric";
             var origins = "origins=place_id:EjVBdi4gSm9zw6kgTWFyw61hIE1vcmVubyA1NjEsIEMxNDI0QUFGIENBQkEsIEFyZ2VudGluYQ"; //Store location
-            var apiKey = "key=AIzaSyBxKMKlaxoM9x9Jv-r4KXxhvgHBsKbAmEk";
+            var apiKey = $"key={_googleApiKey}";
             var result = await httpClient.GetAsync($"https://{distanceApi}/json?{metrics}&{origins}&destinations={addressLine1}&{apiKey}");
             var body = await result.Content.ReadAsStringAsync();
 
@@ -104,7 +106,7 @@ namespace RepoWebShop.Repositories
 
         private async Task<KeyValuePair<string, string>> GetGeoLocationAsync(string addressLine1)
         {
-            var requestUri = $"https://maps.googleapis.com/maps/api/geocode/xml?address={(Uri.EscapeDataString(addressLine1))}&key=AIzaSyBxKMKlaxoM9x9Jv-r4KXxhvgHBsKbAmEk&sensor=false";
+            var requestUri = $"https://maps.googleapis.com/maps/api/geocode/xml?address={(Uri.EscapeDataString(addressLine1))}&key={_googleApiKey}&sensor=false";
             KeyValuePair<string, string> result;;
             using (var client = new HttpClient())
             {
@@ -163,7 +165,7 @@ namespace RepoWebShop.Repositories
         {
             var httpClient = new HttpClient();
             var autocompleteApi = "maps.googleapis.com/maps/api/place/autocomplete";
-            var apiKey = "key=AIzaSyBxKMKlaxoM9x9Jv-r4KXxhvgHBsKbAmEk";
+            var apiKey = $"key={_googleApiKey}";
             var result = await httpClient.GetAsync($"https://{autocompleteApi}/xml?input={address}&types=address&{apiKey}");
             var body = await result.Content.ReadAsStringAsync();
 
@@ -180,7 +182,7 @@ namespace RepoWebShop.Repositories
 				var placeId = await GuessPlaceIdAsync(address);
 				var httpClient = new HttpClient();
 				var placeApi = "maps.googleapis.com/maps/api/place/details";
-				var apiKey = "key=AIzaSyBxKMKlaxoM9x9Jv-r4KXxhvgHBsKbAmEk";
+				var apiKey = $"key={_googleApiKey}";
 				var response = await httpClient.GetAsync($"https://{placeApi}/xml?placeid={placeId}&{apiKey}");
 				var bodyAsString = await response.Content.ReadAsStringAsync();
 				var body = XDocument.Parse(bodyAsString);
@@ -198,7 +200,7 @@ namespace RepoWebShop.Repositories
         {
             var httpClient = new HttpClient();
             var placeApi = "maps.googleapis.com/maps/api/place/details";
-            var apiKey = "key=AIzaSyBxKMKlaxoM9x9Jv-r4KXxhvgHBsKbAmEk";
+            var apiKey = $"key={_googleApiKey}";
             var response = await httpClient.GetAsync($"https://{placeApi}/xml?placeid={placeId}&{apiKey}");
             var body = await response.Content.ReadAsStringAsync();
 

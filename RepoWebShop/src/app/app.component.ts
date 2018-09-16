@@ -31,9 +31,9 @@ export class AppComponent implements OnInit, OnDestroy {
       this.user = user;
     });
     this.adjustPadding();
-    // this.store.dispatch(new productActions.LoadProducts());
-    // this.store.dispatch(new cateringActions.LoadCaterings());
-    // this.store.dispatch(new cateringActions.LoadItems());
+    this.store.dispatch(new productActions.LoadProducts());
+    this.store.dispatch(new cateringActions.LoadCaterings());
+    this.store.dispatch(new cateringActions.LoadItems());
   }
 
   ngOnDestroy(): void {
