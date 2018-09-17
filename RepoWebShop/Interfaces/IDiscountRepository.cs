@@ -11,5 +11,6 @@ namespace RepoWebShop.Interfaces
         void Delete(int id);
 		bool IsValid(string code);
 		Discount AddQuickDiscount(decimal value);
+		Discount GetById(int discountId);
 	}
 }

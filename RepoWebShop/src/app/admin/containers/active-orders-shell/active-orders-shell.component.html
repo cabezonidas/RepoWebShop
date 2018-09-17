@@ -1,1 +1,1 @@
-<app-orders-shell [orders]="orders$ | async"></app-orders-shell>
+<app-orders-shell [orders]="orders$ | async" (orderUpdated)="updateOrders()"></app-orders-shell>

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;   
 using Microsoft.AspNetCore.Identity;
 using RepoWebShop.Extensions;
+using RepoWebShop.FeApi.Invoice;
 using RepoWebShop.FeModels;
 using RepoWebShop.ViewModels;
 using System;
@@ -13,7 +14,13 @@ namespace RepoWebShop.Models
     {
 		public MappingProfile()
 		{
-			CreateMap<Order, _Order>();
+			CreateMap<Cae, _Cae>();
+			CreateMap<InvoiceData, _InvoiceData>();
+			CreateMap<InvoiceDetail, _InvoiceDetail>();
+			CreateMap<Order, _Order>()
+				.ForMember(x => x.PickUpTimeFrom, opt => opt.ResolveUsing(src =>
+					src.PickUpTimeFrom.HasValue && src.PickUpTimeFrom.Value.Year == 1 ? src.PickUpTime : src.PickUpTimeFrom));
+
 			CreateMap<DeliveryAddress, _DeliveryAddress>();
 			CreateMap<_DeliveryAddress, DeliveryAddress>();
 			CreateMap<Lunch, _Catering>();

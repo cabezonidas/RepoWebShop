@@ -1,3 +1,55 @@
-<p>
-  order-dialog-shell works!
-</p>
+<div class="container">
+    <mat-accordion>
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>Pedido</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div *ngIf="(customerName$ | async) as name">
+            <strong>Cliente</strong> {{ name }}
+          </div>
+          <div *ngIf="(customerNumbers$ | async) as numbers">
+            <strong>Contacto</strong> {{ numbers }}
+          </div>
+          <div *ngIf="(customerEmails$ | async) as emails">
+            <strong>Email</strong> {{ emails }}
+          </div>
+          <div *ngIf="(discount$ | async) as discount">
+            <strong>Descuento </strong> <a class='link' [attr.href]="'/Discounts/Details/' + discount.phrase" target="_blank">{{ discount.phrase }}</a> 
+          </div>
+        
+          <div>
+            <strong>Email enviado </strong> <a class='link' [attr.href]="'/Order/EmailSentNotification/' + data.orderId" target="_blank">Ver</a> 
+          </div>
+          
+          <div *ngIf="(deliveryAddress$ | async) as delivery">
+            <strong>Delivery</strong> {{ delivery.addressLine1 }} {{ delivery.deliveryInstructions }}
+          </div>
+          <div *ngIf="data.customerComments">
+            <strong>Comentarios</strong> {{data.customerComments}}
+          </div>
+          
+        </mat-expansion-panel>
+      </mat-accordion>
+  
+  <div *ngIf="(detailsBreakDown$ | async) as details">
+    <br>
+    <mat-accordion>
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>Detalle</mat-panel-title>
+          </mat-expansion-panel-header>
+          <div *ngFor="let detail of details"><small>{{ detail.amount }} {{ detail.title }}</small></div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    
+    <br>
+  </div>
+
+  <app-order-billing [order]="data"></app-order-billing>
+  <div [ngStyle]="{'margin-top': '20px', 'text-align': 'center'}">
+    <button mat-raised-button (click)="ticket(data.orderId)" [ngStyle]="{'margin': 'auto'}" color="primary">
+      Ticket
+    </button>
+  </div>
+</div>

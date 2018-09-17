@@ -15,6 +15,7 @@ namespace RepoWebShop.Interfaces
         Task<string> GuessPlaceIdAsync(string address);
 		Task<string> GuessGooglePlaceAsync(string address);
 		Task<AddressViewModel> GetPlaceAsync(string placeId);
+		_DeliveryAddress GetDeliveryById(int id);
 		bool CanDelivery();
 		int DistanceFromStore(string lat, string lng, char v);
 		int DistanceFromDeliveryCenter(string lat, string lng, char v);

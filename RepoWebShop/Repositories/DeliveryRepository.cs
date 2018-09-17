@@ -283,5 +283,11 @@ namespace RepoWebShop.Repositories
 			}
 			return null;
 		}
+
+		public _DeliveryAddress GetDeliveryById(int id)
+		{
+			var address = _appDbContext.DeliveryAddresses.FirstOrDefault(x => x.DeliveryAddressId == id);
+			return address != null ? _mapper.Map<_DeliveryAddress>(address) : null;
+		}
 	}
 }

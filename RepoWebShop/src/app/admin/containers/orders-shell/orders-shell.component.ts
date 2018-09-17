@@ -1,21 +1,25 @@
-import { Component, OnInit, Input, ViewChild, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, OnChanges, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { IOrder } from '../../interfaces/iorder';
 import { MatPaginator, MatSort, MatTableDataSource, Sort, MatDialog } from '@angular/material';
 import { CalendarService } from '../../../home/services/calendar.service';
 import { OrderDialogShellComponent } from '../order-dialog-shell/order-dialog-shell.component';
 import { OrdersService } from '../../services/orders.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-orders-shell',
   templateUrl: './orders-shell.component.html',
   styleUrls: ['./orders-shell.component.scss']
 })
-export class OrdersShellComponent implements OnInit, OnChanges {
+export class OrdersShellComponent implements OnInit, OnChanges, OnDestroy {
 
+  archSub = new Subscription();
+  notiSub = new Subscription();
   displayedColumns: string[] = ['pickUpTimeFrom', 'items'];
   dataSource: MatTableDataSource<IOrder>;
 
   @Input() orders: IOrder[];
+  @Output() orderUpdated = new EventEmitter();
   sortedData: IOrder[];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -63,10 +67,14 @@ export class OrdersShellComponent implements OnInit, OnChanges {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   archive(row: IOrder) {
-    this.openDialog(row);
+    this.archSub = this.orderService.archive(row.orderId).subscribe(() => this.orderUpdated.emit());
   }
   notify(row: IOrder) {
-    this.openDialog(row);
+    this.notiSub = this.orderService.done(row.orderId).subscribe(() => this.orderUpdated.emit());
+  }
+  ngOnDestroy() {
+    this.archSub.unsubscribe();
+    this.notiSub.unsubscribe();
   }
 }
 

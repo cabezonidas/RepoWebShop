@@ -1,0 +1,73 @@
+<div class="container">
+  <div *ngIf="order.cuit !== '0' && order.status === 'reservation'">
+    <mat-card>
+      Emitir factura A manualmente con cuit <strong>{{order.cuit}}</strong>
+    </mat-card>
+  </div>
+
+
+  <div *ngIf="invoice && order.status !== 'reservation'">
+
+    <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <div >
+                <small *ngIf="isSuccess()">
+                  Comprobante fiscal emitido con éxito.
+                </small>
+                <small *ngIf="!isSuccess()">
+                  Hubo un error. {{ order.cuit !== '0' ? 'Emitir Factura A manualmente con cuit ' + order.cuit + '.' : 'Emitir ticket manualmente.' }}
+                </small>
+              </div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+            <small>
+              <div>
+                <strong>Tipo</strong> {{ billing.cbteTipo(invoice.cbteTipo) }}
+              </div>
+              <div>
+                <strong>Resultado</strong> {{ isSuccess() ? 'Aprobado' : 'Rechazado' }}
+              </div>
+              <div>
+                <strong>Punto de Venta</strong> {{ invoice.ptoVta }}
+              </div>
+              <div *ngIf="invoice.caes">
+                <div *ngFor="let cae of invoice.caes">
+                    <mat-divider></mat-divider>
+                    <div>
+                        <strong>CAE</strong> {{ cae.cae }}
+                    </div>
+                    <div>
+                        <strong>Comprobante</strong> {{ cae.cbteDesde }}
+                    </div>
+                    <div>
+                        <strong>Tipo documento</strong> {{ billing.docTipo(cae.docTipo) }}
+                    </div>
+                    <div *ngIf="cae.docTipo !== 99">
+                        <strong>Documento</strong> {{ cae.docNro }}
+                    </div>
+                    <div>
+                        <strong>Importe</strong> ${{ cae.impTotal }}
+                    </div>
+                    <div>
+                        <strong>Estado CAE</strong> {{ billing.resultado(cae.resultado) }}
+                    </div>
+                </div>
+              </div>
+              <div *ngIf="invoice.invoiceDetails">
+                <div *ngFor="let detail of invoice.invoiceDetails">
+                  <mat-divider></mat-divider>
+                  <div>
+                      <strong>{{ detail.type }}</strong> {{ detail.msg }}
+                  </div>
+                  <div>
+                      <strong>Código</strong> {{ detail.code }}
+                  </div>
+                </div>
+                </div>            
+            </small>
+        </mat-expansion-panel>
+      </mat-accordion>
+  </div>
+</div>

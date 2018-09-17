@@ -14,8 +14,8 @@ export interface IInvoiceData {
     cantReg: number;
     resultado: string;
     reproceso: string;
-    InvoiceDetails: IInvoiceDetail[];
-    Caes: ICae[];
+    invoiceDetails: IInvoiceDetail[];
+    caes: ICae[];
     factura: string;
     friendlyResultado: string;
 }

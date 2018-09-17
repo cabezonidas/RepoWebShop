@@ -1,5 +1,5 @@
 export interface IOrder {
-    orderId: string;
+    orderId: number;
     registrationId: string;
     emailId: number;
     deliveryAddressId: number;

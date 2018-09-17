@@ -1,0 +1,25 @@
+<div>
+  <strong>{{ calendar.pickupDate(order.pickUpTimeFrom) }}</strong> (<span class="month-year">{{order.pickUpTimeFrom | date : 'MMM y' : undefined : 'es-AR'}}</span>) 
+</div>
+<div>
+  <app-order-customer [orderId]="order.orderId"></app-order-customer>
+  <small *ngIf="order.customerComments" [ngStyle]="{'color': 'gray'}">"{{ order.customerComments }}"</small>
+</div>
+<div>
+  <app-order-delivery [deliveryId]="order.deliveryAddressId"></app-order-delivery>
+</div>
+<div>
+  {{ order.orderTotal | currency : '$' : 'symbol' : '1.0-0' }}
+  <span *ngIf="order.status == 'reservation'" [ngStyle]="{'color': 'green'}">
+    Reserva
+  </span>
+  <span *ngIf="order.status == 'approved'" [ngStyle]="{'color': 'gray'}">
+    Pagado
+  </span>
+  <div><small>{{ order.friendlyBookingId }}</small></div>
+</div>
+<div>
+  <button mat-button (click)="openDialog.emit()" color="accent" class="home-button">
+    Ver
+  </button>
+</div>

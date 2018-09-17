@@ -139,5 +139,10 @@ namespace RepoWebShop.Repositories
 
 			return Add(disc);
 		}
+
+		public Discount GetById(int discountId)
+		{
+			return _appDbContext.Discounts.FirstOrDefault(x => x.DiscountId == discountId);
+		}
 	}
 }

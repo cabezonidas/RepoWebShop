@@ -1,0 +1,6 @@
+<div *ngIf="address">
+  Envío: {{ address.addressLine1 }}
+  <div *ngIf="address.deliveryInstructions">
+    Detalles: {{ address.deliveryInstructions }}
+  </div>
+</div>

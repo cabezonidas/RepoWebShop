@@ -1,9 +1,10 @@
 .container {
-    width: 90%;
+    max-width: 600px;
     margin: auto;
 
     .table {
         margin: auto;
+        margin-bottom: 25px;
         table {
             width: 100%;
             tr {

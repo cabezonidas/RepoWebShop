@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoadingComponent } from './components/loading/loading.component';
 import { MaterialModule } from '../material/material.module';
@@ -13,6 +13,10 @@ import { LogoHeaderComponent } from './components/logo-header/logo-header.compon
 import { AdminGearComponent } from './components/admin-gear/admin-gear.component';
 import { ProductPriceComponent } from './components/product-price/product-price.component';
 import { RouterModule } from '@angular/router';
+import argLocale from '@angular/common/locales/es-AR';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(argLocale);
 
 @NgModule({
   imports: [
@@ -36,6 +40,9 @@ import { RouterModule } from '@angular/router';
     ProductPriceComponent
   ],
   declarations: [LogoHeaderComponent, ProductSubtotalComponent, LoadingComponent, SnackbarComponent,
-    TrolleyIconComponent, TrolleyIconShellComponent, TotalComponent, AdminGearComponent, ProductPriceComponent]
+    TrolleyIconComponent, TrolleyIconShellComponent, TotalComponent, AdminGearComponent, ProductPriceComponent],
+  // providers: [
+  //   { provide: LOCALE_ID, useValue: 'es-AR"' },
+  // ]
 })
 export class SharedModule { }
