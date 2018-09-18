@@ -46,9 +46,9 @@
         @*<img src="~/Pictures/Loader.gif" id="loading" style="margin: auto;" />*@
     </div>
     @{ long albumbId = 72157693586449552; }
-    @Html.Partial("~/Views/Photos/SmallCarrousel.cshtml", albumbId)
+    @await Html.PartialAsync("~/Views/Photos/SmallCarrousel.cshtml", albumbId)
 
-    @Html.Partial("~/Views/Lunch/Combos.cshtml", await _lunch.GetAllLunchesAsync(x => x.IsCombo))
+    @await Html.PartialAsync("~/Views/Lunch/Combos.cshtml", await _lunch.GetAllLunchesAsync(x => x.IsCombo))
     <div class="container">
         <h3>¿Querés uno a medida? </h3>
         <h5>Acá podes ver nuestras opciones más clásicas. Contactate con nosotros y te ayudamos a elegir, sobre todo con opciones que no están en esta lista.</h5>

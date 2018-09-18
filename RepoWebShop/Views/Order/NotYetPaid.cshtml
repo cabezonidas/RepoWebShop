@@ -4,4 +4,4 @@
     <h2>Pedidos entregados que todavía no están pagos</h2>
 </div>
 
-@Html.Partial("~/Views/Order/OrdersTable.cshtml", Model)
+@await Html.PartialAsync("~/Views/Order/OrdersTable.cshtml", Model)

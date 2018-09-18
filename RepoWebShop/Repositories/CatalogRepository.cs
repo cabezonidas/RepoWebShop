@@ -197,5 +197,7 @@ namespace RepoWebShop.Models
 
 			return result;
 		}
+
+		public IEnumerable<Product> GetByParentForCatalog(int id) => _pieDetailRepository.GetCatalogChildren(id);
 	}
 }

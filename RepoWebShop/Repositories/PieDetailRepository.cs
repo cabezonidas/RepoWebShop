@@ -132,6 +132,7 @@ namespace RepoWebShop.Repositories
             _appDbContext.SaveChanges();
         }
 
-        public IEnumerable<Product> GetChildren(int id) => _appDbContext.Products.Include(x => x.PieDetail).Where(x => x.PieDetail.PieDetailId == id && x.IsActive && x.IsOnSale).ToArray();
-    }
+		public IEnumerable<Product> GetChildren(int id) => _appDbContext.Products.Include(x => x.PieDetail).Where(x => x.PieDetail.PieDetailId == id && x.IsActive && x.IsOnSale).ToArray();
+		public IEnumerable<Product> GetCatalogChildren(int id) => _appDbContext.Products.Include(x => x.PieDetail).Where(x => x.PieDetail.PieDetailId == id).ToArray();
+	}
 }

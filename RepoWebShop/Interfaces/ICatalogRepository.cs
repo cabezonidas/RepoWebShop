@@ -23,6 +23,7 @@ namespace RepoWebShop.Interfaces
 		Task<IEnumerable<_Product>> ProductsGroupedByParent();
 		Product CreateOrUpdate(ProductViewModel vm);
         IEnumerable<Product> GetByParent(int id);
+        IEnumerable<Product> GetByParentForCatalog(int id);
         void QuickUpdate(int productId, decimal price, decimal priceInStore, bool onlineSale, string category, string temp, int minAmountOrder, int increments, int portions, int prepTime);
     }
 }

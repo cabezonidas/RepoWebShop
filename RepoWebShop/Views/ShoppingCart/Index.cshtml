@@ -30,16 +30,16 @@ else
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
-                @Html.Partial("~/Views/ShoppingCart/ShoppingCartItems.cshtml", Model)
+                @await Html.PartialAsync("~/Views/ShoppingCart/ShoppingCartItems.cshtml", Model)
                 @if (Model.Discount == null)
             {
-                @Html.Partial("~/Views/Discounts/ApplyDiscount.cshtml", new AddDiscountViewModel())
+                @await Html.PartialAsync("~/Views/Discounts/ApplyDiscount.cshtml", new AddDiscountViewModel())
         }
             </div>
             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                @*@Html.Partial("~/Views/Shared/PickupDate.cshtml", Model.PickupDate)*@
+                @*@await Html.PartialAsync("~/Views/Shared/PickupDate.cshtml", Model.PickupDate)*@
                 <div id="pickUpTime">
-                    @Html.Partial("~/Views/ShoppingCart/PickupTime.cshtml", Model.PickupTime)
+                    @await Html.PartialAsync("~/Views/ShoppingCart/PickupTime.cshtml", Model.PickupTime)
                 </div>
             </div>
         </div>
@@ -55,10 +55,10 @@ else
         </div>
         <div class="row">
             <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
-                @Html.Partial("~/Views/ShoppingCart/Comments.cshtml", Model.Comments)
+                @await Html.PartialAsync("~/Views/ShoppingCart/Comments.cshtml", Model.Comments)
             </div>
             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                @Html.Partial("~/Views/ShoppingCart/CheckDelivery.cshtml", Model)
+                @await Html.PartialAsync("~/Views/ShoppingCart/CheckDelivery.cshtml", Model)
             </div>
         </div>
         <div id="payout"></div>
@@ -66,9 +66,9 @@ else
 
         <br />
     </div>
-    @Html.Partial("~/Views/ShoppingCart/CheckOutOptions.cshtml", Model)
+    @await Html.PartialAsync("~/Views/ShoppingCart/CheckOutOptions.cshtml", Model)
     <br />
-    @Html.Partial("~/Views/ShoppingCart/Faq.cshtml", Model)
+    @await Html.PartialAsync("~/Views/ShoppingCart/Faq.cshtml", Model)
 
 }
 

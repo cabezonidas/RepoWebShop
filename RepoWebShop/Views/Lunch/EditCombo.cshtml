@@ -100,7 +100,7 @@
     </form>
 </div>
 <hr />
-@Html.Partial("~/Views/Lunch/Detail.cshtml", await  _lunchRepository.GetLunchByIdAsync(Model.LunchId))
+@await Html.PartialAsync("~/Views/Lunch/Detail.cshtml", await  _lunchRepository.GetLunchByIdAsync(Model.LunchId))
 <script>
     function linkimgs() {
         $('img').on('click', function () {

@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import * as fromProduct from '../../state';
 import * as fromStore from '../../../cart/store';
 import { CalendarService } from '../../../home/services/calendar.service';
+import { ProductsService } from '../../services/products.service';
 
 @Component({
   selector: 'app-full-catalog',
@@ -24,7 +25,7 @@ export class FullCatalogComponent implements OnInit, OnChanges {
     'category'
   ];
 
-  constructor(private store: Store<fromProduct.State>, private calendar: CalendarService) {}
+  constructor(private store: Store<fromProduct.State>, private calendar: CalendarService, private productsServ: ProductsService) {}
 
   ngOnInit() {
     this.feedTable();
@@ -36,7 +37,7 @@ export class FullCatalogComponent implements OnInit, OnChanges {
   feedTable = () => {
     this.items = [];
     this.products.forEach(x => x.items.forEach(y => this.items.push(y)));
-    this.dataSource = new MatTableDataSource(this.items.sort((a, b) => compare(a, b)));
+    this.dataSource = new MatTableDataSource(this.items.sort((a, b) => this.productsServ.compare(a, b)));
   }
 
   addToCart(id: number): void {
@@ -50,33 +51,3 @@ export class FullCatalogComponent implements OnInit, OnChanges {
   soonestPickup = (date: Date) => this.calendar.soonestPickup(new Date(date));
 }
 
-function compare(a: IItem, b: IItem) {
-  return (rankCategory(a.category) + a.displayName < rankCategory(b.category) + b.displayName ? -1 : 1);
-}
-
-function rankCategory(category: string): number {
-  let result = 9;
-  category = category.toLowerCase().trim();
-  switch (category) {
-    case 'postre': {
-      result = 1;
-      break;
-    }
-    case 'seco': {
-      result = 2;
-      break;
-    }
-    case 'lunch': {
-      result = 3;
-      break;
-    }
-    case 'appetizer': {
-      result = 4;
-      break;
-    }
-    default: {
-      break;
-    }
-  }
-  return result;
-}

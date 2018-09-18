@@ -11,6 +11,7 @@ import { moveIn } from '../../../animations/router.animations';
 import * as fromStore from '../../../cart/store';
 import { CateringService } from '../../services/catering.service';
 import { Title } from '@angular/platform-browser';
+import { ProductsService } from '../../../products/services/products.service';
 
 @Component({
   selector: 'app-new-catering-shell',
@@ -24,7 +25,7 @@ export class NewCateringShellComponent implements OnInit {
   loading$: Observable<boolean>;
   errorMessage$: Observable<string>;
 
-  constructor(private store: Store<fromCatering.State>, private titleService: Title) { }
+  constructor(private store: Store<fromCatering.State>, private titleService: Title, private productsServ: ProductsService) { }
   @HostBinding('@moveIn') role = '';
 
   ngOnInit() {
@@ -35,7 +36,7 @@ export class NewCateringShellComponent implements OnInit {
     // this.store.dispatch(new cateringActions.LoadItems());
     this.items$ = this.store.pipe(
       select(fromCatering.getItems),
-      map(items => items.sort((a, b) => a.displayName.localeCompare(b.displayName))
+      map(items => items.sort((a, b) => this.productsServ.reverseCompare(a, b))
     ));
 
     this.loading$ = this.store.pipe(

@@ -52,7 +52,7 @@ namespace RepoWebShop.ApiControllers
         [Route("GetByParent/{id}")]
         public IActionResult GetByParent(int id)
         {
-            IEnumerable<Product> products = _catalogRepository.GetByParent(id);
+            IEnumerable<Product> products = _catalogRepository.GetByParentForCatalog(id);
             return Ok(new { products });
         }
 

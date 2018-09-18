@@ -35,4 +35,5 @@ export class OrdersService {
   archive = (id: number) => this.http.post<void>('/api/OrderData/PickUpOrder/' + id, null);
   done = (id: number) => this.http.post<void>('/api/OrderData/CompleteOrder/' + id, null);
 
+  printTicket = (id: number) => this.http.post<void>('/api/OrderData/PrintOnlineOrder/' + id, null);
 }

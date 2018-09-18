@@ -2,123 +2,123 @@
 @inject ICalendarRepository calendar
 <div class="container">
 
-    <div>
-        <h3>Sesiones</h3>
-        <br />
-        <table class="table table-condensed" id="bookings">
-            <thead>
-                <tr>
-                    <th>
-                        Id
-                    </th>
-                    <th>
-                        Sesión
-                    </th>
-                    <th>
-                        Creado
-                    </th>
-                    <th>
-                        Ip
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.BookingRecords)
-                {
-                    <tr>
-                        <td>
-                            @item.BookingRecordId
-                        </td>
-                        <td>
-                            <a asp-action="SessionsActivities" asp-controller="Admin" asp-route-bookingId="@item.BookingId">
-                                <div title="@item.BookingId">
-                                    @item.BookingId.Ending(6)
-                                </div>
-                            </a>
-                        </td>
-                        <td>
-                            @item.Created.ToString("s")
-                        </td>
-                        <td>
-                            @{ var href = "https://tools.keycdn.com/geo?host=" + item.Ip; }
-                            <a href="@href" target="_blank">@item.Ip</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+	<div>
+		<h3>Sesiones</h3>
+		<br />
+		<table class="table table-condensed" id="bookings">
+			<thead>
+				<tr>
+					<th>
+						Id
+					</th>
+					<th>
+						Sesión
+					</th>
+					<th>
+						Creado
+					</th>
+					<th>
+						Ip
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.BookingRecords)
+				{
+					<tr>
+						<td>
+							@item.BookingRecordId
+						</td>
+						<td>
+							<a asp-action="SessionsActivities" asp-controller="Admin" asp-route-bookingId="@item.BookingId">
+								<div title="@item.BookingId">
+									@item.BookingId.Ending(6)
+								</div>
+							</a>
+						</td>
+						<td>
+							@item.Created.ToString("s")
+						</td>
+						<td>
+							@{ var href = "https://tools.keycdn.com/geo?host=" + item.Ip; }
+							<a href="@href" target="_blank">@item.Ip</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
 
-    @if (Model.Exceptions.Any())
-    {
-        <div>
-            <h3>Errores del sitio</h3>
-            <br />
-            <table class="table table-condensed" id="exceptions">
-                <thead>
-                    <tr>
-                        <th>
-                            Id
-                        </th>
-                        <th>
-                            Sesión
-                        </th>
-                        <th>
-                            Fecha
-                        </th>
-                        <th>
-                            Ip
-                        </th>
-                        <th>
-                            Path
-                        </th>
-                        <th>
-                            Usuario
-                        </th>
-                        <th>
-                            Error
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Exceptions)
-                    {
-                        <tr>
-                            <td>
-                                @item.SiteExceptionId
-                            </td>
-                            <td>
-                                <a asp-action="SessionsActivities" asp-controller="Admin" asp-route-bookingId="@item.BookingId">
-                                    <div title="@item.BookingId">
-                                        <span>
-                                            @item.BookingId.Ending(6)
-                                        </span>
-                                    </div>
-                                </a>
-                            </td>
-                            <td>
-                                @Html.Raw(calendar.SuperFriendlyDate(item.Date))
-                            </td>
-                            <td>
-                                @{ var href = "https://tools.keycdn.com/geo?host=" + item.Ip; }
-                                <a href="@href" target="_blank">@item.Ip</a>
-                            </td>
-                            <td style="max-width:150px; overflow-wrap:break-word">
-                                @item.Path
-                            </td>
-                            <td>
-                                @Html.Raw(item.User?.Email ?? "")
-                            </td>
-                            <td title="@item.StuckTrace">
-                                @item.Error
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-    @*@Html.Partial("~/Views/Admin/SessionsActivities.cshtml", Model.SessionDetails)*@
+	@if (Model.Exceptions.Any())
+	{
+		<div>
+			<h3>Errores del sitio</h3>
+			<br />
+			<table class="table table-condensed" id="exceptions">
+				<thead>
+					<tr>
+						<th>
+							Id
+						</th>
+						<th>
+							Sesión
+						</th>
+						<th>
+							Fecha
+						</th>
+						<th>
+							Ip
+						</th>
+						<th>
+							Path
+						</th>
+						<th>
+							Usuario
+						</th>
+						<th>
+							Error
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model.Exceptions)
+					{
+						<tr>
+							<td>
+								@item.SiteExceptionId
+							</td>
+							<td>
+								<a asp-action="SessionsActivities" asp-controller="Admin" asp-route-bookingId="@item.BookingId">
+									<div title="@item.BookingId">
+										<span>
+											@item.BookingId.Ending(6)
+										</span>
+									</div>
+								</a>
+							</td>
+							<td>
+								@Html.Raw(calendar.SuperFriendlyDate(item.Date))
+							</td>
+							<td>
+								@{ var href = "https://tools.keycdn.com/geo?host=" + item.Ip; }
+								<a href="@href" target="_blank">@item.Ip</a>
+							</td>
+							<td style="max-width:150px; overflow-wrap:break-word">
+								@item.Path
+							</td>
+							<td>
+								@Html.Raw(item.User?.Email ?? "")
+							</td>
+							<td title="@item.StuckTrace">
+								@item.Error
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	}
+	@*@await Html.PartialAsync("~/Views/Admin/SessionsActivities.cshtml", Model.SessionDetails)*@
 </div>
 <script>
     $('#exceptions').DataTable(({

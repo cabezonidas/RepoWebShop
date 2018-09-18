@@ -24,14 +24,14 @@
         var array = Model.PieDetails.ToArray();
         for (int i = 0; i < array.Length; i++)
         {
-            @Html.Partial("PieOverviewSummary", array[i])
+            @await Html.PartialAsync("PieOverviewSummary", array[i])
         }
     }
     </div>
 </div>
 
 <div class="" style="max-width: 800px; min-height: 800px; margin: auto">
-    @Html.Partial("~/Views/PieDetail/Catalog.cshtml", Model.CatalogProducts)
+    @await Html.PartialAsync("~/Views/PieDetail/Catalog.cshtml", Model.CatalogProducts)
 </div>
 
 

@@ -44,7 +44,7 @@
                 @*<br />
                     <p class="shortDesc">@Model.PieDetail.ShortDescription</p>*@
             </a>
-            @Html.Partial("PiePriceCarousel", Model)
+            @await Html.PartialAsync("PiePriceCarousel", Model)
         </div>
     </div>
 </div>

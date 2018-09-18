@@ -33,10 +33,10 @@
 <div class="container">
     <h2 class="text-center">@Html.Raw("Presupuesto " + (Model.IsGeneric ? "Genérico" : "Especial"))</h2>
     <div class="text-center">
-        @Html.Partial("~/Views/Shared/InStoreSwitch.cshtml")
+        @await Html.PartialAsync("~/Views/Shared/InStoreSwitch.cshtml")
     </div>
     <div style="max-width: 500px; margin:auto;">
-        @Html.Partial("~/Views/Lunch/ComboDetail.cshtml", Model)
+        @await Html.PartialAsync("~/Views/Lunch/ComboDetail.cshtml", Model)
     </div>
     <div class="text-center hidden-print" style="margin: 20px auto;">
         <div>

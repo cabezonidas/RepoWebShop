@@ -9,56 +9,58 @@
     <form asp-controller="Catalog" asp-action="Product" method="post" role="form">
         <hr />
         <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                <input asp-for="ProductId" class="hidden" />
-                <div>
-                    <label asp-for="PieDetailId" class="control-label"></label>
-                    <div>
-                        <select asp-for="PieDetailId" id="pieDetailIds">
-                            <option value=""></option>
-                            @foreach (var detail in Model.PieDetails.OrderBy(x => x.Name.TrimStart()))
-                            {
-                                <option value="@detail.PieDetailId">
-                                    @detail.Name
-                                </option>
-                            }
-                        </select>
-                        <div>No poner tamaño ni variedad</div>
-                        <span asp-validation-for="PieDetailId" class="text-danger"></span>
-                    </div>
-                </div>
-                <div id="pieDetailIngredients" class="">
-                    <label asp-for="Ingredients" class="control-label"></label>
-                    <div>
-                        <input asp-for="Ingredients" class="form-control" id="ingredients" />
-                        <span asp-validation-for="Ingredients" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="connected hidden ">
-                    <br />
-                    <label class="control-label">Relacionados</label>
-                    <div class="small">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <td>Tamaño</td>
-                                    <td>Variedad</td>
-                                    <td>Precio Online</td>
-                                    <td>Precio Sucursal</td>
-                                    <td></td>
-                                </tr>
-                            </thead>
-                            <tbody id="children"></tbody>
-                        </table>
-                    </div>
-                </div>
-                @if (!Model.IsAdding && Model.PieDetail != null && Model.PieDetailId > 0)
-                {
-                    <div class="text-center" id="add-variety">
-                        <a asp-action="AddPieDetailChild" asp-route-pieDetailId="@Model.PieDetailId" asp-controller="Catalog" >Agregar otra veriedad de @Model.PieDetail.Name</a>
-                    </div>
-                }
-            </div>
+			<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+				<input asp-for="ProductId" class="hidden" />
+				<div>
+					<label asp-for="PieDetailId" class="control-label"></label>
+					<div>
+						<select asp-for="PieDetailId" id="pieDetailIds">
+							<option value=""></option>
+							@foreach (var detail in Model.PieDetails.OrderBy(x => x.Name.TrimStart()))
+							{
+								<option value="@detail.PieDetailId">
+									@detail.Name
+								</option>
+							}
+						</select>
+						<div>No poner tamaño ni variedad</div>
+						<span asp-validation-for="PieDetailId" class="text-danger"></span>
+					</div>
+				</div>
+				<div id="pieDetailIngredients" class="">
+					<label asp-for="Ingredients" class="control-label"></label>
+					<div>
+						<input asp-for="Ingredients" class="form-control" id="ingredients" />
+						<span asp-validation-for="Ingredients" class="text-danger"></span>
+					</div>
+				</div>
+				<div id="parent" class="">
+				</div>
+				<div class="connected hidden ">
+					<br />
+					<label class="control-label">Relacionados</label>
+					<div class="small">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<td>Tamaño</td>
+									<td>Variedad</td>
+									<td>Precio Online</td>
+									<td>Precio Sucursal</td>
+									<td></td>
+								</tr>
+							</thead>
+							<tbody id="children"></tbody>
+						</table>
+					</div>
+				</div>
+				@if (!Model.IsAdding && Model.PieDetail != null && Model.PieDetailId > 0)
+				{
+					<div class="text-center" id="add-variety">
+						<a asp-action="AddPieDetailChild" asp-route-pieDetailId="@Model.PieDetailId" asp-controller="Catalog">Agregar otra veriedad de @Model.PieDetail.Name</a>
+					</div>
+				}
+			</div>
             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 
                 <div>
@@ -303,8 +305,14 @@
             alert('Ocurrió un error al agregar el producto.')
         })
     }
-    function bringChildren() {
-        $.get('/api/CatalogData/GetByParent/' + $('#pieDetailIds')[0].value).then((data) => {
+	function bringChildren() {
+		var pieDetailId = $('#pieDetailIds')[0].value;
+		$('#parent').empty();
+		if (pieDetailId) {
+			$('#parent').append('<a href="/Admin/EditPieDetail/' + pieDetailId + '">Cambiar album</a>')
+		}
+
+		$.get('/api/CatalogData/GetByParent/' + pieDetailId).then((data) => {
             $('#children').empty();
             data.products.forEach(function (element) {
                 var style = element.productId == @Model.ProductId ? "bold" : "unset";
@@ -323,5 +331,12 @@
                 $('.connected').addClass('hidden')
         }, () => $('.connected').addClass('hidden'));
     }
-
+	$(document).ready(function () {
+		$(window).keydown(function (event) {
+			if (event.keyCode == 13) {
+				event.preventDefault();
+				return false;
+			}
+		});
+	});
 </script>

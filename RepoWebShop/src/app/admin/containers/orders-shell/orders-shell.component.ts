@@ -33,6 +33,11 @@ export class OrdersShellComponent implements OnInit, OnChanges, OnDestroy {
       data: row
     });
   }
+
+  closeDialog() {
+    this.dialog.closeAll();
+  }
+
   ngOnInit() {
 
   }

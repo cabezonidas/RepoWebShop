@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <div style="margin-bottom:150px;">
-                    @Html.Partial("ArrowDown", "#piesoftheweek")
+                    @await Html.PartialAsync("ArrowDown", "#piesoftheweek")
                 </div>
             </div>
         </div>
@@ -72,7 +72,7 @@
 
                 @foreach (var pie in validPieDetails)
                 {
-                    @Html.Partial("PieOverviewSummary", pie)
+                    @await Html.PartialAsync("PieOverviewSummary", pie)
                 }
             </div>
             <a asp-action="List" asp-controller="PieDetail">
@@ -81,7 +81,7 @@
         </div>
     </section>
 }
-@Html.Partial("~/Views/Services/Index.cshtml")
+@await Html.PartialAsync("~/Views/Services/Index.cshtml")
 
 <section id="location">
     <div class="title-container">
@@ -111,14 +111,14 @@
             </div>
         </div>
 
-        <div class="owl-carousel team-carousel hidden">
-            @Html.Partial("TeamMember", new TeamMemberViewModel() { Name = "Claudio", Picture = "/Pictures/Team/Claudio.jpg", Title = "Maestro pastelero", Subtitle = "Cofundador", Email = "" })
-            @Html.Partial("TeamMember", new TeamMemberViewModel() { Name = "Marcela", Picture = "/Pictures/Team/Marcela.jpg", Title = "Mente creativa", Subtitle = "Cofundadora", Email = "" })
-            @Html.Partial("TeamMember", new TeamMemberViewModel() { Name = "Fiorella", Picture = "/Pictures/Team/Fio.jpeg", Title = "Master Chef", Subtitle = "Manager de Ventas", Email = "" })
-            @Html.Partial("TeamMember", new TeamMemberViewModel() { Name = "Gaby", Picture = "/Pictures/Team/Tia.png", Title = "Master Chef", Subtitle = "Manos mágicas", Email = "" })
-            @Html.Partial("TeamMember", new TeamMemberViewModel() { Name = "Nico", Picture = "/Pictures/Team/Nico.PNG", Title = "Master de Todo", Subtitle = "Genio culinario", Email = "" })
-            @Html.Partial("TeamMember", new TeamMemberViewModel() { Name = "Alicia", Picture = "/Pictures/Team/ALita.PNG", Title = "La Jefa", Subtitle = "Atención al Cliente", Email = "" })
-        </div>
+		<div class="owl-carousel team-carousel hidden">
+			@await Html.PartialAsync("TeamMember", new TeamMemberViewModel() { Name = "Claudio", Picture = "/Pictures/Team/Claudio.jpg", Title = "Maestro pastelero", Subtitle = "Cofundador", Email = "" })
+			@await Html.PartialAsync("TeamMember", new TeamMemberViewModel() { Name = "Marcela", Picture = "/Pictures/Team/Marcela.jpg", Title = "Mente creativa", Subtitle = "Cofundadora", Email = "" })
+			@await Html.PartialAsync("TeamMember", new TeamMemberViewModel() { Name = "Fiorella", Picture = "/Pictures/Team/Fio.jpeg", Title = "Master Chef", Subtitle = "Manager de Ventas", Email = "" })
+			@await Html.PartialAsync("TeamMember", new TeamMemberViewModel() { Name = "Gaby", Picture = "/Pictures/Team/Tia.png", Title = "Master Chef", Subtitle = "Manos mágicas", Email = "" })
+			@await Html.PartialAsync("TeamMember", new TeamMemberViewModel() { Name = "Nico", Picture = "/Pictures/Team/Nico.PNG", Title = "Master de Todo", Subtitle = "Genio culinario", Email = "" })
+			@await Html.PartialAsync("TeamMember", new TeamMemberViewModel() { Name = "Alicia", Picture = "/Pictures/Team/ALita.PNG", Title = "La Jefa", Subtitle = "Atención al Cliente", Email = "" })
+		</div>
 
         <div class="row">
             <div id="staff"></div>
@@ -140,9 +140,9 @@
 </section>
 
 <script type="text/javascript">
-    $.get("/api/PhotosData/GetAlbumStaff/72157693137937504", function (data) {
-        $("#staff").append(data);
-    })
+	$.get("/api/PhotosData/GetAlbumStaff/72157693137937504", function (data) {
+		$("#staff").append(data);
+	});
 
     //$(function () {
     //    $('.carousel').carousel({
@@ -164,13 +164,13 @@
     //});
 
     $(document).ready(function () {
-        setInterval(function () {
-            setTimeout(function () {
-                $('#buy-btn').addClass('flash');
-            }, 2000);
-            setTimeout(function () {
-                $('#buy-btn').removeClass('flash');
-            }, 1000);
-        }, 5000)
+		setInterval(function () {
+			setTimeout(function () {
+				$('#buy-btn').addClass('flash');
+			}, 2000);
+			setTimeout(function () {
+				$('#buy-btn').removeClass('flash');
+			}, 1000);
+		}, 5000);
     });
 </script>

@@ -68,7 +68,7 @@ namespace RepoWebShop.ApiControllers
                     {
                         await OnPaymentNotified(latestPayment.Value);
                     }
-                    catch(Exception ex)
+                    catch
                     {
                         //Record this
                     }

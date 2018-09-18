@@ -18,5 +18,6 @@ namespace RepoWebShop.Interfaces
         void Restore(int pieDetailId);
         void UpdateIngredients(ProductViewModel vm);
         IEnumerable<Product> GetChildren(int id);
+        IEnumerable<Product> GetCatalogChildren(int id);
     }
 }

@@ -21,9 +21,9 @@
 	@RenderSection("metatags", required: false)
 
 	<meta property="og:image" content="@host/Pictures/LogoWithBackground.png" />
-	@Html.Partial("~/Views/Shared/Favicon.cshtml")
-	@Html.Partial("~/Views/Shared/ExternalCss.cshtml")
-	@Html.Partial("~/Views/Shared/SharedCss.cshtml")
+	@await Html.PartialAsync("~/Views/Shared/Favicon.cshtml")
+	@await Html.PartialAsync("~/Views/Shared/ExternalCss.cshtml")
+	@await Html.PartialAsync("~/Views/Shared/SharedCss.cshtml")
 	<meta property="fb:app_id" content="744831982380043" />
 	@RenderSection("styles", required: false)
 
@@ -84,7 +84,7 @@
 	<meta name="google-site-verification" content="TUVubu2wlOkQR100TXZkZ92DF5zmVpN22oYsYPpaZ9A" />
 </head>
 <body>
-    @Html.Partial("~/Views/Shared/Loader.cshtml")
+    @await Html.PartialAsync("~/Views/Shared/Loader.cshtml")
     <div id="fb-root"></div>
     <script>
         (function (d, s, id) {
@@ -134,7 +134,7 @@
                         <li>
                             @* await Component.InvokeAsync("ShoppingCartSummary") *@
                             @* Este await choto rompe todo cuando hay muchos requests simultaneos*@
-                            @Html.Partial("~/Views/ShoppingCart/TrolleyIcon.cshtml")
+                            @await Html.PartialAsync("~/Views/ShoppingCart/TrolleyIcon.cshtml")
                         </li>
 
                     </ul>
@@ -155,7 +155,7 @@
                         <li><a asp-controller="Admin" asp-action="Index">Admin</a></li>
                     }
                 </ul>
-                @*@Html.Partial("LoginPartial")*@
+                @*@await Html.PartialAsync("LoginPartial")*@
             </div>
         </div>
     </nav>

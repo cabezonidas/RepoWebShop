@@ -73,7 +73,7 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        public ViewResult Catering()
+        public async Task<ViewResult> Catering()
         {
             //var access_token = await GetSharePointAccessTokenAsync();
 
@@ -87,7 +87,7 @@ namespace RepoWebShop.MvcControllers
             //var Response = (new JsonSerializer().Deserialize<Object>((new JsonTextReader(new StreamReader(body)))));
             //return View("Catering", access_token);
 
-            var result = _catalog.GetAll(x => x.Category.ToLower().Trim() == "lunch");
+            var result = await _catalog.GetAll(x => x.Category.ToLower().Trim() == "lunch");
 
             return View("Catering", result);
         }

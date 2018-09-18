@@ -5,4 +5,4 @@
     <h2>Pedidos entregados que fueron devueltos</h2>
 </div>
 
-@Html.Partial("~/Views/Order/OrdersTable.cshtml", Model)
+@await Html.PartialAsync("~/Views/Order/OrdersTable.cshtml", Model)

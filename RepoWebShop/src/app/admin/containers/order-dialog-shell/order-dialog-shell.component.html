@@ -47,9 +47,20 @@
   </div>
 
   <app-order-billing [order]="data"></app-order-billing>
-  <div [ngStyle]="{'margin-top': '20px', 'text-align': 'center'}">
-    <button mat-raised-button (click)="ticket(data.orderId)" [ngStyle]="{'margin': 'auto'}" color="primary">
-      Ticket
-    </button>
+  <div [ngStyle]="{'margin-top': '20px', 'text-align': 'center'}" >
+    <span [ngStyle]="{'margin-right': '2px'}">
+      <button mat-button [ngStyle]="{'margin': 'auto'}" (click)="dialogRef.close()">
+        Cerrar
+      </button>
+    </span>
+    <span #printTicket [ngStyle]="{'margin-left': '2px'}">
+      <button mat-raised-button [ngStyle]="{'margin': 'auto'}" color="primary" [ngClass]="loadingPrint ? 'hidden' : ''">
+        Ticket
+      </button>   
+      <mat-spinner [diameter]="50" [ngStyle]="{'margin': 'auto'}" [ngClass]="loadingPrint ? '' : 'hidden'"></mat-spinner>
+    </span>
+    <div *ngIf="errorPrint">
+      <small>Hubo un error al intentar imprimir</small>
+    </div>
   </div>
 </div>

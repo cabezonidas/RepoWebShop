@@ -146,8 +146,6 @@ namespace RepoWebShop.Models
             order.BookingId = order.BookingId ?? _cartRepository.GetSessionCartId();
 
             order.Cuit = _cartRepository.GetCuit(order.BookingId);
-
-            order.PhoneNumber = order.Registration?.PhoneNumber;
             order.OrderTotal = _cartRepository.GetTotal(order.BookingId);
             order.TotalInStore = _cartRepository.GetTotalInStore(order.BookingId);
             order.Discount = _cartRepository.GetDiscount(order.BookingId);

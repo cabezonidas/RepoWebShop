@@ -161,10 +161,12 @@ namespace RepoWebShop.MvcControllers
             else
             {
                 var pieDetailCreateViewModel = _mapper.Map<PieDetail, PieDetailCreateViewModel>(pieDetail);
-                var albumes = _flickrRepository.Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content });
+				var albumesSelect = new List<SelectListItem>();
+				albumesSelect.Add(new SelectListItem { Value = "0", Text = "Sin album" });
+				albumesSelect.AddRange(_flickrRepository.Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content }));
                 
-                pieDetailCreateViewModel.Albumes = albumes;
-                pieDetailCreateViewModel.Children = _pieDetailRepository.GetChildren(pieDetailCreateViewModel.PieDetailId);
+                pieDetailCreateViewModel.Albumes = albumesSelect.AsEnumerable();
+                pieDetailCreateViewModel.Children = _pieDetailRepository.GetCatalogChildren(pieDetailCreateViewModel.PieDetailId);
                 return View(pieDetailCreateViewModel);
             }
         }

@@ -24,7 +24,7 @@
     <br />
     <div class="row" style="border-top-left-radius: 5px; border-top-right-radius: 5px; max-width: 500px; margin: auto; background-color: #883636; color:papayawhip">
         <h2>Catering Personalizado</h2>
-        @Html.Partial("~/Views/Shared/InStoreSwitch.cshtml")
+        @await Html.PartialAsync("~/Views/Shared/InStoreSwitch.cshtml")
     </div>
 
     <div id="lunchbox">
@@ -33,11 +33,11 @@
         {
             foreach (var item in Model.Items)
             {
-                @Html.Partial("~/Views/Lunch/ItemDetail.cshtml", item)
+                @await Html.PartialAsync("~/Views/Lunch/ItemDetail.cshtml", item)
             }
             foreach (var item in Model.Miscellanea)
             {
-                @Html.Partial("~/Views/Lunch/MiscellaneousDetail.cshtml", item)
+                @await Html.PartialAsync("~/Views/Lunch/MiscellaneousDetail.cshtml", item)
             }
         }
     </div>
@@ -87,7 +87,7 @@
     </div>
 
     <div id="totals">
-        @Html.Partial("~/Views/Lunch/LunchTotals.cshtml", Model)
+        @await Html.PartialAsync("~/Views/Lunch/LunchTotals.cshtml", Model)
     </div>
     <div>
         <a class="btn btn-primary hidden-print" style="margin-top: 5px;" asp-action="Catering" asp-controller="Services">Ver más opciones</a>
@@ -143,7 +143,7 @@
 				}
             }
         });
-    };
+    }
 
     function unitPriceFormat(item) {
         var priceInStore = '';

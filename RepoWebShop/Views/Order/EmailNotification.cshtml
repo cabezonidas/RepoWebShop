@@ -2,5 +2,5 @@
 @{Layout = string.Empty;}
 
 <body>
-    @Html.Partial("~/Views/Order/EmailNotificationBody.cshtml", Model)   
+    @await Html.PartialAsync("~/Views/Order/EmailNotificationBody.cshtml", Model)   
 </body>
