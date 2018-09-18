@@ -127,44 +127,57 @@ namespace RepoWebShop.ApiControllers
         [Route("GetMercadoPagoLink/{bookingId}")]
         public async Task<IActionResult> GetMercadoPagoLink(string bookingId)
         {
-            var _user = string.IsNullOrEmpty(bookingId) ? await _userManager.GetUser(_signInManager) : null; 
-            bookingId = string.IsNullOrEmpty(bookingId) ? _cartRepository.GetSessionCartId() : bookingId;
+			string init_point = null;
 
-            var _total = _cartRepository.GetTotal(bookingId);
-            
-            var _friendlyBookingId = bookingId.Ending(6);
-
-            var preference = _mp.BuildPreference(_total, bookingId, _friendlyBookingId, Request.Host.ToString(), "De las Artes", _user?.Id);
-
-            string preferenceId = _cartRepository.GetMpPreference(bookingId);
-            bool validPreference = true;
-            string init_point;
-            Hashtable response;
-
-            if (!String.IsNullOrEmpty(preferenceId))
-            {
-                response = ((await _mp.GetPreferenceAsync(preferenceId))["response"] as Hashtable);
-                var bookId = response["external_reference"].ToString();
-                //validPreference = _appDbContext.ShoppingCartItems.Any(x => x.ShoppingCartId == bookingId);
-                validPreference = bookId == bookingId;
-            }
-
-            if(String.IsNullOrEmpty(preferenceId) || !validPreference)
-            {
-                response = ((await _mp.CreatePreferenceAsync(preference))["response"] as Hashtable);
-                if (response != null && response["id"] != null)
-                    _cartRepository.SetMpPreference(response["id"].ToString());
-                else
-                    return BadRequest();
-            }
-            else
-            {
-                response = ((await _mp.UpdatePreferenceAsync(preferenceId, preference))["response"] as Hashtable);
-            }
-
-            init_point = response["init_point"].ToString();
+			try
+			{
+				init_point = await Init_point(bookingId);
+			}
+			catch { }
 
             return Ok(new { link = init_point });
         }
+
+		private async Task<string> Init_point(string bookingId)
+		{
+			var _user = string.IsNullOrEmpty(bookingId) ? await _userManager.GetUser(_signInManager) : null;
+			bookingId = string.IsNullOrEmpty(bookingId) ? _cartRepository.GetSessionCartId() : bookingId;
+
+			var _total = _cartRepository.GetTotal(bookingId);
+
+			var _friendlyBookingId = bookingId.Ending(6);
+
+			var preference = _mp.BuildPreference(_total, bookingId, _friendlyBookingId, Request.Host.ToString(), "De las Artes", _user?.Id);
+
+			string preferenceId = _cartRepository.GetMpPreference(bookingId);
+			bool validPreference = true;
+			string init_point = null;
+			Hashtable response;
+
+			if (!String.IsNullOrEmpty(preferenceId))
+			{
+				response = ((await _mp.GetPreferenceAsync(preferenceId))["response"] as Hashtable);
+				var bookId = response["external_reference"].ToString();
+				//validPreference = _appDbContext.ShoppingCartItems.Any(x => x.ShoppingCartId == bookingId);
+				validPreference = bookId == bookingId;
+			}
+
+			if (String.IsNullOrEmpty(preferenceId) || !validPreference)
+			{
+				response = ((await _mp.CreatePreferenceAsync(preference))["response"] as Hashtable);
+				if (response != null && response["id"] != null)
+					_cartRepository.SetMpPreference(response["id"].ToString());
+				else
+					throw new Exception("Bad request");
+			}
+			else
+			{
+				response = ((await _mp.UpdatePreferenceAsync(preferenceId, preference))["response"] as Hashtable);
+			}
+
+			init_point = response["init_point"].ToString();
+
+			return init_point;
+		}
     }
 }

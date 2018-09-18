@@ -19,16 +19,30 @@
     <p>
       Pagá ahora con <strong>MercadoPago</strong> con la tarjeta que más te convenga.  
     </p>  
-    <div *ngIf="mercadoLink else loadingLink" >
+    <div *ngIf="(mercadoLink && !mercadoLinkFailed) else loadingLink" >
       <a id="mercadolink" (click)="goPay()" name="MP-Checkout" mp-mode="redirect" class="MP-blue-common-CDl MP-ar-l-rn-Dl" target="">
           Pagar
       </a>
     </div>
     <ng-template #loadingLink>
-      <div>
+      <div [ngClass]="loading ? '' : 'hidden'">
         <mat-spinner [diameter]="50"></mat-spinner>
       </div>
     </ng-template>
+
+    <div [ngClass]="mercadoLinkFailed && !retrying ? '' : 'hidden'">
+      <div #retry>
+        <button mat-fab>
+          <mat-icon aria-label="">refresh</mat-icon>
+        </button>
+      </div>      
+    </div>
+    <div [ngClass]="mercadoLinkFailed && retrying ? '' : 'hidden'">
+      <div>
+        <mat-spinner [diameter]="50"></mat-spinner>
+      </div> 
+    </div>
+
     <p>
       <small>
         ¡No es necesario estar registrado!

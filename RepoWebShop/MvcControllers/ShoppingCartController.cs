@@ -102,7 +102,7 @@ namespace RepoWebShop.MvcControllers
 
         [HttpGet]
         [PageVisitAsync]
-        public RedirectToActionResult AddToShoppingCart(int pieId)
+        public RedirectResult AddToShoppingCart(int pieId)
         {
             var selectedPie = _pieRepository.ActivePies.FirstOrDefault(p => p.PieId == pieId);
 
@@ -110,12 +110,12 @@ namespace RepoWebShop.MvcControllers
             {
                 _cartRepository.AddToCart(selectedPie, 1);
             }
-            return RedirectToAction("Index");
+            return Redirect("/cart");
         }
 
         [HttpGet]
         [PageVisitAsync]
-        public async Task<RedirectToActionResult> AddProductToShoppingCart(int id)
+        public async Task<RedirectResult> AddProductToShoppingCart(int id)
         {
             var product = (await _catalogRepository.GetAvailableToBuyOnline()).FirstOrDefault(p => p.ProductId == id);
 
@@ -123,17 +123,17 @@ namespace RepoWebShop.MvcControllers
             {
                 _cartRepository.AddCatalogItemToCart(product, 1);
             }
-            return RedirectToAction("Index");
-        }
+            return Redirect("/cart");
+		}
 
         [HttpGet]
         [PageVisitAsync]
-        public async Task<RedirectToActionResult> AddCateringToShoppingCart(int id)
+        public async Task<RedirectResult> AddCateringToShoppingCart(int id)
         {
             var catering = await _lunchRep.GetLunchByIdAsync(id);
             if (catering != null)
                 _cartRepository.AddCateringToCart(catering, amount: 1);
-            return RedirectToAction("Index");
+            return Redirect("/cart");
         }
 
         [HttpGet]
