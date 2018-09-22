@@ -57,7 +57,9 @@ namespace RepoWebShop.Extensions
 
 		public static T ParseBody<T>(this HttpRequest request)
 		{
-			return (new JsonSerializer()).Deserialize<T>(new JsonTextReader(new StreamReader(request.Body)));
+			var streamReader = new StreamReader(request.Body);
+			var jsonText = new JsonTextReader(streamReader);
+			return (new JsonSerializer()).Deserialize<T>(jsonText);
 		}
 
 

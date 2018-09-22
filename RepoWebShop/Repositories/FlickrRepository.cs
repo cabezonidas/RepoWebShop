@@ -10,6 +10,7 @@ using System.IO;
 using Newtonsoft.Json;
 using RepoWebShop.FeModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace RepoWebShop.Repositories
 {
@@ -46,6 +47,14 @@ namespace RepoWebShop.Repositories
                 }
                 return albums.Photosets.Photoset;
             }
+        }
+
+        public IEnumerable<SelectListItem> AlbumsOptions()
+        {
+			List<SelectListItem> albumesSelect = new List<SelectListItem>();
+			albumesSelect.Add(new SelectListItem { Value = "0", Text = "Sin álbum" });
+			albumesSelect.AddRange(Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content }));
+            return albumesSelect.AsEnumerable();
         }
 
         public IEnumerable<AlbumPictures> GetAlbumsPictures(IEnumerable<long> albums)

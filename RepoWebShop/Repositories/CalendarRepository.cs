@@ -14,6 +14,7 @@ namespace RepoWebShop.Repositories
     {
         private readonly AppDbContext _appDbContext;
         private readonly IConfiguration _config;
+        private readonly ICalendarCacheRepository _calendarCache;
 
         public string dayToSpanish(string day)
         {
@@ -73,11 +74,13 @@ namespace RepoWebShop.Repositories
             return "";
         }
 
-        public CalendarRepository(AppDbContext appDbContext, IConfiguration config)
+        public CalendarRepository(AppDbContext appDbContext, IConfiguration config, ICalendarCacheRepository calendarCache)
         {
             _appDbContext = appDbContext;
             _config = config;
-        }
+			_calendarCache = calendarCache;
+
+		}
 
 
         public DateTime LocalTime()
@@ -92,7 +95,11 @@ namespace RepoWebShop.Repositories
 
         public DateTime GetPickupEstimate(int hours)
         {
-            var result = WorkingHours.GetPickUpDate(
+			var cachedResult = _calendarCache.GetPickup(hours);
+			if (cachedResult.HasValue)
+				return cachedResult.Value;
+
+			var result = WorkingHours.GetPickUpDate(
                 LocalTime(),
                 hours,
                 _appDbContext.ProcessingHours,
@@ -104,7 +111,10 @@ namespace RepoWebShop.Repositories
             var offsetMinutes = 15 - (localTime.Minute % 15);
             localTime = localTime.AddMinutes(offsetMinutes);
 
-            return result >= localTime ? result : localTime;
+			result = result >= localTime ? result : localTime;
+			_calendarCache.SetPickup(hours, result);
+
+			return result;
         }
 
         public string SuperFriendlyDate(DateTime? date)

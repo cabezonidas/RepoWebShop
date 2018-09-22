@@ -161,11 +161,7 @@ namespace RepoWebShop.MvcControllers
             else
             {
                 var pieDetailCreateViewModel = _mapper.Map<PieDetail, PieDetailCreateViewModel>(pieDetail);
-				var albumesSelect = new List<SelectListItem>();
-				albumesSelect.Add(new SelectListItem { Value = "0", Text = "Sin album" });
-				albumesSelect.AddRange(_flickrRepository.Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content }));
-                
-                pieDetailCreateViewModel.Albumes = albumesSelect.AsEnumerable();
+                pieDetailCreateViewModel.Albumes = _flickrRepository.AlbumsOptions();
                 pieDetailCreateViewModel.Children = _pieDetailRepository.GetCatalogChildren(pieDetailCreateViewModel.PieDetailId);
                 return View(pieDetailCreateViewModel);
             }
@@ -218,9 +214,7 @@ namespace RepoWebShop.MvcControllers
 
                 //return View(pieDetailCreateViewModel);
             }
-            
-            var albumes = _flickrRepository.Albums.OrderBy(x => x.Title._Content).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title._Content });
-            pieDetailCreateViewModel.Albumes = albumes;
+            pieDetailCreateViewModel.Albumes = _flickrRepository.AlbumsOptions();
             pieDetailCreateViewModel.Children = _pieDetailRepository.GetChildren(pieDetailCreateViewModel.PieDetailId);
 
             return View(pieDetailCreateViewModel);

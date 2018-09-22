@@ -1,4 +1,5 @@
-﻿using RepoWebShop.FeModels;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using RepoWebShop.FeModels;
 using RepoWebShop.Models;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,6 @@ namespace RepoWebShop.Interfaces
         AlbumPictures GetAlbumPictures(long album);
         IEnumerable<AlbumPictures> GetAlbumsPictures(IEnumerable<long> albums);
 		_Album GetFeAlbumBy(long id);
+		IEnumerable<SelectListItem> AlbumsOptions();
 	}
 }

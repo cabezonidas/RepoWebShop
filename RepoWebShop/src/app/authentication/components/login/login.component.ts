@@ -9,6 +9,7 @@ import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
 import { AppService } from '../../../core/services/app/app.service';
 import { Title } from '@angular/platform-browser';
+import { switchMap, tap, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -22,9 +23,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   returnUrl = '';
   afUser: firebase.User;
   backEndLogin$ = new Subscription();
-  loginSuccess$ = new Subscription();
   returnUrl$ = new Subscription();
-  userSub$ = new Subscription();
+  firebaseUser: firebase.User;
 
   constructor(public afAuth: AngularFireAuth, private titleService: Title,
     private router: Router, private auth: AuthService, private appService: AppService) { }
@@ -44,12 +44,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   loginSuccess = () => {
-    this.loginSuccess$.unsubscribe();
-    this.backEndLogin$.unsubscribe();
 
-    this.loginSuccess$ = this.afAuth.user.subscribe(user$ => {
-      this.backEndLogin$ = this.auth.socialLogin(user$).subscribe(appUser => this.appService.setUser(appUser));
-    }, this.loginError);
   }
 
   loginError = (err) => {
@@ -60,18 +55,26 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.titleService.setTitle('Inicio de sesión');
     this.returnUrl$ = this.appService.returnUrl.subscribe(url => this.returnUrl = url);
-    this.userSub$ = this.appService.user.subscribe(user$ => {
-      if (user$) {
-        this.appService.returnToUrl(this.returnUrl);
-      }
-    });
+
+    this.backEndLogin$ = this.afAuth.user.pipe(
+      filter(user => !!user),
+      tap(firebaseUser => this.firebaseUser = firebaseUser),
+      switchMap(user => user.delete()),
+      switchMap(_ => this.auth.socialLogin(this.firebaseUser)),
+      tap(user => {
+        if (user) {
+          this.appService.setUser(user);
+          this.appService.returnToUrl(this.returnUrl);
+        } else {
+          this.loginError('');
+        }
+      })
+    ).subscribe(_ => { }, this.loginError);
   }
 
   ngOnDestroy() {
-    this.loginSuccess$.unsubscribe();
     this.backEndLogin$.unsubscribe();
     this.returnUrl$.unsubscribe();
-    this.userSub$.unsubscribe();
   }
 
 }

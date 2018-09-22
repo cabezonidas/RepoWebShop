@@ -69,6 +69,8 @@ namespace RepoWebShop.FeApi
 		public async Task<_User> SocialLogin()
 		{
 			var userData = Request.ParseBody<_ProviderData[]>().FirstOrDefault();
+			if (string.IsNullOrEmpty(userData.Email))
+				return null;
 			await _account.EnsureSocialLoginAsync(userData);
 			var signInResult = await _signInManager.ExternalLoginSignInAsync(userData.ProviderId, userData.Uid, isPersistent: true, bypassTwoFactor: true);
 			return signInResult.Succeeded ? _mapper.Map<ApplicationUser, _User>(await _userManager.FindByEmailAsync(userData.Email)) : null;

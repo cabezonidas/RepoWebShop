@@ -35,7 +35,10 @@ namespace RepoWebShop
 
 		public IServiceProvider ConfigureServices(IServiceCollection services)
 		{
-			services.AddDbContext<AppDbContext>(options => options.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
+			services.AddDbContext<AppDbContext>(options => 
+				options.UseSqlServer(_config.GetConnectionString("DefaultConnection"), opts => opts.EnableRetryOnFailure())
+			);
+
 			services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 			services.AddAuthentication().AddCookie(opts =>
 			{
@@ -81,6 +84,7 @@ namespace RepoWebShop
 			services.AddTransient<IGalleryRepository, GalleryRepository>();
 			services.AddTransient<ISmsRepository, SmsRepository>();
 			services.AddTransient<ICalendarRepository, CalendarRepository>();
+			services.AddSingleton<ICalendarCacheRepository, CalendarCacheRepository>();
 			services.AddSingleton<IFlickrRepository, FlickrRepository>();
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddSingleton<IMercadoPago, MercadoPago>();
