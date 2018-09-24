@@ -14,16 +14,15 @@ namespace RepoWebShop.Models
     {
         public static async Task Seed(IServiceProvider serviceProvider)
         {
-			if (serviceProvider.GetRequiredService<IHostingEnvironment>().IsDevelopment())
-				await CreateUserAsync(serviceProvider, "vagancia@gmail.com", "Guido", "Declich", "banana123", "Administrator");
 			await CreateUserWithRoleAsync(serviceProvider, "Administrator", "sebastian.scd@gmail.com", "Sebastián", "Cabeza");
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "fiorelcd@gmail.com", "Fiorella", "Cabeza");
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "marcelardec@gmail.com", "Marcela", "Declich");
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "cabeza1961@gmail.com", "Claudio", "Cabeza");
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "luciebenve@gmail.com", "Lucía", "Benvenuto");
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "info@delasartes.com.ar", "Admin", "De las Artes");
-            await CreateUserWithRoleAsync(serviceProvider, "Administrator", "nalvarezdeclich@gmail.com", "Nicolas", "Alvarez");
-            await CreateUserWithRoleAsync(serviceProvider, "Administrator", "nicosanti1990@gmail.com", "Nicolas", "Santiago");
+			await CreateUserWithRoleAsync(serviceProvider, "Administrator", "nalvarezdeclich@gmail.com", "Nicolas", "Alvarez");
+			await CreateUserWithRoleAsync(serviceProvider, "Administrator", "danielapesci.93@gmail.com", "Daniela", "Pesci");
+			await CreateUserWithRoleAsync(serviceProvider, "Administrator", "nicosanti1990@gmail.com", "Nicolas", "Santiago");
 
             var hostEnvironment = serviceProvider.GetRequiredService<IHostingEnvironment>();
             if (!hostEnvironment.IsProduction())

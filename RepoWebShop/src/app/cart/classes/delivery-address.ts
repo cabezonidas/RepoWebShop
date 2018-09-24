@@ -3,7 +3,6 @@ export class DeliveryAddress {
   'addressLine1': string;
   'streetNumber': string;
   'streetName': string;
-  'zipCode': string;
   'state': string;
   'country': string;
   'distance': number;
@@ -14,8 +13,7 @@ export class DeliveryAddress {
   'latitude': number;
   'longitude': number;
 
-  constructor(zipCode: string, streetNumber: string, streetName: string, lat: number, lng: number) {
-    this.zipCode = zipCode;
+  constructor(streetNumber: string, streetName: string, lat: number, lng: number) {
     this.streetName = streetName;
     this.streetNumber = streetNumber;
     this.latitude = lat;

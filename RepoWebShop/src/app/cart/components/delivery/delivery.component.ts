@@ -75,20 +75,19 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
       if (this.place.geometry === undefined || this.place.geometry === null) {
         this.clear();
       } else {
-        const zipCode = this.delivery.zipCode(this.place.address_components);
         const streetNumber = this.delivery.streetNumber(this.place.address_components);
         const streetName = this.delivery.streetName(this.place.address_components);
         const lat = this.place.geometry ? this.place.geometry.location.lat() : 0;
         const lng = this.place.geometry ? this.place.geometry.location.lng() : 0;
-        this.trySaveDelivery(zipCode, streetNumber, streetName, lat, lng);
+        this.trySaveDelivery(streetNumber, streetName, lat, lng);
       }
     });
   }
 
-  trySaveDelivery = (zipCode: string, streetNumber: string, streetName: string, lat: number, lng: number) => {
-    this.address = new DeliveryAddress(zipCode, streetNumber, streetName, lat, lng);
+  trySaveDelivery = (streetNumber: string, streetName: string, lat: number, lng: number) => {
+    this.address = new DeliveryAddress(streetNumber, streetName, lat, lng);
     this.searchSelected = true;
-    this.fullAddress = !!this.address.zipCode && !!this.address.streetName && !!this.address.streetNumber;
+    this.fullAddress = !!this.address.streetName && !!this.address.streetNumber;
     this.outOfZone = !this.inZone();
     if (this.fullAddress && !this.outOfZone) {
       this.addDelivery.emit(this.address);
@@ -137,10 +136,9 @@ export class DeliveryComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
         if (place) {
           try {
             const result = place.PlaceDetailsResponse.result;
-            const zipCode = result.address_component.find(x => x.type === 'postal_code').long_name;
             const streetNumber = result.address_component.find(x => x.type === 'street_number').long_name;
             const streetName = result.address_component.find(x => x.type === 'route').long_name;
-            this.trySaveDelivery(zipCode, streetNumber, streetName, result.geometry.location.lat, result.geometry.location.lng);
+            this.trySaveDelivery(streetNumber, streetName, result.geometry.location.lat, result.geometry.location.lng);
           } catch {
             this.fullAddress = false;
           }

@@ -70,8 +70,8 @@ namespace RepoWebShop.MvcControllers
             {
                 var potentialPlace = await _deliveryRepository.GuessPlaceIdAsync(deliveryAddres.AddressLine1);
                 var placeConfirmed = await _deliveryRepository.GetPlaceAsync(potentialPlace);
-                deliveryAddres.AddressLine1 = placeConfirmed.StreetName + " " + placeConfirmed.StreetNumber + ", " + placeConfirmed.PostalCode;
-                deliveryAddres.ZipCode = placeConfirmed.PostalCode;
+				deliveryAddres.AddressLine1 = placeConfirmed.StreetName + " " + placeConfirmed.StreetNumber; // + ", " + placeConfirmed.PostalCode;
+                // deliveryAddres.ZipCode = placeConfirmed.PostalCode;
                 deliveryAddres.StreetName = placeConfirmed.StreetName;
                 deliveryAddres.StreetNumber = placeConfirmed.StreetNumber;
             }

@@ -220,14 +220,14 @@ namespace RepoWebShop.Repositories
                 if (addressComponent.Element("type").Value == "street_number")
                     streetNumber = addressComponent.Element("long_name").Value;
 
-                if (addressComponent.Element("type").Value == "postal_code")
-                    postalCode = addressComponent.Element("long_name").Value;
+                //if (addressComponent.Element("type").Value == "postal_code")
+                //    postalCode = addressComponent.Element("long_name").Value;
             }
 
             var address = new AddressViewModel()
             {
                 AddressLine1 = addressLine1,
-                PostalCode = postalCode,
+                // PostalCode = postalCode,
                 StreetName = streetName,
                 StreetNumber = streetNumber
             };
@@ -238,8 +238,8 @@ namespace RepoWebShop.Repositories
             if (string.IsNullOrEmpty(address.StreetName))
                 throw new Exception("No se puede determinar la calle.");
 
-            if (string.IsNullOrEmpty(address.PostalCode))
-                throw new Exception("No se puede determinar el código postal.");
+            //if (string.IsNullOrEmpty(address.PostalCode))
+            //    throw new Exception("No se puede determinar el código postal.");
 
             return address;
         }
