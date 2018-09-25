@@ -14,7 +14,7 @@ namespace RepoWebShop.Repositories
     {
         private readonly AppDbContext _appDbContext;
         private readonly IConfiguration _config;
-        private readonly ICalendarCacheRepository _calendarCache;
+        private readonly ICacheRepository _calendarCache;
 
         public string dayToSpanish(string day)
         {
@@ -74,7 +74,7 @@ namespace RepoWebShop.Repositories
             return "";
         }
 
-        public CalendarRepository(AppDbContext appDbContext, IConfiguration config, ICalendarCacheRepository calendarCache)
+        public CalendarRepository(AppDbContext appDbContext, IConfiguration config, ICacheRepository calendarCache)
         {
             _appDbContext = appDbContext;
             _config = config;

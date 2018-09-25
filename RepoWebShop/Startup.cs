@@ -84,7 +84,7 @@ namespace RepoWebShop
 			services.AddTransient<IGalleryRepository, GalleryRepository>();
 			services.AddTransient<ISmsRepository, SmsRepository>();
 			services.AddTransient<ICalendarRepository, CalendarRepository>();
-			services.AddSingleton<ICalendarCacheRepository, CalendarCacheRepository>();
+			services.AddSingleton<ICacheRepository, CacheRepository>();
 			services.AddSingleton<IFlickrRepository, FlickrRepository>();
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddSingleton<IMercadoPago, MercadoPago>();

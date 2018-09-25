@@ -11,15 +11,15 @@
 section {
     max-width: 800px;
     margin: auto;
-    height: 450px;
-    overflow: auto;
+    // height: 450px;
+    // overflow: auto;
     mat-form-field {
         width: 100%;
     }
     table {
         width: 100%;
         td {
-            min-width: 130px;
+            // min-width: 130px;
             padding-top: 5px;
             padding-bottom: 5px;
         }
@@ -38,4 +38,7 @@ section {
 .buyButton {
     margin: 10px auto;
     text-align: center;  
+}
+.hidden {
+    display: none;
 }

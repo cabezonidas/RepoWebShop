@@ -76,6 +76,21 @@ export class CartComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.titleService.setTitle('Carrito');
 
+    this.store.dispatch(new fromStore.GetTotals());
+    this.total$ = this.store.pipe(select(fromStore.getTotal));
+    this.totalGoods$ = this.store.pipe(select(fromStore.getTotalGoods));
+    this.totalGoodsInStore$ = this.store.pipe(select(fromStore.getTotalGoodsInStore));
+    this.totalInStore$ = this.store.pipe(select(fromStore.getTotalInStore));
+    this.totalWithoutDiscount$ = this.store.pipe(select(fromStore.getTotalWithoutDiscount));
+    this.totalItems$ = this.store.pipe(select(fromStore.getTotalItems));
+    this.totalItemsInStore$ = this.store.pipe(select(fromStore.getTotalItemsInStore));
+    this.totalCaterings$ = this.store.pipe(select(fromStore.getTotalCaterings));
+    this.totalCateringsInStore$ = this.store.pipe(select(fromStore.getTotalCateringsInStore));
+    this.totalCustomCatering$ = this.store.pipe(select(fromStore.getTotalCustomCatering));
+    this.totalCustomCateringInStore$ = this.store.pipe(select(fromStore.getTotalCustomCateringInStore));
+    this.totalsLoaded$ = this.store.pipe(select(fromStore.getTotalsLoaded));
+    this.totalsLoading$ = this.store.pipe(select(fromStore.getTotalsLoading));
+
     this.store.dispatch(new fromStore.LoadCaterings());
     this.caterings$ = this.store.pipe(select(fromStore.getCaterings));
     this.cateringsLoaded$ = this.store.pipe(select(fromStore.getCateringsLoaded));
@@ -121,20 +136,7 @@ export class CartComponent implements OnInit, OnDestroy {
     this.pickupLoaded$ = this.store.pipe(select(fromStore.getPickupLoaded));
     this.pickupLoading$ = this.store.pipe(select(fromStore.getPickupLoading));
 
-    this.store.dispatch(new fromStore.GetTotals());
-    this.total$ = this.store.pipe(select(fromStore.getTotal));
-    this.totalGoods$ = this.store.pipe(select(fromStore.getTotalGoods));
-    this.totalGoodsInStore$ = this.store.pipe(select(fromStore.getTotalGoodsInStore));
-    this.totalInStore$ = this.store.pipe(select(fromStore.getTotalInStore));
-    this.totalWithoutDiscount$ = this.store.pipe(select(fromStore.getTotalWithoutDiscount));
-    this.totalItems$ = this.store.pipe(select(fromStore.getTotalItems));
-    this.totalItemsInStore$ = this.store.pipe(select(fromStore.getTotalItemsInStore));
-    this.totalCaterings$ = this.store.pipe(select(fromStore.getTotalCaterings));
-    this.totalCateringsInStore$ = this.store.pipe(select(fromStore.getTotalCateringsInStore));
-    this.totalCustomCatering$ = this.store.pipe(select(fromStore.getTotalCustomCatering));
-    this.totalCustomCateringInStore$ = this.store.pipe(select(fromStore.getTotalCustomCateringInStore));
-    this.totalsLoaded$ = this.store.pipe(select(fromStore.getTotalsLoaded));
-    this.totalsLoading$ = this.store.pipe(select(fromStore.getTotalsLoading));
+
 
 
   }

@@ -12,7 +12,6 @@ import { ScrollService } from '../../../home/services/scroll.service';
 @Component({
   templateUrl: './product-shell.component.html',
   styleUrls: ['./product-shell.component.scss']
-  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductShellComponent implements OnInit {
   items$: Observable<IProduct[]>;

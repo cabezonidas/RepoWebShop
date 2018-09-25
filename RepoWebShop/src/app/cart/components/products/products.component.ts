@@ -18,6 +18,7 @@ export class ProductsComponent implements OnInit {
   @Input() itemsLoading: boolean;
   @Input() totalGoods: number;
   @Input() totalGoodsInStore: number;
+  @Input() totalsLoading: boolean;
 
   @Output() next = new EventEmitter<void>();
   @Output() addItem = new EventEmitter<number>();

@@ -3,7 +3,6 @@ import { IItem } from '../../products/interfaces/iitem';
 import { ICatering } from '../interfaces/ICatering';
 
 export interface CateringState {
-    items: IItem[];
     error: string;
     loading: boolean;
     cateringsLoaded: boolean;
@@ -12,7 +11,6 @@ export interface CateringState {
 }
 
 const initialState: CateringState = {
-    items: [],
     error: '',
     loading: false,
     cateringsLoaded: false,
@@ -22,11 +20,6 @@ const initialState: CateringState = {
 
 export function reducer(state = initialState, action: CateringActions): CateringState {
     switch (action.type) {
-        case CateringActionTypes.LoadItems: return {
-            ...state,
-            loading: true,
-            error: ''
-        };
 
         case CateringActionTypes.AddItem: return {
             ...state,
@@ -51,19 +44,6 @@ export function reducer(state = initialState, action: CateringActions): Catering
             loadingCaterings: true,
             cateringsLoaded: false,
             error: ''
-        };
-
-        case CateringActionTypes.LoadItemsSuccess: return {
-            ...state,
-            items: action.payload,
-            loading: false,
-            error: ''
-        };
-        case CateringActionTypes.LoadItemsFail: return {
-            ...state,
-            items: [],
-            loading: false,
-            error: action.payload
         };
 
         case CateringActionTypes.LoadCateringsSuccess: return {

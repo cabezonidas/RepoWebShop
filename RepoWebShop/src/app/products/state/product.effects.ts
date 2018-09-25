@@ -5,7 +5,7 @@ import * as productActions from './product.actions';
 import { mergeMap, map, catchError, tap } from 'rxjs/operators';
 import { IProduct } from '../interfaces/iproduct';
 import { of, Observable } from 'rxjs';
-import { Action, Store } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 import { ImagesService } from '../services/images.service';
 
 import * as fromProduct from '.';
@@ -13,19 +13,13 @@ import { IAlbum } from '../interfaces/ialbum';
 
 @Injectable()
 export class ProductEffects {
-    constructor(private store: Store<fromProduct.State>,
-        private actions$: Actions, private productService: ProductsService, private albumService: ImagesService) { }
+    constructor(private actions$: Actions, private productService: ProductsService, private albumService: ImagesService) { }
 
     @Effect()
     loadProducts$: Observable<Action> = this.actions$.pipe(
         ofType(productActions.ProductActionTypes.LoadProducts),
         mergeMap((action: productActions.LoadProducts) => this.productService.getProducts().pipe(
             map((products: IProduct[]) => {
-                products.forEach(product => {
-                    if (product.flickrAlbumId) {
-                        this.store.dispatch(new productActions.LoadAlbum(product.flickrAlbumId));
-                    }
-                });
                 return new productActions.LoadProductsSuccess(products);
             }),
             catchError(err => of(new productActions.LoadProductsFail(err)))

@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import * as fromProduct from '../../state';
 import * as productActions from '../../state/product.actions';
 import { IProduct } from '../../interfaces/iproduct';
-import { map } from 'rxjs/operators';
 import { CalendarService } from '../../../home/services/calendar.service';
 import { ScrollService } from '../../../home/services/scroll.service';
 import { Title } from '@angular/platform-browser';

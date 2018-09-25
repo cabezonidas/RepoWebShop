@@ -16,11 +16,13 @@ namespace RepoWebShop.Models
         private readonly AppDbContext _appDbContext;
         private readonly ICalendarRepository _calendarRepository;
         private readonly IPieDetailRepository _pieDetailRepository;
+        private readonly ICacheRepository _cache;
         private readonly IMapper _mapper;
 
-        public CatalogRepository(IMapper mapper, IPieDetailRepository pieDetailRepository,
+        public CatalogRepository(IMapper mapper, IPieDetailRepository pieDetailRepository, ICacheRepository cache,
 			AppDbContext appDbContext, ICalendarRepository calendarRepository)
         {
+			_cache = cache;
 			_mapper = mapper;
             _pieDetailRepository = pieDetailRepository;
             _appDbContext = appDbContext;
@@ -177,6 +179,10 @@ namespace RepoWebShop.Models
 
 		public async Task<IEnumerable<_Product>> ProductsGroupedByParent()
 		{
+			var allProdsCached = _cache.GetProducts();
+			if (allProdsCached != null)
+				return allProdsCached;
+
 			var allProds = await GetAll();
 			IEnumerable<_Item> _items = new List<_Item>().AsEnumerable();
 
@@ -194,6 +200,8 @@ namespace RepoWebShop.Models
 				x.Items = _items.Where(item => item.PieDetailId == x.PieDetailId);
 				return x;
 			}).ToArray();
+
+			_cache.SetProducts(result);
 
 			return result;
 		}

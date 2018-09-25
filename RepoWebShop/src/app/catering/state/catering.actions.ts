@@ -3,9 +3,6 @@ import { IItem } from '../../products/interfaces/iitem';
 import { ICatering } from '../interfaces/ICatering';
 
 export enum CateringActionTypes {
-    LoadItems = '[Catering] Load Items',
-    LoadItemsSuccess = '[Catering] Load Items Success',
-    LoadItemsFail = '[Catering] Load Items Fail',
     AddItem = '[Catering] Add Item to Catering',
     RemoveItem = '[Catering] Remove Item from Catering',
     LoadCaterings = '[Catering] Load Caterings',
@@ -14,23 +11,9 @@ export enum CateringActionTypes {
     LoadSessionCateringDone = '[Catering] Session Catering Loaded [Success/Fail]'
 }
 
-export class LoadItems implements Action {
-    readonly type = CateringActionTypes.LoadItems;
-}
-
-export class LoadItemsSuccess implements Action {
-    readonly type = CateringActionTypes.LoadItemsSuccess;
-    constructor(public payload: IItem[]) {}
-}
-
 export class LoadSessionCateringDone implements Action {
     readonly type = CateringActionTypes.LoadSessionCateringDone;
     constructor() {}
-}
-
-export class LoadItemsFail implements Action {
-    readonly type = CateringActionTypes.LoadItemsFail;
-    constructor(public payload: string) {}
 }
 
 export class LoadCaterings implements Action {
@@ -58,9 +41,6 @@ export class RemoveItem implements Action {
 }
 
 export type CateringActions = LoadSessionCateringDone
-    | LoadItems
-    | LoadItemsSuccess
-    | LoadItemsFail
     | AddItem
     | RemoveItem
     | LoadCaterings

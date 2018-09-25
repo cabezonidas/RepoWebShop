@@ -7,12 +7,12 @@
     autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off"
   >
 </mat-form-field>
-<section *ngIf="items && items.length">
+<section [ngClass]="items && items.length ? '' : 'hidden'">
   
   <div class="container" >
 
 
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" (matSortChange)="sortData($event)">
+    <table mat-table [dataSource]="dataSource">
       
       <ng-container matColumnDef="displayName">
         <th mat-header-cell *matHeaderCellDef > Productos </th>
@@ -53,6 +53,6 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       
     </table>
-    
+    <mat-paginator [pageSizeOptions]="[2, 4, 10, 25, 100]" #paginator [pageSize]='itemsPerPage'></mat-paginator>
   </div>
 </section>

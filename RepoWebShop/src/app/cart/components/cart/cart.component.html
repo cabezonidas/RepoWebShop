@@ -1,7 +1,7 @@
 
 <div class="form-container">
     <div class='logo'>
-      <img src='../../../../assets/images/logoRepo.PNG'>
+      <img src='https://farm2.staticflickr.com/1978/31026266528_02d833e53f_o.png'>
       <h2 *ngIf="total$ | async">Revisar Orden</h2>
       
       <div *ngIf="!(totalsLoaded$ | async)">
@@ -22,7 +22,7 @@
         <mat-step >
           <ng-template matStepLabel>Pedido</ng-template>
           <app-products [items]="items$ | async" [caterings]="caterings$ | async" [customCatering]="customCatering$ | async"
-          [itemsLoaded]="cuitLoaded$ | async" [itemsLoading]="cuitLoading$ | async"
+          [itemsLoaded]="cuitLoaded$ | async" [itemsLoading]="cuitLoading$ | async" [totalsLoading]="totalsLoading$ | async"
           [totalGoods]="totalGoods$ | async" [totalGoodsInStore]="totalGoodsInStore$ | async"
           (next)="_onNext()" (addItem)="addItem($event)" (removeItem)="removeItem($event)"
           (addCatering)="addCatering($event)" (removeCatering)="removeCatering($event)" (removeCustomCatering)="removeCustomCatering($event)"

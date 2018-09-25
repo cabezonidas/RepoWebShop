@@ -2,11 +2,12 @@
 
   <div id="background" [ngStyle]="{'height.px': videoHeight}">
     <video preload="true" autoplay="autoplay" [muted]="true" loop="loop" #video (window:resize)="onResize($event)">
-      <source src="../../../assets/videos/background_landscape.mp4" type="video/mp4">
+      <!-- <source src="../../../assets/videos/background_landscape.mp4" type="video/mp4"> -->
+      <source src="https://player.vimeo.com/play/1105957421?s=291625982_1537846000_828e7762c67dd0082a8f7353bc110972&loc=external&context=Vimeo%5CController%5CClipController.main&download=1" type="video/mp4">
     </video>
     <div id="content">
       <div class='logo'>
-        <img src='../../../assets/images/logoRepo.PNG'>
+        <img src='https://farm2.staticflickr.com/1978/31026266528_02d833e53f_o.png'>
       </div>
       <h2>Pastelería Artesanal</h2>
       <div id="call-to-action">

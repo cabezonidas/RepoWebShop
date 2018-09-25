@@ -4,10 +4,10 @@ import { Subscription } from 'rxjs';
 import { MatSidenav } from '@angular/material/sidenav';
 import { IAppUser } from './authentication/interfaces/iapp-user';
 import { Store } from '@ngrx/store';
+import { AppService } from './core/services/app/app.service';
 import * as fromProduct from './products/state';
 import * as productActions from './products/state/product.actions';
 import * as cateringActions from './catering/state/catering.actions';
-import { AppService } from './core/services/app/app.service';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +23,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   @ViewChild('content') public contentElement: ElementRef;
 
-  constructor(private auth: AuthService, private store: Store<fromProduct.State>, private appService: AppService) {}
+  constructor(private store: Store<fromProduct.State>, private auth: AuthService, private appService: AppService) {}
 
   ngOnInit() {
     this.userSub = this.auth.loadUser().subscribe(user => {
@@ -33,7 +33,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.adjustPadding();
     this.store.dispatch(new productActions.LoadProducts());
     this.store.dispatch(new cateringActions.LoadCaterings());
-    this.store.dispatch(new cateringActions.LoadItems());
   }
 
   ngOnDestroy(): void {

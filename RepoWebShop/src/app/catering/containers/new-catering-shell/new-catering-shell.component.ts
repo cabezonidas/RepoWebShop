@@ -3,9 +3,10 @@ import { IItem } from '../../../products/interfaces/iitem';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
+import * as fromProducts from '../../../products/state';
 import * as fromCatering from '../../state';
 import * as cateringActions from '../../state/catering.actions';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ICatering } from '../../interfaces/ICatering';
 import { moveIn } from '../../../animations/router.animations';
 import * as fromStore from '../../../cart/store';
@@ -25,34 +26,39 @@ export class NewCateringShellComponent implements OnInit {
   loading$: Observable<boolean>;
   errorMessage$: Observable<string>;
 
-  constructor(private store: Store<fromCatering.State>, private titleService: Title, private productsServ: ProductsService) { }
+  constructor(private cateringStore: Store<fromCatering.State>, private productsStore: Store<fromProducts.State>,
+    private titleService: Title, private productsServ: ProductsService) { }
   @HostBinding('@moveIn') role = '';
 
   ngOnInit() {
     this.titleService.setTitle('Catering personalizado');
 
-    this.catering$ = this.store.pipe(select(fromStore.getCustomCatering));
+    this.catering$ = this.cateringStore.pipe(select(fromStore.getCustomCatering));
 
-    // this.store.dispatch(new cateringActions.LoadItems());
-    this.items$ = this.store.pipe(
-      select(fromCatering.getItems),
-      map(items => items.sort((a, b) => this.productsServ.reverseCompare(a, b))
-    ));
-
-    this.loading$ = this.store.pipe(
-      select(fromCatering.getLoading)
+    this.items$ = this.productsStore.pipe(
+      select(fromProducts.getProducts),
+      map(prods => {
+        const items: IItem[] = [];
+        prods.forEach(prod => {
+          prod.items.forEach(item => items.push(item));
+        });
+        return items.sort((a, b) => this.productsServ.reverseCompare(a, b));
+      })
     );
 
+    this.loading$ = this.cateringStore.pipe(
+      select(fromCatering.getLoading)
+      );
 
-    this.errorMessage$ = this.store.pipe(select(fromCatering.getError));
+    this.errorMessage$ = this.cateringStore.pipe(select(fromCatering.getError));
   }
 
   addItem(itemId: number): void {
-    this.store.dispatch(new cateringActions.AddItem(itemId));
+    this.cateringStore.dispatch(new cateringActions.AddItem(itemId));
   }
 
   removeItem(itemId: number): void {
-    this.store.dispatch(new cateringActions.RemoveItem(itemId));
+    this.cateringStore.dispatch(new cateringActions.RemoveItem(itemId));
   }
 
 }

@@ -47,7 +47,9 @@ namespace RepoWebShop.FeApi
 		public async Task<_Catering> AddItem(int id)
 		{
 			var catering = _cart.SessionCatering();
-			if(catering.Items.FirstOrDefault(i => i.Item.ProductId == id) != null)
+			if (catering != null && 
+				catering.Items != null && 
+				catering.Items.FirstOrDefault(i => i.Item != null && i.Item.ProductId == id) != null)
 				await _catering.AddItemInstanceAsync(catering.LunchId, id);
 			else
 				await _catering.AddItemAsync(catering.LunchId, id);

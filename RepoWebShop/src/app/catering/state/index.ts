@@ -8,10 +8,6 @@ export interface State extends fromRoot.State {
 
 const getCateringFeatureState = createFeatureSelector<fromCatering.CateringState>('catering');
 
-export const getItems = createSelector(
-    getCateringFeatureState,
-    state => state.items
-);
 export const getError = createSelector(
     getCateringFeatureState,
     state => state.error
