@@ -39,6 +39,7 @@ export class HoursComponent implements OnInit, OnDestroy {
     });
 
     this.publicHolidaysSub = this.calendar.getPublicCalendar().pipe(
+      tap(() => console.log()),
       switchMap(publicCalendar => publicCalendar.publicHolidays.sort((a, b) => b.date.valueOf() - a.date.valueOf())),
       groupBy(publicHoliday => publicHoliday.date),
       mergeMap(group => group.pipe(toArray())),

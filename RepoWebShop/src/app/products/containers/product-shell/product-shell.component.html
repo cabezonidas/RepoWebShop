@@ -1,5 +1,5 @@
 <div id='top'></div>
-<app-logo-header [header]="'Postres destacados'"></app-logo-header>
+<app-logo-header [header]="'Productos con fotos'"></app-logo-header>
 <div class='product-shell'>
     <div *ngIf="items$ | async as products">
         <mat-spinner *ngIf="!products.length"> </mat-spinner>

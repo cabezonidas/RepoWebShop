@@ -31,7 +31,12 @@
               <strong>{{ spDay(day.date) }}</strong>
             </span>
             <span class="hours">
-              {{ i !== 0 ? ' y' : ''}} de {{ starting(day.openHours) | date:'shortTime' }} a {{ closing(day.openHours) | date:'shortTime' }}
+              <span *ngIf="day.openHours; else cerrado">
+                {{ i !== 0 ? ' y' : ''}} de {{ starting(day.openHours) | date:'shortTime' }} a {{ closing(day.openHours) | date:'shortTime' }}
+              </span>
+              <ng-template #cerrado>
+                cerrado
+              </ng-template>
             </span>
           </span>
         </div>

@@ -11,5 +11,5 @@ namespace RepoWebShop.ViewModels
         public IEnumerable<OpenHours> OpenHours { get; set; }
         public IEnumerable<PublicHoliday> PublicHolidays { get; set; }
         public IEnumerable<Vacation> Vacations { get; set; }
-    }
+	}
 }

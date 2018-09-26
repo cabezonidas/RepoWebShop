@@ -35,7 +35,8 @@ namespace RepoWebShop.Models
 			{
 				var openHoursSlotsInHolidays = holidays.Where(x => x.Date.Date == day.Date);
 				if (openHoursSlotsInHolidays.Count() > 0)
-					return openHoursSlotsInHolidays.Select(x => new KeyValuePair<DateTime, TimeSpan>(day.Add(x.OpenHours.StartingAt), x.OpenHours.Duration));
+					return openHoursSlotsInHolidays.Where(x => x.OpenHours != null)
+						.Select(x => new KeyValuePair<DateTime, TimeSpan>(day.Add(x.OpenHours.StartingAt), x.OpenHours.Duration));
 				else
 				{
 					var ordinaryHours = openHours.Where(x => x.DayId == (int)day.DayOfWeek).Select(x => new KeyValuePair<DateTime, TimeSpan>(day.Add(x.StartingAt), x.Duration));
@@ -53,7 +54,8 @@ namespace RepoWebShop.Models
                 var openHoursSlotsInHolidays = holidays.Where(x => x.Date.Date == day.Date);
                 if(openHoursSlotsInHolidays.Count() > 0)
                 {
-                    var holidayHours = openHoursSlotsInHolidays.Select(x => new KeyValuePair<DateTime, TimeSpan>(day.Add(x.OpenHours.StartingAt), x.OpenHours.Duration));
+                    var holidayHours = openHoursSlotsInHolidays.Where(x => x.OpenHours != null)
+						.Select(x => new KeyValuePair<DateTime, TimeSpan>(day.Add(x.OpenHours.StartingAt), x.OpenHours.Duration));
                     preliminarResults = preliminarResults.Concat(holidayHours);
                 }
                 else

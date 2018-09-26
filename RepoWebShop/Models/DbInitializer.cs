@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RepoWebShop.Models
@@ -22,6 +18,7 @@ namespace RepoWebShop.Models
             await CreateUserWithRoleAsync(serviceProvider, "Administrator", "info@delasartes.com.ar", "Admin", "De las Artes");
 			await CreateUserWithRoleAsync(serviceProvider, "Administrator", "nalvarezdeclich@gmail.com", "Nicolas", "Alvarez");
 			await CreateUserWithRoleAsync(serviceProvider, "Administrator", "danielapesci.93@gmail.com", "Daniela", "Pesci");
+			await CreateUserWithRoleAsync(serviceProvider, "Administrator", "dani@delasartes.com.ar", "Daniela", "Pesci");
 			await CreateUserWithRoleAsync(serviceProvider, "Administrator", "nicosanti1990@gmail.com", "Nicolas", "Santiago");
 
             var hostEnvironment = serviceProvider.GetRequiredService<IHostingEnvironment>();
