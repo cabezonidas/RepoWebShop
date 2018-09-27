@@ -24,6 +24,7 @@ namespace RepoWebShop.Repositories
         private readonly ShoppingCart _cartSession;
         private readonly IConfiguration _config;
         private readonly IDiscountRepository _discountRepository;
+        private readonly ICacheRepository _cache;
         private readonly IHttpContextAccessor _contextAccessor;
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly SignInManager<ApplicationUser> _signInManager;
@@ -34,9 +35,10 @@ namespace RepoWebShop.Repositories
 		private readonly int _costByBlock;
 		private readonly int _deliveryRadius;
 
-		public ShoppingCartRepository(IHttpContextAccessor contextAccessor, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration config, IDiscountRepository discountRepository, ShoppingCart shoppingCart, IMapper mapper, AppDbContext appDbContext, ICalendarRepository calendarRepository)
+		public ShoppingCartRepository(ICacheRepository cache, IHttpContextAccessor contextAccessor, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration config, IDiscountRepository discountRepository, ShoppingCart shoppingCart, IMapper mapper, AppDbContext appDbContext, ICalendarRepository calendarRepository)
         {
-            _contextAccessor = contextAccessor;
+			_cache = cache;
+			_contextAccessor = contextAccessor;
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_config = config;
@@ -988,6 +990,99 @@ namespace RepoWebShop.Repositories
 			result.CateringsSavings = GetCateringsTotalSavings(bookingId);
 			result.CustomCatering = GetCustomCateringTotals(bookingId);
 			result.CustomCateringInStore = GetCustomCateringTotalsInStore(bookingId);
+			return result;
+		}
+
+		public async Task<_Totals> GetTotalsAsync(string bookingId)
+		{
+			bookingId = bookingId ?? _cartSession.BookingId;
+
+			var products = _cache.GetCatalogItems();
+			if (products ==  null)
+			{
+				products = await _appDbContext.Products.ToArrayAsync();
+				_cache.SetCatalogItems(products);
+			}
+
+			var miscellanea = _cache.GetMiscellanea();
+			if (miscellanea == null)
+			{
+				miscellanea = await _appDbContext.LunchMiscellanea.ToArrayAsync();
+				_cache.SetMiscellanea(miscellanea);
+			}
+
+			var cateringItems = _cache.GetCateringItems();
+			if (cateringItems == null)
+			{
+				cateringItems = await _appDbContext.LunchItems.ToArrayAsync();
+				_cache.SetCateringItems(cateringItems);
+			}
+
+			_Totals result = new _Totals();
+
+			var cartProducts = await _appDbContext.ShoppingCartCatalogProducts.Where(x => x.ShoppingCartId == bookingId).ToArrayAsync();
+			var cartCaterings = await _appDbContext.ShoppingCartCaterings.Where(x => x.BookingId == bookingId).ToArrayAsync();
+			var cartCustomCatering = await _appDbContext.ShoppingCartCustomLunch.FirstOrDefaultAsync(x => x.BookingId == bookingId);
+			var cartDelivery = await _appDbContext.DeliveryAddresses.FirstOrDefaultAsync(x => x.ShoppingCartId == bookingId);
+
+			var prodInStore = cartProducts.Select(item => (products.FirstOrDefault(p => p.ProductId == item.ProductId)?.PriceInStore ?? 0) * item.Amount).Sum();
+			var prodOnline = cartProducts.Select(item => (products.FirstOrDefault(p => p.ProductId == item.ProductId)?.Price ?? 0) * item.Amount).Sum();
+
+			decimal catInStore = 0;
+			decimal catOnline = 0;
+
+			foreach(var cat in cartCaterings)
+			{
+				var items = cateringItems.Where(x => x.LunchId == cat.LunchId);
+				foreach(var item in items)
+				{
+					var product = products.FirstOrDefault(x => x.ProductId == item.ProductId);
+					var itemCount = item.Quantity > 0 ? (product?.MinOrderAmount ?? 0) + ((product?.MultipleAmount ?? 0) * (item.Quantity - 1)) : 0;
+					catInStore += itemCount * (product?.PriceInStore ?? 0) * cat.Amount;
+					catOnline += itemCount * (product?.Price ?? 0) * cat.Amount;
+				}
+				foreach(var miscellaneous in miscellanea.Where(x => x.LunchId == cat.LunchId))
+				{
+					catInStore += (miscellaneous.Price * miscellaneous.Quantity) * cat.Amount;
+					catOnline += (miscellaneous.Price * miscellaneous.Quantity) * cat.Amount;
+				}
+			}
+
+			decimal customCatInStore = 0;
+			decimal customCatOnline = 0;
+
+			if (cartCustomCatering != null)
+			{
+				var items = cateringItems.Where(x => x.LunchId == cartCustomCatering.LunchId);
+				foreach (var item in items)
+				{
+					var product = products.FirstOrDefault(x => x.ProductId == item.ProductId);
+					var itemCount = item.Quantity > 0 ? (product?.MinOrderAmount ?? 0) + ((product?.MultipleAmount ?? 0) * (item.Quantity - 1)) : 0;
+					customCatInStore += itemCount * (product?.PriceInStore ?? 0);
+					customCatOnline += itemCount * (product?.Price ?? 0);
+				}
+			}
+
+			var subtotalInStore = prodInStore + catInStore + customCatInStore;
+			var subtotalOnline = prodOnline + catOnline + customCatOnline;
+
+			var deliveryCost = subtotalOnline >= _minimumArsForOrderDelivery ? cartDelivery?.DeliveryCost ?? 0 : 0;
+			subtotalInStore += deliveryCost;
+			subtotalOnline += deliveryCost;
+
+			string error;
+			var discount = Discount.ApplyDiscount(_calendarRepository.LocalTime(), subtotalOnline, GetDiscount(bookingId), out error);
+
+			result.Total = subtotalOnline + discount;
+			result.TotalInStore = subtotalInStore;
+			result.TotalWithoutDiscount = subtotalOnline;
+			result.Items = prodOnline;
+			result.ItemsInStore = prodInStore;
+			result.Caterings = catOnline;
+			result.CateringsInStore = catInStore;
+			result.CateringsSavings = catInStore > catOnline ? catInStore - catOnline : 0;
+			result.CustomCatering = customCatOnline;
+			result.CustomCateringInStore = customCatInStore;
 			return result;
 		}
 

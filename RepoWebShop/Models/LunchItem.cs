@@ -5,9 +5,10 @@ namespace RepoWebShop.Models
     public class LunchItem
     {
         public int LunchItemId { get; set; }
-        public Lunch Lunch { get; set; }
+		public int LunchId { get; set; }
+		public Lunch Lunch { get; set; }
 
-        public Product Product { get; set; }
+		public Product Product { get; set; }
         public int Quantity { get; set; }
 
         public decimal SubTotal
@@ -24,5 +25,6 @@ namespace RepoWebShop.Models
         {
             get => Quantity > 0 ? Product.MinOrderAmount + (Product.MultipleAmount * (Quantity - 1)) : 0;
         }
-    }
+		public int ProductId { get; set; }
+	}
 }

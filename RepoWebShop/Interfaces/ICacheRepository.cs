@@ -11,5 +11,14 @@ namespace RepoWebShop.Interfaces
 
 		Calendar GetPublicCalendar();
 		void SetPublicCalendar(Calendar Calendar);
+
+		IEnumerable<Product> GetCatalogItems();
+		void SetCatalogItems(IEnumerable<Product> products);
+
+		IEnumerable<LunchMiscellaneous> GetMiscellanea();
+		void SetMiscellanea(IEnumerable<LunchMiscellaneous> miscellanea);
+
+		IEnumerable<LunchItem> GetCateringItems();
+		void SetCateringItems(IEnumerable<LunchItem> items);
 	}
 }

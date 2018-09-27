@@ -12,5 +12,6 @@ namespace RepoWebShop.Models
         public string ShoppingCartId { get; set; }
         public DateTime Created { get; set; }
         public int Amount { get; internal set; }
-    }
+		public int ProductId { get; set; }
+	}
 }

@@ -10,5 +10,6 @@ namespace RepoWebShop.Models
         public int ShoppingCartLunchId { get; set; }
         public string BookingId { get; set; }
         public Lunch Lunch { get; set; }
-    }
+		public int LunchId { get; set; }
+	}
 }

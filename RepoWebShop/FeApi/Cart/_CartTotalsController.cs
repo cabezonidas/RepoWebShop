@@ -2,6 +2,7 @@
 using RepoWebShop.FeModels;
 using RepoWebShop.Interfaces;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.FeApi
 {
@@ -15,7 +16,12 @@ namespace RepoWebShop.FeApi
 		}
 		[HttpGet]
 		[Route("Totals")]
-		public _Totals Totals() => _cart.GetTotals(null);
+		public async Task<_Totals> Totals()
+		{
+			// var result1 = _cart.GetTotals(null);
+			var result2 = await _cart.GetTotalsAsync(null);
+			return result2;
+		}
 
 		[HttpGet]
 		[Route("Total")]

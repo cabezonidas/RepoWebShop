@@ -4,12 +4,12 @@
       <img src='https://farm2.staticflickr.com/1978/31026266528_02d833e53f_o.png'>
       <h2 *ngIf="total$ | async">Revisar Orden</h2>
       
-      <div *ngIf="!(totalsLoaded$ | async)">
+      <div *ngIf="!(totalsLoaded$ | async) || ((totalsLoading$ | async) && ((total$ | async) === 0))">
           <mat-spinner></mat-spinner>
       </div>
       
       <div *ngIf="totalsLoaded$ | async">
-        <div *ngIf="!(total$ | async)">
+        <div *ngIf="!(total$ | async) && !(totalsLoading$ | async)">
           <h3>Parece que tu carrito está vacío</h3>
           <button mat-button routerLink="/products"><p>Date una vuelta por nuestras exquisiteces</p></button>
         </div>

@@ -14,6 +14,7 @@ namespace RepoWebShop.Interfaces
         void RemoveCuitFromCart(string bookingId);
         IEnumerable<ShoppingCartItem> GetItems(string bookingId);
 		_Totals GetTotals(string bookingId);
+		Task<_Totals> GetTotalsAsync(string bookingId);
 		IEnumerable<ShoppingCartCatalogItem> GetCatalogItems(string bookingId);
         IEnumerable<ShoppingCartComboCatering> GetShoppingCaterings(string bookingId);
         ShoppingCartLunch GetSessionLunch(string bookingId = null);
