@@ -14,7 +14,10 @@ namespace RepoWebShop.Repositories
 		private MiscellaneaCache _miscellaneaCache;
 		private CateringItemsCache _cateringItemsCache;
 
-		public IEnumerable<_Product> GetProducts() => _productsCache != null && !_productsCache.Expired ? _productsCache.Products : null;
+		public IEnumerable<_Product> GetProducts()
+		{
+			return _productsCache != null && !_productsCache.Expired ? _productsCache.Products : null;
+		}
 		public void SetProducts(IEnumerable<_Product> Products) => _productsCache = new ProductsCache(Products);
 
 		public Calendar GetPublicCalendar() => _calendarCache != null && !_calendarCache.Expired ? _calendarCache.Calendar : null;

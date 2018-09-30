@@ -14,6 +14,11 @@ import { OrderDeliveryComponent } from './components/order-delivery/order-delive
 import { AllOrdersShellComponent } from './containers/all-orders-shell/all-orders-shell.component';
 import { OrderCustomerComponent } from './components/order-customer/order-customer.component';
 import { OrderBillingComponent } from './components/order-billing/order-billing.component';
+import { CustomersShellComponent } from './containers/customers-shell/customers-shell.component';
+import { CustomersComponent } from './components/customers/customers.component';
+import { CustomersStateComponent } from './components/customers-state/customers-state.component';
+import { MobileActivationCodeComponent } from './components/mobile-activation-code/mobile-activation-code.component';
+import { EmailActivationCodeComponent } from './components/email-activation-code/email-activation-code.component';
 
 const adminRoutes: Routes = [
 {
@@ -23,8 +28,9 @@ const adminRoutes: Routes = [
     children: [
         { path: '', redirectTo: 'active-orders', pathMatch: 'full' },
         { path: 'active-orders', component: ActiveOrdersShellComponent },
+        { path: 'users', component: CustomersShellComponent },
         { path: 'all-orders', component: AllOrdersShellComponent },
-        { path: '**', redirectTo: 'active-orders', pathMatch: 'full' }
+        { path: '**', redirectTo: 'active-orders', pathMatch: 'full' },
     ]
 }];
 
@@ -36,9 +42,9 @@ const adminRoutes: Routes = [
     RouterModule.forChild(adminRoutes)
     ],
   declarations: [
-    TopBarComponent, OrdersShellComponent, ActiveOrdersShellComponent,
+    TopBarComponent, OrdersShellComponent, ActiveOrdersShellComponent, CustomersShellComponent,
     OrderDialogShellComponent, OrderDetailsComponent, OrderSummaryComponent,
-    OrderDeliveryComponent, AllOrdersShellComponent, OrderCustomerComponent, OrderBillingComponent
+    OrderDeliveryComponent, AllOrdersShellComponent, OrderCustomerComponent, OrderBillingComponent, CustomersComponent, CustomersStateComponent, MobileActivationCodeComponent, EmailActivationCodeComponent
     ],
   exports: [
     ],

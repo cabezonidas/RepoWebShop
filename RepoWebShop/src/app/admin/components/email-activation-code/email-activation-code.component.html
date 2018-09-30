@@ -1,0 +1,16 @@
+<div class="container">
+
+  <mat-card>
+    <mat-card-title>Buscar código de activación de email</mat-card-title>
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput placeholder="Email" #email autocomplete="off">
+    </mat-form-field>
+    <div *ngIf="validationCode && keyword">
+      <small>
+        Código enviado es {{ validationCode }} 
+      </small>
+    </div>
+</mat-card>
+
+</div>

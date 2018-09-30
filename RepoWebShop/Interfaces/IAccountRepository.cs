@@ -22,7 +22,12 @@ namespace RepoWebShop.Interfaces
 		Task<_User> RegisterUser(_RegisterEmail userCache);
 		Task UpdatePassword(string password);
 		Task SetCacheMobileActivation(string mobile);
-		Task<_MobileInfo> GetCacheMobileActivation();
+		Task<_MobileInfo> GetCacheMobileActivation(string email = null);
 		Task UpdateMobileAsync(string number);
+		Task<IEnumerable<_Customer>> GetCustomers();
+		Task<string> GetEmailActivationCode(string email);
+		Task<string> GetMobileActivationCode(string userId);
+		Task ActivateEmail(string userId);
+		Task ActivateMobile(string userId);
 	}
 }

@@ -1,0 +1,13 @@
+<div [ngClass]="validationCode ? 'show' : 'hidden'">
+  <small>
+    Código de validación de celular: {{ validationCode }} 
+  </small>
+  <div #validate>
+    <small class="manualValidation" >
+      Validar manualmente 
+    </small>
+  </div>
+</div>
+<div *ngIf="recentlyActivated">
+  <small>Telefono validado</small>
+</div>

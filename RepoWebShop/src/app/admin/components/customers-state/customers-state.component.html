@@ -1,0 +1,32 @@
+
+<div *ngIf="customer.phoneNumberConfirmed">
+  {{ customer.phoneNumber }}  <i class="fas fa-check" [ngClass]='"green"'></i>
+</div>
+<div *ngIf="!customer.phoneNumberConfirmed && customer.phoneNumberDeclared">
+  {{ customer.phoneNumberDeclared }}  
+  <div *ngIf="customer.registrationId">
+    <app-mobile-activation-code [userId]="customer.registrationId" (activated)="recentlyActivated()"></app-mobile-activation-code>
+  </div>
+</div>
+
+<div class="state">
+  <span *ngIf="customer.registrationId">
+    <i class="far fa-user" [ngClass]='"green"'></i>
+  </span>
+
+  <span *ngIf="customer.emailConfirmed">
+    <i class="far fa-envelope" [ngClass]='"green"'></i>
+  </span>
+
+  <span *ngIf="customer.phoneNumberConfirmed">
+    <i class="fas fa-mobile-alt" [ngClass]='"green"'></i>
+  </span>
+  
+  <span *ngIf="customer.facebookNameIdentifier" >
+      <i class="fab fa-facebook-square" [ngClass]='"blue"'></i>
+  </span>
+  
+  <span *ngIf="customer.googleNameIdentifier" >
+      <i class="fab fa-google" [ngClass]='"lightblue"'> </i>
+  </span>
+</div>

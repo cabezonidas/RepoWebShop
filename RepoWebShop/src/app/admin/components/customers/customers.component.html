@@ -1,0 +1,51 @@
+<div class="container">
+  <div class='table'>
+    <mat-form-field>
+      <input matInput placeholder="Buscar" (keyup)="applyFilter($event.target.value)">
+    </mat-form-field>
+  
+    <div class="">
+      <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">   
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header='name'> Nombre </th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.name }}
+            <div *ngFor="let email of row.emails">
+              {{ email }}
+            </div>
+            <app-customers-state [customer]="row"></app-customers-state>
+          </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="spent">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header='spent'> Gastado </th>
+          <td mat-cell *matCellDef="let row">
+            ${{ row.spent }}
+            <div *ngIf="row.orders">
+              {{ row.orders }} compra{{ row.orders > 1 ? 's' : '' }}
+              <div>
+                <small *ngFor="let id of row.orderIds">
+                  {{ suffix(id, 6) }}
+                </small>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="created">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header='created'> Creado </th>
+          <td mat-cell *matCellDef="let row">
+              {{ row.created | date : 'short' : undefined : 'es-AR' }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" ></mat-paginator>
+    </div>
+    <app-email-activation-code></app-email-activation-code>
+  </div>
+</div>

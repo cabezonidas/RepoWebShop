@@ -5,6 +5,7 @@ using RepoWebShop.FeApi.Invoice;
 using RepoWebShop.FeModels;
 using RepoWebShop.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 
@@ -14,6 +15,16 @@ namespace RepoWebShop.Models
     {
 		public MappingProfile()
 		{
+			CreateMap<ApplicationUser, _Customer>()
+				.ForMember(x => x.Emails, opt => opt.ResolveUsing(src => new List<string> { src.Email.ToLower().Trim() }))
+				.ForMember(x => x.OrderIds, opt => opt.ResolveUsing(src => new List<string>()))
+				.ForMember(x => x.Name, opt => opt.ResolveUsing(src => {
+					var names = new List<string>();
+					names.AddRange(src.FirstName.ToLower().Trim().ToTitleCase().Split(' '));
+					names.AddRange(src.LastName.ToLower().Trim().ToTitleCase().Split(' '));
+					return String.Join(' ', names);
+				}))
+				.ForMember(x => x.RegistrationId, opt => opt.ResolveUsing(src => src.Id));
 			CreateMap<Cae, _Cae>();
 			CreateMap<InvoiceData, _InvoiceData>();
 			CreateMap<InvoiceDetail, _InvoiceDetail>();

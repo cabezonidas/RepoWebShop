@@ -36,8 +36,29 @@ namespace RepoWebShop.FeApi
 		}
 
 		[HttpGet]
+		[Authorize(Roles = "Administrator")]
+		[Route("GetCustomers")]
+		public async Task<IEnumerable<_Customer>> GetCustomers() => await _account.GetCustomers();
+
+		[HttpGet]
+		[Authorize(Roles = "Administrator")]
+		[Route("GetEmailActivationCode/{userId}")]
+		public async Task<string> GetEmailActivationCode(string userId) => await _account.GetEmailActivationCode(userId);
+
+		[HttpGet]
+		[Authorize(Roles = "Administrator")]
+		[Route("GetMobileActivationCode/{userId}")]
+		public async Task<string> GetMobileActivationCode(string userId) => await _account.GetMobileActivationCode(userId);
+
+		[HttpPost]
+		[Authorize(Roles = "Administrator")]
+		[Route("ActivateMobile/{userId}")]
+		public async Task ActivateMobile(string userId) => await _account.ActivateMobile(userId);
+
+		[HttpGet]
 		[Route("Current")]
 		public async Task<_User> Current() => _mapper.Map<ApplicationUser, _User>(await _account.Current());
+
 
 		[HttpGet]
 		[Route("IsAuth")]

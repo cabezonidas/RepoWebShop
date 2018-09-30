@@ -9,6 +9,7 @@ export class VideoComponent implements OnInit {
 
   videoSource: string;
   videoHeight: number;
+  smallDevice = false;
   @ViewChild('video') public videoElement: ElementRef;
   constructor() { }
 
@@ -24,6 +25,7 @@ export class VideoComponent implements OnInit {
     let size = '320';
     if (window.innerWidth > 0 && window.innerWidth < 540) {
       size = '320';
+      this.smallDevice = true;
     }
     if (window.innerWidth >= 540 && window.innerWidth < 720) {
       size = '540';

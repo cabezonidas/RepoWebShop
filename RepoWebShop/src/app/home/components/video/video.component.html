@@ -1,8 +1,8 @@
 <div class="container">
 
   <div id="background" [ngStyle]="{'height.px': videoHeight}">
-    <video preload="true" autoplay="autoplay" [muted]="true" loop="loop" #video (window:resize)="onResize($event)">
-      <source [attr.src]="videoSource" type="video/mp4">
+    <video #video preload="true" autoplay="autoplay" [muted]="true" loop="loop"(window:resize)="onResize($event)">
+      <source [attr.src]="videoSource" type="video/mp4" *ngIf="!smallDevice" >
     </video>
     <div id="content">
       <div class='logo'>

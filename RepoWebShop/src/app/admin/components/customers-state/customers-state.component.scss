@@ -1,0 +1,18 @@
+@import "../../../../../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
+.state {    
+    span {
+        margin: 5px;
+    }
+    .green {
+        color: green;
+    }
+    .red {
+        color: red;
+    }
+    .blue {
+        color: #3B5998;
+    }
+    .lightblue {
+        color: #4885ed;
+    }
+}

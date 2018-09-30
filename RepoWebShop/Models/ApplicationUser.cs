@@ -71,8 +71,9 @@ namespace RepoWebShop.Models
         public DateTime? ValidationMailToken { get; set; }
         public string PhoneNumberDeclared { get; set; }
         public string FacebookNameIdentifier { get; set; }
-        public string GoogleNameIdentifier { get; set; } 
+		public string GoogleNameIdentifier { get; set; }
+		public DateTime Created { get; set; }
 
-        public IEnumerable<DeliveryAddress> DeliveryAddresses { get; set; }
+		public IEnumerable<DeliveryAddress> DeliveryAddresses { get; set; }
     }
 }
