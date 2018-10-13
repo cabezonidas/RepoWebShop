@@ -35,13 +35,13 @@ export class PasswordComponent implements OnInit, OnDestroy {
   emailCodeSent$ = new Subscription();
   returnUrl$ = new Subscription();
   savePassword$ = new Subscription();
-  constructor(private _formBuilder: FormBuilder, private auth: AuthService, private appService: AppService, private titleService: Title) { }
+  constructor(private _formBuilder: FormBuilder, private auth: AuthService, private app: AppService, private titleService: Title) { }
   @HostBinding('@moveIn') role = '';
   @ViewChild('stepper') stepper: MatStepper;
 
   ngOnInit() {
     this.titleService.setTitle('Contraseña');
-    this.returnUrl$ = this.appService.returnUrl.subscribe(url => this.returnUrl = url);
+    this.returnUrl$ = this.app.returnUrl.subscribe(url => this.returnUrl = url);
     this.stepper$ = this.stepper.selectionChange.subscribe(() => this.sendCodeToEmail());
     this.emailGroup = this._formBuilder.group({
       email: ['', Validators.compose([Validators.required, Validators.email]), this.emailFound.bind(this)],
@@ -53,7 +53,7 @@ export class PasswordComponent implements OnInit, OnDestroy {
     });
     this.newPasswordGroup = this._formBuilder.group({
       newPass: ['', Validators.compose([Validators.required, Validators.minLength(6)])]});
-    this.userSub = this.appService.user.subscribe(appUser => {
+    this.userSub = this.app.user.subscribe(appUser => {
       this.user = appUser;
     });
   }
@@ -76,7 +76,7 @@ export class PasswordComponent implements OnInit, OnDestroy {
     return this.auth.activateRecoveredEmail(this.emailGroup.value.email, control.value).pipe(
     map(appUser => {
       if (appUser) {
-        this.appService.setUser(appUser);
+        this.app.setUser(appUser);
       }
       return { emailCode: false };
     }));
@@ -85,7 +85,7 @@ export class PasswordComponent implements OnInit, OnDestroy {
   savePassword() {
     this.savePassword$.unsubscribe();
     this.savePassword$ = this.auth.updatePassword(this.newPasswordGroup.value.newPass)
-      .subscribe(() => this.appService.returnToUrl(this.returnUrl));
+      .subscribe(() => this.app.returnToUrl(this.returnUrl));
   }
 
   ngOnDestroy() {

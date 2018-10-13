@@ -36,7 +36,7 @@ const authRoutes: Routes = [
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase), AngularFireAuthModule,
     MaterialModule, FormsModule, ReactiveFormsModule,
-    SharedModule
+    SharedModule,
   ],
   declarations: [
     EmailComponent,

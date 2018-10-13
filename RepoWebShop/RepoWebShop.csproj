@@ -20,7 +20,7 @@
     <DefaultItemExcludes>$(DefaultItemExcludes);node_modules\**</DefaultItemExcludes>
 
     <!-- Set this to true if you enable server-side prerendering -->
-    <BuildServerSideRenderer>false</BuildServerSideRenderer>
+    <BuildServerSideRenderer>true</BuildServerSideRenderer>
   </PropertyGroup>
 
   <ItemGroup>
@@ -139,15 +139,15 @@
   </Target>
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
-    <!-- As part of publishing, ensure the JS resources are freshly built in production mode 
+    <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec WorkingDirectory="" Command="npm install" />
-    <Exec WorkingDirectory="" Command="npm run build - - - -prod" />
-    <Exec WorkingDirectory="" Command="npm run build:ssr - - - -prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />-->
+    <Exec WorkingDirectory="" Command="npm run build -- --prod" />
+    <Exec WorkingDirectory="" Command="npm run build:ssr" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
 
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
       <DistFiles Include="wwwroot\dist\**" />
-      <!--<DistFiles Include="node_modules\**" Exclude="node_modules\.cache\**" Condition="'$(BuildServerSideRenderer)' == 'true'" />-->
+      <DistFiles Include="node_modules\**" Exclude="node_modules\.cache\**" Condition="'$(BuildServerSideRenderer)' == 'true'" />
       <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
         <RelativePath>%(DistFiles.Identity)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

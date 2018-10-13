@@ -14,10 +14,10 @@ export class AdminGearComponent implements OnInit, OnDestroy {
 
   isAdministrator = false;
   userSub = new Subscription();
-  constructor(private appService: AppService, private auth: AuthService, private router: Router) { }
+  constructor(private app: AppService, private auth: AuthService, private router: Router) { }
 
   ngOnInit() {
-    this.userSub = this.appService.user.pipe(
+    this.userSub = this.app.user.pipe(
       switchMap(() => this.auth.isAdmin())
     ).subscribe(isAdmin => this.isAdministrator = isAdmin);
   }

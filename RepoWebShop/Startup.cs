@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Reflection;
 using System.IO;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 
 namespace RepoWebShop
 {
@@ -141,7 +142,16 @@ namespace RepoWebShop
 			app.UseSpa(spa =>
 			{
 				spa.Options.SourcePath = "wwwroot/dist";
+				    spa.UseSpaPrerendering(options =>
+					{
+						options.BootModulePath = $"{spa.Options.SourcePath}/dist-server/main.js";
+						options.BootModuleBuilder = env.IsDevelopment()
+							? new AngularCliBuilder(npmScript: "build:ssr")
+							: null;
+						options.ExcludeUrls = new[] { "/sockjs-node" };
+					});
 				if (env.IsDevelopment())
+					// spa.UseAngularCliServer(npmScript: "start");
 					spa.UseProxyToSpaDevelopmentServer("http://localhost:4200/");
 			});
 		}

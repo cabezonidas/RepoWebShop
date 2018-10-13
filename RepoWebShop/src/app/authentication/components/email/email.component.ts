@@ -26,7 +26,7 @@ export class EmailComponent implements OnInit, OnDestroy {
   userSub = new Subscription();
   onSubmitSub = new Subscription();
 
-  constructor(private titleService: Title, private appService: AppService, private auth: AuthService, private fb: FormBuilder) {
+  constructor(private titleService: Title, private app: AppService, private auth: AuthService, private fb: FormBuilder) {
     this.rForm = fb.group({
       'email': [null, Validators.compose([Validators.required, Validators.email])],
       'password': [null, Validators.compose([Validators.required, Validators.minLength(6)])]
@@ -37,10 +37,10 @@ export class EmailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.titleService.setTitle('Email');
-    this.returnUrlSub = this.appService.returnUrl.subscribe(url => this.returnUrl = url);
-    this.userSub = this.appService.user.subscribe(user$ => {
+    this.returnUrlSub = this.app.returnUrl.subscribe(url => this.returnUrl = url);
+    this.userSub = this.app.user.subscribe(user$ => {
       if (user$) {
-        this.appService.returnToUrl(this.returnUrl);
+        this.app.returnToUrl(this.returnUrl);
       }
     });
   }
@@ -51,7 +51,7 @@ export class EmailComponent implements OnInit, OnDestroy {
     this.onSubmitSub = this.auth.emailLogin(emailLogon)
       .subscribe(appUser => {
         if (appUser) {
-          this.appService.setUser(appUser);
+          this.app.setUser(appUser);
         } else {
           this.invalidCredentials = 'Email o contraseña incorrecta';
         }

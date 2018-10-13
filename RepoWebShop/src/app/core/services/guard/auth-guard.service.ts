@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional, Inject } from '@angular/core';
 import { CanActivate, Router, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { AppService } from '../app/app.service';
 import { tap } from 'rxjs/operators';
+import { APP_BASE_HREF } from '@angular/common';
 
 
 @Injectable({
@@ -12,18 +13,21 @@ import { tap } from 'rxjs/operators';
 export class AuthGuardService implements CanActivate {
 
   url = '';
-  constructor(private router: Router, private appService: AppService, private http: HttpClient)  {
-    this.appService.returnUrl.subscribe(url => this.url = url);
+  public api = 'api';
+  constructor(private router: Router, private app: AppService,
+    private http: HttpClient, @Optional() @Inject(APP_BASE_HREF) origin: string)  {
+    this.app.returnUrl.subscribe(url => this.url = url);
+    this.api = `${origin ? origin : ''}${this.api}`;
   }
 
-  isAuth = (): Observable<boolean> => (this.http.get('/api/_account/isAuth') as Observable<boolean>);
+  isAuth = (): Observable<boolean> => (this.http.get(this.api + '/_account/isAuth') as Observable<boolean>);
 
   canActivate(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Observable<boolean> {
     return this.isAuth().pipe(
       tap(state => {
         if (!state) {
           if (!this.url) {
-            this.appService.setReturnUrl(routerState.url);
+            this.app.setReturnUrl(routerState.url);
           }
           this.router.navigate([ '/login' ]);
       }

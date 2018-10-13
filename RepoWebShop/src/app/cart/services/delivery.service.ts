@@ -1,22 +1,27 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { DeliveryAddress } from '../classes/delivery-address';
+import { APP_BASE_HREF } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DeliveryService {
 
-  constructor(private http: HttpClient) { }
+  public api = 'api';
+  constructor(private http: HttpClient, @Optional() @Inject(APP_BASE_HREF) origin: string) {
+    this.api = `${origin ? origin : ''}${this.api}`;
+  }
 
-  canDeliver = () => this.http.get<boolean>('/api/_cartDelivery/canDeliver');
-  guess = (address: string) => this.http.get<any>('/api/_cartDelivery/guess/' + address);
-  clearDelivery = () => this.http.delete<void>('/api/_cartDelivery/remove');
+  canDeliver = () => this.http.get<boolean>(this.api + '/_cartDelivery/canDeliver');
+  guess = (address: string) => this.http.get<any>(this.api + '/_cartDelivery/guess/' + address);
+  clearDelivery = () => this.http.delete<void>(this.api + '/_cartDelivery/remove');
+  get = () => this.http.get<DeliveryAddress>(this.api + '/_cartDelivery/get');
   updateInstructions = (instructions: DeliveryAddress) =>
-    this.http.post<DeliveryAddress>('/api/_cartDelivery/updateInstructions', instructions)
-  saveDelivery = (addresss: DeliveryAddress) => this.http.post<DeliveryAddress>('/api/_cartDelivery/saveDelivery', addresss);
-  get = () => this.http.get<DeliveryAddress>('/api/_cartDelivery/get');
+    this.http.post<DeliveryAddress>(this.api + '/_cartDelivery/updateInstructions', instructions)
+  saveDelivery = (addresss: DeliveryAddress) =>
+    this.http.post<DeliveryAddress>(this.api + '/_cartDelivery/saveDelivery', addresss)
 
   getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2): number {
     const R = 6371; // Radius of the earth in km

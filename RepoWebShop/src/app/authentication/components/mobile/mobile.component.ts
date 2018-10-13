@@ -30,7 +30,7 @@ export class MobileComponent implements OnInit, OnDestroy {
   codeSent$ = new Subscription();
 
   constructor(private router: Router, private auth: AuthService, private fb: FormBuilder,
-    private sms: SmsService, private appService: AppService, private titleService: Title) {
+    private sms: SmsService, private app: AppService, private titleService: Title) {
 
       this.mobileForm = fb.group({
         'mobile': [null, Validators.required, this.validMobile.bind(this)],
@@ -46,8 +46,8 @@ export class MobileComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.titleService.setTitle('Celular');
-    this.returnUrl$ = this.appService.returnUrl.subscribe(url => this.returnUrl = url);
-    this.user$ = this.appService.user.subscribe(user$ => {
+    this.returnUrl$ = this.app.returnUrl.subscribe(url => this.returnUrl = url);
+    this.user$ = this.app.user.subscribe(user$ => {
       this.user = user$;
     });
     // this.user$ = this.auth.loadUser().subscribe(user => {
@@ -59,7 +59,7 @@ export class MobileComponent implements OnInit, OnDestroy {
     return this.auth.confirmMobile(control.value).pipe(
       map(res => {
         if (res) {
-          this.appService.returnToUrl(this.returnUrl);
+          this.app.returnToUrl(this.returnUrl);
         }
         return res === true ? null : { emailTaken: true };
     }));

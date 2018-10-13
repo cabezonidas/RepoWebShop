@@ -35,7 +35,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   stepper$ = new Subscription();
 
   constructor(private _formBuilder: FormBuilder, private auth: AuthService, private titleService: Title,
-    private router: Router, private appService: AppService) {}
+    private router: Router, private app: AppService) {}
 
   @HostBinding('@moveIn') role = '';
   @ViewChild('stepper') stepper: MatStepper;
@@ -44,11 +44,11 @@ export class SignupComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.titleService.setTitle('Registro');
-    this.returnUrl$ = this.appService.returnUrl.subscribe(url => this.returnUrl = url);
+    this.returnUrl$ = this.app.returnUrl.subscribe(url => this.returnUrl = url);
     this.stepper$ = this.stepper.selectionChange.subscribe(() => this.bookEmail());
-    this.user$ = this.appService.user.subscribe(user$ => {
+    this.user$ = this.app.user.subscribe(user$ => {
       if (user$) {
-        this.appService.returnToUrl(this.returnUrl);
+        this.app.returnToUrl(this.returnUrl);
       }
     });
 
@@ -69,7 +69,7 @@ export class SignupComponent implements OnInit, OnDestroy {
     return this.auth.registerUserEmail(this.current(), control.value).pipe(
     map(appUser => {
       if (appUser) {
-        this.appService.setUser(appUser);
+        this.app.setUser(appUser);
       }
       return { emailCode: false };
     }));

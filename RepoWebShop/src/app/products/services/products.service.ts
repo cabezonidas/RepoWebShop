@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { IProduct } from '../interfaces/iproduct';
 import { Observable } from 'rxjs';
 import { IItem } from '../interfaces/iitem';
+import { APP_BASE_HREF } from '@angular/common';
 
 
 @Injectable({
@@ -10,9 +11,12 @@ import { IItem } from '../interfaces/iitem';
 })
 export class ProductsService {
 
-  constructor(private http: HttpClient) { }
+  public api = 'api';
+  constructor(private http: HttpClient, @Optional() @Inject(APP_BASE_HREF) origin: string) {
+    this.api = `${origin ? origin : ''}${this.api}`;
+  }
 
-  getProducts = (): Observable<IProduct[]> => this.http.get<IProduct[]>('/api/_products/all');
+  getProducts = (): Observable<IProduct[]> => this.http.get<IProduct[]>(this.api + '/_products/all');
   compare = (a: IItem, b: IItem): number =>
     (this.rankCategory(a.category) + a.displayName < this.rankCategory(b.category) + b.displayName ? -1 : 1)
 

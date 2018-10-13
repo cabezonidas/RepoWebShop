@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   firebaseUser: firebase.User;
 
   constructor(public afAuth: AngularFireAuth, private titleService: Title,
-    private router: Router, private auth: AuthService, private appService: AppService) { }
+    private router: Router, private auth: AuthService, private app: AppService) { }
 
   @HostBinding('@moveIn') role = '';
 
@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.titleService.setTitle('Inicio de sesión');
-    this.returnUrl$ = this.appService.returnUrl.subscribe(url => this.returnUrl = url);
+    this.returnUrl$ = this.app.returnUrl.subscribe(url => this.returnUrl = url);
 
     this.backEndLogin$ = this.afAuth.user.pipe(
       filter(user => !!user),
@@ -63,8 +63,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       switchMap(_ => this.auth.socialLogin(this.firebaseUser)),
       tap(user => {
         if (user) {
-          this.appService.setUser(user);
-          this.appService.returnToUrl(this.returnUrl);
+          this.app.setUser(user);
+          this.app.returnToUrl(this.returnUrl);
         } else {
           this.loginError('');
         }

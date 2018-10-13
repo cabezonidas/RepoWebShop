@@ -12,7 +12,8 @@ import * as cateringActions from './catering/state/catering.actions';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  providers: [AppService]
 })
 export class AppComponent implements OnInit, OnDestroy {
   @ViewChild('sidenav') sidenav: MatSidenav;
@@ -23,11 +24,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   @ViewChild('content') public contentElement: ElementRef;
 
-  constructor(private store: Store<fromProduct.State>, private auth: AuthService, private appService: AppService) {}
+  constructor(private store: Store<fromProduct.State>, private auth: AuthService, private app: AppService) {}
 
   ngOnInit() {
     this.userSub = this.auth.loadUser().subscribe(user => {
-      this.appService.setUser(user);
+      this.app.setUser(user);
       this.user = user;
     });
     this.adjustPadding();

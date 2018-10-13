@@ -3,6 +3,32 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
+    "ssr": {
+      "root": "",
+      "sourceRoot": "src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "wwwroot/dist/dist-server",
+            "main": "src/main.server.ts",
+            "tsConfig": "src/tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "optimization": false,
+              "outputHashing": "media",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "bundleDependencies": "all"
+            }
+          }
+        }
+      }
+    },
     "repo-web-shop": {
       "root": "",
       "sourceRoot": "src",

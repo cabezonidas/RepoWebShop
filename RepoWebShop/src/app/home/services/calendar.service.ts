@@ -1,19 +1,23 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IPublicCalendar } from '../interfaces/ipublic-calendar';
 import { IWorkingHour } from '../interfaces/iworking-hour';
 import * as moment from 'moment-timezone';
+import { APP_BASE_HREF } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CalendarService {
 
-  constructor(private http: HttpClient) { }
+  public api = 'api';
+  constructor(private http: HttpClient, @Optional() @Inject(APP_BASE_HREF) origin: string) {
+    this.api = `${origin ? origin : ''}${this.api}`;
+  }
 
-  getPublicCalendar = (): Observable<IPublicCalendar> => this.http.get<IPublicCalendar>('/api/_calendar/publicCalendar');
-  getPickup = (hours: number): Observable<Date> => this.http.get<Date>('/api/_calendar/readyFor/' + hours);
+  getPublicCalendar = (): Observable<IPublicCalendar> => this.http.get<IPublicCalendar>(this.api + '/_calendar/publicCalendar');
+  getPickup = (hours: number): Observable<Date> => this.http.get<Date>(this.api + '/_calendar/readyFor/' + hours);
 
   day(i: number) {
     switch (i) {

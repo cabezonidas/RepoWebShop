@@ -23,14 +23,14 @@ export class MembersComponent implements OnInit, OnDestroy {
   userSub = new Subscription();
 
   constructor(private router: Router, private auth: AuthService, private titleService: Title,
-    private afAuth: AngularFireAuth, private appService: AppService) { }
+    private afAuth: AngularFireAuth, private app: AppService) { }
 
   @HostBinding('@moveIn') role = '';
 
   logout() {
     this.afAuth.auth.signOut().then(() => {
       this.logOut = this.auth.logOut().subscribe(() => {
-        this.appService.setUser(null);
+        this.app.setUser(null);
       });
       // api logout doesn't work -> force log out with MVC engine
       window.location.assign('/account/LogoutSpa/start');
@@ -39,7 +39,7 @@ export class MembersComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.titleService.setTitle('Perfil');
-    this.userSub = this.appService.user.subscribe(user$ => {
+    this.userSub = this.app.user.subscribe(user$ => {
       this.user = user$;
     });
     // this.userSub = this.auth.loadUser().subscribe(user => {

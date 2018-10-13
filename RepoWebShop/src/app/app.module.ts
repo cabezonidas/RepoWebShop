@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, LOCALE_ID } from '@angular/core';
+import { NgModule, LOCALE_ID, Inject, PLATFORM_ID, APP_ID } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ProductModule } from './products/products.module';
@@ -19,6 +19,7 @@ import { HomeModule } from './home/home.module';
 import { AdminModule } from './admin/admin.module';
 import { LeftnavContainerComponent } from './components/leftnav-container/leftnav-container.component';
 import { ToolBarComponent } from './components/tool-bar/tool-bar.component';
+import { isPlatformBrowser } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,7 @@ import { ToolBarComponent } from './components/tool-bar/tool-bar.component';
     AdminModule,
     SharedModule,
     MaterialModule,
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'de-las-artes' }),
     AuthenticationModule,
     ProductModule,
     CateringModule,
@@ -54,4 +55,9 @@ import { ToolBarComponent } from './components/tool-bar/tool-bar.component';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, @Inject(APP_ID) private appId: string) {
+    const platform = isPlatformBrowser(platformId) ? 'in the browser' : 'on the server';
+    console.log(`Running ${platform} with appId=${appId}`);
+  }
+}
