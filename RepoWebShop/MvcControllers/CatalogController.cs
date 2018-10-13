@@ -29,10 +29,10 @@ namespace RepoWebShop.MvcControllers
         public async Task <IActionResult> Index() => View(await _catalogRepo.GetAll());
 
         [HttpGet]
-        public IActionResult QuickEdit() => View(_catalogRepo.GetAll(x => x.IsActive));
+        public async Task<IActionResult> QuickEdit() => View(await _catalogRepo.GetAll(x => x.IsActive));
 
         [HttpGet]
-        public IActionResult OnlyPrices() => View(_catalogRepo.GetAll(x => x.IsActive));
+        public async Task<IActionResult> OnlyPrices() => View(await _catalogRepo.GetAll(x => x.IsActive));
 
         [HttpGet]
         [Route("[controller]/AddPieDetailChild/{pieDetailId}")]

@@ -78,7 +78,7 @@
                         @Html.Raw(payment.PaymentNotice.PayerAsHtml)
                     </td>
                     <td>
-                        <a href="/Order/Detail/@payment.Order.OrderId">@payment.Order.FriendlyBookingId</a>
+                        <a href="/Order/Detail/@payment.Order?.OrderId">@payment.Order?.FriendlyBookingId</a>
                     </td>
                 </tr>
 

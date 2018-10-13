@@ -374,7 +374,7 @@ namespace RepoWebShop.Models
             {
                 order.PickUpTime = _calendarRepository.GetPickupEstimate(order.PreparationTime);
                 order.Status = "approved";
-                order.Payout = _calendarRepository.LocalTime();
+				MapMercadoPagoData(ref order, payment);
                 order.Factura = await _billing.Facturar(order);
                 _appDbContext.Orders.Update(order);
                 _appDbContext.SaveChanges();
@@ -383,6 +383,21 @@ namespace RepoWebShop.Models
 
             return order;
         }
+
+		private void MapMercadoPagoData(ref Order order, PaymentNotice payment)
+		{
+			order.PaymentReceived = true;
+			order.MercadoPagoMail = payment.MercadoPagoMail;
+			order.MercadoPagoName = payment.MercadoPagoName;
+			order.MercadoPagoUsername = payment.MercadoPagoUsername;
+			order.PhoneNumber = payment.PhoneNumber;
+			order.CardHolderName = payment.CardHolderName;
+			order.CardHolderNumber = payment.CardHolderNumber;
+			order.CardHolderType = payment.CardHolderType;
+			order.PayerIdNumber = payment.PayerIdNumber;
+			order.PayerIdType = payment.PayerIdType;
+			order.Payout = _calendarRepository.LocalTime();
+		}
 
         public Order LatestReservationInProgress(ApplicationUser currentUser)
         {
@@ -403,8 +418,8 @@ namespace RepoWebShop.Models
         public async Task AfterOrderConfirmedAsync(Order order)
         {
             await _printer.AddToQueueAsync(order.OrderId);
-            await _emailRepository.SendOrderConfirmationAsync(order);
             await _smsRepository.NotifyAdminsAsync($"¡Pedido nuevo! Código {order.FriendlyBookingId}");
+            await _emailRepository.SendOrderConfirmationAsync(order);
         }
 	}
 }

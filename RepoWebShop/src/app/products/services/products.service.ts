@@ -39,6 +39,10 @@ export class ProductsService {
         result = 4;
         break;
       }
+      case 'plato festivo': {
+        result = 5;
+        break;
+      }
       default: {
         break;
       }

@@ -197,7 +197,8 @@ namespace RepoWebShop.Repositories
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("De las Artes", _sender));
-            message.To.Add(new MailboxAddress(email.To));
+			if (!String.IsNullOrEmpty(email.To))
+				message.To.Add(new MailboxAddress(email.To));
             if(!String.IsNullOrEmpty(secondaryEmail))
                 message.To.Add(new MailboxAddress(secondaryEmail));
             if (!String.IsNullOrEmpty(email.Bcc))
