@@ -1,31 +1,33 @@
 
 <div class="container">
-    <br>
-    <app-caterings-carousel-shell></app-caterings-carousel-shell>
-
-
-    <mat-spinner [ngStyle]="{'margin': 'auto'}" *ngIf="!(loaded$ | async)"></mat-spinner>
-    
-
-    <div [ngClass]="!(loaded$ | async) ? 'hidden' : ''" class="arrows">
-        <button mat-icon-button (click)="slickPrev()" class="arrow arrow-left">
-            <mat-icon aria-label="">arrow_back</mat-icon>
-        </button>          
-        <div class="spacer">
-            <div class="p">
-                <div class="text">Caterings recomendados</div>
-            </div>
-        </div>
-        <button mat-icon-button (click)="slickNext()" class="arrow arrow-right" id="next">
-            <mat-icon aria-label="">arrow_forward</mat-icon>
-        </button>
+    <div class='intro'>
+        <br>
+        <app-caterings-carousel-shell></app-caterings-carousel-shell>
     </div>
-    <div>
-        <ngx-slick class="accent" #slickModal="slick-modal" [config]="slideConfig" id='slick-carousel'>
-            <app-catering-option ngxSlickItem *ngFor="let catering of caterings" class="slide"
-            [catering]="catering" (addCatering)="addCatering($event)" (copyCatering)="copyCatering($event)"
-            (next)="slickNext()" (prev)="slickPrev()">
-            </app-catering-option>
-        </ngx-slick>
+
+    <div class='options'>
+        <mat-spinner [ngStyle]="{'margin': 'auto'}" *ngIf="!(loaded$ | async)"></mat-spinner>
+        <h1>Opciones de Catering</h1>
+        <div [ngClass]="!(loaded$ | async) ? 'hidden' : ''" class="arrows">
+            <button mat-icon-button (click)="slickPrev()" class="arrow arrow-left">
+                <mat-icon aria-label="">arrow_back</mat-icon>
+            </button>          
+            <div class="spacer">
+                <div class="p">
+                    <div class="text">Desliza para más opciones</div>
+                </div>
+            </div>
+            <button mat-icon-button (click)="slickNext()" class="arrow arrow-right" id="next">
+                <mat-icon aria-label="">arrow_forward</mat-icon>
+            </button>
+        </div>
+        <div class='slick-carousel'>
+            <ngx-slick class="accent" #slickModal="slick-modal" [config]="slideConfig" id='slick-carousel'>
+                <app-catering-option ngxSlickItem *ngFor="let catering of caterings" class="slide"
+                [catering]="catering" (addCatering)="addCatering($event)" (copyCatering)="copyCatering($event)"
+                (next)="slickNext()" (prev)="slickPrev()">
+                </app-catering-option>
+            </ngx-slick>
+        </div>
     </div>
 </div>
