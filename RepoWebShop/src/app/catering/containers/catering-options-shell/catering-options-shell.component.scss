@@ -3,32 +3,38 @@
 @import url('//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css');
 
 .container {
-    .catering-header {
-        max-width: 80%;
-        margin: auto;
-    }
     h1 {
         margin-top: 0;
         padding-top: 20px;
     }
-
 }
 
 ngx-slick {
     z-index: 1;
 }
-
-.arrow {
-    position: fixed;
-    top: 40%;
-    bottom: 60%;
-    z-index: 2;
-}
-.arrow-left {
-    left: 5px;
-}
-.arrow-right {
-    right: 5px;
+.arrows {
+    display: flex;
+    background-color: white;
+    border-radius: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    .spacer {
+        flex: 1;
+        .p {
+            display: table;
+            height: 100%;
+            width: 100%;
+            .text{
+                text-align: center;
+                display: table-cell;
+                vertical-align: middle;
+                margin: 10px;
+            }
+        }
+    }
+    .arrow-left, .arrow-right {
+        margin: 5px;
+    }
 }
 
 .catering-header {

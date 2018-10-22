@@ -1,0 +1,40 @@
+@import "~materialize-css/sass/materialize.scss";
+
+.carousel {
+    height: 200px;
+}
+.custom-card {
+    text-align: center;
+    padding: 15px;
+    background-color: white;
+    border-radius: 2px;
+    font-size: 0.8em;
+    margin-bottom: 15px;
+    .strong {
+        font-weight: bold;
+    }
+    .italoc {
+        font-style: italic;
+    }
+    .line {
+        display: flex;
+        .spacer {
+            flex: 1;
+        }
+    }
+    .vertically-aligned {
+        display: table;
+        height: 100%;
+        width: 100%;
+        .text {
+            text-align: center;
+            display: table-cell;
+            vertical-align: middle;
+        }
+    }
+}
+    img {
+        object-fit: cover;
+        width:200px;
+        height:200px;
+    }

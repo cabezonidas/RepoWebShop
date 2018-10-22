@@ -27,7 +27,6 @@ export class ProductPreviewComponent implements OnInit, OnDestroy {
       map(albums => albums.map(e => e.albumId).indexOf(this.product.flickrAlbumId) !== -1)
     ).subscribe(albumFound => {
       if (!albumFound && !this.loadDispatch) {
-        console.log('Loading ', this.product.flickrAlbumId);
         this.loadDispatch = true;
         this.store.dispatch(new productActions.LoadAlbum(this.product.flickrAlbumId));
       }

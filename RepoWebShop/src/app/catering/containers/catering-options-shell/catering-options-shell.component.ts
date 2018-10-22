@@ -24,16 +24,18 @@ import { Title } from '@angular/platform-browser';
 export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnDestroy {
 
   cateringCopiedSub = new Subscription();
-  caterings$: Observable<ICatering[]>;
+  cateringsSub = new Subscription();
+  caterings: ICatering[];
+  currentSlide: number;
   loaded$: Observable<boolean>;
   carouselInit = false;
+
   slideConfig = {
     arrows: false,
+    dots: true,
     slidesToShow: 1,
     slidesToScroll: 1,
     variableWidth: true,
-    // centerMode: true,
-    // centerPadding: '40px',
     infinite: false, // This when set true, breaks clicks on slides
   };
 
@@ -48,9 +50,12 @@ export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnD
 
   ngOnInit() {
     this.titleService.setTitle('Catering para eventos');
-    // this.store.dispatch(new cateringActions.LoadCaterings());
-    this.caterings$ = this.store.pipe(select(fromCatering.getCaterings));
+
     this.loaded$ = this.store.pipe(select(fromCatering.getCateringsLoaded));
+
+    this.cateringsSub = this.store.pipe(select(fromCatering.getCaterings))
+      .subscribe(cats => this.caterings = cats);
+
     this.cateringCopiedSub = this.itemEffects.copyCatering$
       .pipe(filter(action => action.type === fromStore.CateringActionTypes.CopyCateringSuccess))
       .subscribe(() => this.router.navigateByUrl('/new-catering'));
@@ -61,11 +66,14 @@ export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnD
   }
 
   ngAfterViewInit() {
-    (document.getElementById('next') as HTMLElement).click();
+    if (!this.slickModal) {
+      (document.getElementById('next') as HTMLElement).click();
+    }
   }
 
   ngOnDestroy() {
     this.cateringCopiedSub.unsubscribe();
+    this.cateringsSub.unsubscribe();
   }
 
   slickPrev() {

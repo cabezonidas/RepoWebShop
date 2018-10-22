@@ -17,6 +17,7 @@ import { SharedModule } from '../shared/shared.module';
 import { CateringOptionsShellComponent } from './containers/catering-options-shell/catering-options-shell.component';
 import { CateringOptionComponent } from './components/catering-option/catering-option.component';
 import { SlickModule } from 'ngx-slick';
+import { CateringsCarouselShellComponent } from './containers/caterings-carousel-shell/caterings-carousel-shell.component';
 
 const cateringRoutes: Routes = [
   { path: 'new-catering', component: NewCateringShellComponent },
@@ -33,9 +34,10 @@ const cateringRoutes: Routes = [
     ProductModule,
     RouterModule.forChild(cateringRoutes),
     StoreModule.forFeature('catering', reducer),
-    EffectsModule.forFeature([CateringEffects])
+    EffectsModule.forFeature([CateringEffects]),
   ],
   declarations: [NewCateringShellComponent, ItemsTableComponent, SelectedItemsTableComponent,
-    AutocompleteItemsComponent, NewCateringSubtotalHeaderComponent, CateringOptionComponent, CateringOptionsShellComponent]
+    AutocompleteItemsComponent, NewCateringSubtotalHeaderComponent, CateringOptionComponent,
+    CateringOptionsShellComponent, CateringsCarouselShellComponent]
 })
 export class CateringModule { }

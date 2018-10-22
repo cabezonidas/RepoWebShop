@@ -1,0 +1,53 @@
+
+
+<div class="row">
+    <div class="col m6 s12">
+      <div class="custom-card">
+        <app-logo-header [header]="'Opciones de Catering'" ></app-logo-header>
+        <div class="line vertically-aligned">
+          <p>
+            Sabemos que muchas veces el proceso de compra de un catering es un poco engorroso, con muchas idas y vueltas y sobre todo muchos nervios de que salga todo bien!
+            En de las Artes te ofrecemos el catering de tu evento al alcance de un click con opciones que sabemos que funcionan.
+          </p>
+          <span class="spacer"></span>
+          <div class="text">
+            <!-- <i class="material-icons">arrow_downward</i> -->
+          </div>
+        </div>
+          <p>
+            Echale un vistazo, más abajo, a nuestros deliciosos menúes que podemos preparar para tu evento.
+            Si alguno te gustó, pero le quisieras cambiar algo, cliquea en <span class="strong">Modificar</span> para que puedas ajustarlo a tu medida.
+            Ten en cuenta, que al modificar un catering ya armado, el plazo de entrega puede aumentar.
+            Igual, no te preocupes, siempre vas a saber para qué fecha podemos hacerlo antes de que lo compres.
+          </p>
+          <p>
+            ¿Querés armarlo desde cero? <a routerLink="/new-catering">¡Click aquí!</a>
+          </p>
+          <p>
+            <span class="strong">Tip</span> Normalmente nosotros recomendamos entre 10 y 12 bocados por comensal, dependiendo de cuánto dure la celebración.
+          </p>
+          <p>
+              <span class="strong">¿Servicio de mesa?</span> En caso de necesitar servicio de mesa, por favor contáctate con nosotros a <a href='mailto:info@delasartes.com.ar'>info@delasartes.com.ar</a> o a nuestro whatsapp <a href='https://api.whatsapp.com/send?phone=5491127778899'>11 2777 8899</a>
+          </p>
+          <p class="strong">
+            Tanto por internet, como en sucursal, disponemos de Factura A para empresas
+          </p>
+        </div>
+    </div>
+    <div class="col m6 s12" (window:resize)="onResize($event)" #video >
+      <iframe width="100%" height="315"  src="https://www.youtube.com/embed/HH2pSjztIbk?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen ></iframe>
+      <div *ngIf="currentAlbum" >
+        <div class="carousel" id="{{ albumId + '-' + itemId }}">
+          <div *ngFor="let thumbnail of thumbnails; let i = index">
+            <div class="carousel-item">
+              <img src="{{ thumbnail }}" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="row">
+  <div class="col s12">
+  </div>
+</div>
