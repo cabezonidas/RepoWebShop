@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 import { SlickComponent } from 'ngx-slick';
 import { MatButton } from '@angular/material';
 import { Title } from '@angular/platform-browser';
+import { ScrollService } from 'src/app/home/services/scroll.service';
 
 @Component({
   selector: 'app-catering-options-shell',
@@ -36,7 +37,7 @@ export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnD
     slidesToShow: 1,
     slidesToScroll: 1,
     variableWidth: true,
-    infinite: false, // This when set true, breaks clicks on slides
+    infinite: true, // This when set true, breaks clicks on slides
   };
 
   @ViewChild('slickModal') slickModal: SlickComponent;
@@ -44,7 +45,8 @@ export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnD
     private store: Store<fromCatering.State>,
     private itemEffects: fromEffects.CateringsEffects,
     private router: Router,
-    private titleService: Title
+    private titleService: Title,
+    private scroll: ScrollService
   ) { }
   @HostBinding('@moveIn') role = '';
 
@@ -87,6 +89,8 @@ export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnD
       this.slickModal.slickNext();
     } catch {}
   }
+
+  goTo = (id: string) => this.scroll.triggerScrollTo(id, -65);
 
   addCatering = (id: number) => this.store.dispatch(new fromStore.AddCatering(id));
   copyCatering = (id: number) => {

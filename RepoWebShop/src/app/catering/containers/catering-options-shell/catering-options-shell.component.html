@@ -2,12 +2,16 @@
 <div class="container">
     <div class='intro'>
         <br>
-        <app-caterings-carousel-shell></app-caterings-carousel-shell>
+        <app-caterings-carousel-shell (viewCaterings)="goTo('caterings-scroller')"></app-caterings-carousel-shell>
     </div>
 
     <div class='options'>
-        <mat-spinner [ngStyle]="{'margin': 'auto'}" *ngIf="!(loaded$ | async)"></mat-spinner>
-        <h1>Opciones de Catering</h1>
+        <mat-card [ngStyle]="{'margin': 'auto', 'max-width': '300px'}" *ngIf="!(loaded$ | async)">
+            <div [ngStyle]="{'text-align': 'center'}">Cargando caterings </div>
+            <mat-spinner [ngStyle]="{'margin': '5px auto'}" [diameter]="50"></mat-spinner>
+
+        </mat-card>
+        <div id="caterings-scroller"></div>
         <div [ngClass]="!(loaded$ | async) ? 'hidden' : ''" class="arrows">
             <button mat-icon-button (click)="slickPrev()" class="arrow arrow-left">
                 <mat-icon aria-label="">arrow_back</mat-icon>

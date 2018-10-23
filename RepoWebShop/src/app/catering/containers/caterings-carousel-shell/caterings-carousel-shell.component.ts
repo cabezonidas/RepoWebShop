@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewChecked, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, AfterViewChecked, OnDestroy, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import * as MobileDetect from 'mobile-detect/mobile-detect';
 import { Store } from '@ngrx/store';
 import * as fromProduct from '../../state';
@@ -18,6 +18,7 @@ export class CateringsCarouselShellComponent implements OnInit, AfterViewChecked
   videoWidth = 560;
   videoHeight = 315;
   @ViewChild('video') public videoElement: ElementRef;
+  @Output() viewCaterings = new EventEmitter<void>();
 
   constructor(private images: ImagesService, private store: Store<fromProduct.State>) {
     if (typeof window !== 'undefined') {
@@ -49,7 +50,7 @@ export class CateringsCarouselShellComponent implements OnInit, AfterViewChecked
     .subscribe(album => {
       if (album) {
         this.currentAlbum = album;
-        this.currentAlbum.photos.forEach(x => this.thumbnails.push(this.images.squareUrl_150(x)));
+        this.currentAlbum.photos.forEach(x => this.thumbnails.push(this.images.med_640(x)));
         this.albumsSub.unsubscribe();
       }
     });
