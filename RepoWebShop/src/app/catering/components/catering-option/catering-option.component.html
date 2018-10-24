@@ -54,6 +54,9 @@
       </button>
     </mat-card-actions>
     <app-soonest-pickup [soonestPickup]="catering.preparationTime"></app-soonest-pickup>
+    <!-- <small><a href="/Lunch/Special/{{catering.lunchId}}" class="nolink" target="_blank">Compartir</a></small> -->
+    <br>
+    <app-fb-share [url]="'/Lunch/Special/' + catering.lunchId" [showShare]="true"></app-fb-share>
     <div class="footer">
       <p *ngIf="catering.attendants && catering.eventDuration">
         Sugerido para hasta {{ catering.attendants }} comensales, considerando unas {{ catering.eventDuration }} horas de evento

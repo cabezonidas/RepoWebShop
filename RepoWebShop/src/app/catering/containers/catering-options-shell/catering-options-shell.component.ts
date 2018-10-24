@@ -37,7 +37,7 @@ export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnD
     slidesToShow: 1,
     slidesToScroll: 1,
     variableWidth: true,
-    infinite: true, // This when set true, breaks clicks on slides
+    infinite: false, // This when set true, breaks clicks on slides
   };
 
   @ViewChild('slickModal') slickModal: SlickComponent;

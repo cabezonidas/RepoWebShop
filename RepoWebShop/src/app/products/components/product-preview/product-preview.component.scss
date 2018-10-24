@@ -16,7 +16,10 @@
     mat-card-subtitle {
       height: 50px;
     }
-
+.nolink, .nolink :visited {
+  text-decoration-line: none;
+  color: #B44848;
+}
 @media screen and (max-width: 374px) {
   .card {
     width: 300px;

@@ -19,8 +19,9 @@
 		gtag('config', 'UA-114850184-1');
 	</script>
 	@RenderSection("metatags", required: false)
+	
+	@*<meta property="og:image" content="@host/Pictures/Backgrounds/background-mobile.jpg" />*@
 
-	<meta property="og:image" content="@host/Pictures/LogoWithBackground.png" />
 	@await Html.PartialAsync("~/Views/Shared/Favicon.cshtml")
 	@await Html.PartialAsync("~/Views/Shared/ExternalCss.cshtml")
 	@await Html.PartialAsync("~/Views/Shared/SharedCss.cshtml")

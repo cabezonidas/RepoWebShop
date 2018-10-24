@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RepoWebShop.Extensions;
 using RepoWebShop.Filters;
 using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
@@ -45,7 +46,7 @@ namespace RepoWebShop.MvcControllers
         public async Task<IActionResult> CopyLunch(int id)
         {
             await _lunchRepository.CopyLunchAsync(id);
-            return RedirectToAction("Estimate");
+			return Redirect($"{Request.HostUrl()}/new-catering");
         }
 
         [HttpGet]

@@ -2,7 +2,10 @@ mat-card {
   margin: 10px;
   text-align: center;
   padding: 0px;
-
+  .nolink, .nolink :visited {
+    text-decoration-line: none;
+    color: #B44848;
+  }
   div.content {
     padding: 5px;
     table {

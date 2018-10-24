@@ -1,0 +1,10 @@
+<div class="fb-share-button" *ngIf="showShare"
+  [attr.data-href]="url"
+  data-layout="button_count" data-action="share">
+</div>
+
+<div class="fb-like"  *ngIf="showLike"
+  [attr.data-href]="url" data-width="320"
+  data-layout="standard" data-action="like" 
+  data-size="large" data-show-faces="true" data-share="true">
+</div>

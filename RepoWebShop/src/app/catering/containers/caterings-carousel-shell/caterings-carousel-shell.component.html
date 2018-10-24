@@ -1,10 +1,10 @@
 
 
 <div class="row">
-    <div class="col m6 s12">
+    <div class="col l6 m12 s12">
       <mat-card class="custom-card">
         <div class="line vertically-aligned"></div>
-        <h4>Nuetro Catering</h4>
+        <h4>Nuestro Catering</h4>
         <div class="p">
           Sabemos que muchas veces el proceso de compra de un catering es un poco engorroso, con muchas idas y vueltas y sobre todo muchos nervios de que salga todo bien!
           En <span class="strong">de las Artes</span> te ofrecemos el catering de tu evento al alcance de un click con <span class="strong">opciones que funcionan</span>.
@@ -35,7 +35,7 @@
         </div>
       </mat-card>
     </div>
-    <div class="col m6 s12" (window:resize)="onResize($event)" #video >
+    <div class="col l6 m12 s12" (window:resize)="onResize($event)" #video >
       <mat-card class="custom-card">
 
         <iframe width="100%" height="315"  src="https://www.youtube.com/embed/HH2pSjztIbk?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen ></iframe>
@@ -50,6 +50,9 @@
         </div>
         <div class="p">
             <span class="strong">Tanto por internet, como en sucursal, disponemos de Factura A para empresas</span>
+        </div>
+        <div class="fb-share">
+            <app-fb-share [url]="'https://facebook.com/ReposteriaDeLasArtes/'" [showLike]="true"></app-fb-share>
         </div>
       </mat-card>
       <br>
