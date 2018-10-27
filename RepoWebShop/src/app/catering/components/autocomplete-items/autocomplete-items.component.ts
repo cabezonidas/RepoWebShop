@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/typings';
 export class AutocompleteItemsComponent implements OnInit {
 
   @Input() items: IItem[];
-  @Output() addItem = new EventEmitter<number>();
+  @Output() addItem = new EventEmitter<IItem>();
 
   itemCtrl = new FormControl();
   filteredProducts: Observable<IItem[]>;
@@ -40,8 +40,8 @@ export class AutocompleteItemsComponent implements OnInit {
     });
   }
 
-  _onSelect(itemId: number) {
-    this.addItem.emit(itemId);
+  _onSelect(item: IItem) {
+    this.addItem.emit(item);
   }
-
+  optionSelected = () => this.itemCtrl.setValue('');
 }

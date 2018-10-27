@@ -1,6 +1,6 @@
 <mat-list *ngIf="catering">
     <mat-list-item *ngFor="let item of catering.items">
-      <h4 mat-line color="primary">{{item.itemCount}}x {{item.item.displayName}} ({{item.item.preparationTime}} hs)</h4>
+      <h4 mat-line color="primary">{{item.itemCount}}x {{item.item.displayName}}</h4>
       <p mat-line> {{item.item.displayDescription}} </p>
       <app-product-subtotal  mat-line [amount]="item.itemCount" [priceInStore]="item.item.priceInStore" [price]="item.item.price">
       </app-product-subtotal>

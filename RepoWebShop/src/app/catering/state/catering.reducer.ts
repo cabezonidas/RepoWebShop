@@ -8,6 +8,7 @@ export interface CateringState {
     cateringsLoaded: boolean;
     loadingCaterings: boolean;
     caterings: ICatering[];
+    productsSelected: IItem[];
 }
 
 const initialState: CateringState = {
@@ -15,7 +16,8 @@ const initialState: CateringState = {
     loading: false,
     cateringsLoaded: false,
     loadingCaterings: false,
-    caterings: []
+    caterings: [],
+    productsSelected: []
 };
 
 export function reducer(state = initialState, action: CateringActions): CateringState {
@@ -32,6 +34,19 @@ export function reducer(state = initialState, action: CateringActions): Catering
             loading: true,
             error: ''
         };
+
+        case CateringActionTypes.AddLocalItem: return {
+            ...state,
+            productsSelected: state.productsSelected.concat(action.payload)
+        };
+
+        case CateringActionTypes.RemoveLocalItem: {
+            const index = state.productsSelected.lastIndexOf(action.payload);
+            return {
+                ...state,
+                productsSelected: index >= 0 ? state.productsSelected.filter((item, i) => i !== index) : state.productsSelected
+            };
+        }
 
         case CateringActionTypes.LoadSessionCateringDone: return {
             ...state,

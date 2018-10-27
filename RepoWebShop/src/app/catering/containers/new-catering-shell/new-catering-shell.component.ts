@@ -53,8 +53,8 @@ export class NewCateringShellComponent implements OnInit {
     this.errorMessage$ = this.cateringStore.pipe(select(fromCatering.getError));
   }
 
-  addItem(itemId: number): void {
-    this.cateringStore.dispatch(new cateringActions.AddItem(itemId));
+  addItem(item: IItem): void {
+    this.cateringStore.dispatch(new cateringActions.AddItem(item.productId));
   }
 
   removeItem(itemId: number): void {

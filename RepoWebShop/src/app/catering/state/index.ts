@@ -24,3 +24,7 @@ export const getCaterings = createSelector(
     getCateringFeatureState,
     state => state.caterings
 );
+export const getSelectedItems = createSelector(
+    getCateringFeatureState,
+    state => state.productsSelected
+);

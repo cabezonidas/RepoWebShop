@@ -18,9 +18,12 @@ import { CateringOptionsShellComponent } from './containers/catering-options-she
 import { CateringOptionComponent } from './components/catering-option/catering-option.component';
 import { SlickModule } from 'ngx-slick';
 import { CateringsCarouselShellComponent } from './containers/caterings-carousel-shell/caterings-carousel-shell.component';
+import { CustomCateringShellComponent } from './containers/custom-catering-shell/custom-catering-shell.component';
+import { CustomCateringItemComponent } from './components/custom-catering-item/custom-catering-item.component';
 
 const cateringRoutes: Routes = [
   { path: 'new-catering', component: NewCateringShellComponent },
+  { path: 'custom-catering', component: CustomCateringShellComponent },
   { path: 'catering-options', component: CateringOptionsShellComponent }
 ];
 
@@ -38,6 +41,6 @@ const cateringRoutes: Routes = [
   ],
   declarations: [NewCateringShellComponent, ItemsTableComponent, SelectedItemsTableComponent,
     AutocompleteItemsComponent, NewCateringSubtotalHeaderComponent, CateringOptionComponent,
-    CateringOptionsShellComponent, CateringsCarouselShellComponent]
+    CateringOptionsShellComponent, CateringsCarouselShellComponent, CustomCateringShellComponent, CustomCateringItemComponent]
 })
 export class CateringModule { }

@@ -5,6 +5,8 @@ import { ICatering } from '../interfaces/ICatering';
 export enum CateringActionTypes {
     AddItem = '[Catering] Add Item to Catering',
     RemoveItem = '[Catering] Remove Item from Catering',
+    AddLocalItem = '[Catering] Add Local Item to Catering',
+    RemoveLocalItem = '[Catering] Remove Local Item from Catering',
     LoadCaterings = '[Catering] Load Caterings',
     LoadCateringsSuccess = '[Catering] Load Caterings Success',
     LoadCateringsFail = '[Catering] Load Caterings Fail',
@@ -40,9 +42,21 @@ export class RemoveItem implements Action {
     constructor(public payload: number) {}
 }
 
+export class AddLocalItem implements Action {
+    readonly type = CateringActionTypes.AddLocalItem;
+    constructor(public payload: IItem) {}
+}
+
+export class RemoveLocalItem implements Action {
+    readonly type = CateringActionTypes.RemoveLocalItem;
+    constructor(public payload: IItem) {}
+}
+
 export type CateringActions = LoadSessionCateringDone
     | AddItem
     | RemoveItem
+    | AddLocalItem
+    | RemoveLocalItem
     | LoadCaterings
     | LoadCateringsSuccess
     | LoadCateringsFail;
