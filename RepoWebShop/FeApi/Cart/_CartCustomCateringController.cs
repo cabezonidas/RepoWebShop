@@ -34,6 +34,20 @@ namespace RepoWebShop.FeApi
 			return _items;
 		}
 
+
+		[HttpPost]
+		[Route("SaveLocalCatering")]
+		public async Task<_Catering> SaveLocalCatering([FromBody] IEnumerable<_CateringItem> catItems)
+		{
+			_cart.ClearCustomCateringFromCart();
+			var catering = _cart.SessionCatering();
+			foreach (var catItem in catItems)
+			{
+				await _catering.AddItemAsync(catering.LunchId, catItem.Item.ProductId, catItem.Quantity);
+			}
+			return _cart.SessionCatering();
+		}
+
 		[HttpGet]
 		[Route("LoadSessionCatering")]
 		public _Catering LoadSessionCatering()

@@ -28,3 +28,7 @@ export const getSelectedItems = createSelector(
     getCateringFeatureState,
     state => state.productsSelected
 );
+export const getSavingCustomCatering = createSelector(
+    getCateringFeatureState,
+    state => state.savingCustomCatering
+);

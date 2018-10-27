@@ -1,6 +1,7 @@
 import { CateringActions, CateringActionTypes } from './catering.actions';
 import { IItem } from '../../products/interfaces/iitem';
 import { ICatering } from '../interfaces/ICatering';
+import { ICateringItem } from '../interfaces/ICateringItem';
 
 export interface CateringState {
     error: string;
@@ -9,6 +10,8 @@ export interface CateringState {
     loadingCaterings: boolean;
     caterings: ICatering[];
     productsSelected: IItem[];
+    loadingCustomCatering: boolean;
+    savingCustomCatering: boolean;
 }
 
 const initialState: CateringState = {
@@ -17,8 +20,22 @@ const initialState: CateringState = {
     cateringsLoaded: false,
     loadingCaterings: false,
     caterings: [],
-    productsSelected: []
+    productsSelected: [],
+    loadingCustomCatering: false,
+    savingCustomCatering: false
 };
+
+function cateringItemsToItems(catItems: ICateringItem[]) {
+    const items: IItem[] = [];
+    if (catItems) {
+        catItems.forEach(catItem => {
+            for (let i = 0; i < catItem.quantity; i++) {
+                items.push(catItem.item);
+            }
+        });
+    }
+    return items;
+}
 
 export function reducer(state = initialState, action: CateringActions): CateringState {
     switch (action.type) {
@@ -75,6 +92,40 @@ export function reducer(state = initialState, action: CateringActions): Catering
             cateringsLoaded: true,
             error: action.payload
         };
+
+        case CateringActionTypes.LoadCustomCatering: return {
+            ...state,
+            loadingCustomCatering: true,
+        };
+
+        case CateringActionTypes.SavingCustomCatering: return {
+            ...state,
+            savingCustomCatering: true
+        };
+
+        case CateringActionTypes.SavingCustomCateringSuccess:
+            return {
+            ...state,
+            savingCustomCatering: false
+        };
+
+        case CateringActionTypes.SavingCustomCateringFail: return {
+            ...state,
+            savingCustomCatering: false,
+            error: action.payload
+        };
+
+        case CateringActionTypes.LoadCustomCateringFail:
+        return {
+            ...state,
+            loadingCustomCatering: false,
+        };
+        case CateringActionTypes.LoadCustomCateringSuccess: return {
+            ...state,
+            loadingCustomCatering: false,
+            productsSelected: cateringItemsToItems(action.payload.items)
+        };
+
         default:
             return state;
     }

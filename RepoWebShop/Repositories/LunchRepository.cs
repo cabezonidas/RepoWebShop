@@ -55,7 +55,7 @@ namespace RepoWebShop.Repositories
         }
 
 
-        public async Task<LunchItem> AddItemAsync(int lunchId, int productId)
+        public async Task<LunchItem> AddItemAsync(int lunchId, int productId, int? quantity)
         {
             var lunch = await GetLunchByIdAsync(lunchId);
             var product = await _catalog.GetById(productId);
@@ -64,7 +64,7 @@ namespace RepoWebShop.Repositories
 
             if (shoppingCartLunchItem == null)
             {
-                shoppingCartLunchItem = new LunchItem { Lunch = lunch, Product = product, Quantity = 1 };
+                shoppingCartLunchItem = new LunchItem { Lunch = lunch, Product = product, Quantity = quantity.HasValue ? quantity.Value : 1 };
                 _appDbContext.LunchItems.Add(shoppingCartLunchItem);
                 _appDbContext.SaveChanges();
             }

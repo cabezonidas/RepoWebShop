@@ -6,8 +6,8 @@
         <app-custom-catering-item [items]="selectedItems$ | async" (Decrement)="removeItem($event)" (Increment)="addItem($event)" ></app-custom-catering-item>
         <app-autocomplete-items [items]='items' (addItem)="addItem($event)" ></app-autocomplete-items>
         <app-total [price]="price$ | async" [priceInStore]="priceInStore$ | async"></app-total>
-        <div *ngIf="price$ | async">
-          <button mat-raised-button color="primary">Agregar al carrito</button>
+        <div>
+          <button mat-raised-button color="primary" (click)="saveCatering()">Guardar</button>
         </div>
       </div>
     </div>
@@ -15,5 +15,11 @@
       <mat-progress-bar mode="indeterminate"></mat-progress-bar>
       <small>¡Por favor espera mientras preparamos todo!</small>
     </ng-template>
-  </mat-card>
+    <div *ngIf="saving$ | async as saving">
+      <div *ngIf="saving">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        <small>Agregando al carrito...</small>
+      </div>
+    </div>
+  </mat-card> 
 </div>

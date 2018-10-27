@@ -14,6 +14,9 @@ export class CateringService {
 
   getItems = (): Observable<IItem[]> => this.http.get<IItem[]>('/api/_cartCustomCatering/cateringItems');
 
+  saveLocalCatering = (catItems: ICateringItem[]): Observable<ICatering> =>
+    this.http.post<ICatering>('/api/_cartCustomCatering/saveLocalCatering', catItems)
+
   loadSessionCatering = (): Observable<ICatering> => this.http.get<ICatering>('/api/_cartCustomCatering/loadSessionCatering');
 
   loadCaterings = (): Observable<ICatering[]> => this.http.get<ICatering[]>('/api/_caterings/availableCaterings');

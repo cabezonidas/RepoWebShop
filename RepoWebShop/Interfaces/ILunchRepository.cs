@@ -11,7 +11,7 @@ namespace RepoWebShop.Interfaces
     {
         Task<Lunch> GetLunchByIdAsync(int lunchId);
         Task<LunchItem> AddItemInstanceAsync(int lunchId, int productId);
-        Task<LunchItem> AddItemAsync(int lunchId, int productId);
+        Task<LunchItem> AddItemAsync(int lunchId, int productId, int? quantity = null);
         Task<LunchItem> RemoveItemInstanceAsync(int lunchId, int productId);
         Task<LunchItem> RemoveItemAsync(int lunchId, int productId);
         Task<LunchMiscellaneous> AddMiscellaneousAsync(int lunchId, string description, decimal price);

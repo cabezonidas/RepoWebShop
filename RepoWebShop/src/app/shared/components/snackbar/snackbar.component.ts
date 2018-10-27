@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import {MatSnackBar, MatSnackBarRef} from '@angular/material';
 import { Store } from '@ngrx/store';
 import * as fromEffects from '../../../cart/store/effects';
+import * as fromCateringEffects from '../../../catering/state/catering.effects';
+import * as fromCateringState from '../../../catering/state/catering.actions';
 import * as fromStore from '../../../cart/store';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
@@ -20,13 +22,15 @@ export class SnackbarComponent implements OnInit, OnDestroy {
   itemRemoveSub = new Subscription();
   cateringAddedSub = new Subscription();
   cateringRemovedSub = new Subscription();
+  cateringSavedSub = new Subscription();
 
   constructor(
     private store: Store<fromStore.CartState>,
     private router: Router,
     public snackBar: MatSnackBar,
     private itemEffects: fromEffects.ItemsEffects,
-    private cateringEffects: fromEffects.CateringsEffects
+    private cartCateringEffects: fromEffects.CateringsEffects,
+    private cateringEffects: fromCateringEffects.CateringEffects
   ) { }
 
   ngOnInit() {
@@ -37,12 +41,15 @@ export class SnackbarComponent implements OnInit, OnDestroy {
       .pipe(filter(action => action.type === fromStore.ItemActionTypes.RemoveSuccess))
       .subscribe(() => this.openSnackBar('¡Item quitado!'));
 
-    this.cateringAddedSub = this.cateringEffects.addCatering$
+    this.cateringAddedSub = this.cartCateringEffects.addCatering$
       .pipe(filter(action => action.type === fromStore.CateringActionTypes.AddCateringSuccess))
       .subscribe(() => this.openSnackBar('¡Catering agregado!'));
-    this.cateringRemovedSub = this.cateringEffects.removeCatering$
+    this.cateringRemovedSub = this.cartCateringEffects.removeCatering$
       .pipe(filter(action => action.type === fromStore.CateringActionTypes.RemoveCateringSuccess))
       .subscribe(() => this.openSnackBar('¡Catering quitado!'));
+    this.cateringSavedSub = this.cateringEffects.saveCustomCatering$
+      .pipe(filter(action => action.type === fromCateringState.CateringActionTypes.SavingCustomCateringSuccess))
+      .subscribe(() => this.openSnackBar('¡Catering guardado!'));
   }
 
   ngOnDestroy() {
@@ -50,6 +57,7 @@ export class SnackbarComponent implements OnInit, OnDestroy {
     this.itemRemoveSub.unsubscribe();
     this.cateringAddedSub.unsubscribe();
     this.cateringRemovedSub.unsubscribe();
+    this.cateringSavedSub.unsubscribe();
   }
 
   openSnackBar = (msg: string) => {
