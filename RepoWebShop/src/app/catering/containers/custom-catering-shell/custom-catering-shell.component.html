@@ -1,3 +1,4 @@
+<app-loading-blocker [saving]="saving$ | async"></app-loading-blocker>
 <div class="container">
   <mat-card>
     <p>Catering personalizado</p>
@@ -7,7 +8,13 @@
         <app-autocomplete-items [items]='items' (addItem)="addItem($event)" ></app-autocomplete-items>
         <app-total [price]="price$ | async" [priceInStore]="priceInStore$ | async"></app-total>
         <div>
-          <button mat-raised-button color="primary" (click)="saveCatering()">Guardar</button>
+          <button mat-raised-button color="primary" (click)="saving.next(true)">Guardar</button>
+        </div>
+        <div *ngIf="selectedItems$ | async as selctedItems">
+          <div *ngIf="selctedItems.length">
+            <br>
+            <app-soonest-pickup [soonestPickup]="preparationTime$ | async"></app-soonest-pickup>
+          </div>
         </div>
       </div>
     </div>
@@ -17,8 +24,9 @@
     </ng-template>
     <div *ngIf="saving$ | async as saving">
       <div *ngIf="saving">
+        <br>
+        <small>Guardando...</small>
         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-        <small>Agregando al carrito...</small>
       </div>
     </div>
   </mat-card> 

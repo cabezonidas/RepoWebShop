@@ -1,8 +1,10 @@
-<div *ngIf="displayPickup">
-  <div>
+<div *ngIf="displayPickup$ | async as displayPickup">
+  <div *ngIf="displayPickup else loader">
     <small> 
       Lo más temprano que podemos tenerlo es <strong>{{displayPickup}}.</strong> ¿Lo necesitás antes? ¡Llamanos!
     </small>
   </div>
 </div>
-<mat-spinner *ngIf="!displayPickup" [diameter]='25'></mat-spinner>
+<ng-template #loader>
+  <mat-spinner [diameter]='25'></mat-spinner>
+</ng-template>

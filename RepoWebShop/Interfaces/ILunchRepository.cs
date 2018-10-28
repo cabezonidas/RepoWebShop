@@ -27,5 +27,6 @@ namespace RepoWebShop.Interfaces
         decimal GetTotal(Lunch lunch);
         decimal GetLunchTotalInStore(Lunch lunch);
         LunchMiscellaneous GetMiscellaneous(int id);
+		int CustomCateringMinHours();
 	}
 }

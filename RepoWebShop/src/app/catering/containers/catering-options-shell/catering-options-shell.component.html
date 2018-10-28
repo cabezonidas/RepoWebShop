@@ -1,5 +1,6 @@
 
 <div class="container">
+    <app-loading-blocker [saving]="copying"></app-loading-blocker>
     <div class='intro'>
         <br>
         <app-caterings-carousel-shell (viewCaterings)="goTo('caterings-scroller')"></app-caterings-carousel-shell>

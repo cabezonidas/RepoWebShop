@@ -30,6 +30,7 @@ export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnD
   currentSlide: number;
   loaded$: Observable<boolean>;
   carouselInit = false;
+  copying = false;
 
   slideConfig = {
     arrows: false,
@@ -94,6 +95,7 @@ export class CateringOptionsShellComponent implements OnInit, AfterViewInit, OnD
 
   addCatering = (id: number) => this.store.dispatch(new fromStore.AddCatering(id));
   copyCatering = (id: number) => {
+    this.copying = true;
     this.store.dispatch(new fromStore.CopyCatering(id));
   }
 }

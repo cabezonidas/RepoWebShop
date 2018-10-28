@@ -22,8 +22,8 @@ import { CustomCateringShellComponent } from './containers/custom-catering-shell
 import { CustomCateringItemComponent } from './components/custom-catering-item/custom-catering-item.component';
 
 const cateringRoutes: Routes = [
-  { path: 'new-catering', component: NewCateringShellComponent },
-  { path: 'custom-catering', component: CustomCateringShellComponent },
+  // { path: 'new-catering', component: NewCateringShellComponent },
+  { path: 'new-catering', component: CustomCateringShellComponent },
   { path: 'catering-options', component: CateringOptionsShellComponent }
 ];
 

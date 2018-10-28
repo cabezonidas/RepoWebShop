@@ -30,7 +30,4 @@ export class ChooseItemComponent implements OnInit {
   ngOnInit() {
   }
 
-  onDateLoaded() {
-  }
-
 }

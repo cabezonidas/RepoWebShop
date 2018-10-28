@@ -42,5 +42,12 @@ namespace RepoWebShop.FeApi
 
 			return result;
 		}
+		[HttpGet]
+		[Route("PreparationTimeForCatering/{hours}")]
+		public int PreparationTimeForCatering(int hours)
+		{
+			int minHours = _catering.CustomCateringMinHours();
+			return minHours > hours ? minHours : hours;
+		}
 	}
 }

@@ -1,20 +1,16 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { Observable, Subscription, of, Subject } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Observable, Subscription, Subject } from 'rxjs';
 import { IItem } from 'src/app/products/interfaces/iitem';
 import { Store, select } from '@ngrx/store';
 import * as fromProducts from '../../../products/state';
 import * as fromCatering from '../../state';
-import * as fromCateringEffects from '../../state/catering.effects';
 import * as cateringActions from '../../state/catering.actions';
-import { map, mergeMap, groupBy, tap, switchMap, throttleTime, filter, share, take } from 'rxjs/operators';
+import { map, mergeMap, switchMap, filter, take, concatMap, tap } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
 import { ProductsService } from '../../../products/services/products.service';
 import { ICateringItem } from '../../interfaces/ICateringItem';
 import { CateringService } from '../../services/catering.service';
 import * as fromStore from '../../state';
-import { ICatering } from '../../interfaces/ICatering';
-import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-custom-catering-shell',
@@ -26,16 +22,15 @@ export class CustomCateringShellComponent implements OnInit, OnDestroy {
   selectedItems$: Observable<ICateringItem[]>;
   price$: Observable<number>;
   priceInStore$: Observable<number>;
-  @ViewChild('saveCat') saveCatDiv: ElementRef;
+  preparationTime$: Observable<number>;
   saveSub = new Subscription();
-  onceSaved = new Subscription();
-  customCatering$: Observable<ICatering>;
-  customCateringLoading$: Observable<boolean>;
+  saving = new Subject<boolean>();
+  savingButton$ = this.saving.asObservable();
   saving$: Observable<boolean>;
 
   constructor(private cateringStore: Store<fromCatering.State>, private productsStore: Store<fromProducts.State>,
     private titleService: Title, private productsServ: ProductsService, private catService: CateringService,
-    private store: Store<fromStore.State>, private router: Router, private cateringEffects: fromCateringEffects.CateringEffects) { }
+    private store: Store<fromStore.State>) { }
 
   ngOnInit() {
     this.store.dispatch(new cateringActions.LoadCustomCatering());
@@ -52,30 +47,33 @@ export class CustomCateringShellComponent implements OnInit, OnDestroy {
       })
     );
 
+    this.saveSub = this.savingButton$.pipe(
+      filter(saving => saving),
+      switchMap(_ => this.selectedItems$.pipe(
+        take(1),
+        mergeMap(selectedItems => [this.store.dispatch(new cateringActions.SavingCustomCatering(selectedItems))])
+      )
+    )).subscribe();
+
     this.selectedItems$ = this.cateringStore.pipe(
       select(fromCatering.getSelectedItems),
       map(selected => this.catService.groupItems(selected))
+    );
+
+    this.preparationTime$ = this.selectedItems$.pipe(
+      filter(selectedItems => selectedItems && selectedItems.length > 0),
+      map(selectedItems => selectedItems.sort((a, b) => a.item.preparationTime < b.item.preparationTime ? 1 : -1)[0]),
+      concatMap(catItem => this.catService.getCustomCateringPreptime(catItem.item.preparationTime))
     );
 
     this.price$ = this.selectedItems$.pipe(map(items => items.map(i => i.item.price * i.itemCount).reduce((a, b) => a + b, 0)));
     this.priceInStore$ = this.selectedItems$
       .pipe(map(items => items.map(i => i.item.priceInStore * i.itemCount).reduce((a, b) => a + b, 0)));
 
-    // this.onceSaved = this.cateringEffects.saveCustomCatering$
-    //   .pipe(filter(action => action.type === cateringActions.CateringActionTypes.SavingCustomCateringSuccess))
-    //   .subscribe(() => this.router.navigateByUrl('/cart'));
   }
   addItem = (item: IItem) => this.cateringStore.dispatch(new cateringActions.AddLocalItem(item));
   removeItem = (item: IItem) =>  this.cateringStore.dispatch(new cateringActions.RemoveLocalItem(item));
   ngOnDestroy = () => {
     this.saveSub.unsubscribe();
-    this.onceSaved.unsubscribe();
-  }
-
-  saveCatering = () => {
-    this.saveSub = this.selectedItems$.pipe(
-      take(1),
-      mergeMap(selectedItems => [this.store.dispatch(new cateringActions.SavingCustomCatering(selectedItems))])
-    ).subscribe();
   }
 }

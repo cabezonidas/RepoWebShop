@@ -1,5 +1,6 @@
 export interface IItem {
     productId: number;
+    preparationTime: number;
     price: number;
     multipleAmount: number;
     sizeDescription: string;

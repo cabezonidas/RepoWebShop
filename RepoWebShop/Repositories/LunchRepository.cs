@@ -234,5 +234,7 @@ namespace RepoWebShop.Repositories
             _appDbContext.ShoppingCartCustomLunch.Add(result);
             _appDbContext.SaveChanges();
         }
-    }
+
+		public int CustomCateringMinHours() => _cateringMinPrepTime;
+	}
 }

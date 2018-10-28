@@ -15,7 +15,7 @@
           </small>
         </div>
         <h5>Porciones: {{ item.portions }} / Elaboración: {{ item.preparationTime}}hs</h5>
-        <app-soonest-pickup [soonestPickup]="item.preparationTime" (dateLoaded)="onDateLoaded()"></app-soonest-pickup>
+        <app-soonest-pickup [soonestPickup]="item.preparationTime"></app-soonest-pickup>
       </div>
       <span class="spacer"></span>
       <div class="buyButton">
