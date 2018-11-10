@@ -10,6 +10,10 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AppService {
 
+  public fbScriptSource = new BehaviorSubject<boolean>(null);
+  public fbScriptUrl = this.fbScriptSource.asObservable();
+
+
   private returnUrlSource = new BehaviorSubject<string>(null);
   public returnUrl = this.returnUrlSource.asObservable();
 

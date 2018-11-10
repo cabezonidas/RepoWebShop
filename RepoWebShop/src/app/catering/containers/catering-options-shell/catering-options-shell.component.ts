@@ -1,18 +1,15 @@
-import { Component, OnInit, HostBinding, OnDestroy, ViewChild, ElementRef, AfterViewInit, OnChanges } from '@angular/core';
+import { Component, OnInit, HostBinding, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import * as M from 'materialize-css';
 
 import * as fromEffects from '../../../cart/store/effects';
 import * as fromCatering from '../../state';
-import * as cateringActions from '../../state/catering.actions';
 import { ICatering } from '../../interfaces/ICatering';
 import { moveIn } from '../../../animations/router.animations';
 import * as fromStore from '../../../cart/store';
 import { filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { SlickComponent } from 'ngx-slick';
-import { MatButton } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { ScrollService } from 'src/app/home/services/scroll.service';
 
