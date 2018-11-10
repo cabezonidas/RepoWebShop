@@ -9,15 +9,8 @@
           Sabemos que muchas veces el proceso de compra de un catering es un poco engorroso, con muchas idas y vueltas y sobre todo muchos nervios de que salga todo bien!
           En <span class="strong">de las Artes</span> te ofrecemos el catering de tu evento al alcance de un click con <span class="strong">opciones que funcionan</span>.
         </div>
-        <div *ngIf="currentAlbum" class="carousel" >
-          <div class="carousel" id="{{ albumId + '-' + itemId }}">
-            <div *ngFor="let thumbnail of thumbnails; let i = index">
-              <div class="carousel-item">
-                <img src="{{ thumbnail }}" />
-              </div>
-            </div>
-          </div>
-        </div>
+        
+        <app-product-carousel-preview [thumbnails]="thumbnails$ | async"></app-product-carousel-preview>
         <div class="p">
           Echale un vistazo, más abajo, a nuestros <span class="strong">deliciosos menús</span> que podemos preparar para tu evento.
           Si alguno te gustó, pero le quisieras cambiar algo, cliquea en <span class="strong">Modificar</span> para que puedas ajustarlo a tu medida.

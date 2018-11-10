@@ -1,14 +1,4 @@
-import { Component, OnInit, Input, AfterViewChecked, OnDestroy } from '@angular/core';
-import { IAlbum } from '../../interfaces/ialbum';
-import { ImagesService } from '../../services/images.service';
-import * as MobileDetect from 'mobile-detect/mobile-detect';
-import * as M from 'materialize-css';
-import { Store } from '@ngrx/store';
-import * as fromProduct from '../../state';
-import { Observable, Subscription } from 'rxjs';
-import { select } from '@ngrx/store';
-import { first, map } from 'rxjs/operators';
-import { IProduct } from '../../interfaces/iproduct';
+import { Component, Input, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-product-carousel-preview',
@@ -17,40 +7,24 @@ import { IProduct } from '../../interfaces/iproduct';
 })
 
 
-export class ProductCarouselPreviewComponent implements OnInit, AfterViewChecked, OnDestroy {
+export class ProductCarouselPreviewComponent implements AfterViewChecked {
 
-  @Input() albumId: string;
-  @Input() itemId: number;
+  @Input() thumbnails: Array<string>;
+  @ViewChild('carousel') carousel: ElementRef;
+  M: any;
 
-  constructor(private images: ImagesService, private store: Store<fromProduct.State>) { }
-
-  albumsSub = new Subscription();
-  currentAlbum: IAlbum;
-  albumInit = false;
-  thumbnails: Array<string> = [];
-  mobileDetect = new MobileDetect(window.navigator.userAgent);
-
-  ngAfterViewChecked(): void {
-    if (this.currentAlbum && !this.albumInit) {
-      this.albumInit = true;
-      M.Carousel.init(document.getElementById(this.albumId + '-' + this.itemId), { });
+  constructor() {
+    if (typeof window !== 'undefined') {
+      this.M = require('materialize-css');
     }
   }
 
-  ngOnInit() {
-    this.albumsSub = this.store.pipe(
-      select(fromProduct.getAlbums),
-      map(albums => albums.find(album => album.albumId === this.albumId))
-    ).subscribe(album => {
-      if (album) {
-        this.currentAlbum = album;
-        this.currentAlbum.photos.forEach(x => this.thumbnails.push(this.images.smallUrl_240(x)));
-        this.albumsSub.unsubscribe();
-      }
-    });
-  }
+  albumInit = false;
 
-  ngOnDestroy() {
-    this.albumsSub.unsubscribe();
+  ngAfterViewChecked(): void {
+    if (this.thumbnails && this.thumbnails.length && !this.albumInit) {
+      this.albumInit = true;
+      this.M.Carousel.init(this.carousel.nativeElement, { });
+    }
   }
 }

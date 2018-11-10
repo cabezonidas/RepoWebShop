@@ -6,8 +6,10 @@ import { IItem } from '../../interfaces/iitem';
 import { Store, select } from '@ngrx/store';
 import * as productActions from '../../state/product.actions';
 import * as fromProduct from '../../state';
-import { filter, map } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { filter, map, tap, take } from 'rxjs/operators';
+import { Subscription, Observable } from 'rxjs';
+import { IAlbum } from '../../interfaces/ialbum';
+import { ImagesService } from '../../services/images.service';
 
 @Component({
   selector: 'app-product-preview',
@@ -16,10 +18,11 @@ import { Subscription } from 'rxjs';
 })
 export class ProductPreviewComponent implements OnInit, OnDestroy {
   @Input() product: IProduct;
+  album$: Observable<string[]>;
   albumSub = new Subscription();
   loadDispatch = false;
 
-  constructor(private bottomSheet: MatBottomSheet, private store: Store<fromProduct.State>) {}
+  constructor(private bottomSheet: MatBottomSheet, private store: Store<fromProduct.State>, private images: ImagesService) {}
 
   ngOnInit() {
     this.albumSub = this.store.pipe(
@@ -31,6 +34,14 @@ export class ProductPreviewComponent implements OnInit, OnDestroy {
         this.store.dispatch(new productActions.LoadAlbum(this.product.flickrAlbumId));
       }
     });
+
+    this.album$ = this.store.pipe(
+      select(fromProduct.getAlbums),
+      map(albums => albums.find(album => album.albumId === this.product.flickrAlbumId)),
+      filter(album => !!album),
+      take(1),
+      map(album => album.photos.map(img => this.images.smallUrl_240(img)))
+    );
   }
 
   ngOnDestroy(): void {
