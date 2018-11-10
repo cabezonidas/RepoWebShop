@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IPublicCalendar } from '../interfaces/ipublic-calendar';
 import { IWorkingHour } from '../interfaces/iworking-hour';
-import * as moment from 'moment-timezone';
+// import * as moment from 'moment-timezone';
 
 @Injectable({
   providedIn: 'root'
@@ -69,8 +69,11 @@ export class CalendarService {
   soonestPickup = (estimation: Date): string => {
 
     estimation = new Date(estimation);
-    const baTime = new Date(moment().tz('America/Argentina/Buenos_Aires').format('l LT'));
-    const baTimeTomorrow = new Date(moment().tz('America/Argentina/Buenos_Aires').add(1, 'days').format('l LT'));
+    // const baTime = new Date(moment().tz('America/Argentina/Buenos_Aires').format('l LT'));
+    // const baTimeTomorrow = new Date(moment().tz('America/Argentina/Buenos_Aires').add(1, 'days').format('l LT'));
+
+    const today = new Date();
+    const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
 
     let minutes = estimation.getMinutes().toString();
     minutes = minutes.length === 1 ? '0' + minutes : minutes;
@@ -80,21 +83,27 @@ export class CalendarService {
     let day = `el ${this.day((estimation.getDay()))} ${estimation.getDate()} `;
     const time = `a las ${hours}:${minutes}`;
 
-    if (estimation.getMonth() === baTime.getMonth() && estimation.getDate() === baTime.getDate()) {
+    if (estimation.getMonth() === today.getMonth() && estimation.getDate() === today.getDate()) {
       day = 'hoy ';
     }
 
-    if (estimation.getMonth() === baTimeTomorrow.getMonth() && estimation.getDate() === baTimeTomorrow.getDate()) {
+    if (estimation.getMonth() === tomorrow.getMonth() && estimation.getDate() === tomorrow.getDate()) {
       day = 'mañana ';
     }
+
+    // if (estimation.getMonth() === baTime.getMonth() && estimation.getDate() === baTime.getDate()) {
+    //   day = 'hoy ';
+    // }
+
+    // if (estimation.getMonth() === baTimeTomorrow.getMonth() && estimation.getDate() === baTimeTomorrow.getDate()) {
+    //   day = 'mañana ';
+    // }
 
     return day + time;
   }
 
   pickupDate = (estimation: Date): string => {
     estimation = new Date(estimation);
-    const baTime = new Date(moment().tz('America/Argentina/Buenos_Aires').format('l LT'));
-    const baTimeTomorrow = new Date(moment().tz('America/Argentina/Buenos_Aires').add(1, 'days').format('l LT'));
 
     let minutes = estimation.getMinutes().toString();
     minutes = minutes.length === 1 ? '0' + minutes : minutes;

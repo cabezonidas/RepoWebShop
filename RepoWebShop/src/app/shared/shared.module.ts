@@ -6,7 +6,7 @@ import { SnackbarComponent } from './components/snackbar/snackbar.component';
 import { TrolleyIconComponent } from './components/trolley-icon/trolley-icon.component';
 import { ProductSubtotalComponent } from './components/product-subtotal/product-subtotal.component';
 import { TrolleyIconShellComponent } from './containers/trolley-icon-shell/trolley-icon-shell.component';
-import { MomentModule } from 'ngx-moment';
+// import { MomentModule } from 'ngx-moment';
 import { TotalComponent } from './components/total/total.component';
 import { StoreRouterModule } from '../router/store-router.module';
 import { LogoHeaderComponent } from './components/logo-header/logo-header.component';
@@ -24,13 +24,13 @@ registerLocaleData(argLocale);
   imports: [
     CommonModule,
     MaterialModule,
-    MomentModule,
+    // MomentModule,
     StoreRouterModule,
     RouterModule
   ],
   exports: [
     LogoHeaderComponent,
-    MomentModule,
+    // MomentModule,
     LoadingComponent,
     SnackbarComponent,
     TrolleyIconComponent,
