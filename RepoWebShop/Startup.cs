@@ -13,9 +13,6 @@ using RepoWebShop.Interfaces;
 using RepoWebShop.Repositories;
 using RepoWebShop.Filters;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Swagger;
-using System.Reflection;
-using System.IO;
 
 namespace RepoWebShop
 {
@@ -95,7 +92,7 @@ namespace RepoWebShop
 			services.AddMvc(o => { o.Filters.Add<GlobalExceptionFilter>(); }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 			services.AddSpaStaticFiles(configuration => { configuration.RootPath = "wwwroot/dist"; });
-			services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info { Title = "De las Artes API", Version = "v1" }); c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml")); });
+			// services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info { Title = "De las Artes API", Version = "v1" }); c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml")); });
 
 			services.AddAutoMapper();
 			services.AddMemoryCache();
@@ -130,12 +127,12 @@ namespace RepoWebShop
 				routes.MapRoute(name: "default", template: "{controller}/{action=Index}/{id?}");
 			});
 
-			app.UseSwagger();
-			app.UseSwaggerUI(c =>
-			{
-				c.SwaggerEndpoint("/swagger/v1/swagger.json", "De las Artes API V1");
-				c.RoutePrefix = "api";
-			});
+			//app.UseSwagger();
+			//app.UseSwaggerUI(c =>
+			//{
+			//	c.SwaggerEndpoint("/swagger/v1/swagger.json", "De las Artes API V1");
+			//	c.RoutePrefix = "api";
+			//});
 
 			app.UseSpa(spa =>
 			{
