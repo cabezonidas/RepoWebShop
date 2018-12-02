@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using RepoWebShop.Models;
 using Microsoft.Extensions.Configuration;
 using System.Net;
@@ -17,36 +16,24 @@ namespace RepoWebShop.Repositories
     public class FlickrRepository : IFlickrRepository
     {
         private readonly IConfiguration _config;
-        private readonly string apiUrl = "https://api.flickr.com/services/rest/";
         private readonly IMapper _mapper;
 
+		private readonly AlbumPhotos AlbumImages;
+		private readonly AlbumsRefresh AlbumsList;
 
-		private PhotosetList albums;
-        private DateTime lastRefresh;
 
-        private List<PhotosetPhotosRefresh> picturesUrls = new List<PhotosetPhotosRefresh>();
-        //Lists of albums with corresponding img urls. This is a cache.       
-
-        public FlickrRepository(IConfiguration config, IMapper mapper)
+		public FlickrRepository(IConfiguration config, IMapper mapper)
         {
             _config = config;
 			_mapper = mapper;
-            albums = Api_GetAlbums();
-        }
+
+			AlbumImages = new AlbumPhotos();
+			AlbumsList = new AlbumsRefresh();
+		}
 
         public IEnumerable<PhotosetMetadata> Albums
         {
-            get
-            {
-                if (lastRefresh == null || DateTime.Now.Subtract(lastRefresh) > new TimeSpan(0, 0, 30))
-                {
-                    Task.Run(() =>
-                    {
-                        albums = Api_GetAlbums();
-                    });
-                }
-                return albums.Photosets.Photoset;
-            }
+			get => AlbumsList?.AllAlbums?.Photosets?.Photoset ?? new List<PhotosetMetadata>().AsEnumerable();
         }
 
         public IEnumerable<SelectListItem> AlbumsOptions()
@@ -65,74 +52,110 @@ namespace RepoWebShop.Repositories
             return result.AsEnumerable();
         }
 
-        public AlbumPictures GetAlbumPictures(long id)
-        {
-            if (id == 0)
-                return new AlbumPictures();
-
-            var albumPictures = picturesUrls.FirstOrDefault(x => x.PhotosetPhotos.Photoset.Id == id);
-
-            if (albumPictures == null)
-            {
-                albumPictures = new PhotosetPhotosRefresh(Api_GetPictures(id));
-                if (albumPictures.PhotosetPhotos.Photoset != null)
-                    picturesUrls.Add(albumPictures);
-            }
-            else
-            {
-                if (albumPictures.LastRefresh == null || DateTime.Now.Subtract(albumPictures.LastRefresh) > new TimeSpan(0, 0, 30))
-                {
-                    Task.Run(() =>
-                    {
-                        albumPictures.PhotosetPhotos = Api_GetPictures(id);
-                        albumPictures.LastRefresh = DateTime.Now;
-                    });
-                }
-            }
-
-            return albumPictures.PhotosetPhotos;
-        }
+		public AlbumPictures GetAlbumPictures(long id) => AlbumImages[id];
 
 		public _Album GetFeAlbumBy(long id) => _mapper.Map<AlbumPictures, _Album>(GetAlbumPictures(id));
 
-        /***************/
-        private PhotosetList Api_GetAlbums()
-        {
-            var queryString = $"?method=flickr.photosets.getList&api_key={_config["FlickrClientId"]}&format=json&user_id={_config["FlickrUserId"]}&nojsoncallback=?";
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiUrl + queryString);
-            request.Proxy.Credentials = CredentialCache.DefaultCredentials;
-            request.Accept = "application/json";
-            request.Method = "GET";
+		private class AlbumPhotos
+		{
+			private readonly List<AlbumPhotosRefresh> Albums;
+			public AlbumPhotos()
+			{
+				Albums = new List<AlbumPhotosRefresh>();
+			}
 
-            HttpWebResponse apiResult = (HttpWebResponse)request.GetResponse();
+			public AlbumPictures this[long albumId]
+			{
+				get
+				{
+					var albumPictures = Albums.FirstOrDefault(a => a.PhotosetPhotos.Photoset.Id == albumId);
+					if (albumPictures == null || TimeToRefresh(albumPictures.LastRefresh))
+						//try
+						{
+							var newPictures = new AlbumPhotosRefresh(Api_GetPictures(albumId));
+							if (albumPictures != null)
+								Albums.Remove(albumPictures);
+							Albums.Add(newPictures);
+							albumPictures = newPictures;
+						} 
+						//catch { }
+					return albumPictures?.PhotosetPhotos;
+				}
+			}
+		}
 
-            var result = new JsonSerializer().Deserialize<PhotosetList>(new JsonTextReader(new StreamReader(apiResult.GetResponseStream())));
-            lastRefresh = DateTime.Now;
-            return result;
-        }
-        private AlbumPictures Api_GetPictures(long id)
-        {
-            var queryString = $"?method=flickr.photosets.getPhotos&api_key={_config["FlickrClientId"]}&photoset_id={id}&format=json&user_id={_config["FlickrUserId"]}&nojsoncallback=?";
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiUrl + queryString);
-            request.Proxy.Credentials = CredentialCache.DefaultCredentials;
-            request.Accept = "application/json";
-            request.Method = "GET";
-            HttpWebResponse apiResult = (HttpWebResponse)request.GetResponse();
-            var result = new JsonSerializer().Deserialize<AlbumPictures>(new JsonTextReader(new StreamReader(apiResult.GetResponseStream())));
-            return result;
-        }
+		/***************/
+		private class AlbumPhotosRefresh
+		{
+			public AlbumPictures PhotosetPhotos;
+			public DateTime LastRefresh;
+			public AlbumPhotosRefresh(AlbumPictures p)
+			{
+				if (p != null)
+				{
+					PhotosetPhotos = p;
+					LastRefresh = DateTime.Now;
+				}
+			}
+		}
 
+		private class AlbumsRefresh
+		{
+			private PhotosetList Albums;
+			public DateTime LastRefresh;
 
-		private class PhotosetPhotosRefresh
-        {
-            public AlbumPictures PhotosetPhotos;
-            public DateTime LastRefresh;
-            public PhotosetPhotosRefresh(AlbumPictures p)
-            {
-                PhotosetPhotos = p;
-                LastRefresh = DateTime.Now;
-            }
-        }
-    }
+			public PhotosetList AllAlbums 
+			{
+				get
+				{
+					if (Albums == null || TimeToRefresh(LastRefresh))
+						//try
+						//{
+							Albums = Api_GetAlbums();
+							LastRefresh = DateTime.Now;
+						//}
+						//catch { }
+					return Albums;
+				}
+			}
+		}
+
+		/***************/
+		private static PhotosetList Api_GetAlbums()
+		{
+			var _flickrClientId = "d097bef2694e1f6fea5d594b19967deb";
+			var _flickrUserId = "85024949%40N08";
+			string apiUrl = "https://api.flickr.com/services/rest/";
+
+			PhotosetList albums;
+			var queryString = $"?method=flickr.photosets.getList&api_key={_flickrClientId}&format=json&user_id={_flickrUserId}&nojsoncallback=?";
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiUrl + queryString);
+			request.Proxy.Credentials = CredentialCache.DefaultCredentials;
+			request.Accept = "application/json";
+			request.Method = "GET";
+			HttpWebResponse apiResult = (HttpWebResponse)request.GetResponse();
+			albums = new JsonSerializer().Deserialize<PhotosetList>(new JsonTextReader(new StreamReader(apiResult.GetResponseStream())));
+			return albums;
+		}
+
+		private static AlbumPictures Api_GetPictures(long id)
+		{
+			var _flickrClientId = "d097bef2694e1f6fea5d594b19967deb";
+			var _flickrUserId = "85024949%40N08";
+			string apiUrl = "https://api.flickr.com/services/rest/";
+
+			AlbumPictures photos;
+			var queryString = $"?method=flickr.photosets.getPhotos&api_key={_flickrClientId}&photoset_id={id}&format=json&user_id={_flickrUserId}&nojsoncallback=?";
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiUrl + queryString);
+			request.Proxy.Credentials = CredentialCache.DefaultCredentials;
+			request.Accept = "application/json";
+			request.Method = "GET";
+			HttpWebResponse apiResult = (HttpWebResponse)request.GetResponse();
+			photos = new JsonSerializer().Deserialize<AlbumPictures>(new JsonTextReader(new StreamReader(apiResult.GetResponseStream())));
+			return photos;
+		}
+
+		private static bool TimeToRefresh(DateTime lastRefresh) => lastRefresh == null || DateTime.Now.Subtract(lastRefresh) > new TimeSpan(0, 4, 0);
+	}
 }

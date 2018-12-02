@@ -89,7 +89,6 @@ namespace RepoWebShop
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddSingleton<IMercadoPago, MercadoPago>();
 			services.AddSingleton<IConfiguration>(_config);
-			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddScoped(sp => ShoppingCart.GetCart(sp));
 			#endregion
 
