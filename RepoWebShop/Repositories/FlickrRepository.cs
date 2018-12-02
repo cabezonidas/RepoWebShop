@@ -71,15 +71,14 @@ namespace RepoWebShop.Repositories
 				{
 					var albumPictures = Albums.FirstOrDefault(a => a.PhotosetPhotos.Photoset.Id == albumId);
 					if (albumPictures == null || TimeToRefresh(albumPictures.LastRefresh))
-						//try
+						try
 						{
 							var newPictures = new AlbumPhotosRefresh(Api_GetPictures(albumId));
 							if (albumPictures != null)
 								Albums.Remove(albumPictures);
 							Albums.Add(newPictures);
 							albumPictures = newPictures;
-						} 
-						//catch { }
+						} catch { }
 					return albumPictures?.PhotosetPhotos;
 				}
 			}
@@ -110,12 +109,12 @@ namespace RepoWebShop.Repositories
 				get
 				{
 					if (Albums == null || TimeToRefresh(LastRefresh))
-						//try
-						//{
+						try
+						{
 							Albums = Api_GetAlbums();
 							LastRefresh = DateTime.Now;
-						//}
-						//catch { }
+						}
+						catch { }
 					return Albums;
 				}
 			}
