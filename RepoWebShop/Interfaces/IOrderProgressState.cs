@@ -8,7 +8,7 @@ namespace RepoWebShop.Interfaces
     public interface IOrderProgressState
     {
         IOrderProgressState Cancel(Action saveProgressChanges);
-        IOrderProgressState Complete(Action saveProgressChanges, Action notifyCustomer);
+        Task<IOrderProgressState> Complete(Action saveProgressChanges, Func<Task> notifyCustomer);
         IOrderProgressState PickUp(Action saveProgressChanges);
         IOrderProgressState Return(Action saveProgressChanges);
     }

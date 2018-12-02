@@ -134,7 +134,7 @@ namespace RepoWebShop.Models
             await GetAllAsync(x => x.OrderProgressState.GetType() == typeof(OrderPickedUp)
                 && (x.OrderPaymentStatus.GetType() == typeof(OrderMercadoPagoNotPaid) || x.OrderPaymentStatus.GetType() == typeof(OrderReservationNotPaid)));
 
-        public Order CreateOrder(Order order)
+        public async Task<Order> CreateOrderAsync(Order order)
         {
             var customLunch = _cartRepository.GetSessionLunchIfNotEmpty(order.BookingId);
             if (customLunch != null)
@@ -201,7 +201,7 @@ namespace RepoWebShop.Models
 
             /**********************/
 
-            _cartRepository.ClearCart(order.BookingId);
+            _cartRepository.ClearCartAsync(order.BookingId);
 
             return order;
         }
@@ -246,25 +246,25 @@ namespace RepoWebShop.Models
             return emailData;
         }
 
-        public async Task CompleteOrderAsync(int orderId)
-        {
-            var order = await GetOrderByIdAsync(orderId);
-            order.OrderProgressState.Complete(() =>
-            {
-                order.Finished = true;
-                var eventDesc = $"Orden lista.";
-                order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - {eventDesc}";
-                _appDbContext.SaveChanges();
-            },
-            async () =>
-            {
-                if (_env.IsProduction())
+		public async Task CompleteOrderAsync(int orderId)
+		{
+			var order = await GetOrderByIdAsync(orderId);
+			await order.OrderProgressState.Complete(() =>
+			{
+				order.Finished = true;
+				var eventDesc = $"Orden lista.";
+				order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - {eventDesc}";
+				_appDbContext.SaveChanges();
+			},
+			async () =>
+			{
+				if (_env.IsProduction() || _env.IsDevelopment()) //Careful here!
                 {
                     if (order.Registration != null && order.Registration.PhoneNumberConfirmed)
                     {
                         var user = order.Registration;
                         await _smsRepository.SendSms(user.PhoneNumber,
-                            $"{user.FirstName}, ¡Tu pedido {order.FriendlyBookingId} ya está listo! De las Artes.");
+                            $"{user.FirstName}, Tu pedido {order.FriendlyBookingId} ya está listo! De las Artes.");
                     }
                     await _emailRepository.NotifyOrderCompleteAsync(order);
                 }
@@ -312,7 +312,7 @@ namespace RepoWebShop.Models
         public async Task RefundOrderAsync(int orderId, string reason)
         {
             var order = await GetOrderByIdAsync(orderId);
-            order.OrderPaymentStatus.Refund(() =>
+            await order.OrderPaymentStatus.Refund(() =>
             {
                 order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - Devolución del dinero. Motivo: {reason}";
                 order.Refunded = true;
@@ -320,9 +320,9 @@ namespace RepoWebShop.Models
                 order.Cancelled = true;
                 _appDbContext.SaveChanges();
             },
-            () =>
+            async () =>
             {
-                _mp.RefundPaymentAsync(order.MercadoPagoTransaction);
+                await _mp.RefundPaymentAsync(order.MercadoPagoTransaction);
                 //Send email
             });
         }
@@ -330,7 +330,7 @@ namespace RepoWebShop.Models
         public async Task CancelPaymentOrderAsync(int orderId, string reason)
         {
             var order = await GetOrderByIdAsync(orderId);
-            order.OrderPaymentStatus.Cancel(() =>
+            await order.OrderPaymentStatus.Cancel(() =>
             {
                 order.OrderHistory += $"\r\n{_calendarRepository.LocalTimeAsString()} - Pago cancelado. Motivo: {reason}";
                 order.PaymentReceived = false;
@@ -367,7 +367,7 @@ namespace RepoWebShop.Models
                 {
                     order = _mapper.Map<PaymentNotice, Order>(payment);
                     order.Registration = await _userManager.FindByIdAsync(payment.User_Id ?? string.Empty);
-                    order = CreateOrder(order);
+                    order = await CreateOrderAsync(order);
                 }
 
             if (order != null && orderStatusBefore != "approved" && (order.Status == "approved" || payment.Status == "approved"))

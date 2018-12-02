@@ -10,10 +10,10 @@ namespace RepoWebShop.States
     {
         public IOrderProgressState Cancel(Action savePaymentChanges) => this;
 
-        public IOrderProgressState Complete(Action savePaymentChanges, Action notifyCustomer)
+        public async Task<IOrderProgressState> Complete(Action savePaymentChanges, Func<Task> notifyCustomer)
         {
             savePaymentChanges();
-            notifyCustomer();
+            await notifyCustomer();
             return new OrderComplete();
         }
 

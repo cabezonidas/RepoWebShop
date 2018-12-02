@@ -293,7 +293,7 @@ namespace RepoWebShop.MvcControllers
             {
                 order.Status = "reservation";
                 order.Registration = _currentUser;
-                order = _orderRepository.CreateOrder(order);
+                order = await _orderRepository.CreateOrderAsync(order);
                 await _orderRepository.AfterOrderConfirmedAsync(order);
                 return Redirect($"/Order/Status/{order.FriendlyBookingId}");
             }

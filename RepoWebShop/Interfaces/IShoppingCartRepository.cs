@@ -31,7 +31,7 @@ namespace RepoWebShop.Interfaces
 		decimal GetProductsTotal(string bookingId);
         decimal GetCateringsTotal(string bookingId);
         int GetPreparationTime(string bookingId);
-        void ClearCart(string bookingId);
+        Task ClearCartAsync(string bookingId);
         decimal GetLunchTotal(Lunch lunch);
         decimal GetTotal(string bookingId);
 

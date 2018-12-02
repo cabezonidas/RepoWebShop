@@ -29,7 +29,7 @@ namespace RepoWebShop.ApiControllers
 		[HttpPost]
 		[Authorize(Roles = "Administrator")]
 		[Route("QuickDiscount/{value}")]
-		public async void QuickDiscount(decimal value)
+		public async Task QuickDiscount(decimal value)
 		{
 			var disc = _discountRepository.AddQuickDiscount(value);
 

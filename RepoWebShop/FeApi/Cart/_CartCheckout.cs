@@ -37,7 +37,7 @@ namespace RepoWebShop.FeApi
 				Status = "reservation",
 				Registration = user
 			};
-			order = _order.CreateOrder(order);
+			order = await _order.CreateOrderAsync(order);
 			await _order.AfterOrderConfirmedAsync(order);
 			return order.FriendlyBookingId;
 		}

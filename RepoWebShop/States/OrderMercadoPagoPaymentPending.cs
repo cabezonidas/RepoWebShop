@@ -8,10 +8,10 @@ namespace RepoWebShop.States
 {
     public class OrderMercadoPagoPaymentPending : IOrderPaymentStatus
     {
-        public IOrderPaymentStatus Cancel(Action savePaymentChanges, Action mercadoPagoCancel)
+        public async Task<IOrderPaymentStatus> Cancel(Action savePaymentChanges, Func<Task> mercadoPagoCancel)
         {
             savePaymentChanges();
-            mercadoPagoCancel();
+            await mercadoPagoCancel();
             return new OrderMercadoPagoNotPaid();
         }
 
@@ -21,6 +21,6 @@ namespace RepoWebShop.States
             return new OrderMercadoPagoPaid();
         }
 
-        public IOrderPaymentStatus Refund(Action savePaymentChanges, Action mercadoPagoRefund) => this;
+        public async Task<IOrderPaymentStatus> Refund(Action savePaymentChanges, Func<Task> mercadoPagoRefund) => this;
     }
 }

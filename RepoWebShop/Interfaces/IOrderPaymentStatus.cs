@@ -7,8 +7,8 @@ namespace RepoWebShop.Interfaces
 {
     public interface IOrderPaymentStatus
     {
-        IOrderPaymentStatus Refund(Action savePaymentChanges, Action mercadoPagoRefund);
+        Task<IOrderPaymentStatus> Refund(Action savePaymentChanges, Func<Task> mercadoPagoRefund);
         IOrderPaymentStatus Pay(Action savePaymentChanges);
-        IOrderPaymentStatus Cancel(Action savePaymentChanges, Action mercadoPagoCancel);
+		Task<IOrderPaymentStatus> Cancel(Action savePaymentChanges, Func<Task> mercadoPagoCancel);
     }
 }

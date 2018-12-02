@@ -141,7 +141,7 @@ namespace RepoWebShop.Repositories
             return _appDbContext.ShoppingCartCatalogProducts.Include(x => x.Product).ThenInclude(x => x.PieDetail).Where(x => x.ShoppingCartId == bookingId).ToArray();
         }
 
-        public void ClearCart(string bookingId)
+        public async Task ClearCartAsync(string bookingId)
         {
             bookingId = bookingId ?? _cartSession.BookingId;
 
@@ -165,10 +165,10 @@ namespace RepoWebShop.Repositories
             }
             _appDbContext.SaveChanges();
 
-            UpdateMPPreferencesWithDiscount(cartDiscount);
+            await UpdateMPPreferencesWithDiscount(cartDiscount);
         }
 
-        private void UpdateMPPreferencesWithDiscount(ShoppingCartDiscount cartDiscount)
+        private async Task UpdateMPPreferencesWithDiscount(ShoppingCartDiscount cartDiscount)
         {
             if (cartDiscount != null)
             {
@@ -182,7 +182,7 @@ namespace RepoWebShop.Repositories
                     {
                         foreach (var pref in currentPreferencesWithDiscount)
                         {
-                            Task.Run(async () =>
+                            await Task.Run(async () =>
                             {
                                 var apicall = $"http://{_contextAccessor.HttpContext.Request.Host.ToString()}/api/ShoppingCartData/GetMercadoPagoLink/{pref.BookingId}";
                                 await new HttpClient().GetAsync(apicall);

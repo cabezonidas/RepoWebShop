@@ -14,10 +14,10 @@ namespace RepoWebShop.States
             return new OrderCancelled();
         }
 
-        public IOrderProgressState Complete(Action savePaymentChanges, Action notifyCustomer)
+        public async Task<IOrderProgressState> Complete(Action savePaymentChanges, Func<Task> notifyCustomer)
         {
             savePaymentChanges();
-            notifyCustomer();
+            await notifyCustomer();
             return new OrderComplete();
         }
 

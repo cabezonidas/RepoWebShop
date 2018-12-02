@@ -21,7 +21,7 @@ namespace RepoWebShop.Interfaces
         Task<IEnumerable<Order>> GetOrdersReturnedAsync();
         Task<IEnumerable<Order>> GetOrdersRefundedAsync();
         Task<IEnumerable<Order>> GetOrdersPickedUpWithPendingPaymentAsync();
-        Order CreateOrder(Order order);
+        Task<Order> CreateOrderAsync(Order order);
         Task<EmailNotificationViewModel> GetEmailDataAsync(int id);
         Task<Order> GetOrderByIdAsync(int id);
         Task<Order> GetOrderByBookingIdAsync(string id);
