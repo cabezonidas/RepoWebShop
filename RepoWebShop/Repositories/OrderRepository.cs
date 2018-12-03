@@ -258,16 +258,13 @@ namespace RepoWebShop.Models
 			},
 			async () =>
 			{
-				if (_env.IsProduction() || _env.IsDevelopment()) //Careful here!
+                if (order.Registration != null && order.Registration.PhoneNumberConfirmed)
                 {
-                    if (order.Registration != null && order.Registration.PhoneNumberConfirmed)
-                    {
-                        var user = order.Registration;
-                        await _smsRepository.SendSms(user.PhoneNumber,
-                            $"{user.FirstName}, Tu pedido {order.FriendlyBookingId} ya está listo! De las Artes.");
-                    }
-                    await _emailRepository.NotifyOrderCompleteAsync(order);
+                    var user = order.Registration;
+                    await _smsRepository.SendSms(user.PhoneNumber,
+                        $"{user.FirstName}, Tu pedido {order.FriendlyBookingId} ya está listo! De las Artes.");
                 }
+                await _emailRepository.NotifyOrderCompleteAsync(order);
             });
         }
 
