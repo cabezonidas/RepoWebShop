@@ -201,7 +201,7 @@ namespace RepoWebShop.Models
 
             /**********************/
 
-            _cartRepository.ClearCartAsync(order.BookingId);
+            await _cartRepository.ClearCartAsync(order.BookingId);
 
             return order;
         }
@@ -262,7 +262,7 @@ namespace RepoWebShop.Models
                 {
                     var user = order.Registration;
                     await _smsRepository.SendSms(user.PhoneNumber,
-                        $"{user.FirstName}, Tu pedido {order.FriendlyBookingId} ya está listo! De las Artes.");
+                        $"{user.FirstName}, Tu orden {order.FriendlyBookingId} ya está lista! De las Artes.");
                 }
                 await _emailRepository.NotifyOrderCompleteAsync(order);
             });
