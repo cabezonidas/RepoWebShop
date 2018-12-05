@@ -69,15 +69,19 @@ namespace RepoWebShop.Repositories
 			{
 				get
 				{
-					var albumPictures = Albums.FirstOrDefault(a => a.PhotosetPhotos.Photoset.Id == albumId);
+					var albumPictures = Albums.FirstOrDefault(a => a?.PhotosetPhotos?.Photoset?.Id == albumId);
 					if (albumPictures == null || TimeToRefresh(albumPictures.LastRefresh))
 						try
 						{
-							var newPictures = new AlbumPhotosRefresh(Api_GetPictures(albumId));
-							if (albumPictures != null)
-								Albums.Remove(albumPictures);
-							Albums.Add(newPictures);
-							albumPictures = newPictures;
+							var result = Api_GetPictures(albumId);
+							if (result.Stat != "fail" && result.Pictures.Count() > 0)
+							{
+								var newPictures = new AlbumPhotosRefresh(result);
+								if (albumPictures != null)
+									Albums.Remove(albumPictures);
+								Albums.Add(newPictures);
+								albumPictures = newPictures;
+							}
 						} catch { }
 					return albumPictures?.PhotosetPhotos;
 				}
