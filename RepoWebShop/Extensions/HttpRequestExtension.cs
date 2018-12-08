@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace RepoWebShop.Extensions
 {
@@ -36,7 +37,7 @@ namespace RepoWebShop.Extensions
             return $"{request.HostUrl()}{request.Path.Value}";
         }
 
-        public static Dictionary<string, string> BodyAsDictionary(this HttpRequest request)
+        public static async Task<Dictionary<string, string>> BodyAsDictionaryAsync(this HttpRequest request)
         {
             var result = new Dictionary<string, string>();
             string body;
@@ -44,7 +45,7 @@ namespace RepoWebShop.Extensions
                 request.Body.Seek(0, SeekOrigin.Begin);
             using (var reader = new StreamReader(request.Body))
             {
-                body = reader.ReadToEnd();
+                body = await reader.ReadToEndAsync();
             }
 
             var resultSet = body.Split("&").Select(x => StringToKeyValue(x)).Where(x => !string.IsNullOrEmpty(x.Key));

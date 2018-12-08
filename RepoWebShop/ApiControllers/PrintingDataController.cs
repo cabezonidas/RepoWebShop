@@ -30,10 +30,9 @@ namespace RepoWebShop.ApiControllers
 
         [HttpPost]
         [Route("Queue")]
-        public IActionResult Queue()
+        public async Task<IActionResult> Queue()
         {
-
-            var content = Request.BodyAsDictionary();
+            var content = await Request.BodyAsDictionaryAsync();
 
             if (content["ConnectionType"] == "GetRequest" && content["ID"] == printerKey)
             {
