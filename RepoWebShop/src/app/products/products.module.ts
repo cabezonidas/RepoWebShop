@@ -15,6 +15,7 @@ import { reducer } from './state/product.reducer';
 import { ProductEffects } from './state/product.effects';
 import { ProductShellComponent } from './containers/product-shell/product-shell.component';
 import { FullCatalogShellComponent } from './containers/full-catalog-shell/full-catalog-shell.component';
+import { HighlightedCarouselShellComponent } from './containers/highlighted-carousel-shell/highlighted-carousel-shell.component';
 
 const productRoutes: Routes = [
   { path: 'products', component: ProductShellComponent } ,
@@ -37,11 +38,13 @@ const productRoutes: Routes = [
   ],
   declarations: [
     ProductShellComponent, ChooseItemComponent, FullCatalogComponent,
-    PriceComparisonComponent, ProductCarouselPreviewComponent, ProductPreviewComponent, SoonestPickupComponent, FullCatalogShellComponent
+    PriceComparisonComponent, ProductCarouselPreviewComponent, ProductPreviewComponent, SoonestPickupComponent,
+    FullCatalogShellComponent, HighlightedCarouselShellComponent
   ],
   exports: [
     ProductCarouselPreviewComponent,
-    SoonestPickupComponent
+    SoonestPickupComponent,
+    HighlightedCarouselShellComponent
   ],
   entryComponents: [ChooseItemComponent],
 })

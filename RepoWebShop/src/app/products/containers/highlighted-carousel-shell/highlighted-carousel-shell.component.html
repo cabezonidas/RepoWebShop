@@ -1,0 +1,25 @@
+<div class='container'>
+  <div *ngIf="piesOfTheWeek$ | async as piesOfTheWeek">
+    <div *ngIf="piesOfTheWeek.length; else loading">
+      <h1>Más vendidos</h1>
+      <div class='product-shell'>
+        <div  class='products'>
+          <app-product-preview  *ngFor="let product of piesOfTheWeek" class="slide"
+            [product]="product">
+          </app-product-preview>
+        </div>
+      </div>
+      <div>
+        <button mat-raised-button color="warn" routerLink="/products">Ver más</button>
+      </div>
+    </div>  
+    <ng-template #loading>
+      <div class="loading">
+        <br/>
+        <mat-progress-bar mode="indeterminate" >
+        </mat-progress-bar>
+      </div>
+    </ng-template>
+  </div>
+
+</div>
