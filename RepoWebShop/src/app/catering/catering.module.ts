@@ -41,6 +41,7 @@ const cateringRoutes: Routes = [
   ],
   declarations: [NewCateringShellComponent, ItemsTableComponent, SelectedItemsTableComponent,
     AutocompleteItemsComponent, NewCateringSubtotalHeaderComponent, CateringOptionComponent,
-    CateringOptionsShellComponent, CateringsCarouselShellComponent, CustomCateringShellComponent, CustomCateringItemComponent]
+    CateringOptionsShellComponent, CateringsCarouselShellComponent, CustomCateringShellComponent, CustomCateringItemComponent],
+    exports: [CateringsCarouselShellComponent]
 })
 export class CateringModule { }

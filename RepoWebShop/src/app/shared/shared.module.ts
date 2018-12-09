@@ -17,6 +17,7 @@ import argLocale from '@angular/common/locales/es-AR';
 import { registerLocaleData } from '@angular/common';
 import { FbShareComponent } from './components/fb-share/fb-share.component';
 import { LoadingBlockerComponent } from './components/loading-blocker/loading-blocker.component';
+import { TitleComponent } from './components/title/title.component';
 
 registerLocaleData(argLocale);
 
@@ -41,11 +42,12 @@ registerLocaleData(argLocale);
     AdminGearComponent,
     ProductPriceComponent,
     FbShareComponent,
-    LoadingBlockerComponent
+    LoadingBlockerComponent,
+    TitleComponent
   ],
   declarations: [LogoHeaderComponent, ProductSubtotalComponent, LoadingComponent, SnackbarComponent,
     TrolleyIconComponent, TrolleyIconShellComponent, TotalComponent, AdminGearComponent, ProductPriceComponent,
-    FbShareComponent, LoadingBlockerComponent],
+    FbShareComponent, LoadingBlockerComponent, TitleComponent],
   // providers: [
   //   { provide: LOCALE_ID, useValue: 'es-AR"' },
   // ]

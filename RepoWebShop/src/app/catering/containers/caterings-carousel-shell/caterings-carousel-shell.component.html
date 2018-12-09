@@ -1,6 +1,7 @@
 
-
-<div class="row">
+<div class='container'>
+<div class="row caterings-section">
+    <app-title [title]="'Catering'" ></app-title>
     <div class="col l6 m12 s12">
       <mat-card class="custom-card">
         <div class="line vertically-aligned"></div>
@@ -23,7 +24,7 @@
         <br>
         <div class="chip-list">
           <mat-chip-list>
-            <mat-chip selected (click)="viewCaterings.emit()">Ver caterings</mat-chip>
+            <mat-chip selected routerLink="/catering-options">Ver caterings</mat-chip>
           </mat-chip-list>
         </div>
       </mat-card>
@@ -44,11 +45,12 @@
         <div class="p">
             <span class="strong">Tanto por internet, como en sucursal, disponemos de Factura A para empresas</span>
         </div>
-        <div class="fb-share">
+        <!-- <div class="fb-share">
             <app-fb-share [url]="'https://facebook.com/ReposteriaDeLasArtes/'" [showLike]="true"></app-fb-share>
-        </div>
+        </div> -->
       </mat-card>
       <br>
 
     </div>
+</div>
 </div>

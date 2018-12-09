@@ -1,7 +1,7 @@
 <div class='container'>
   <div *ngIf="piesOfTheWeek$ | async as piesOfTheWeek">
     <div *ngIf="piesOfTheWeek.length; else loading">
-      <h1>Más vendidos</h1>
+      <h1>Destacados</h1>
       <div class='product-shell'>
         <div  class='products'>
           <app-product-preview  *ngFor="let product of piesOfTheWeek" class="slide"

@@ -12,6 +12,7 @@ import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { HoursComponent } from './components/hours/hours.component';
 import { ProductModule } from '../products/products.module';
 import { SharedModule } from '../shared/shared.module';
+import { CateringModule } from '../catering/catering.module';
 
 const homeRoutes: Routes = [
   { path: 'start', component: HomeShellComponent },
@@ -27,7 +28,8 @@ const homeRoutes: Routes = [
     HttpClientModule,
     MaterialModule,
     SharedModule,
-    ProductModule
+    ProductModule,
+    CateringModule
   ],
   declarations: [
     VideoComponent,
