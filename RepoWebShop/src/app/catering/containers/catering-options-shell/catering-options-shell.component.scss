@@ -2,13 +2,16 @@
 @import url('//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css');
 
 .container {
+    text-align: center;
+    width: 100%;
     h1 {
         margin: 50px auto;
         text-align: center;
     }
     .intro {
-        -webkit-clip-path: polygon(0 0, 100% 0, 100% 98%, 0% 100%);
-        clip-path: polygon(0 0, 100% 0, 100% 98%, 0% 100%);
+        max-width: 80%;
+        margin: auto;
+        padding-bottom: 20px;
     }
     .options {
         // background-color: white;

@@ -1,5 +1,6 @@
 <div id='top'></div>
-<app-logo-header [header]="'Productos con fotos'"></app-logo-header>
+<!-- <app-logo-header [header]="'Productos con fotos'"></app-logo-header> -->
+<app-title [title]="'Dulces'"></app-title>
 <div class='product-shell'>
     <div *ngIf="items$ | async as products">
         <mat-spinner *ngIf="!products.length"> </mat-spinner>
@@ -7,12 +8,13 @@
             <app-product-preview *ngIf="product.flickrAlbumId" [product]="product">
             </app-product-preview>
         </div>
-        <mat-card *ngIf="products.length">
+        <div [ngStyle]="{'height':'30px'}"></div>
+        <mat-card >
 
             <div class="even-more" >
-                <h3>¿Te quedaste con ganas de más?</h3>
-                <button mat-button routerLink="/all-items" class="view-more">¡Ver catálogo completo!</button>
-                <p>Más de 100 delicias que podés comprar</p>
+                <h3>¿Querés más?</h3>
+                <div>Más de 150 delicias</div>
+                <br>
                 <button mat-raised-button color="primary" routerLink="/all-items">¡Quiero ver!</button>
             </div>
         </mat-card>

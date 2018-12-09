@@ -30,8 +30,8 @@
       </tbody>
     </table>
 
-    <mat-card-content>
-      <div class="item" *ngFor="let item of catering.items">
+    <mat-card-content *ngIf="catering.items && catering.items.length">
+      <div class="item" matRipple *ngFor="let item of catering.items" [matTooltip]="item.item.displayDescription">
         {{ item.itemCount }} {{ item.item.displayName }}
       </div>
     </mat-card-content>

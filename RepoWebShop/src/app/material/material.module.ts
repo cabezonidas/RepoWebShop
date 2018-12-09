@@ -1,4 +1,4 @@
-import { MatButtonModule, MatCheckboxModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatTooltipModule } from '@angular/material';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { NgModule } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -24,6 +24,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatSortModule} from '@angular/material/sort';
+import {MatRippleModule} from '@angular/material/core';
 
 @NgModule({
     imports: [
@@ -52,7 +53,9 @@ import {MatSortModule} from '@angular/material/sort';
         MatSnackBarModule,
         MatTabsModule,
         MatDividerModule,
-        MatSortModule
+        MatSortModule,
+        MatTooltipModule,
+        MatRippleModule
     ],
     exports: [
         MatButtonModule,
@@ -80,7 +83,9 @@ import {MatSortModule} from '@angular/material/sort';
         MatSnackBarModule,
         MatTabsModule,
         MatDividerModule,
-        MatSortModule
+        MatSortModule,
+        MatTooltipModule,
+        MatRippleModule
     ],
     declarations: []
 })

@@ -3,12 +3,12 @@
 }
 mat-progress-bar, mat-spinner {
     width: 60%;
+    margin-bottom: 80px;
     margin: 100px auto;
 }
 
 .product-shell {
     text-align: center;
-    padding-bottom: 80px;
 }
 
 .even-more {
@@ -16,9 +16,9 @@ mat-progress-bar, mat-spinner {
 }
 
 mat-card {
-    max-width: 600px;
-    margin-top: 25px;
+    padding-top: 30px;
     margin: auto;
+    background-color: papayawhip;
 }
 
 button.view-more {
