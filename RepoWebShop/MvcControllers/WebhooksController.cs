@@ -23,11 +23,16 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpPost]
-        public IActionResult MercadoPago()
+        public IActionResult MercadoPago([FromBody] MercadoPagoWebhook notification)
         {
-            var Notification = ((JToken)new JsonSerializer().Deserialize<Object>(new JsonTextReader(new StreamReader(Request.Body)))).Root;
-            var topic = ((JValue)Notification["topic"])?.Value.ToString();
-            var notificationId = ((JValue)Notification["resource"])?.Value.ToString().Split('/').LastOrDefault();
+			//var Notification = ((JToken)new JsonSerializer().Deserialize<Object>(new JsonTextReader(new StreamReader(Request.Body)))).Root;
+			//var topic = ((JValue)Notification["topic"])?.Value.ToString();
+			//var notificationId = ((JValue)Notification["resource"])?.Value.ToString().Split('/').LastOrDefault();
+
+			var notificationId = notification?.Data?.Id;
+
+			if (string.IsNullOrEmpty(notificationId))
+				return BadRequest();
 
             Task.Run(async () =>
             {
