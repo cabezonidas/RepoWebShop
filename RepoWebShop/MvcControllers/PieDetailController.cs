@@ -60,13 +60,14 @@ namespace RepoWebShop.MvcControllers
         public IActionResult Details(int id)
         {
             var pieDetail = _pieDetailRepository.GetPieDetailById(id);
-            if (pieDetail == null)
+            if (pieDetail == null || pieDetail.FlickrAlbumId == 0)
                 return NotFound();
 
             var result = new PieDetailViewModel() { PieDetail = pieDetail, Pies = _pieRepository.ActivePies.Where(x => x.PieDetail.PieDetailId == pieDetail.PieDetailId) };
-            result.PrimaryPicture = _flickrRepository.GetAlbumPictures(pieDetail.FlickrAlbumId).PrimaryPicture;
-            result.AlbumPitures = _flickrRepository.GetAlbumPictures(pieDetail.FlickrAlbumId);
-            result.RequestAbsoluteUrl = Request.AbsoluteUrl();
+
+			result.PrimaryPicture = _flickrRepository.GetAlbumPictures(pieDetail.FlickrAlbumId).PrimaryPicture;
+			result.AlbumPitures = _flickrRepository.GetAlbumPictures(pieDetail.FlickrAlbumId);
+			result.RequestAbsoluteUrl = Request.AbsoluteUrl();
 
             return View(result);
         }
