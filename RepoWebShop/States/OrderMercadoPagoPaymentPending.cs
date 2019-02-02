@@ -21,6 +21,8 @@ namespace RepoWebShop.States
             return new OrderMercadoPagoPaid();
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<IOrderPaymentStatus> Refund(Action savePaymentChanges, Func<Task> mercadoPagoRefund) => this;
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     }
 }
