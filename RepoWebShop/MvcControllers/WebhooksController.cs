@@ -22,25 +22,38 @@ namespace RepoWebShop.MvcControllers
             return Ok();
         }
 
-        [HttpPost]
-        public IActionResult MercadoPago([FromBody] MercadoPagoWebhook notification)
-        {
-			//var Notification = ((JToken)new JsonSerializer().Deserialize<Object>(new JsonTextReader(new StreamReader(Request.Body)))).Root;
-			//var topic = ((JValue)Notification["topic"])?.Value.ToString();
-			//var notificationId = ((JValue)Notification["resource"])?.Value.ToString().Split('/').LastOrDefault();
+		//[HttpPost]
+		//public IActionResult MercadoPago([FromBody] MercadoPagoWebhook notification)
+		//{
+		////var Notification = ((JToken)new JsonSerializer().Deserialize<Object>(new JsonTextReader(new StreamReader(Request.Body)))).Root;
+		////var topic = ((JValue)Notification["topic"])?.Value.ToString();
+		////var notificationId = ((JValue)Notification["resource"])?.Value.ToString().Split('/').LastOrDefault();
 
-			var notificationId = notification?.Data?.Id;
+		//var notificationId = notification?.Data?.Id;
 
-			if (string.IsNullOrEmpty(notificationId))
-				return BadRequest();
+		//if (string.IsNullOrEmpty(notificationId))
+		//	return BadRequest();
 
-            Task.Run(async () =>
-            {
-                var apicall = $"http://{Request.Host.ToString()}/api/WebhooksData/OnPaymentNotified/{notificationId}";
-                await new HttpClient().GetAsync(apicall);
-            });
+		//Task.Run(async () =>
+		//{
+		//    var apicall = $"http://{Request.Host.ToString()}/api/WebhooksData/OnPaymentNotified/{notificationId}";
+		//    await new HttpClient().GetAsync(apicall);
+		//});
+		//return Ok();
+		//}
 
-            return Ok();
-        }
-    }
+		[HttpPost]
+		public IActionResult MercadoPago([FromQuery(Name = "topic")] string topic, [FromQuery(Name = "id")]  string id)
+		{
+			if (topic == "payment" && !string.IsNullOrEmpty(id))
+			{
+				Task.Run(async () =>
+				{
+					var apicall = $"http://{Request.Host.ToString()}/api/WebhooksData/OnPaymentNotified/{id}";
+					await new HttpClient().GetAsync(apicall);
+				});
+			}
+			return Ok();
+		}
+	}
 }
