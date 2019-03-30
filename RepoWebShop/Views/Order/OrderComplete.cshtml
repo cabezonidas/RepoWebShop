@@ -2,6 +2,9 @@
 @{Layout = string.Empty;}
 @inject ICalendarRepository _calendar
 @inject IFlickrRepository _flickr
+@{ 
+	var msg = Model.Delivery != null ? "Tu orden esta en camino!" : "Tu orden ya esta lista!";
+}
 <div style="max-width: 750px;margin: auto;">
     <div style="text-align:center; font-family: 'Trebuchet MS'; ">
         <section style='padding: 20px; width:90%; min-width:300px; ' id='body'>
@@ -22,10 +25,10 @@
                         <div>@Model.CustomarAlias</div>
                     </div>
                     <div style="font-size: 20px;">
-                        <div>
-                            <br />
-                            ¡Tu pedido ya está listo!
-                        </div>
+						<div>
+							<br />
+							@msg
+						</div>
                         <br />
                     </div>
                     <div style="font-size: 30px; ">

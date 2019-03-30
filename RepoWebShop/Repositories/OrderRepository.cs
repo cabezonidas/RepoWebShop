@@ -262,7 +262,7 @@ namespace RepoWebShop.Models
                 {
                     var user = order.Registration;
                     await _smsRepository.SendSms(user.PhoneNumber,
-                        $"{user.FirstName}, Tu orden {order.FriendlyBookingId} ya está lista! De las Artes.");
+                        $"{user.FirstName}, Tu pedido {order.FriendlyBookingId} ya esta {(order.DeliveryAddressId.HasValue ? "en camino" : "listo")}! De las Artes.");
                 }
                 await _emailRepository.NotifyOrderCompleteAsync(order);
             });
