@@ -270,19 +270,21 @@
         });
     }
 
-    function addMiscellaneous() {
-        loaderOn();
-        $.ajax({
-            url: '/api/LunchData/AddMiscellaneous/' + ($('#miscDesc').val()).replace("/", "__") + '/' + $('#miscPrice').val(),
-            type: 'POST',
-            success: function (id) {
-                $.get('/api/LunchData/GetMiscellaneous/' + id).done((data) => {
-                    pasteItem('miscellaneous', data, id);
-                    $('#miscDesc').val('');
-                    $('#miscPrice').val('');
-                });
-            }
-        });
+	function addMiscellaneous() {
+		if ($('#miscDesc').val() && $('#miscPrice').val()) {
+			loaderOn();
+			$.ajax({
+				url: '/api/LunchData/AddMiscellaneous/' + ($('#miscDesc').val()).replace("/", "__") + '/' + $('#miscPrice').val(),
+				type: 'POST',
+				success: function (id) {
+					$.get('/api/LunchData/GetMiscellaneous/' + id).done((data) => {
+						pasteItem('miscellaneous', data, id);
+						$('#miscDesc').val('');
+						$('#miscPrice').val('');
+					});
+				}
+			});
+		}
     }
 
 
