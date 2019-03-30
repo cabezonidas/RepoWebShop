@@ -32,9 +32,17 @@ namespace RepoWebShop.ApiControllers
         [Route("Queue")]
         public async Task<IActionResult> Queue()
         {
-            var content = await Request.BodyAsDictionaryAsync();
+			var content = new Dictionary<string, string>();
+			try
+			{
+				content = await Request.BodyAsDictionaryAsync();
+			} catch
+			{
+				return Ok();
+			}
 
-            if (content["ConnectionType"] == "GetRequest" && content["ID"] == printerKey)
+
+			if (content["ConnectionType"] == "GetRequest" && content["ID"] == printerKey)
             {
                 IEnumerable<PrintQueue> queue = _printer.GetQueue();
                 if(queue.Any())
