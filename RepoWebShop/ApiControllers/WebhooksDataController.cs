@@ -98,6 +98,9 @@ namespace RepoWebShop.ApiControllers
             if (payment["status"]?.ToString() == "200")
             {
                 PaymentNotice paymentInfo = new PaymentNotice(((payment["response"] as Hashtable)["collection"] as Hashtable), _config.GetSection("LocalZone").Value);
+				if (string.IsNullOrEmpty(paymentInfo.Merchant_Order_Id))
+					return Ok();
+
                 var merchantOrder = await _mp.GetMerchantOrderAsync(paymentInfo.Merchant_Order_Id);
 
                 if (merchantOrder["status"]?.ToString() == "200")
