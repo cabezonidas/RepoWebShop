@@ -7,7 +7,7 @@
         <section style='padding: 20px; width:90%; min-width:400px; ' id='body'>
             <div style=" background-color: #883636; color: papayawhip; border-top-left-radius: 10px;border-top-right-radius: 10px;">
                 <br />
-                <a href="@Model.AbsoluteUrl" target="_blank" style="text-decoration: none; ">
+                <a href="https://delasartes.com.ar" target="_blank" style="text-decoration: none; ">
                     <div style="padding-left: 20px; padding-right: 20px;">
                         <img src="https://farm2.staticflickr.com/1978/31026266528_02d833e53f_o.png" width="250" />
                     </div>
@@ -24,7 +24,7 @@
                     <div style="font-size: 30px; color:black;">
                         <strong>
                             Pedido
-                            <a href="@Model.AbsoluteUrl/Order/Status/@Model.FriendlyBookingId" target="_blank" style="color: #883636 ; text-decoration: none;">
+                            <a href="https://delasartes.com.ar/Order/Status/@Model.FriendlyBookingId" target="_blank" style="color: #883636 ; text-decoration: none;">
                                 @Model.FriendlyBookingId
                             </a>
                         </strong>
@@ -68,7 +68,7 @@
                                     @{
                                         var pic = _flickr.GetAlbumPictures(item.Pie.PieDetail.FlickrAlbumId)?.PrimaryPicture;
                                         pic = !string.IsNullOrEmpty(pic) ? pic + "s.jpg" : "/Pictures/logo.png";
-                                        var itemref = Model.AbsoluteUrl + $"/PieDetail/Details/{item.Pie.PieDetail.PieDetailId}";
+                                        var itemref = "https://delasartes.com.ar" + $"/PieDetail/Details/{item.Pie.PieDetail.PieDetailId}";
                                     }
                                     <td style='padding:10px; padding-left:2px; text-align:center;'>
 
@@ -103,16 +103,17 @@
                                 </tr>
                             }
                             @foreach (var item in Model.OrderCatalogItems.OrderByDescending(x => x.Product.PieDetail?.FlickrAlbumId ?? 0))
-                            {
-                                var albumId = item.Product.PieDetail?.FlickrAlbumId ?? 0;
+							{
+								var albumId = item.Product.PieDetail?.FlickrAlbumId ?? 0;
 
-                                var pic = _flickr.GetAlbumPictures(albumId)?.PrimaryPicture;
-                                pic = !string.IsNullOrEmpty(pic) ? pic + "s.jpg" : $"{Model.AbsoluteUrl}/Pictures/cake-2.png";
-                                var itemref = "";
-                                if (item.Product.PieDetail?.IsActive ?? false)
-                                {
-                                    itemref = Model.AbsoluteUrl + $"/PieDetail/Details/{item.Product.PieDetail.PieDetailId}";
-                                }
+								var pic = _flickr.GetAlbumPictures(albumId)?.PrimaryPicture;
+								pic = !string.IsNullOrEmpty(pic) ? pic + "s.jpg" : $"{Model.AbsoluteUrl}/Pictures/cake-2.png";
+								var itemref = "";
+								if (item.Product.PieDetail?.IsActive ?? false)
+								{
+									itemref = "https://delasartes.com.ar" + $"/PieDetail/Details/{item.Product.PieDetail.PieDetailId}";
+
+								}
                                 <tr>
                                     <td style='padding:10px; padding-left:2px; text-align:center;'>
                                         <a href="@itemref">
@@ -150,11 +151,11 @@
                             {
                                 <tr>
                                     @{
-                                        var itemref = Model.AbsoluteUrl + $"/Lunch/Special/{item.Lunch.LunchId}";
+                                        var itemref = "https://delasartes.com.ar" + $"/Lunch/Special/{item.Lunch.LunchId}";
                                     }
                                     <td style='padding:10px; padding-left:2px; text-align:center;'>
                                         <a href="@itemref">
-                                            <img src="@Model.AbsoluteUrl/Pictures/catering.png" width="75" />
+                                            <img src="https://delasartes.com.ar/Pictures/catering.png" width="75" />
                                         </a>
                                     </td>
                                     <td style='padding:2px; text-align:left; padding-left: 10px; padding-right: 10px;'>
@@ -190,7 +191,7 @@
                             {
                                 <tr>
                                     <td style='padding:10px; padding-left:2px; text-align:center;'>
-                                        <img src="@Model.AbsoluteUrl/Pictures/delivery3.png" width="75" />
+                                        <img src="https://delasartes.com.ar/Pictures/delivery3.png" width="75" />
                                     </td>
                                     <td style='padding:2px; text-align:left;  padding-left: 10px; padding-right: 10px;' colspan="1">@Model.Delivery.AddressLine1</td>
                                     <td style='padding:2px; text-align:right; font-size: large'>$@Model.Delivery.DeliveryCost</td>
@@ -201,7 +202,7 @@
                             {
                                 <tr style="font-size: large">
                                     <td style='padding:10px; padding-left:2px; text-align:center;'>
-                                        <img src="@Model.AbsoluteUrl/Pictures/deal2.png" width="75" />
+                                        <img src="https://delasartes.com.ar/Pictures/deal2.png" width="75" />
                                     </td>
                                     <td style='padding:2px; text-align:left; padding-left: 10px; padding-right: 10px;' colspan="1">
                                         @{
@@ -209,7 +210,7 @@
                                             var discount = deliveryCost + totalItems - Model.OrderTotal;
                                         }
                                         <div style="color: green;">
-                                            <a href="@Model.AbsoluteUrl/Discounts/Details/@Model.Discount.Phrase">
+                                            <a href="https://delasartes.com.ar/Discounts/Details/@Model.Discount.Phrase">
 
                                                 @if (Model.Discount.Percentage < 100)
                                                 {
@@ -281,8 +282,8 @@
                     <div style="font-size: larger; text-align: left"><strong style="">Importante</strong></div>
                     <div>
                         <br />
-                        Ante cualquier duda o alteración, podés <a href='@Model.AbsoluteUrl/Contact' target="_blank" style="color: #883636">contactarnos</a> o
-                        visitarnos o llamarnos en nuestros <a href='@Model.AbsoluteUrl/Calendar/OpenHours' target="_blank" style="color: #883636">horarios de atención</a>.
+                        Ante cualquier duda o alteración, podés <a href='https://delasartes.com.ar/Contact' target="_blank" style="color: #883636">contactarnos</a> o
+                        visitarnos o llamarnos en nuestros <a href='https://delasartes.com.ar/Calendar/OpenHours' target="_blank" style="color: #883636">horarios de atención</a>.
                     </div>
                     <div>
                         <br />
@@ -296,7 +297,7 @@
             <div style=" background-color: #883636; color: papayawhip; text-align:left; border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
                 <div style="text-align: center;">
                     <br />
-                    <a href='@Model.AbsoluteUrl' target="_blank" style="color: papayawhip">@Model.AbsoluteUrl</a>
+					<a href='https://delasartes.com.ar' target="_blank" style="color: papayawhip">https://delasartes.com.ar</a>
                 </div>
                 <br />
             </div>
