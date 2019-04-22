@@ -88,8 +88,14 @@ namespace RepoWebShop.Models
 
         public async Task<IEnumerable<Order>> GetAllAsync(Func<Order, bool> condition = null)
         {
+            IEnumerable<int> orderIds = await _appDbContext.Orders
+                .Where(x => (condition == null || condition(x)) && x.Status != "draft").Select(x => x.OrderId).ToArrayAsync();
+
+            if (!orderIds.Any())
+                return new Order[0];
+
             IEnumerable<Order> orders = await _appDbContext.Orders
-                .Where(x => (condition == null || condition(x)) && x.Status != "draft")
+                .Where(x => orderIds.Contains(x.OrderId))
                 .Include(x => x.Factura)
                 .Include(x => x.Factura.InvoiceDetails)
                 .Include(x => x.Factura.Caes)

@@ -122,16 +122,16 @@ else
     @await Html.PartialAsync("~/Views/Shared/LoadingBar.cshtml")
     
     <script type="text/javascript">
-		checkOrder();
 		setInterval(checkOrder, 5000);
-		setTimeout(checkAllOrders, 20000);
+		setTimeout(checkAllOrders, 60000);
 
         function checkOrder() {
             $.ajax({
                 type: 'GET',
                 url: '/api/OrderData/FindOrderApproved/' + '@Model.BookingId',
-                success: function () {
-                    window.location.reload();
+            }).then(res => {
+                if (res.found) {
+                  window.location.reload();
                 }
             });
         }

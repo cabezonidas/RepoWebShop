@@ -88,11 +88,12 @@ namespace RepoWebShop.MvcControllers
                 };
             }
             else
-            { 
+            {
+                var not = await _orderRepository.GetEmailDataAsync(order.OrderId);
                 orderstatus = new OrderStatusViewModel()
                 {
                     BookingId = id ?? string.Empty,
-                    Notification = await _orderRepository.GetEmailDataAsync(order.OrderId),
+                    Notification = not,
                     Payment = order.OrderPaymentStatus,
                     Progress = order.OrderProgressState
                 };

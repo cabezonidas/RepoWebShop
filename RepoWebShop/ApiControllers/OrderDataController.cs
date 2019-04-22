@@ -32,10 +32,10 @@ namespace RepoWebShop.ApiControllers
         {
             var order = await _orderRepository.GetOrderByFriendlyBookingId(bookingId);
             if (order != null && order.Status == "approved")
-                return Ok();
+                return Ok(new { found = true });
             else
             {
-                return NotFound();
+                return Ok(new { found = false });
             }
         }
 
