@@ -549,7 +549,7 @@ namespace RepoWebShop.Repositories
 			bookingId = bookingId ?? _cartSession.BookingId;
 			var prepTime = GetPreparationTime(bookingId);
 			var discount = GetDiscount(bookingId);
-			var model = _calendarRepository.GetPickUpOption(prepTime, discount).Take(50);
+			var model = _calendarRepository.GetPickUpOption(prepTime, discount).Take(25);
 			var selectedTime = GetPickUpDate(bookingId);
 			var result = new PickUpTimeViewModel
 			{
