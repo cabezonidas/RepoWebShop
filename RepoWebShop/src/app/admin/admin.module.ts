@@ -19,6 +19,7 @@ import { CustomersComponent } from './components/customers/customers.component';
 import { CustomersStateComponent } from './components/customers-state/customers-state.component';
 import { MobileActivationCodeComponent } from './components/mobile-activation-code/mobile-activation-code.component';
 import { EmailActivationCodeComponent } from './components/email-activation-code/email-activation-code.component';
+import { DbCleanerComponent } from './components/db-cleaner/db-cleaner.component';
 
 const adminRoutes: Routes = [
 {
@@ -44,7 +45,8 @@ const adminRoutes: Routes = [
   declarations: [
     TopBarComponent, OrdersShellComponent, ActiveOrdersShellComponent, CustomersShellComponent,
     OrderDialogShellComponent, OrderDetailsComponent, OrderSummaryComponent,
-    OrderDeliveryComponent, AllOrdersShellComponent, OrderCustomerComponent, OrderBillingComponent, CustomersComponent, CustomersStateComponent, MobileActivationCodeComponent, EmailActivationCodeComponent
+    OrderDeliveryComponent, AllOrdersShellComponent, OrderCustomerComponent, OrderBillingComponent,
+    CustomersComponent, CustomersStateComponent, MobileActivationCodeComponent, EmailActivationCodeComponent, DbCleanerComponent
     ],
   exports: [
     ],
