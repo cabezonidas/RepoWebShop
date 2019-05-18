@@ -1,1 +1,4 @@
 <app-orders-shell [orders]="orders$ | async" (orderUpdated)="updateOrders()"></app-orders-shell>
+<div [ngStyle]="{ 'width': '100%', 'display': 'flex', 'justify-content': 'center' }">
+    <app-db-cleaner></app-db-cleaner>
+</div>

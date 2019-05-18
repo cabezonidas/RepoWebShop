@@ -1,3 +1,9 @@
-<p>
-  db-cleaner works!
-</p>
+<div #cleanUp [ngStyle]="{'user-select': 'none', 'color': 'gray'}">
+  <small *ngIf="!loading" [ngStyle]="{'cursor': 'pointer'}">
+    Limpiar sesiones
+  </small>
+  <small *ngIf="loading" >
+    Limpiando...
+  </small>
+</div>
+
