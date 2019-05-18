@@ -236,15 +236,15 @@ namespace RepoWebShop.ApiControllers
             var unusedCartData = await _appDbContext.ShoppingCartData.Where(scd =>
                 !orderIds.Contains(scd.BookingId) &&
                 localTime.Ticks - scd.LastUpdate.Ticks > TimeSpan.TicksPerDay
-            ).ToArrayAsync();
+            ).Take(top).ToArrayAsync();
             var unusedCartDates = await _appDbContext.ShoppingCartPickUpDates.Where(scpud =>
                 !orderIds.Contains(scpud.BookingId) &&
                 localTime > scpud.From
-            ).ToArrayAsync();
+            ).Take(top).ToArrayAsync();
             var unusedCartProducts = await _appDbContext.ShoppingCartCatalogProducts.Where(sccp =>
                 !orderIds.Contains(sccp.ShoppingCartId) &&
                 localTime.Ticks - sccp.Created.Ticks > TimeSpan.TicksPerDay
-            ).ToArrayAsync();
+            ).Take(top).ToArrayAsync();
             _appDbContext.ShoppingCartData.RemoveRange(unusedCartData);
             _appDbContext.ShoppingCartPickUpDates.RemoveRange(unusedCartDates);
             _appDbContext.ShoppingCartCatalogProducts.RemoveRange(unusedCartProducts);
