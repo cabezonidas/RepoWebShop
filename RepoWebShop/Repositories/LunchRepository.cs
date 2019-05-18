@@ -18,8 +18,9 @@ namespace RepoWebShop.Repositories
         private readonly ICatalogRepository _catalog;
         private readonly IConfiguration _config;
         private readonly int _cateringMinPrepTime;
+        private readonly ICalendarRepository _calendar;
 
-        public LunchRepository(ICatalogRepository catalog, IConfiguration config, IMapper mapper, AppDbContext appDbContext, IShoppingCartRepository cartRepository)
+        public LunchRepository(ICalendarRepository calendar, ICatalogRepository catalog, IConfiguration config, IMapper mapper, AppDbContext appDbContext, IShoppingCartRepository cartRepository)
         {
             _config = config;
             _catalog = catalog;
@@ -27,6 +28,7 @@ namespace RepoWebShop.Repositories
             _appDbContext = appDbContext;
             _cartRepository = cartRepository;
             _cateringMinPrepTime = _config.GetValue<int>("CateringDefaultPreparationTime");
+            _calendar = calendar;
         }
 
         public async Task<Lunch> GetLunchByIdAsync(int lunchId) => (await GetAllLunchesAsync(x => x.LunchId == lunchId)).FirstOrDefault();
@@ -229,7 +231,8 @@ namespace RepoWebShop.Repositories
             var result = new ShoppingCartLunch
             {
                 BookingId = _cartRepository.GetSessionCartId(),
-                Lunch = lunch
+                Lunch = lunch,
+                Created = _calendar.LocalTime()
             };
             _appDbContext.ShoppingCartCustomLunch.Add(result);
             _appDbContext.SaveChanges();

@@ -11,5 +11,6 @@ namespace RepoWebShop.Models
         public string BookingId { get; set; }
         public Lunch Lunch { get; set; }
 		public int LunchId { get; set; }
-	}
+        public DateTime? Created { get; set; }
+    }
 }

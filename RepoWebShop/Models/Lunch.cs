@@ -34,7 +34,9 @@ namespace RepoWebShop.Models
         }
         
         public int EventDuration { get; set; }
-        
+
         public int Attendants { get; set; }
+
+        public DateTime? Created { get; set; }
     }
 }

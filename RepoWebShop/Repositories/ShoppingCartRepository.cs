@@ -88,7 +88,8 @@ namespace RepoWebShop.Repositories
                 result = new ShoppingCartLunch
                 {
                     BookingId = bookingId,
-                    Lunch = new Lunch()
+                    Lunch = new Lunch{ Created = _calendarRepository.LocalTime() },
+                    Created = _calendarRepository.LocalTime()
                 };
                 _appDbContext.ShoppingCartCustomLunch.Add(result);
                 _appDbContext.SaveChanges();
