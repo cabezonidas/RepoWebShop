@@ -15,7 +15,7 @@ using RepoWebShop.Filters;
 
 namespace RepoWebShop.MvcControllers
 {
-    [PageVisitAsync]
+    
     public class OrderController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

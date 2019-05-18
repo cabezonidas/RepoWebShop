@@ -13,7 +13,7 @@ using RepoWebShop.Filters;
 
 namespace RepoWebShop.MvcControllers
 {
-    [PageVisitAsync]
+    
     public class PieDetailController : Controller
     {
         private readonly IPieDetailRepository _pieDetailRepository;

@@ -15,7 +15,7 @@ using RepoWebShop.ViewModels;
 
 namespace RepoWebShop.MvcControllers
 {
-    [PageVisitAsync]
+    
     [Authorize(Roles = "Administrator")]
     public class LunchController : Controller
     {

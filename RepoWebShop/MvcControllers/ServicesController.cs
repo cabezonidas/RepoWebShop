@@ -16,7 +16,7 @@ using RepoWebShop.Filters;
 
 namespace RepoWebShop.MvcControllers
 {
-    [PageVisitAsync]
+    
     public class ServicesController : Controller
     {
         private readonly IGalleryRepository _photosRepository;

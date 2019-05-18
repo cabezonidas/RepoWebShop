@@ -78,7 +78,7 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        [PageVisitAsync]
+        
         [AllowAnonymous]
         public IActionResult ApplyDiscount() => View();
     }

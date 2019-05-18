@@ -20,7 +20,7 @@ using RepoWebShop.FeModels;
 
 namespace RepoWebShop.MvcControllers
 {
-    [PageVisitAsync]
+    
     [Authorize]
     public class AccountController : Controller
     {

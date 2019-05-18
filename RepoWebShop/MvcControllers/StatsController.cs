@@ -12,7 +12,7 @@ using RepoWebShop.Filters;
 
 namespace RepoWebShop.MvcControllers
 {
-    [PageVisitAsync]
+    
     [Authorize(Roles = "Administrator")]
     public class StatsController : Controller
     {

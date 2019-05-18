@@ -4,7 +4,7 @@ using RepoWebShop.Interfaces;
 
 namespace RepoWebShop.MvcControllers
 {
-    [PageVisitAsync]
+    
     public class PhotosController : Controller
     {
         private readonly IFlickrRepository _photosetAlbums;

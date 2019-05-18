@@ -8,7 +8,7 @@ using RepoWebShop.Filters;
 
 namespace RepoWebShop.MvcControllers
 {
-    [PageVisitAsync]
+    
     public class HomeController : Controller
     {
         private readonly IPieRepository _pieRepository;

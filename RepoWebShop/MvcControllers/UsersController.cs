@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace RepoWebShop.MvcControllers
 {
-    [PageVisitAsync]
+    
     [Authorize(Roles = "Administrator")]
     public class UsersController : Controller
     {

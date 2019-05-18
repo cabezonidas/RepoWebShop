@@ -67,7 +67,7 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        [PageVisitAsync]
+        
         public async Task<ViewResult> Index()
         {
 			ShoppingCartViewModel res = await _cartRepository.GetShoppingCartViewModel();
@@ -101,7 +101,7 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        [PageVisitAsync]
+        
         public RedirectResult AddToShoppingCart(int pieId)
         {
             var selectedPie = _pieRepository.ActivePies.FirstOrDefault(p => p.PieId == pieId);
@@ -114,7 +114,7 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        [PageVisitAsync]
+        
         public async Task<RedirectResult> AddProductToShoppingCart(int id)
         {
             var product = (await _catalogRepository.GetAvailableToBuyOnline()).FirstOrDefault(p => p.ProductId == id);
@@ -127,7 +127,7 @@ namespace RepoWebShop.MvcControllers
 		}
 
         [HttpGet]
-        [PageVisitAsync]
+        
         public async Task<RedirectResult> AddCateringToShoppingCart(int id)
         {
             var catering = await _lunchRep.GetLunchByIdAsync(id);
@@ -137,7 +137,7 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        [PageVisitAsync]
+        
         public RedirectToActionResult RemoveDelivery()
         {
             _cartRepository.RemoveDelivery();
@@ -146,7 +146,7 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        [PageVisitAsync]
+        
         public RedirectToActionResult RemoveDiscount()
         {
             _cartRepository.RemoveShoppingDiscount();
@@ -155,7 +155,7 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        [PageVisitAsync]
+        
         public RedirectToActionResult ClearCustomCateringFromCart()
         {
             _cartRepository.ClearCustomCateringFromCart();
@@ -163,7 +163,7 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        [PageVisitAsync]
+        
         public RedirectToActionResult RemoveFromShoppingCart(int pieId)
         {
             var selectedPie = _pieRepository.AllPies.FirstOrDefault(p => p.PieId == pieId);
@@ -176,7 +176,7 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        [PageVisitAsync]
+        
         public async Task<RedirectToActionResult> RemoveCatalogProductFromShoppingCart(int productId)
         {
             var selectedProduct = await _catalogRepository.GetById(productId);
@@ -185,7 +185,7 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        [PageVisitAsync]
+        
         public async Task<RedirectToActionResult> RemoveCateringFromCart(int lunchId)
         {
             var lunch = await _lunchRep.GetLunchByIdAsync(lunchId);
@@ -194,7 +194,7 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        [PageVisitAsync]
+        
         public RedirectToActionResult ClearFromShoppingCart(int pieId)
         {
             _cartRepository.ClearFromCart(pieId);
@@ -203,7 +203,7 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        [PageVisitAsync]
+        
         public RedirectToActionResult ClearCatalogProductFromShoppingCart(int productId)
         {
             _cartRepository.ClearCatalogItemFromCart(productId);
@@ -211,7 +211,7 @@ namespace RepoWebShop.MvcControllers
         }
 
         [HttpGet]
-        [PageVisitAsync]
+        
         public RedirectToActionResult ClearCateringFromCart(int cateringId)
         {
             _cartRepository.ClearCateringFromCart(cateringId);
