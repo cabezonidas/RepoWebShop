@@ -4,6 +4,8 @@ using RepoWebShop.Interfaces;
 using RepoWebShop.Models;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace RepoWebShop.ApiControllers
 {
@@ -17,8 +19,9 @@ namespace RepoWebShop.ApiControllers
         private readonly IGalleryRepository _galleryRepository;
         private readonly IFlickrRepository _photosetAlbums;
         private readonly AppDbContext _appDbContext;
+        private readonly ICalendarRepository _calendar;
 
-        public AdminDataController(AppDbContext appDbContext, IFlickrRepository photosetAlbums, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository, IGalleryRepository galleryRepository)
+        public AdminDataController(ICalendarRepository calendar, AppDbContext appDbContext, IFlickrRepository photosetAlbums, IPieDetailRepository pieDetailRepository, ICategoryRepository categoryRepository, IPieRepository pieRepository, IGalleryRepository galleryRepository)
         {
             _galleryRepository = galleryRepository;
             _pieDetailRepository = pieDetailRepository;
@@ -26,6 +29,7 @@ namespace RepoWebShop.ApiControllers
             _pieRepository = pieRepository;
             _appDbContext = appDbContext;
             _photosetAlbums = photosetAlbums;
+            _calendar = calendar;
         }
 
         [HttpPost]
@@ -219,6 +223,58 @@ namespace RepoWebShop.ApiControllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost]
+        [Route("ClearUnusedSessionData/{top}")]
+        public async Task<IActionResult> ClearUnusedSessionData(int top)
+        {
+            var localTime = _calendar.LocalTime();
+            var orderIds = await _appDbContext.Orders.Select(o => o.BookingId).ToArrayAsync();
+            var usedLunchIds = await _appDbContext.OrderCaterings.Select(l => l.LunchId).ToArrayAsync();
+
+            var unusedCartData = await _appDbContext.ShoppingCartData.Where(scd =>
+                !orderIds.Contains(scd.BookingId) &&
+                localTime.Ticks - scd.LastUpdate.Ticks > TimeSpan.TicksPerDay
+            ).ToArrayAsync();
+            var unusedCartDates = await _appDbContext.ShoppingCartPickUpDates.Where(scpud =>
+                !orderIds.Contains(scpud.BookingId) &&
+                localTime > scpud.From
+            ).ToArrayAsync();
+            var unusedCartProducts = await _appDbContext.ShoppingCartCatalogProducts.Where(sccp =>
+                !orderIds.Contains(sccp.ShoppingCartId) &&
+                localTime.Ticks - sccp.Created.Ticks > TimeSpan.TicksPerDay
+            ).ToArrayAsync();
+            _appDbContext.ShoppingCartData.RemoveRange(unusedCartData);
+            _appDbContext.ShoppingCartPickUpDates.RemoveRange(unusedCartDates);
+            _appDbContext.ShoppingCartCatalogProducts.RemoveRange(unusedCartProducts);
+            await _appDbContext.SaveChangesAsync();
+
+            var unusedCartLunches = await _appDbContext.ShoppingCartCustomLunch.Where(sccl =>
+                !sccl.Created.HasValue || localTime.Ticks - sccl.Created.Value.Ticks > TimeSpan.TicksPerDay
+            ).ToArrayAsync();
+            _appDbContext.ShoppingCartCustomLunch.RemoveRange(unusedCartLunches);
+            await _appDbContext.SaveChangesAsync();
+
+            var unusedLunches = await _appDbContext.Lunch.Where(l =>
+                !usedLunchIds.Contains(l.LunchId) &&
+                String.IsNullOrEmpty(l.Title) &&
+                !l.IsCombo &&
+                (!l.Created.HasValue || localTime.Ticks - l.Created.Value.Ticks > TimeSpan.TicksPerDay)
+            ).Take(top).ToArrayAsync();
+
+            _appDbContext.Lunch.RemoveRange(unusedLunches);
+            await _appDbContext.SaveChangesAsync();
+
+            return Ok(new
+                {
+                    cartDataRows = unusedCartData.Count(),
+                    cartDatesRows = unusedCartDates.Count(),
+                    cartProductsRows = unusedCartProducts.Count(),
+                    cartLunchesRows = unusedCartLunches.Count(),
+                    lunchesRows = unusedLunches.Count(),
+                }
+            );
         }
     }
 }
