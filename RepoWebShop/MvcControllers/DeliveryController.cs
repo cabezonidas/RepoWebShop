@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace RepoWebShop.MvcControllers
 {
-    [PageVisitAsync]
+    
     public class DeliveryController : Controller
     {
         private readonly IDeliveryRepository _deliveryRepository;
