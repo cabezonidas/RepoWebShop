@@ -444,6 +444,9 @@ namespace RepoWebShop.Models
                                         "\"id\": \"bank_transfer\"" +
                                     "}," +
                                     "{" +
+                                        "\"id\": \"credit_card\"" +
+                                    "}," +
+                                    "{" +
                                         "\"id\": \"atm\"" +
                                     "}]," +
                                 "\"installments\":1" +
