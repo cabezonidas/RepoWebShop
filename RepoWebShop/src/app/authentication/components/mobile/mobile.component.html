@@ -23,6 +23,7 @@
               <mat-label>Teléfono</mat-label>
               <input matInput placeholder="11 2777 8899" formControlName="mobile" name="tel" required/>
             </mat-form-field>
+            <div><small>Si tu teléfono empieza con 15 y no te llega el mensage, prueba con 11.</small></div>
             <div>
               <br />
               <button mat-raised-button matStepperNext (click)="sendCodeToNumber()" color="primary" [disabled]="!mobileForm.valid">¡Validar!</button>
