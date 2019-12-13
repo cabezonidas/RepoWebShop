@@ -89,6 +89,7 @@
     <div id="totals">
         @await Html.PartialAsync("~/Views/Lunch/LunchTotals.cshtml", Model)
     </div>
+    <div style="margin-top: 20px;">Los precios son válidos durante 20 días</div>
     <div>
         <a class="btn btn-primary hidden-print" style="margin-top: 5px;" asp-action="Catering" asp-controller="Services">Ver más opciones</a>
         <a class="btn btn-primary hidden-print" style="margin-top: 5px;" asp-action="ClearCustomCateringFromCart" asp-controller="ShoppingCart">Descartar</a>
