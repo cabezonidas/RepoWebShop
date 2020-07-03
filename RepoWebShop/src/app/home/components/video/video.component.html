@@ -1,5 +1,26 @@
 <div class="container">
-
+  <div style="display: flex; justify-content: space-around; align-items: center;">
+    <div style="width: 100%; background: papayawhip; padding: 30px; border: 2px solid rgb(173, 136, 75); margin: auto">
+      <h3 style="color: #9c5858; margin-top: 0; margin-bottom: 0;">AVISO</h3>
+      <p>
+        En de las artes haremos todo lo posible por entregar tu pedido en tiempo y forma según la elección en tu orden.
+      </p>
+      <p>
+        Ante la gravedad de la situación mundial, lamentablemente esperamos imprevistos en nuestras operaciones.
+      </p>
+      <p>
+        Si bien alentamos las compras online, vas a tener 100% de certeza en tu orden si nos manejamos con las redes sociales.
+      </p>
+      <div style="display: grid; grid-template-columns: repeat(2, auto); grid-gap: 10px;">
+        <strong>Whatsapp</strong>
+        <strong>Teléfono</strong>
+        <a style="color: #883536;" href="https://api.whatsapp.com/send?phone=5491127778899">11 2777 8899</a>
+        <a style="color: #883536;" href="tel:+5491149250262">4925 0262</a>
+      </div>
+      <p>Muchas gracias por contar con nosotros en momentos tan difíciles.</p>
+      <p>Nuestros estándares de higiene siguen siendo los más altos, cuidémonos entre todos.</p>
+    </div>
+  </div>
   <div id="background" [ngStyle]="{'height.px': videoHeight}">
     <video #video preload="true" autoplay="autoplay" [muted]="true" loop="loop"(window:resize)="onResize($event)">
       <source [attr.src]="videoSource" type="video/mp4" *ngIf="!smallDevice" >
