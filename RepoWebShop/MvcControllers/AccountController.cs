@@ -267,23 +267,23 @@ namespace RepoWebShop.MvcControllers
             return View(loginViewModel);
         }
 
-        // [HttpGet]
-        // [AllowAnonymous]
-        // [Route("[controller]/Register/{*returnUrl}")]
-        // public IActionResult Register(string returnUrl)
-        // {
-        //     var result = new RegisterViewModel { ReturnUrl = returnUrl };
-        //     return View(result);
-        // }
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("[controller]/Register/{*returnUrl}")]
+        public IActionResult Register(string returnUrl)
+        {
+            var result = new RegisterViewModel { ReturnUrl = returnUrl };
+            return View(result);
+        }
 
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
-        // [AllowAnonymous]
-        // [Route("[controller]/Register/{*returnUrl}")]
-        // public async Task<IActionResult> Register(RegisterViewModel registration)
-        // {
-        //     return await RegisterUser(registration);
-        // }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[AllowAnonymous]
+        //[Route("[controller]/Register/{*returnUrl}")]
+        //public async Task<IActionResult> Register(RegisterViewModel registration)
+        //{
+        //    return await RegisterUser(registration);
+        //}
 
         private async Task<IActionResult> RegisterUser(RegisterViewModel registration)
         {
