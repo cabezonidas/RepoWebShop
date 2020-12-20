@@ -8,7 +8,7 @@
     Muchas gracias por comprender
   </div> -->
 <mat-tab-group >
-  <mat-tab label="Reserva" >
+  <!-- <mat-tab label="Reserva" >
     <p>
       Pagalo cuando lo recibís. Si abonás en <strong class="appealing">efectivo</strong> te regalamos un <strong class="appealing">voucher de $50</strong> para tu próxima compra.
     </p>
@@ -20,10 +20,10 @@
         ¡Te mandamos un sms cuando el pedido está listo!
       </small>
     </p>  
-  </mat-tab>
+  </mat-tab> -->
   <mat-tab label="MercadoPago">
     <p>
-      Pagá ahora con <strong>MercadoPago</strong> con la tarjeta que más te convenga.  
+      Paga con <strong>MercadoPago</strong> con la tarjeta que más te convenga.  
     </p>  
     <div *ngIf="(mercadoLink && !mercadoLinkFailed) else loadingLink" >
       <a id="mercadolink" (click)="goPay()" name="MP-Checkout" mp-mode="redirect" class="MP-blue-common-CDl MP-ar-l-rn-Dl" target="">
@@ -49,11 +49,11 @@
       </div> 
     </div>
 
-    <p>
+    <!-- <p>
       <small>
         ¡No es necesario estar registrado!
       </small>
-    </p>  
+    </p>   -->
   </mat-tab>
 </mat-tab-group>
 </div>
