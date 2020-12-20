@@ -16,7 +16,7 @@
       </div>
     </div>
     <mat-card *ngIf="total$ | async">
-      <p [ngStyle]="{'color':'grey'}">Al completar tu reserva podrás elegir si querés pagar cuando lo recibís, o bien pagar en el momento a través MercadoPago.</p>
+      <!-- <p [ngStyle]="{'color':'grey'}">Al completar tu reserva podrás elegir si querés pagar cuando lo recibís, o bien pagar en el momento a través MercadoPago.</p> -->
       <mat-vertical-stepper linear #stepper>
 
         <mat-step >
@@ -29,19 +29,19 @@
           >
           </app-products>
         </mat-step>
-          <mat-step >
+          <!-- <mat-step >
             <ng-template matStepLabel>Envío</ng-template>
             <app-delivery (next)="_onNext()" (addDelivery)="saveDelivery($event)" (removeDelivery)="clearDelivery($event)"
             (updateInstructions)="updateInstructions($event)" [deliveryAddress]="delivery$ | async"
             [deliveryLoaded]="deliveryLoaded$ | async" [deliveryLoading]="deliveryLoading$ | async" [totalWithoutDiscount]="totalWithoutDiscount$ | async"
             ></app-delivery>
-          </mat-step>
-          <mat-step >
+          </mat-step> -->
+          <!-- <mat-step >
               <ng-template matStepLabel>Código Promocional</ng-template>
               <app-discount [savedDiscount]="discount$ | async" [discountsLoaded]="discountsLoaded$ | async" [discountsLoading]="discountsLoading$ | async" 
               [totalInStore]="totalInStore$ | async" [totalOnline]="total$ | async" [totalWithoutDiscount]="totalWithoutDiscount$ | async"
               (next)="_onNext()" (clearDiscount)="clearDiscount()" (applyDiscount)="applyDiscount($event)" ></app-discount>
-            </mat-step>
+            </mat-step> -->
             <mat-step >
                 <ng-template matStepLabel>Retiro / Entrega</ng-template>
                 <app-pickup-options [options]="pickupOptions$ | async" [pickup]="pickup$ | async" 
