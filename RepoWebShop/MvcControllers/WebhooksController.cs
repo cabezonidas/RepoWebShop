@@ -12,11 +12,14 @@ namespace RepoWebShop.MvcControllers
 {
     public class WebhooksController : Controller
     {
-        public WebhooksController()
-        {
-        }
+		private readonly AppDbContext _appDbContext;
 
-        [HttpGet]
+		public WebhooksController(AppDbContext appDbContext)
+		{
+			_appDbContext = appDbContext;
+		}
+
+		[HttpGet]
         public IActionResult Index()
         {
             return Ok();
@@ -47,6 +50,11 @@ namespace RepoWebShop.MvcControllers
 		{
 			if (topic == "payment" && !string.IsNullOrEmpty(id))
 			{
+				int count = _appDbContext.PaymentNotices.Count(p => p.MercadoPagoTransaction == id);
+				if (count > 0)
+				{
+					return Ok(); // It's a duplicate
+				}
 				Task.Run(async () =>
 				{
 					var apicall = $"http://{Request.Host.ToString()}/api/WebhooksData/OnPaymentNotified/{id}";

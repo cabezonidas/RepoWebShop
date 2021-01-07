@@ -21,6 +21,11 @@ namespace RepoWebShop.Repositories
 
         public async Task CreatePayment(PaymentNotice paymentNotification)
         {
+            int count = _appDbContext.PaymentNotices.Count(p => p.MercadoPagoTransaction == paymentNotification.MercadoPagoTransaction);
+            if (count > 0)
+            {
+                return; // It's a duplicate
+            }
             _appDbContext.PaymentNotices.Add(paymentNotification);
             _appDbContext.SaveChanges();
 
