@@ -26,20 +26,21 @@ namespace RepoWebShop.FeApi
 
 		[HttpPost]
 		[Route("ConfirmReservation")]
-		public async Task<string> ConfirmReservation()
+		public void ConfirmReservation()
 		{
-			if (_cart.GetTotal(null) == 0)
-				throw new Exception("Intento de reserva con carrito vacío");
+			throw new Exception("Reserva deshabilitada");
+			//if (_cart.GetTotal(null) == 0)
+			//	throw new Exception("Intento de reserva con carrito vacío");
 
-			var user = await _account.Current();
-			Order order = new Order
-			{
-				Status = "reservation",
-				Registration = user
-			};
-			order = await _order.CreateOrderAsync(order);
-			await _order.AfterOrderConfirmedAsync(order);
-			return order.FriendlyBookingId;
+			//var user = await _account.Current();
+			//Order order = new Order
+			//{
+			//	Status = "reservation",
+			//	Registration = user
+			//};
+			//order = await _order.CreateOrderAsync(order);
+			//await _order.AfterOrderConfirmedAsync(order);
+			//return order.FriendlyBookingId;
 		}
 	}
 }

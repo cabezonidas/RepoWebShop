@@ -249,19 +249,19 @@ namespace RepoWebShop.MvcControllers
                 return NotFound();
         }
 
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> Checkout()
-        {
-            var user = await _userManager.GetUser(_signInManager);
-            if (_cartRepository.GetTotal(null) > 0)
-                if(user.PhoneNumberConfirmed)
-                    return View(user);
-                else
-                    return Redirect($"/Account/VerifyNumber/Order/Checkout/");
-            else
-                return RedirectToAction("Index", "Home");
-        }
+        //[HttpGet]
+        //[Authorize]
+        //public async Task<IActionResult> Checkout()
+        //{
+        //    var user = await _userManager.GetUser(_signInManager);
+        //    if (_cartRepository.GetTotal(null) > 0)
+        //        if(user.PhoneNumberConfirmed)
+        //            return View(user);
+        //        else
+        //            return Redirect($"/Account/VerifyNumber/Order/Checkout/");
+        //    else
+        //        return RedirectToAction("Index", "Home");
+        //}
 
         [HttpPost]
         [Authorize]
