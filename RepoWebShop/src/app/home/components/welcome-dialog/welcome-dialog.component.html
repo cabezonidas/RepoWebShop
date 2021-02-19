@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>Cambios en la forma de comprar</h2>
+
+<mat-dialog-content style="font-family: Noto Serif">
+
+  <p>
+    Hola, gracias por visitarnos!
+  </p>
+  <p>
+    Queriamos avisarte que a modo de prueba, las cosas van a ser un poco distintas desde el Martes 22 de Febrero, hasta el Domingo 14 de Marzo.
+  </p>
+  <ul>
+    <li>
+      Durante este tiempo vamos a tomar pedidos a través de nuestro WhatsApp solamente.
+    </li>
+    <li>
+      Solo vamos a tomar pedidos de nuestro catálo de productos dulces.
+    </li>
+    <li>
+      Las compras se podrán retirar los días Sábados entre las 9hs y 14hs.
+    </li>
+  </ul>
+
+  
+  <div>
+    <p>
+      Con mucho cariño,
+    <br>
+      De las Artes
+    </p>
+  </div>
+ 
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <div style="display: grid; grid-template-columns: auto auto; gap: 10px; width: 100%;">
+      <a href='https://api.whatsapp.com/send?phone=5491127778899' target="_blank" style="display: flex; align-items: center; color: black; margin-right: auto;">
+        <img src="../../../assets/images/icons/whapp.png" style="width:25px; height: 25px; margin-right: 10px;" class="icon">11 2777 8899
+      </a>  
+      <button style="margin-left: auto;" mat-button color="primary" (click)="close()">Entendido</button>
+    </div>
+</mat-dialog-actions>

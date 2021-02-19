@@ -13,6 +13,8 @@ import { HoursComponent } from './components/hours/hours.component';
 import { ProductModule } from '../products/products.module';
 import { SharedModule } from '../shared/shared.module';
 import { CateringModule } from '../catering/catering.module';
+import { MatDialogModule } from '@angular/material';
+import { WelcomeDialogComponent } from './components/welcome-dialog/welcome-dialog.component';
 
 const homeRoutes: Routes = [
   { path: 'start', component: HomeShellComponent },
@@ -29,7 +31,8 @@ const homeRoutes: Routes = [
     MaterialModule,
     SharedModule,
     ProductModule,
-    CateringModule
+    CateringModule,
+    MatDialogModule,
   ],
   declarations: [
     VideoComponent,
@@ -37,7 +40,9 @@ const homeRoutes: Routes = [
     ContactComponent,
     InfoComponent,
     HoursComponent,
+    WelcomeDialogComponent,
   ],
-  providers: []
+  providers: [],
+  entryComponents: [WelcomeDialogComponent]
 })
 export class HomeModule { }
