@@ -24,7 +24,7 @@ export class HomeShellComponent implements OnInit {
     // this.store.dispatch(new productActions.LoadProducts());
     // this.store.dispatch(new cateringActions.LoadCaterings());
     // this.store.dispatch(new cateringActions.LoadItems());
-    if (new Date() < new Date(2021,2, 14)){
+    if (new Date() < new Date(2021,3, 1)){
       this.openDialog();
     }
   }

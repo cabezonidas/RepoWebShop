@@ -1,25 +1,17 @@
-<h2 mat-dialog-title>Cambios en la forma de comprar</h2>
+<h2 mat-dialog-title>Nuevos horarios de atencion al publico</h2>
 
 <mat-dialog-content style="font-family: Noto Serif">
-
   <p>
-    Hola, gracias por visitarnos!
-  </p>
-  <p>
-    Queriamos avisarte que a modo de prueba, las cosas van a ser un poco distintas desde el Martes 22 de Febrero, hasta el Domingo 14 de Marzo.
+    Hola! Nuevos horarios y modalidad de trabajo renovada.
   </p>
   <ul>
     <li>
-      Durante este tiempo vamos a tomar pedidos a través de nuestro WhatsApp solamente.
+      Martes a Viernes de 8.30hs a 18.00hs, Sabados de 8.30hs a 14.00hs, Domingos y Lunes estaremos cerrados.
     </li>
     <li>
-      Solo vamos a tomar pedidos de nuestro catálo de productos dulces.
-    </li>
-    <li>
-      Las compras se podrán retirar los días Sábados entre las 9hs y 14hs.
+      Nuestra producción estará enfocada en compras y reservas con antelación. Por favor, hacé tu pedido con tiempo por cualquiera de nuestras redes.
     </li>
   </ul>
-
   
   <div>
     <p>
@@ -33,9 +25,9 @@
 
 <mat-dialog-actions>
     <div style="display: grid; grid-template-columns: auto auto; gap: 10px; width: 100%;">
-      <a href='https://api.whatsapp.com/send?phone=5491127778899' target="_blank" style="display: flex; align-items: center; color: black; margin-right: auto;">
+      <button tabindex="1" style="margin-right: auto;" mat-button color="primary" (click)="close()">Entendido</button>
+      <a tabindex="2" href='https://api.whatsapp.com/send?phone=5491127778899' target="_blank" style="display: flex; align-items: center; color: black; margin-left: auto;">
         <img src="../../../assets/images/icons/whapp.png" style="width:25px; height: 25px; margin-right: 10px;" class="icon">11 2777 8899
       </a>  
-      <button style="margin-left: auto;" mat-button color="primary" (click)="close()">Entendido</button>
     </div>
 </mat-dialog-actions>
