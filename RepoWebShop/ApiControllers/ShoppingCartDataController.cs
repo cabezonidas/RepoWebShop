@@ -121,21 +121,22 @@ namespace RepoWebShop.ApiControllers
 
         [HttpGet]
         [Route("GetMercadoPagoLink")]
-        public async Task<IActionResult> GetMercadoPagoLink() => await GetMercadoPagoLink(null);
+        public IActionResult GetMercadoPagoLink() => GetMercadoPagoLink(null);
 
         [HttpGet]
         [Route("GetMercadoPagoLink/{bookingId}")]
-        public async Task<IActionResult> GetMercadoPagoLink(string bookingId)
+        public IActionResult GetMercadoPagoLink(string bookingId)
         {
-			string init_point = null;
+            return BadRequest();
+			//string init_point = null;
 
-			try
-			{
-				init_point = await Init_point(bookingId);
-			}
-			catch { }
+			//try
+			//{
+			//	init_point = await Init_point(bookingId);
+			//}
+			//catch { }
 
-            return Ok(new { link = init_point });
+            //return Ok(new { link = init_point });
         }
 
 		private async Task<string> Init_point(string bookingId)
