@@ -109,11 +109,16 @@ namespace RepoWebShop
 			{
 				app.UseDeveloperExceptionPage();
 				app.UseStatusCodePages();
-				app.UseCors(builder => builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 			}
 			else
 				app.UseExceptionHandler("/AppException");
 
+			app.UseCors(builder =>
+				builder
+					.AllowAnyHeader()
+					.AllowAnyOrigin()
+					.AllowAnyMethod()
+			);
 			app.UseSession();
 			app.UseAuthentication();
 
